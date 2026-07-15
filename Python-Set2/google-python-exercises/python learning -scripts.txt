@@ -1,0 +1,40 @@
+D:\Nambi\CD1\Learning\Python\google-python-exercises
+
+import sys
+# This is the standard boilerplate that calls the main() function.
+if __name__ == '__main__':
+  main()
+
+
+
+^(?=.*[a-z])(?=.*\d)(?=.*[A-Z])([a-zA-Z\d]{8})$
+
+
+# Open file
+  f = open('test.txt','r')
+  # Feed the file text into findall(); it returns a list of all the found strings
+  strings = re.findall(r'some pattern', f.read())
+
+((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})==>Not working
+((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})
+
+    dict ={}
+    dict['s']='Superman'
+    dict['i']='Ironman'
+    dict['b']='Batman'
+    print dict['b']
+    print dict['s']
+
+dict ={}
+    dict['g']='grey'
+    dict['w']='white'
+    dict['b']='black'
+    dict['r'] = 'red'
+    for key in dict:
+        print key
+
+    dict ={}
+    dict['a']='alpha'
+    dict['g']='gamma'
+    dict['o']='omega'
+    print dict

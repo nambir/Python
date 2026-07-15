@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Basics — Interview Prep</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #1a1a2e; }
+
+.slide { display: none; width: 100%; height: 100vh; padding: 30px 50px 60px 50px; overflow-y: auto; position: relative; }
+.slide.active { display: block; }
+
+.slide-hdr { margin-bottom: 16px; }
+.slide-meta { font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }
+.slide-title { font-size: 28px; font-weight: 700; color: #1a1a2e; border-bottom: 3px solid #0066cc; padding-bottom: 6px; display: inline-block; }
+.slide-sub { font-size: 14px; color: #555; margin-top: 3px; }
+
+h3 { font-size: 16px; color: #0066cc; margin: 14px 0 6px 0; }
+h4 { font-size: 14px; color: #333; margin: 10px 0 4px 0; }
+p { font-size: 13px; margin-bottom: 6px; line-height: 1.5; }
+ul { margin-left: 18px; margin-bottom: 8px; }
+li { font-size: 12px; margin-bottom: 2px; line-height: 1.4; }
+code { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px; background: #f0f7ff; padding: 1px 4px; border-radius: 3px; color: #0000FF; }
+
+.nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 44px; background: #f0f0f0; border-top: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 50px; z-index: 999; }
+.nav-bar button { padding: 6px 20px; font-size: 13px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; }
+.nav-bar .btn-prev { background: #666; color: #fff; }
+.nav-bar .btn-prev:hover { background: #444; }
+.nav-bar .btn-next { background: #0066cc; color: #fff; }
+.nav-bar .btn-next:hover { background: #004499; }
+.nav-bar .btn-nav { background: #28a745; color: #fff; }
+.nav-bar .btn-nav:hover { background: #1e7e34; }
+.nav-bar .slide-info { font-size: 12px; color: #555; }
+
+table, .ref-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+th { background: #0066cc; color: #fff; padding: 6px 10px; text-align: left; font-size: 11px; }
+td { padding: 5px 10px; border-bottom: 1px solid #e8e8e8; }
+tr:nth-child(even) { background: #f8fafc; }
+
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; border-left: 3px solid #0066cc; }
+.card-g { border-left-color: #28a745; }
+.card-o { border-left-color: #f39c12; }
+.card-p { border-left-color: #6f42c1; }
+.card-r { border-left-color: #dc3545; }
+
+.tip { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.challenge { background: #e8f5e9; border-left: 3px solid #28a745; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.callout { background: #f0f7ff; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.def-box { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #333; border-radius: 6px; padding: 10px; margin: 8px 0; font-size: 12px; line-height: 1.5; }
+.interview-box { background: #e8f5e9; border-left: 3px solid #28a745; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.interview-box p { margin: 6px 0 0; line-height: 1.5; color: #1b5e20; font-style: italic; font-size: 12px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.slide-layout { display: flex; flex-direction: column; gap: 12px; }
+.explain-top { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.explain-left h3:first-of-type, .explain-right h3:first-of-type { margin-top: 0; }
+.practice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.practice-bottom { grid-column: 1; }
+.practice-panel { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+.practice-panel h3 { margin-top: 0; }
+.checklist { list-style: none; margin: 8px 0 0 0; padding: 0; }
+.checklist li { padding: 3px 0; font-size: 12px; }
+.checklist li::before { content: "\2610  "; color: #0066cc; }
+.file-link { display: inline-block; margin-top: 8px; padding: 5px 12px; background: #0066cc; color: #fff; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.file-link:hover { background: #004499; }
+.run-cmd { font-family: Consolas, monospace; background: #2d2d2d; color: #dcdcdc; padding: 8px 12px; border-radius: 4px; font-size: 11px; margin-top: 8px; display: block; }
+
+pre.code { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px; line-height: 1.45; margin: 8px 0; }
+.kw { color: #0000FF; } .str { color: #A31515; } .cmt { color: #008000; }
+.num { color: #098658; } .fn { color: #795E26; } .typ { color: #267F99; }
+
+.nav-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 44px); padding: 20px; }
+.nav-content h1 { font-size: 38px; color: #1a1a2e; margin-bottom: 4px; }
+.nav-content .sub { font-size: 17px; color: #0066cc; margin-bottom: 4px; }
+.nav-content .org { font-size: 13px; color: #666; margin-bottom: 30px; }
+.nav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 900px; width: 100%; }
+.nav-section { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 14px; text-align: center; max-height: 420px; overflow-y: auto; }
+.nav-section h3 { font-size: 13px; color: #1a1a2e; margin-bottom: 8px; border-bottom: 2px solid #0066cc; padding-bottom: 4px; }
+.nav-section a { display: block; padding: 3px 0; color: #0066cc; text-decoration: none; font-size: 12px; cursor: pointer; text-align: left; }
+.nav-section a:hover { text-decoration: underline; }
+
+.qa-item { margin-bottom: 10px; font-size: 12px; }
+.qa-item strong { color: #0066cc; display: block; margin-bottom: 3px; }
+
+.tree-mockup { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin: 8px 0; font-family: Consolas, 'Cascadia Mono', monospace; font-size: 11px; line-height: 1.55; overflow-x: auto; }
+.tree-mockup .t-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; padding: 1px 0; }
+.tree-mockup .t-indent-1 { padding-left: 16px; }
+.tree-mockup .t-indent-2 { padding-left: 32px; }
+.tree-mockup .t-indent-3 { padding-left: 48px; }
+.tree-mockup .t-indent-4 { padding-left: 64px; }
+.tree-mockup .t-folder { color: #0066cc; font-weight: 700; }
+.tree-mockup .t-file { color: #1a1a2e; }
+.tree-mockup .t-config { color: #6f42c1; }
+.tree-mockup .t-test { color: #28a745; font-weight: 600; }
+.tree-mockup .t-note { color: #888; font-style: italic; font-family: 'Segoe UI', sans-serif; font-size: 10px; }
+.tree-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; font-size: 11px; }
+.tree-legend span { display: flex; align-items: center; gap: 6px; }
+.tree-legend .dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.dot-blue { background: #0066cc; } .dot-green { background: #28a745; }
+.dot-purple { background: #6f42c1; } .dot-orange { background: #f39c12; }
+.wireframe-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+.wireframe-box { border: 2px dashed #b3d4fc; border-radius: 8px; padding: 10px; background: #fff; }
+.project-map { width: 100%; font-size: 11px; }
+.project-map td:first-child { font-weight: 600; color: #0066cc; white-space: nowrap; }
+
+@media (max-width: 700px) {
+  .slide { padding: 20px 16px 60px; }
+  .two-col, .cards, .nav-grid, .wireframe-compare, .tree-legend, .explain-top, .practice-row { grid-template-columns: 1fr; }
+  .practice-bottom { grid-column: auto; }
+  .nav-bar { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+<div class="slide active" id="slide-0">
+<div class="nav-content">
+  <h1>Python Basics</h1>
+  <div class="sub">Interview Prep &middot; For C# Developers</div>
+  <div class="org">Click a topic below to jump to that slide</div>
+  <div class="nav-grid">
+    <div class="nav-section">
+      <h3>Module 1 — Python Basics</h3>
+      <a onclick="goSlide(2)">2. Welcome & Setup</a><a onclick="goSlide(3)">3. Hello World & Running Code</a><a onclick="goSlide(4)">4. Variables & Types</a><a onclick="goSlide(5)">5. Strings</a><a onclick="goSlide(6)">6. Numbers & Math</a><a onclick="goSlide(7)">7. Booleans & None</a><a onclick="goSlide(8)">8. if / elif / else</a><a onclick="goSlide(9)">9. Loops: for</a><a onclick="goSlide(10)">10. Loops: while, break, continue</a><a onclick="goSlide(11)">11. Lists</a><a onclick="goSlide(12)">12. Tuples & Sets</a><a onclick="goSlide(13)">13. Dictionaries</a><a onclick="goSlide(14)">14. Functions</a>
+    </div>
+    <div class="nav-section">
+      <h3>Python Basics (continued)</h3>
+      <a onclick="goSlide(15)">15. Lambda, map, filter</a><a onclick="goSlide(16)">16. Comprehensions</a>
+    </div>
+    <div class="nav-section">
+      <h3>OOP — Object-Oriented Programming</h3>
+      <a onclick="goSlide(17)">17. OOP — Four Pillars Overview</a><a onclick="goSlide(18)">18. OOP — Classes, Objects & Encapsulation</a><a onclick="goSlide(19)">19. OOP — Inheritance & Polymorphism</a><a onclick="goSlide(20)">20. OOP — Abstraction & Magic Methods</a>
+    </div>
+    <div class="nav-section">
+      <h3>Python Basics (modules &amp; more)</h3>
+      <a onclick="goSlide(21)">21. Modules & Imports</a><a onclick="goSlide(22)">22. File I/O</a><a onclick="goSlide(23)">23. Exceptions</a><a onclick="goSlide(24)">24. Common Stdlib</a><a onclick="goSlide(25)">25. Top Interview Patterns</a><a onclick="goSlide(26)">26. Mock Interview Q&A</a>
+    </div>
+    <div class="nav-section">
+      <h3>Module 2 — API (FastAPI)</h3>
+      <a onclick="goSlide(26)">26. Mock Interview Q&A</a><a onclick="goSlide(27)">27. HTTP & REST Basics</a><a onclick="goSlide(28)">28. FastAPI — Hello API</a><a onclick="goSlide(29)">29. FastAPI — POST & Validation</a><a onclick="goSlide(30)">30. FastAPI — CRUD Mini API</a>
+    </div>
+    <div class="nav-section">
+      <h3>Module 3 — UI (Streamlit &amp; Tkinter)</h3>
+      <a onclick="goSlide(31)">31. API Interview Q&A</a><a onclick="goSlide(32)">32. UI Options in Python</a><a onclick="goSlide(33)">33. Streamlit — First App</a><a onclick="goSlide(34)">34. Streamlit — Call Your API</a><a onclick="goSlide(35)">35. Tkinter — Desktop UI</a>
+    </div>
+    <div class="nav-section">
+      <h3>Module 4 — Real Project Structure</h3>
+      <a onclick="goSlide(37)">37. Why Real Project Structure?</a><a onclick="goSlide(38)">38. Learning Project Structure (Wireframe)</a><a onclick="goSlide(39)">39. FastAPI Production Structure (Wireframe)</a><a onclick="goSlide(40)">40. Full-Stack Monorepo Structure (Wireframe)</a><a onclick="goSlide(41)">41. Create a Real Project — Step by Step</a>
+    </div>
+    <div class="nav-section">
+      <h3>Module 5 — Python-Set2 Real Projects</h3>
+      <a onclick="goSlide(42)">42. Python-Set2 — Portfolio Overview</a><a onclick="goSlide(43)">43. pythonBasics — Topic Modules</a><a onclick="goSlide(44)">44. Google Exercises &amp; Pandas Data</a><a onclick="goSlide(45)">45. Django &amp; Django REST Projects</a><a onclick="goSlide(46)">46. Pipecat — Voice AI POCs</a><a onclick="goSlide(47)">47. Python-Set2 — Learning Path &amp; Interview Map</a>
+    </div>
+    <div class="nav-section">
+      <h3>Appendix</h3>
+      <a onclick="goSlide(48)">48. C# vs Python Quick Reference</a>
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-2">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 2 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Welcome & Setup</div>
+  <div class="slide-sub">Python is a high-level, interpreted programming language known for readable syntax.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Python is a high-level, interpreted programming language known for readable syntax. Setup means installing the Python runtime, an editor, and learning how to run .py files or use the REPL.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Python is an interpreted, dynamically typed language — I don't declare types upfront. I write code in .py files and run them with python filename.py, or test quickly in the REPL. Coming from C#, the biggest shift is no braces or semicolons — indentation defines blocks.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Welcome! You know C# — Python will feel familiar yet simpler in syntax.</p>
+<ul>
+  <li>Install Python 3.11+ from <strong>python.org</strong></li>
+  <li>Use VS Code or Cursor with Python extension</li>
+  <li>Run scripts: <code>python filename.py</code></li>
+  <li>REPL: type <code>python</code> in terminal</li>
+</ul>
+<div class="callout"><strong>Coming from C#?</strong> No semicolons, no curly braces, indentation matters. Python uses dynamic typing — no <code>int x = 5;</code> declaration needed.</div>
+<div class="tip"><strong>Interview tip:</strong> Python is interpreted, dynamically typed, and strongly typed (no implicit string+int).</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Setup Checklist</h4>
+<ul class="checklist">
+  <li>Install Python and verify: python --version</li>
+  <li>Create folder d:\Sangeetha\Python\Projects</li>
+  <li>Open PythonBasics.html in browser</li>
+  <li>Run first script on Slide 3</li>
+</ul>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-3">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 3 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Hello World & Running Code</div>
+  <div class="slide-sub">A Python program is a script executed line by line.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A Python program is a script executed line by line. print() sends output to the console. The if __name__ == '__main__' guard runs code only when the file is executed directly, not when imported.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;print() is Python's Console.WriteLine. Every .py file runs top to bottom. I use if __name__ == '__main__' as the entry point — it only runs when I execute the file directly, similar to a Main method but optional and idiomatic for reusable modules.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>print()</code> = C# <code>Console.WriteLine()</code></li>
+  <li>Scripts run top-to-bottom</li>
+  <li><code>if __name__ == "__main__":</code> guards entry point</li>
+</ul>
+<pre class="code">print("Hello, Python!")
+name = "Alex"
+print(f"Hi, {name}!")
+
+if __name__ == "__main__":
+    print("Script entry point")</pre>
+<div class="callout"><strong>Coming from C#?</strong> C# needs <code>static void Main()</code>. Python runs the file directly; the <code>__name__</code> guard is optional but professional.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Hello World</h4>
+<ul class="checklist">
+  <li>Print "Hello, Python!"</li>
+  <li>Print your name on line 2</li>
+  <li>Print result of 2 + 3</li>
+</ul>
+<a class="file-link" href="Projects/03_hello_world.py">Projects/03_hello_world.py</a>
+<span class="run-cmd">python Projects/03_hello_world.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-4">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 4 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Variables & Types</div>
+  <div class="slide-sub">Variables are names bound to objects in memory.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Variables are names bound to objects in memory. Python is dynamically typed — you assign values without declaring types, but types exist at runtime and can be checked with type().</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;In Python I just write x = 10 — no int keyword. Python is dynamically typed, meaning the type is determined at runtime, but strongly typed, meaning it won't silently convert incompatible types like string plus integer. I can check types with type() when needed.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Assign with <code>x = 10</code> — no type keyword</li>
+  <li><code>type(x)</code> checks runtime type</li>
+  <li>Variables are references to objects</li>
+</ul>
+<pre class="code">age = 25
+price = 9.99
+name = "Riya"
+is_active = True
+print(type(age))   # &lt;class 'int'&gt;</pre>
+<div class="callout"><strong>Coming from C#?</strong> C#: <code>int age = 25;</code> Python: <code>age = 25</code>. Types are checked at runtime, not compile time.</div>
+<div class="tip"><strong>Interview tip:</strong> Python is dynamically typed but strongly typed — <code>"5" + 5</code> raises TypeError.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Variables</h4>
+<ul class="checklist">
+  <li>Create int, float, str, bool variables</li>
+  <li>Print type() of each</li>
+  <li>Reassign age to a string — observe type change</li>
+</ul>
+<a class="file-link" href="Projects/04_variables.py">Projects/04_variables.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-5">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 5 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Strings</div>
+  <div class="slide-sub">A string is an immutable sequence of Unicode characters.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A string is an immutable sequence of Unicode characters. Python supports slicing, formatting (especially f-strings), and built-in methods like upper(), split(), and replace().</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Strings are immutable in Python — once created they can't be changed, only new strings are made. I use f-strings for formatting, like f'Hello {name}', which is similar to C# interpolated strings. Slicing like text[0:3] or text[-1] is a common interview topic.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Immutable sequence of characters</li>
+  <li>f-strings: <code>f"Hello {name}"</code></li>
+  <li>Slicing: <code>s[0:3]</code>, <code>s[-1]</code></li>
+  <li>Methods: .upper(), .split(), .replace()</li>
+</ul>
+<pre class="code">text = "Python"
+print(text[0:3])       # Pyt
+print(f"Learn {text}!") # Learn Python!
+print(len(text))</pre>
+<div class="callout"><strong>Coming from C#?</strong> C# has <code>$"Hello {name}"</code>. Python f-strings work the same way: <code>f"Hello {name}"</code>.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Strings</h4>
+<ul class="checklist">
+  <li>Slice first 6 and last 4 chars</li>
+  <li>Use an f-string greeting</li>
+  <li>Call .upper() and .replace()</li>
+</ul>
+<a class="file-link" href="Projects/05_strings.py">Projects/05_strings.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-6">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 6 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Numbers & Math</div>
+  <div class="slide-sub">Python supports integers, floats, and complex numbers.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Python supports integers, floats, and complex numbers. Key operators include / for true division, // for floor division, % for modulo, and ** for exponentiation.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Unlike C#, Python's / always returns a float — 17/5 is 3.4. For integer division I use //. Modulo % gives the remainder, and ** is power. divmod(a,b) returns both quotient and remainder in one call.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>/</code> always float division</li>
+  <li><code>//</code> floor division, <code>%</code> modulo</li>
+  <li><code>**</code> exponent, <code>divmod(a,b)</code></li>
+</ul>
+<pre class="code">a, b = 17, 5
+print(a / b)    # 3.4
+print(a // b)   # 3
+print(a % b)    # 2
+print(a ** 2)   # 289</pre>
+<div class="callout"><strong>Coming from C#?</strong> C# <code>17 / 5</code> is 3 (int div). Python 3 <code>17 / 5</code> is 3.4. Use <code>//</code> for integer division.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Numbers</h4>
+<ul class="checklist">
+  <li>Print /, //, %, ** for 17 and 5</li>
+  <li>Use divmod()</li>
+  <li>Round pi to 2 decimals</li>
+</ul>
+<a class="file-link" href="Projects/06_numbers.py">Projects/06_numbers.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-7">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 7 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Booleans & None</div>
+  <div class="slide-sub">bool represents True or False.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>bool represents True or False. None is the singleton representing absence of a value (like null). Python uses truthiness — empty or zero values evaluate to False in conditionals.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;None is Python's null — I always check with 'is None', not == None, because is checks identity. Truthiness is important: empty string, zero, empty list are all falsy. A common trap is bool('False') returns True because any non-empty string is truthy.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>None</code> = C# <code>null</code></li>
+  <li>Use <code>is None</code>, not <code>== None</code></li>
+  <li>Truthiness: empty = False, non-empty = True</li>
+</ul>
+<pre class="code">x = None
+if x is None:
+    print("No value")
+
+print(bool(""))    # False
+print(bool("hi"))  # True
+print(bool(0))     # False</pre>
+<div class="tip"><strong>Interview trap:</strong> <code>bool("False")</code> is <code>True</code> — non-empty strings are truthy!</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Booleans</h4>
+<ul class="checklist">
+  <li>Print bool() of 8 different values</li>
+  <li>Check None with "is"</li>
+  <li>Predict bool("False") before running</li>
+</ul>
+<a class="file-link" href="Projects/07_booleans_none.py">Projects/07_booleans_none.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-8">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 8 of 48 &middot; Python Basics</div>
+  <div class="slide-title">if / elif / else</div>
+  <div class="slide-sub">Conditional statements (if, elif, else) execute blocks based on boolean expressions.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Conditional statements (if, elif, else) execute blocks based on boolean expressions. Python uses a colon and indentation instead of braces to define blocks.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Python conditionals work like C# if/else but without parentheses required and with elif instead of else if. The block is defined by indentation, typically 4 spaces. I can also write a one-line ternary: result = 'pass' if score >= 60 else 'fail'.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>No parentheses required (but allowed)</li>
+  <li>Colon <code>:</code> + indented block</li>
+  <li>Ternary: <code>x if cond else y</code></li>
+</ul>
+<pre class="code">score = 85
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+else:
+    grade = "C"
+status = "pass" if score >= 60 else "fail"</pre>
+<div class="callout"><strong>Coming from C#?</strong> C# uses <code>{ }</code> blocks. Python uses indentation (4 spaces standard). Mixing tabs/spaces causes errors.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Conditionals</h4>
+<ul class="checklist">
+  <li>Assign letter grade from score</li>
+  <li>Use ternary for pass/fail</li>
+  <li>Check if score is 70–89</li>
+</ul>
+<a class="file-link" href="Projects/08_conditionals.py">Projects/08_conditionals.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-9">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 9 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Loops: for</div>
+  <div class="slide-sub">A for loop iterates over any iterable (list, string, range, etc.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A for loop iterates over any iterable (list, string, range, etc.). range() generates number sequences. enumerate() provides both index and value during iteration.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Python's for loop is like C# foreach — I write for item in collection, not for(int i=0...). When I need indexes I use enumerate(). range(5) gives 0 through 4, and range(1,6) gives 1 through 5.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>for item in collection:</code> = C# foreach</li>
+  <li><code>range(5)</code> → 0,1,2,3,4</li>
+  <li><code>enumerate()</code> gives index + value</li>
+</ul>
+<pre class="code">for i in range(1, 6):
+    print(i * i)
+
+fruits = ["apple", "banana"]
+for i, f in enumerate(fruits):
+    print(i, f)</pre>
+<div class="callout"><strong>Coming from C#?</strong> <code>foreach (var x in list)</code> → <code>for x in list:</code>. No index unless you use <code>enumerate</code>.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: for loops</h4>
+<ul class="checklist">
+  <li>enumerate() over fruits list</li>
+  <li>Print squares 1–5 with range</li>
+  <li>Sum a list manually</li>
+</ul>
+<a class="file-link" href="Projects/09_for_loops.py">Projects/09_for_loops.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-10">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 10 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Loops: while, break, continue</div>
+  <div class="slide-sub">A while loop repeats while a condition is true.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A while loop repeats while a condition is true. break exits the loop early; continue skips to the next iteration. Python uniquely allows an else clause on loops that runs if no break occurred.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;while works the same conceptually as C#. break stops the loop, continue skips the rest of the current iteration. One Python-specific detail: a for/while else block runs only if the loop completed without hitting break — useful for search patterns.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>while condition:</code> same idea as C#</li>
+  <li><code>break</code> exits loop, <code>continue</code> skips iteration</li>
+  <li>Python loops can have <code>else</code> (runs if no break)</li>
+</ul>
+<pre class="code">n = 5
+while n > 0:
+    print(n)
+    n -= 1
+
+for i in range(10):
+    if i % 2 == 0:
+        continue
+    print(i)</pre>
+<div class="callout"><strong>Coming from C#?</strong> No <code>i++</code> — use <code>i += 1</code>. No <code>--</code> operator either.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: while loops</h4>
+<ul class="checklist">
+  <li>Countdown 5 to 1 with while</li>
+  <li>Skip multiples of 3 with continue</li>
+  <li>Find first number &gt; 50 with break</li>
+</ul>
+<a class="file-link" href="Projects/10_while_loops.py">Projects/10_while_loops.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-11">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 11 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Lists</div>
+  <div class="slide-sub">A list is a mutable, ordered collection that can hold mixed types.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A list is a mutable, ordered collection that can hold mixed types. It supports indexing, slicing, and methods like append(), insert(), pop(), sort(), and reverse().</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Lists are Python's most used collection — like a C# List but untyped and more flexible. They're mutable and ordered. Slicing like nums[1:3] returns a new sublist. nums[::-1] reverses without modifying the original. append is amortized O(1).&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Mutable, ordered — like <code>List&lt;T&gt;</code></li>
+  <li>append, insert, pop, sort, reverse</li>
+  <li>Slicing creates new list: <code>nums[1:3]</code></li>
+</ul>
+<pre class="code">nums = [10, 20, 30]
+nums.append(40)
+nums.insert(0, 5)
+print(nums[1:3])
+print(nums[::-1])  # reverse</pre>
+<div class="tip"><strong>Interview tip:</strong> Lists are mutable. Slicing returns a copy — safe to modify.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Lists</h4>
+<ul class="checklist">
+  <li>append, insert, pop operations</li>
+  <li>Slice middle elements</li>
+  <li>Reverse with [::-1]</li>
+</ul>
+<a class="file-link" href="Projects/11_lists.py">Projects/11_lists.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-12">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 12 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Tuples & Sets</div>
+  <div class="slide-sub">A tuple is an immutable ordered collection, often used for fixed data.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A tuple is an immutable ordered collection, often used for fixed data. A set is an unordered collection of unique elements supporting mathematical operations like union and intersection.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I use tuples when data shouldn't change — they're immutable and can be dictionary keys. Sets automatically remove duplicates and are great for membership tests in O(1). For example, set([1,2,2,3]) gives {1,2,3}.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><strong>Tuple</strong> — immutable, ordered: <code>(1, 2, 3)</code></li>
+  <li><strong>Set</strong> — unique, unordered: <code>{1, 2, 3}</code></li>
+  <li>Sets support union <code>|</code>, intersection <code>&</code></li>
+</ul>
+<pre class="code">coords = (10, 20, 30)
+x, y, z = coords          # unpacking
+
+unique = set([1,2,2,3])
+a, b = {1,2,3}, {3,4,5}
+print(a | b)  # union</pre>
+<div class="callout"><strong>Coming from C#?</strong> C# ValueTuple is similar. Python tuples are lightweight and hashable (can be dict keys).</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Tuples & Sets</h4>
+<ul class="checklist">
+  <li>Unpack a 3-value tuple</li>
+  <li>Remove duplicates with set()</li>
+  <li>Union and intersection of two sets</li>
+</ul>
+<a class="file-link" href="Projects/12_tuples_sets.py">Projects/12_tuples_sets.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-13">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 13 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Dictionaries</div>
+  <div class="slide-sub">A dictionary stores key-value pairs with fast O(1) lookup.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A dictionary stores key-value pairs with fast O(1) lookup. Keys must be hashable (immutable types). dict.get(key, default) safely returns a fallback for missing keys.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Dictionaries are like C# Dictionary — key-value pairs with fast lookup. I prefer .get('key', default) over direct access to avoid KeyError. Dict comprehensions like {n: n*n for n in range(5)} are idiomatic and often asked in interviews.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Key-value pairs — like <code>Dictionary&lt;K,V&gt;</code></li>
+  <li><code>.get(key, default)</code> safe lookup</li>
+  <li>Dict comprehension: <code>{k: v for ...}</code></li>
+</ul>
+<pre class="code">student = {"name": "Riya", "age": 22}
+student["city"] = "Chennai"
+grade = student.get("grade", "N/A")
+
+squares = {n: n*n for n in range(1, 6)}</pre>
+<div class="tip"><strong>Interview tip:</strong> Keys must be hashable (str, int, tuple — not list).</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Dictionaries</h4>
+<ul class="checklist">
+  <li>Add a new key to student dict</li>
+  <li>Safe .get() with default</li>
+  <li>Dict comprehension for squares</li>
+</ul>
+<a class="file-link" href="Projects/13_dictionaries.py">Projects/13_dictionaries.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-14">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 14 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Functions</div>
+  <div class="slide-sub">Functions are reusable blocks defined with def.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Functions are reusable blocks defined with def. They support default parameters, *args for variable positional arguments, and **kwargs for variable keyword arguments. Functions are first-class objects.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I define functions with def name(params): and return sends a value back. *args collects extra positional args as a tuple, **kwargs collects keyword args as a dict. The classic trap is mutable default arguments — def f(lst=[]) shares the same list across calls; I use None instead.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>def name(params):</code> — no access modifiers</li>
+  <li>Default args: <code>def f(x, y=10)</code></li>
+  <li><code>*args</code> tuple, <code>**kwargs</code> dict</li>
+</ul>
+<pre class="code">def greet(name, msg="Hello"):
+    return f"{msg}, {name}!"
+
+def add_all(*args):
+    return sum(args)
+
+print(greet("Sam"))
+print(add_all(1, 2, 3))</pre>
+<div class="tip"><strong>Interview trap:</strong> Never use mutable default args like <code>def f(x, lst=[])</code> — shared across calls!</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Functions</h4>
+<ul class="checklist">
+  <li>Write greet() with default greeting</li>
+  <li>Write add_all(*args)</li>
+  <li>Fix mutable default arg bug</li>
+</ul>
+<a class="file-link" href="Projects/14_functions.py">Projects/14_functions.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-15">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 15 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Lambda, map, filter</div>
+  <div class="slide-sub">lambda creates small anonymous functions.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>lambda creates small anonymous functions. map() transforms each element; filter() keeps elements matching a condition. These enable functional-style programming.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;lambda is a one-line anonymous function — like x: x*2. map applies a function to every item, filter keeps items where the function returns True. In practice I often prefer list comprehensions, but I should know lambda for sorting: sorted(items, key=lambda x: x[1]).&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>lambda x: x * 2</code> — anonymous one-liner</li>
+  <li><code>map(fn, iterable)</code> — transform each</li>
+  <li><code>filter(fn, iterable)</code> — keep matches</li>
+</ul>
+<pre class="code">nums = [1, 2, 3, 4, 5]
+doubled = list(map(lambda x: x*2, nums))
+evens = list(filter(lambda x: x%2==0, nums))
+
+pairs = [("amy",1), ("bob",3)]
+pairs.sort(key=lambda p: p[1])</pre>
+<div class="callout"><strong>Coming from C#?</strong> Similar to LINQ <code>.Select()</code> and <code>.Where()</code>. List comprehensions are often preferred in Python.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Lambda & map</h4>
+<ul class="checklist">
+  <li>Double nums with map</li>
+  <li>Filter evens only</li>
+  <li>Sort pairs by second element</li>
+</ul>
+<a class="file-link" href="Projects/15_lambda_map_filter.py">Projects/15_lambda_map_filter.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-16">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 16 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Comprehensions</div>
+  <div class="slide-sub">Comprehensions provide a concise syntax to build lists, sets, or dictionaries from iterables with optional filtering — a Pythonic alternative to loops or map/filter.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Comprehensions provide a concise syntax to build lists, sets, or dictionaries from iterables with optional filtering — a Pythonic alternative to loops or map/filter.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Comprehensions are the Pythonic way to build collections. [x*2 for x in nums if x%2==0] replaces a for loop plus append. They're more readable than map/filter and show you write idiomatic Python — interviewers love seeing them.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>List: <code>[x*2 for x in nums if x%2==0]</code></li>
+  <li>Set: <code>{c for c in chars}</code></li>
+  <li>Dict: <code>{w: len(w) for w in words}</code></li>
+</ul>
+<pre class="code">squares = [n*n for n in range(1,11) if n%2==0]
+letters = {w[0] for w in ["python","code"]}
+lengths = {w: len(w) for w in words}</pre>
+<div class="tip"><strong>Interview tip:</strong> Comprehensions are idiomatic Python — faster to write and often faster to run than map/filter.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Comprehensions</h4>
+<ul class="checklist">
+  <li>Even squares list comp</li>
+  <li>Set comp for first letters</li>
+  <li>Dict comp for word lengths</li>
+</ul>
+<a class="file-link" href="Projects/16_comprehensions.py">Projects/16_comprehensions.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-17">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 17 of 48 &middot; Python Basics · OOP</div>
+  <div class="slide-title">OOP — Four Pillars Overview</div>
+  <div class="slide-sub">OOP (Object-Oriented Programming) organizes code around objects with four pillars: Encapsulation, Inheritance, Polymorphism, and Abstraction.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>OOP (Object-Oriented Programming) organizes code around objects with four pillars: Encapsulation, Inheritance, Polymorphism, and Abstraction. Python supports all four — with conventions slightly different from C#.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Python is fully object-oriented — even numbers and functions are objects. The four pillars are encapsulation with _private convention, inheritance via class Child(Parent), polymorphism by overriding methods or duck typing, and abstraction using ABC abstract classes or informal interfaces.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Object-Oriented Programming (OOP) groups <b>data</b> and <b>behavior</b> into objects. Python supports all four pillars — slightly differently from C#.</p>
+<table>
+<tr><th>Pillar</th><th>Meaning</th><th>Python</th><th>C#</th><th>Slide</th></tr>
+<tr><td><b>Encapsulation</b></td><td>Hide internal data; expose methods</td><td><code>_private</code> convention, <code>@property</code></td><td><code>private</code>, properties</td><td>18</td></tr>
+<tr><td><b>Inheritance</b></td><td>Reuse parent class code</td><td><code>class Dog(Animal)</code></td><td><code>class Dog : Animal</code></td><td>19</td></tr>
+<tr><td><b>Polymorphism</b></td><td>Same method, different behavior</td><td>Override methods; duck typing</td><td><code>override</code>, interfaces</td><td>19</td></tr>
+<tr><td><b>Abstraction</b></td><td>Hide complexity; show essentials</td><td><code>ABC</code>, abstract methods, duck typing</td><td><code>abstract</code>, interfaces</td><td>20</td></tr>
+</table>
+<div class="callout"><b>Interview answer:</b> &ldquo;Python is object-oriented — everything is an object, even integers and functions. I use classes for encapsulation, inheritance with super(), polymorphism by overriding methods, and abstraction with ABC or duck typing.&rdquo;</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>OOP self-check</h4>
+<ul class="checklist">
+  <li>Name all 4 OOP pillars from memory</li>
+  <li>Match each pillar to slides 18, 19, 20</li>
+  <li>Explain one C# vs Python OOP difference</li>
+</ul>
+<div class="tip">Next 3 slides deep-dive each pillar with code practice.</div>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-18">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 18 of 48 &middot; Python Basics · OOP</div>
+  <div class="slide-title">OOP — Classes, Objects & Encapsulation</div>
+  <div class="slide-sub">A class is a blueprint; an object is an instance.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A class is a blueprint; an object is an instance. Encapsulation bundles data and methods together and hides internals using the _underscore convention and @property.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I define a class with __init__ as constructor and self as the first parameter like C# this. For encapsulation I prefix internal fields with underscore — Python has no private keyword. @property gives controlled read access like a C# property getter.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><b>Class</b> = blueprint; <b>object</b> = instance created from class</li>
+  <li><code>self</code> = C# <code>this</code> (must be explicit first parameter)</li>
+  <li><b>Encapsulation:</b> bundle data + methods; hide internals with <code>_name</code> convention</li>
+  <li><code>@property</code> = controlled getter (like C# property get/set)</li>
+</ul>
+<pre class="code">class BankAccount:
+    def __init__(self, owner):
+        self.owner = owner
+        self._balance = 0          # "private" by convention
+
+    def deposit(self, amount):
+        self._balance += amount
+
+    @property
+    def balance(self):
+        return self._balance
+
+acct = BankAccount("Riya")
+acct.deposit(100)
+print(acct.balance)  # 100 — no direct _balance access</pre>
+<div class="callout"><b>Coming from C#?</b> No <code>public/private</code> keywords. Use <code>_</code> prefix for internal use; <code>__</code> (dunder) for name mangling (rare).</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Encapsulation</h4>
+<ul class="checklist">
+  <li>Build Person with __init__ and introduce()</li>
+  <li>Add "private" <code>_age</code> with a method to read it</li>
+  <li>Create 2 instances and call introduce()</li>
+</ul>
+<a class="file-link" href="Projects/17_classes.py">Projects/17_classes.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-19">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 19 of 48 &middot; Python Basics · OOP</div>
+  <div class="slide-title">OOP — Inheritance & Polymorphism</div>
+  <div class="slide-sub">Inheritance reuses parent class code via class Child(Parent).</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Inheritance reuses parent class code via class Child(Parent). Polymorphism lets the same method call behave differently — through overriding or duck typing (if it has the method, it works).</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I inherit with class Dog(Animal) and call super().__init__() like base constructor in C#. Polymorphism: I override speak() in Dog and Cat, loop a list of animals, each returns different sound. Duck typing means I don't need a formal interface — if it has the method, it works.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><b>Inheritance:</b> <code>class Dog(Animal):</code> reuses parent code</li>
+  <li><code>super().__init__()</code> calls parent constructor</li>
+  <li><b>Polymorphism:</b> override <code>speak()</code> — same call, different output per type</li>
+  <li><b>Duck typing:</b> &ldquo;if it walks and quacks like a duck…&rdquo; — no interface required</li>
+</ul>
+<pre class="code">class Animal:
+    def speak(self):
+        return "..."
+
+class Dog(Animal):
+    def speak(self):
+        return "Woof!"
+
+class Cat(Animal):
+    def speak(self):
+        return "Meow!"
+
+for pet in [Dog(), Cat()]:      # polymorphism
+    print(pet.speak())</pre>
+<div class="tip"><b>Interview tip:</b> Python supports <b>multiple inheritance</b>. Know MRO (Method Resolution Order). C# uses single inheritance + interfaces instead.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Inheritance & Polymorphism</h4>
+<ul class="checklist">
+  <li>Dog extends Animal, override speak() → "Woof!"</li>
+  <li>Use super().__init__(name) in Dog</li>
+  <li>Loop a list of animals — print each speak()</li>
+</ul>
+<a class="file-link" href="Projects/18_inheritance.py">Projects/18_inheritance.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-20">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 20 of 48 &middot; Python Basics · OOP</div>
+  <div class="slide-title">OOP — Abstraction & Magic Methods</div>
+  <div class="slide-sub">Abstraction hides complex implementation behind a simple interface — using ABC + @abstractmethod (like C# abstract class) or duck typing.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Abstraction hides complex implementation behind a simple interface — using ABC + @abstractmethod (like C# abstract class) or duck typing. Magic methods (__str__, __eq__) customize object behavior.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;For abstraction I use ABC from abc module with @abstractmethod — like C# abstract class. Duck typing is Python's informal alternative to interfaces. __str__ is for users like ToString(), __repr__ for debugging, __eq__ for Equals().&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><b>Abstraction:</b> hide implementation — use <code>ABC</code> + <code>@abstractmethod</code> (like C# abstract class)</li>
+  <li><b>Duck typing:</b> any object with the right methods works — no formal interface</li>
+  <li><b>Magic methods:</b> <code>__str__</code>, <code>__repr__</code>, <code>__eq__</code> (like ToString, Equals)</li>
+</ul>
+<pre class="code">from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+    def area(self):
+        return 3.14 * self.r ** 2
+
+class Book:
+    def __init__(self, title):
+        self.title = title
+    def __str__(self):
+        return f"Book: {self.title}"</pre>
+<div class="callout"><b>Coming from C#?</b> C# <code>interface IShape</code> → Python <code>ABC</code> or duck typing. <code>__str__</code> ≈ <code>ToString()</code>, <code>__eq__</code> ≈ <code>Equals()</code>.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Abstraction & Magic Methods</h4>
+<ul class="checklist">
+  <li>Implement __str__ and __repr__ on Book</li>
+  <li>Implement __eq__ comparing title</li>
+  <li>Optional: create Shape ABC with Circle subclass</li>
+</ul>
+<a class="file-link" href="Projects/19_magic_methods.py">Projects/19_magic_methods.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-21">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 21 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Modules & Imports</div>
+  <div class="slide-sub">A module is any .</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A module is any .py file. import loads a module; from...import brings specific names. __name__ is '__main__' when run directly, otherwise the module name — enabling reusable code.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Every .py file is a module. import math loads the whole module; from math import sqrt imports one function. The __name__ variable tells me if the file is run directly or imported — that's how I guard my test/entry code.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>import math</code> — whole module</li>
+  <li><code>from utils import add</code> — specific names</li>
+  <li><code>__name__ == "__main__"</code> when run directly</li>
+</ul>
+<pre class="code">import math
+from my_utils import add, greet
+
+print(math.sqrt(16))
+print(greet("Dev"))
+print(__name__)  # __main__ if direct</pre>
+<div class="callout"><strong>Coming from C#?</strong> <code>using System;</code> → <code>import os</code>. Python modules are just .py files.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Modules</h4>
+<ul class="checklist">
+  <li>Import from my_utils.py</li>
+  <li>Import math, print sqrt(144)</li>
+  <li>Print __name__ when run directly</li>
+</ul>
+<a class="file-link" href="Projects/20_modules/main.py">Projects/20_modules/main.py</a>
+<span class="run-cmd">python Projects/20_modules/main.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-22">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 22 of 48 &middot; Python Basics</div>
+  <div class="slide-title">File I/O</div>
+  <div class="slide-sub">File I/O reads and writes data to the filesystem.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>File I/O reads and writes data to the filesystem. The with statement (context manager) automatically closes files. Modes: 'r' read, 'w' write, 'a' append.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I always use with open('file.txt', 'r', encoding='utf-8') as f — it auto-closes the file, like C# using statement. I specify encoding explicitly for text files. I can read line by line with for line in f, which is memory-efficient for large files.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>open(path, "r")</code> read, <code>"w"</code> write, <code>"a"</code> append</li>
+  <li><code>with open(...) as f:</code> auto-closes file</li>
+  <li>Always specify <code>encoding="utf-8"</code></li>
+</ul>
+<pre class="code">with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("Hello\n")
+    f.write("Python\n")
+
+with open("notes.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        print(line.rstrip())</pre>
+<div class="callout"><strong>Coming from C#?</strong> Like <code>using (var reader = ...)</code>. Python <code>with</code> is a context manager — same idea.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: File I/O</h4>
+<ul class="checklist">
+  <li>Write 3 lines to a file</li>
+  <li>Read back with line numbers</li>
+  <li>Append a 4th line</li>
+</ul>
+<a class="file-link" href="Projects/21_file_io.py">Projects/21_file_io.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-23">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 23 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Exceptions</div>
+  <div class="slide-sub">Exception handling uses try/except/finally to catch and handle runtime errors.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Exception handling uses try/except/finally to catch and handle runtime errors. raise throws exceptions. Custom exceptions inherit from Exception.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;try/except is like try/catch in C#. I catch specific exceptions like ValueError, not bare except, because that catches everything including KeyboardInterrupt. finally always runs for cleanup. I raise exceptions to signal invalid input to callers.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>try / except / finally</code> = C# try/catch/finally</li>
+  <li>Catch specific: <code>except ValueError:</code></li>
+  <li><code>raise</code> to throw exceptions</li>
+</ul>
+<pre class="code">try:
+    n = int("abc")
+except ValueError:
+    print("Invalid number")
+
+def set_age(age):
+    if age < 0:
+        raise ValueError("Negative age")
+    return age</pre>
+<div class="tip"><strong>Interview tip:</strong> Catch specific exceptions, not bare <code>except:</code>. Use <code>finally</code> for cleanup.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Exceptions</h4>
+<ul class="checklist">
+  <li>try/except converting strings to int</li>
+  <li>Raise ValueError for negative age</li>
+  <li>Create custom TooSmallError class</li>
+</ul>
+<a class="file-link" href="Projects/22_exceptions.py">Projects/22_exceptions.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-24">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 24 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Common Stdlib</div>
+  <div class="slide-sub">Python's standard library provides built-in modules for common tasks: os for filesystem, json for serialization, datetime for dates, sys for interpreter settings.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Python's standard library provides built-in modules for common tasks: os for filesystem, json for serialization, datetime for dates, sys for interpreter settings.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Python has batteries included. I use os.getcwd() for paths, json.dumps/loads for API data — like System.Text.Json in C#. datetime handles dates; timedelta adds or subtracts days. I don't need to install these — they ship with Python.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li><code>os</code> — paths, environment, cwd</li>
+  <li><code>json</code> — serialize/deserialize</li>
+  <li><code>datetime</code> — dates and timedelta</li>
+</ul>
+<pre class="code">import json, os
+from datetime import datetime, timedelta
+
+data = {"lang": "Python"}
+js = json.dumps(data)
+restored = json.loads(js)
+print(os.getcwd())
+print(datetime.now() + timedelta(days=7))</pre>
+<div class="callout"><strong>Coming from C#?</strong> <code>System.Text.Json</code> → <code>json</code>. <code>DateTime</code> → <code>datetime</code>.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Stdlib</h4>
+<ul class="checklist">
+  <li>Print current working directory</li>
+  <li>JSON serialize and parse a dict</li>
+  <li>Print date 7 days from today</li>
+</ul>
+<a class="file-link" href="Projects/23_stdlib_demo.py">Projects/23_stdlib_demo.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-25">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 25 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Top Interview Patterns</div>
+  <div class="slide-sub">Common coding interview patterns in Python include string reversal, frequency counting with dicts, FizzBuzz, palindrome checks, and hash-map techniques like two-sum.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Common coding interview patterns in Python include string reversal, frequency counting with dicts, FizzBuzz, palindrome checks, and hash-map techniques like two-sum.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;For two-sum I use a hash map — store each number's index, check if target minus current exists in O(n). For frequency counting I use dict.get(ch, 0) + 1 or collections.Counter. I always state time and space complexity — dict lookups are O(1) average.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Reverse string / list</li>
+  <li>Character frequency count</li>
+  <li>FizzBuzz (classic warm-up)</li>
+  <li>Two-sum with hash map</li>
+</ul>
+<pre class="code">def two_sum(nums, target):
+    seen = {}
+    for i, v in enumerate(nums):
+        need = target - v
+        if need in seen:
+            return [seen[need], i]
+        seen[v] = i
+    return []</pre>
+<div class="tip"><strong>Interview tip:</strong> Dict lookup is O(1) — use it for frequency and two-sum patterns.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Patterns</h4>
+<ul class="checklist">
+  <li>Reverse a string manually</li>
+  <li>Count char frequency in a string</li>
+  <li>Implement FizzBuzz 1–15</li>
+  <li>Implement two_sum()</li>
+</ul>
+<a class="file-link" href="Projects/24_interview_patterns.py">Projects/24_interview_patterns.py</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-26">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 26 of 48 &middot; Python Basics</div>
+  <div class="slide-title">Mock Interview Q&A</div>
+  <div class="slide-sub">Core Python interview topics include data type differences, identity vs equality, mutability traps, the GIL, args/kwargs, and Python-specific behaviors like truthiness and context managers.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Core Python interview topics include data type differences, identity vs equality, mutability traps, the GIL, args/kwargs, and Python-specific behaviors like truthiness and context managers.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I structure oral answers as: definition, example, when to use it. For list vs tuple: list is mutable for changing data, tuple is immutable for fixed records. For == vs is: == compares values, is compares memory identity — I use is only for None, True, False.&rdquo;</p></div></div>
+    <div class="explain-right">
+<div class="qa-item"><strong>Q: List vs Tuple?</strong> List is mutable, tuple is immutable. Tuples can be dict keys.</div>
+<div class="qa-item"><strong>Q: == vs is?</strong> == compares values, is compares identity (same object in memory).</div>
+<div class="qa-item"><strong>Q: Mutable default argument?</strong> Default values evaluated once. Use None instead of [].</div>
+<div class="qa-item"><strong>Q: What is GIL?</strong> Global Interpreter Lock — one thread executes Python bytecode at a time. Matters for CPU-bound threading.</div>
+<div class="qa-item"><strong>Q: *args and **kwargs?</strong> Collect extra positional (*tuple) and keyword (**dict) arguments.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Self-Test (answer aloud)</h4>
+<ul class="checklist">
+  <li>Explain list vs tuple in 30 seconds</li>
+  <li>Explain == vs is with example</li>
+  <li>Describe the mutable default trap</li>
+  <li>What is a context manager?</li>
+  <li>How does for-loop else work?</li>
+</ul>
+<div class="tip"><strong>Tip:</strong> Practice explaining out loud — interviews test communication too.</div>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-27">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 27 of 48 &middot; API · FastAPI</div>
+  <div class="slide-title">HTTP & REST Basics</div>
+  <div class="slide-sub">HTTP is the protocol for web communication.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>HTTP is the protocol for web communication. REST is an architectural style using HTTP methods (GET, POST, PUT, DELETE) on resources identified by URLs, typically exchanging JSON data.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;REST APIs use HTTP verbs on resource URLs — GET reads, POST creates, PUT updates, DELETE removes. I return proper status codes: 200 success, 201 created, 404 not found, 400 bad request. JSON is the standard body format. In Python I use the requests library to call APIs.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>REST uses HTTP verbs: GET, POST, PUT, DELETE</li>
+  <li>Status codes: 200 OK, 201 Created, 404 Not Found, 500 Error</li>
+  <li>JSON is the standard data format for APIs</li>
+</ul>
+<pre class="code">import requests
+
+r = requests.get("https://api.example.com/users/1")
+print(r.status_code)
+data = r.json()
+print(data["name"])
+
+r = requests.post(url, json={"name": "Alex"})</pre>
+<div class="callout"><strong>Coming from C#?</strong> Like calling APIs with <code>HttpClient</code>. <code>requests</code> is the most popular HTTP library.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: HTTP Requests</h4>
+<ul class="checklist">
+  <li>GET a post from JSONPlaceholder</li>
+  <li>Print status_code and title</li>
+  <li>POST a new item with json=</li>
+</ul>
+<a class="file-link" href="Projects/26_http_requests.py">Projects/26_http_requests.py</a>
+<span class="run-cmd">pip install requests &amp;&amp; python Projects/26_http_requests.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-28">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 28 of 48 &middot; API · FastAPI</div>
+  <div class="slide-title">FastAPI — Hello API</div>
+  <div class="slide-sub">FastAPI is a modern Python web framework for building APIs.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>FastAPI is a modern Python web framework for building APIs. It uses Python type hints for validation and automatically generates OpenAPI/Swagger documentation.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;FastAPI is like ASP.NET Web API — I define routes with decorators like @app.get('/users/{id}'). It auto-validates inputs from type hints and returns JSON from dictionaries. Swagger docs are free at /docs. It's fast and ideal for microservices and interview demos.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>FastAPI = modern Python web framework (like ASP.NET Web API)</li>
+  <li>Decorator routes: <code>@app.get("/path")</code></li>
+  <li>Auto-generates Swagger docs at /docs</li>
+</ul>
+<pre class="code">from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"message": "Hello!"}
+
+@app.get("/hello/{name}")
+def hello(name: str):
+    return {"greeting": f"Hello, {name}!"}</pre>
+<div class="callout"><strong>Coming from C#?</strong> <code>[HttpGet("users/{id}")]</code> → <code>@app.get("/users/{id}")</code>. Returns dict → auto JSON.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Hello API</h4>
+<ul class="checklist">
+  <li>Create GET /hello/{name}</li>
+  <li>Add GET /health endpoint</li>
+  <li>Test in browser at /docs</li>
+</ul>
+<a class="file-link" href="Projects/27_fastapi_hello/main.py">Projects/27_fastapi_hello/main.py</a>
+<span class="run-cmd">cd Projects/27_fastapi_hello &amp;&amp; uvicorn main:app --reload</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-29">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 29 of 48 &middot; API · FastAPI</div>
+  <div class="slide-title">FastAPI — POST & Validation</div>
+  <div class="slide-sub">POST endpoints accept data in the request body.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>POST endpoints accept data in the request body. Pydantic models define and validate the shape of request/response data, similar to DTOs with data annotations in C#.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;For POST I define a Pydantic BaseModel — like a C# DTO with validation attributes. FastAPI reads the JSON body, validates it, and returns 422 if invalid. This gives me type-safe APIs with minimal boilerplate — the model doubles as documentation.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Pydantic models validate request bodies (like DTOs)</li>
+  <li>Type hints drive validation and docs</li>
+  <li>Invalid data returns 422 automatically</li>
+</ul>
+<pre class="code">from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    name: str = Field(..., min_length=2)
+    email: str
+    age: int = Field(ge=0, le=120)
+
+@app.post("/users")
+def create_user(user: User):
+    return {"user": user}</pre>
+<div class="callout"><strong>Coming from C#?</strong> Pydantic models ≈ C# record/DTO classes with DataAnnotations validation.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: POST API</h4>
+<ul class="checklist">
+  <li>Define User model with validation</li>
+  <li>POST /users creates a user</li>
+  <li>GET /users lists all users</li>
+</ul>
+<a class="file-link" href="Projects/28_fastapi_post/main.py">Projects/28_fastapi_post/main.py</a>
+<span class="run-cmd">cd Projects/28_fastapi_post &amp;&amp; uvicorn main:app --reload</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-30">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 30 of 48 &middot; API · FastAPI</div>
+  <div class="slide-title">FastAPI — CRUD Mini API</div>
+  <div class="slide-sub">CRUD means Create, Read, Update, Delete — the four basic database/API operations mapped to POST, GET, PUT/PATCH, and DELETE HTTP methods on a resource.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>CRUD means Create, Read, Update, Delete — the four basic database/API operations mapped to POST, GET, PUT/PATCH, and DELETE HTTP methods on a resource.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I design CRUD with noun-based URLs: POST /todos creates, GET /todos lists, PUT /todos/{id} updates, DELETE /todos/{id} removes. I return 201 on create with the new resource, 404 when ID not found via HTTPException. I test everything in Swagger UI.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>CRUD = Create, Read, Update, Delete</li>
+  <li>PUT updates, DELETE removes, POST creates</li>
+  <li>HTTPException for 404 errors</li>
+</ul>
+<pre class="code">from fastapi import HTTPException
+
+@app.post("/todos", status_code=201)
+def create_todo(todo: Todo):
+    ...
+
+@app.delete("/todos/{todo_id}")
+def delete_todo(todo_id: int):
+    raise HTTPException(404, "Not found")</pre>
+<div class="tip"><strong>Interview tip:</strong> Know REST conventions — nouns for resources, verbs via HTTP methods, proper status codes.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Todo CRUD</h4>
+<ul class="checklist">
+  <li>Implement full CRUD for todos</li>
+  <li>Test all endpoints in Swagger /docs</li>
+  <li>Return 404 for missing items</li>
+</ul>
+<a class="file-link" href="Projects/29_fastapi_crud/main.py">Projects/29_fastapi_crud/main.py</a>
+<span class="run-cmd">cd Projects/29_fastapi_crud &amp;&amp; uvicorn main:app --reload</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-31">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 31 of 48 &middot; API · FastAPI</div>
+  <div class="slide-title">API Interview Q&A</div>
+  <div class="slide-sub">API interview topics cover REST principles, HTTP status codes, authentication basics, idempotency, pagination, and API design patterns like versioning and error handling.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>API interview topics cover REST principles, HTTP status codes, authentication basics, idempotency, pagination, and API design patterns like versioning and error handling.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;GET, PUT, DELETE are idempotent — calling twice has the same effect. POST is not — each call may create a new resource. 401 means not logged in, 403 means logged in but forbidden. For pagination I'd add ?page=1&limit=20 query params and return total count in the response.&rdquo;</p></div></div>
+    <div class="explain-right">
+<div class="qa-item"><strong>Q: REST vs GraphQL?</strong> REST uses fixed endpoints per resource. GraphQL uses one endpoint with client-defined queries.</div>
+<div class="qa-item"><strong>Q: Idempotent methods?</strong> GET, PUT, DELETE are idempotent. POST is not (creates new each time).</div>
+<div class="qa-item"><strong>Q: 401 vs 403?</strong> 401 = not authenticated. 403 = authenticated but not authorized.</div>
+<div class="qa-item"><strong>Q: Design a URL shortener API?</strong> POST /links {url} → {short_code}, GET /{code} → redirect.</div>
+<div class="qa-item"><strong>Q: async in FastAPI?</strong> Use async def for I/O-bound work. Sync def is fine for CPU-light CRUD.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Design Challenge</h4>
+<ul class="checklist">
+  <li>Sketch endpoints for a Book Store API</li>
+  <li>Choose status codes for each operation</li>
+  <li>Define request/response JSON shapes</li>
+  <li>Explain how you'd add pagination</li>
+</ul>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-32">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 32 of 48 &middot; UI · Streamlit & Tkinter</div>
+  <div class="slide-title">UI Options in Python</div>
+  <div class="slide-sub">Python offers multiple UI approaches: Streamlit for quick web dashboards, Tkinter for desktop apps, Flask/Django for full web apps, and FastAPI for API backends paired with any frontend.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Python offers multiple UI approaches: Streamlit for quick web dashboards, Tkinter for desktop apps, Flask/Django for full web apps, and FastAPI for API backends paired with any frontend.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;For quick prototypes I use Streamlit — pure Python, no HTML needed. For desktop, Tkinter is built in. For production web apps, Flask or Django. I pair FastAPI backend with Streamlit or React frontend — same separation as .NET Web API plus Blazor or Angular.&rdquo;</p></div></div>
+    <div class="explain-right">
+<table class="ref-table">
+<tr><th>Approach</th><th>Library</th><th>C# Parallel</th><th>Best For</th></tr>
+<tr><td>Web UI (quick)</td><td>Streamlit</td><td>Blazor/Razor</td><td>Dashboards, prototypes</td></tr>
+<tr><td>Desktop UI</td><td>Tkinter</td><td>WinForms/WPF</td><td>Simple desktop apps</td></tr>
+<tr><td>Web UI (full)</td><td>Flask + HTML</td><td>ASP.NET MVC</td><td>Custom web apps</td></tr>
+<tr><td>API backend</td><td>FastAPI</td><td>ASP.NET Web API</td><td>REST services</td></tr>
+</table>
+<div class="callout"><strong>Coming from C#?</strong> You likely used WinForms/WPF or Blazor. In Python interviews, Streamlit + FastAPI is a powerful combo to demo quickly.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Choose Your Path</h4>
+<ul class="checklist">
+  <li>Slides 32–33: Streamlit (web UI)</li>
+  <li>Slide 34: Tkinter (desktop)</li>
+  <li>Slide 35: Full-stack capstone</li>
+</ul>
+<span class="run-cmd">pip install -r Projects/requirements-ui.txt</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-33">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 33 of 48 &middot; UI · Streamlit & Tkinter</div>
+  <div class="slide-title">Streamlit — First App</div>
+  <div class="slide-sub">Streamlit is a Python library that turns scripts into interactive web apps.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Streamlit is a Python library that turns scripts into interactive web apps. Widgets like buttons, text inputs, and sliders are created with simple function calls.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Streamlit lets me build a UI in pure Python — st.title, st.text_input, st.button. When a user interacts, the script reruns top to bottom. It's perfect for data dashboards and quick demos. I run it with streamlit run app.py and it opens in the browser.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Pure Python — no HTML/CSS/JS needed</li>
+  <li><code>st.title()</code>, <code>st.button()</code>, <code>st.text_input()</code></li>
+  <li>Runs as local web app in browser</li>
+</ul>
+<pre class="code">import streamlit as st
+
+st.title("My App")
+name = st.text_input("Your name")
+if st.button("Say Hello"):
+    st.success(f"Hello, {name}!")
+
+age = st.slider("Age", 18, 60, 25)</pre>
+<div class="callout"><strong>Coming from C#?</strong> Like building a Blazor page but with zero markup — every widget is a Python function call.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Streamlit App</h4>
+<ul class="checklist">
+  <li>Add text_input for name</li>
+  <li>Button shows greeting</li>
+  <li>Slider for age 18–60</li>
+</ul>
+<a class="file-link" href="Projects/32_streamlit_app.py">Projects/32_streamlit_app.py</a>
+<span class="run-cmd">streamlit run Projects/32_streamlit_app.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-34">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 34 of 48 &middot; UI · Streamlit & Tkinter</div>
+  <div class="slide-title">Streamlit — Call Your API</div>
+  <div class="slide-sub">A client UI can consume a REST API using HTTP requests.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A client UI can consume a REST API using HTTP requests. Separating frontend (Streamlit) from backend (FastAPI) follows the same architecture as modern web applications.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I keep UI and API separate — Streamlit calls FastAPI with requests.get/post. This decoupled architecture means I can swap the UI or API independently. Same pattern as Angular calling a .NET API. I handle connection errors gracefully when the API isn't running.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>UI layer calls REST API with requests</li>
+  <li>Form submits POST, button triggers refresh</li>
+  <li>Separate frontend (Streamlit) from backend (FastAPI)</li>
+</ul>
+<pre class="code">import requests, streamlit as st
+
+API = "http://127.0.0.1:8000"
+todos = requests.get(f"{API}/todos").json()
+
+with st.form("add"):
+    title = st.text_input("Todo")
+    if st.form_submit_button("Add"):
+        requests.post(f"{API}/todos",
+            json={"title": title})</pre>
+<div class="tip"><strong>Interview tip:</strong> Decoupling UI and API shows you understand architecture — same as Angular/React + .NET API.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: API Client UI</h4>
+<ul class="checklist">
+  <li>Start Todo API (slide 29)</li>
+  <li>Display todos from GET /todos</li>
+  <li>Form to add new todo via POST</li>
+</ul>
+<a class="file-link" href="Projects/33_streamlit_api_client/app.py">Projects/33_streamlit_api_client/app.py</a>
+<span class="run-cmd">streamlit run Projects/33_streamlit_api_client/app.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-35">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 35 of 48 &middot; UI · Streamlit & Tkinter</div>
+  <div class="slide-title">Tkinter — Desktop UI</div>
+  <div class="slide-sub">Tkinter is Python's built-in GUI toolkit.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Tkinter is Python's built-in GUI toolkit. It provides windows, buttons, labels, and text fields with an event-driven model centered on mainloop().</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Tkinter is Python's standard desktop UI — like WinForms. I create a root window, add widgets with pack() or grid(), and bind button commands to functions. root.mainloop() starts the event loop waiting for clicks. It's built into Python on Windows — no extra install.&rdquo;</p></div></div>
+    <div class="explain-right">
+<ul>
+  <li>Built into Python (no pip install on Windows)</li>
+  <li>Window, widgets, event loop pattern</li>
+  <li><code>root.mainloop()</code> starts the app</li>
+</ul>
+<pre class="code">import tkinter as tk
+
+root = tk.Tk()
+root.title("Calculator")
+
+display = tk.Entry(root, font=("Consolas", 18))
+display.pack()
+
+def on_click(char):
+    display.insert(tk.END, char)
+
+tk.Button(root, text="7",
+    command=lambda: on_click("7")).pack()
+root.mainloop()</pre>
+<div class="callout"><strong>Coming from C#?</strong> Very similar to WinForms — drag-less code UI. Button click = event handler / command callback.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Exercise: Calculator</h4>
+<ul class="checklist">
+  <li>Build 4x4 button grid</li>
+  <li>Display shows input/output</li>
+  <li>= evaluates expression</li>
+</ul>
+<a class="file-link" href="Projects/34_tkinter_calc.py">Projects/34_tkinter_calc.py</a>
+<span class="run-cmd">python Projects/34_tkinter_calc.py</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-36">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 36 of 48 &middot; UI · Streamlit & Tkinter</div>
+  <div class="slide-title">Full-Stack Capstone Project</div>
+  <div class="slide-sub">A full-stack Python project combines a FastAPI backend (business logic, data) with a Streamlit frontend (user interface), communicating over HTTP REST calls.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A full-stack Python project combines a FastAPI backend (business logic, data) with a Streamlit frontend (user interface), communicating over HTTP REST calls.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;My capstone runs two services: FastAPI on port 8001 handles CRUD logic, Streamlit UI calls it via HTTP. This shows I understand separation of concerns, REST integration, and end-to-end delivery. I'd demo it live: add a todo, toggle it, delete it — and explain the request flow.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Combine everything: <strong>FastAPI backend</strong> + <strong>Streamlit frontend</strong> = Todo app.</p>
+<ul>
+  <li>API on port 8001 with CRUD + toggle</li>
+  <li>UI displays, adds, toggles, deletes todos</li>
+  <li>Two terminals — one for each service</li>
+</ul>
+<pre class="code"># Terminal 1 (api folder):
+# uvicorn main:app --reload --port 8001
+
+# Terminal 2 (ui folder):
+# streamlit run app.py</pre>
+<div class="tip"><strong>Interview tip:</strong> Walk through this project end-to-end. It demonstrates Python basics, API design, and UI — a complete story.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Capstone: Build & Demo</h4>
+<ul class="checklist">
+  <li>Start API on port 8001</li>
+  <li>Start Streamlit UI</li>
+  <li>Add 3 todos, toggle one, delete one</li>
+  <li>Explain architecture to a friend</li>
+</ul>
+<a class="file-link" href="Projects/35_mini_project/api/main.py">Projects/35_mini_project/api/</a>
+<a class="file-link" href="Projects/35_mini_project/ui/app.py">Projects/35_mini_project/ui/</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-37">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 37 of 48 &middot; Real Projects · Structure</div>
+  <div class="slide-title">Why Real Project Structure?</div>
+  <div class="slide-sub">Real project structure organizes Python code into folders by responsibility — routes, services, schemas, models, tests, and config — so teams can scale, test, and deploy professionally.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Real project structure organizes Python code into folders by responsibility — routes, services, schemas, models, tests, and config — so teams can scale, test, and deploy professionally.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;A real Python API project separates concerns: routes handle HTTP, services hold business logic, schemas validate data, models map to the database, and tests mirror the app in a tests/ folder. This is like a C# solution with Controllers, Services, DTOs, and Entities in separate folders.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>In interviews, employers expect you to explain <b>how a real Python project is organized</b> — not just single <code>.py</code> files.</p>
+<ul>
+  <li><b>Separation of concerns</b> — routes, business logic, data, config stay separate</li>
+  <li><b>Team collaboration</b> — everyone knows where to add code</li>
+  <li><b>Testability</b> — tests mirror app structure in <code>tests/</code></li>
+  <li><b>Deployability</b> — config via <code>.env</code>, dependencies in <code>requirements.txt</code></li>
+</ul>
+<div class="callout"><b>Coming from C#?</b> Python <code>app/api/routes/</code> ≈ C# <code>Controllers/</code>. <code>services/</code> ≈ business layer. <code>schemas/</code> ≈ DTOs. <code>models/</code> ≈ EF entities.</div>
+<div class="wireframe-compare">
+  <div class="wireframe-box"><h4>Learning (this course)</h4><p style="font-size:11px;text-align:center">One file per topic<br><code>03_hello_world.py</code></p></div>
+  <div class="wireframe-box"><h4>Real job project</h4><p style="font-size:11px;text-align:center">Folders by responsibility<br><code>app/api/routes/todos.py</code></p></div>
+</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Interview warm-up</h4>
+<ul class="checklist">
+  <li>Explain difference: script vs structured project</li>
+  <li>Name 4 folders in a real API project</li>
+  <li>Why keep tests in a separate <code>tests/</code> folder?</li>
+</ul>
+<div class="tip">Next slides show wireframe trees — study them like an architecture diagram.</div>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-38">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 38 of 48 &middot; Real Projects · Structure</div>
+  <div class="slide-title">Learning Project Structure (Wireframe)</div>
+  <div class="slide-sub">A learning project uses numbered single-file scripts (03_hello_world.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A learning project uses numbered single-file scripts (03_hello_world.py) or small demo folders — optimized for practice, not production deployment.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;During learning I use one file per topic for quick practice. In production I'd never put everything in one file — I'd use packages and layers. I can point to my Projects/ folder as learning work and describe how I'd restructure it for a real job.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Your <code>Projects/</code> folder follows a <b>numbered learning layout</b> — great for practice, not for production.</p>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 Python/</span><span class="t-note">— root workspace</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 Projects/</span><span class="t-note">— all practice exercises</span></div><div class="t-row t-indent-2"><span class="t-file">📄 03_hello_world.py</span><span class="t-note">— single-topic script</span></div><div class="t-row t-indent-2"><span class="t-file">📄 14_functions.py</span><span class="t-note">— single-topic script</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 27_fastapi_hello/</span><span class="t-note">— small multi-file demo</span></div><div class="t-row t-indent-3"><span class="t-file">📄 main.py</span><span class="t-note">— entry point only</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 35_mini_project/</span><span class="t-note">— mini full-stack</span></div><div class="t-row t-indent-3"><span class="t-folder">📁 api/</span><span class="t-note">— backend</span></div><div class="t-row t-indent-4"><span class="t-file">📄 main.py</span><span class="t-note">— FastAPI app</span></div><div class="t-row t-indent-3"><span class="t-folder">📁 ui/</span><span class="t-note">— frontend</span></div><div class="t-row t-indent-4"><span class="t-file">📄 app.py</span><span class="t-note">— Streamlit UI</span></div><div class="t-row t-indent-1"><span class="t-file">📄 PythonBasics.html</span><span class="t-note">— slide deck</span></div><div class="t-row t-indent-1"><span class="t-file">📄 build_deck.py</span><span class="t-note">— regenerate slides</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<table>
+<tr><th>Pattern</th><th>Purpose</th><th>When to use</th></tr>
+<tr><td><code>NN_topic.py</code></td><td>One concept per file</td><td>Learning, interviews practice</td></tr>
+<tr><td><code>topic/main.py</code></td><td>Mini app in subfolder</td><td>API/UI demos</td></tr>
+<tr><td><code>api/ + ui/</code></td><td>Split backend & frontend</td><td>Capstone projects</td></tr>
+</table>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Map your current folder</h4>
+<ul class="checklist">
+  <li>Open <code>Projects/</code> in File Explorer</li>
+  <li>Find 3 single-file exercises (slides 3–24)</li>
+  <li>Find 2 folder-based projects (27, 35)</li>
+  <li>Draw this tree on paper from memory</li>
+</ul>
+<a class="file-link" href="Projects/">Open Projects/</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-39">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 39 of 48 &middot; Real Projects · Structure</div>
+  <div class="slide-title">FastAPI Production Structure (Wireframe)</div>
+  <div class="slide-sub">A production FastAPI project typically has app/main.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A production FastAPI project typically has app/main.py as entry point, api/routes for endpoints, schemas for Pydantic DTOs, services for business logic, models for database entities, core for config, and tests/ for pytest.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I structure FastAPI as: main.py creates the app and includes routers. Routes are thin — they call services. Services contain business rules. Schemas define request/response shapes. Models are database tables. Config lives in core/ and reads from .env. Tests live outside app/ in tests/.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Industry-standard FastAPI projects group code by <b>responsibility</b> (layered) or by <b>feature</b> (domain). Below is the most common interview answer — <b>layered structure</b>.</p>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 todo-api/</span><span class="t-note">— project root</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 app/</span><span class="t-note">— all application source</span></div><div class="t-row t-indent-2"><span class="t-file">📄 main.py</span><span class="t-note">— creates FastAPI app, mounts routers</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 api/</span><span class="t-note">— HTTP layer (like Controllers)</span></div><div class="t-row t-indent-3"><span class="t-folder">📁 routes/</span><span class="t-note">— endpoint files</span></div><div class="t-row t-indent-4"><span class="t-file">📄 todos.py</span><span class="t-note">— @router.get/post — thin handlers</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 schemas/</span><span class="t-note">— Pydantic DTOs (request/response)</span></div><div class="t-row t-indent-3"><span class="t-file">📄 todo.py</span><span class="t-note">— TodoCreate, TodoResponse models</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 services/</span><span class="t-note">— business logic</span></div><div class="t-row t-indent-3"><span class="t-file">📄 todo_service.py</span><span class="t-note">— create, list, delete rules</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 models/</span><span class="t-note">— database table classes (SQLAlchemy)</span></div><div class="t-row t-indent-3"><span class="t-file">📄 todo.py</span><span class="t-note">— Todo table definition</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 core/</span><span class="t-note">— settings, security, logging</span></div><div class="t-row t-indent-3"><span class="t-file">📄 config.py</span><span class="t-note">— reads .env variables</span></div><div class="t-row t-indent-1"><span class="t-test">📁 tests/</span><span class="t-note">— pytest tests mirror app/</span></div><div class="t-row t-indent-2"><span class="t-test">📄 test_todos.py</span><span class="t-note">— API endpoint tests</span></div><div class="t-row t-indent-1"><span class="t-config">📄 requirements.txt</span><span class="t-note">— pip dependencies</span></div><div class="t-row t-indent-1"><span class="t-config">📄 .env.example</span><span class="t-note">— sample secrets (no real keys)</span></div><div class="t-row t-indent-1"><span class="t-file">📄 README.md</span><span class="t-note">— how to run the project</span></div><div class="t-row t-indent-1"><span class="t-config">📄 .gitignore</span><span class="t-note">— ignore .env, __pycache__</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<div class="tip"><b>Interview answer:</b> &ldquo;Routes stay thin — they validate input and call services. Services hold business rules. Models talk to the database. Schemas define API contracts.&rdquo;</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Explore template</h4>
+<ul class="checklist">
+  <li>Open <code>Projects/real_project_template/</code></li>
+  <li>Read each file's header comment (purpose)</li>
+  <li>Trace: route → service → schema flow</li>
+  <li>Run: <code>uvicorn app.main:app --reload</code></li>
+</ul>
+<a class="file-link" href="Projects/real_project_template/">real_project_template/</a>
+<span class="run-cmd">cd Projects/real_project_template && uvicorn app.main:app --reload</span>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-40">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 40 of 48 &middot; Real Projects · Structure</div>
+  <div class="slide-title">Full-Stack Monorepo Structure (Wireframe)</div>
+  <div class="slide-sub">A full-stack monorepo keeps backend/, frontend/, docs/, and scripts/ in one git repository when multiple deployable services belong to the same product.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A full-stack monorepo keeps backend/, frontend/, docs/, and scripts/ in one git repository when multiple deployable services belong to the same product.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;In a monorepo I'd have backend/ for FastAPI, frontend/ for Streamlit or React, shared/ for common code, and docs/ for architecture. The UI calls the API over HTTP — same pattern as Angular plus .NET API. docker-compose.yml can run both services locally.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>When API + UI + scripts live in <b>one repository</b> (monorepo), folders are split by <b>deployable service</b>.</p>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 my-todo-product/</span><span class="t-note">— one git repo</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 backend/</span><span class="t-note">— FastAPI service (deploy to server)</span></div><div class="t-row t-indent-2"><span class="t-folder">📁 app/</span><span class="t-note">— same layered structure as slide 39</span></div><div class="t-row t-indent-2"><span class="t-config">📄 requirements.txt</span><span class="t-note">— fastapi, uvicorn, pydantic</span></div><div class="t-row t-indent-2"><span class="t-config">📄 Dockerfile</span><span class="t-note">— container image for API</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 frontend/</span><span class="t-note">— Streamlit or React UI</span></div><div class="t-row t-indent-2"><span class="t-file">📄 app.py</span><span class="t-note">— calls backend via HTTP</span></div><div class="t-row t-indent-2"><span class="t-config">📄 requirements.txt</span><span class="t-note">— streamlit, requests</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 shared/</span><span class="t-note">— optional shared constants/types</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 docs/</span><span class="t-note">— architecture diagrams, API notes</span></div><div class="t-row t-indent-2"><span class="t-file">📄 architecture.md</span><span class="t-note">— wireframe & data flow</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 scripts/</span><span class="t-note">— dev helpers</span></div><div class="t-row t-indent-2"><span class="t-file">📄 run_dev.ps1</span><span class="t-note">— start API + UI together</span></div><div class="t-row t-indent-1"><span class="t-config">📄 docker-compose.yml</span><span class="t-note">— run all services locally</span></div><div class="t-row t-indent-1"><span class="t-config">📄 .env.example</span><span class="t-note">— API_URL, DB connection</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<div class="callout"><b>Data flow wireframe:</b><br>
+<code>Browser → frontend/app.py → HTTP → backend/app/api/routes → service → DB</code><br>
+Each box maps to a folder. Interviewers love when you draw this left-to-right.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Compare to your capstone</h4>
+<ul class="checklist">
+  <li>Open <code>Projects/35_mini_project/</code></li>
+  <li>Relabel <code>api/</code> as <code>backend/</code> mentally</li>
+  <li>Relabel <code>ui/</code> as <code>frontend/</code></li>
+  <li>Draw the data-flow arrow diagram on paper</li>
+</ul>
+<a class="file-link" href="Projects/35_mini_project/">35_mini_project/</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-41">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 41 of 48 &middot; Real Projects · Structure</div>
+  <div class="slide-title">Create a Real Project — Step by Step</div>
+  <div class="slide-sub">Creating a real project means scaffolding root config files (requirements.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Creating a real project means scaffolding root config files (requirements.txt, .env.example, README), an app/ package with layered subfolders, and tests/ — then implementing one feature end-to-end through all layers.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I start with mkdir, requirements.txt, and app/main.py. Then I add routes, schemas, and services one feature at a time. I never commit .env with secrets. I document run commands in README. I can walk an interviewer through the tree top-down in under two minutes.&rdquo;</p></div></div>
+    <div class="explain-right">
+<h3>Step-by-step (do once before interview)</h3>
+<table>
+<tr><th>Step</th><th>Action</th><th>File / Folder</th></tr>
+<tr><td>1</td><td>Create project root</td><td><code>mkdir my-api && cd my-api</code></td></tr>
+<tr><td>2</td><td>Add dependency list</td><td><code>requirements.txt</code></td></tr>
+<tr><td>3</td><td>Add environment template</td><td><code>.env.example</code> (never commit real .env)</td></tr>
+<tr><td>4</td><td>Create app package</td><td><code>app/__init__.py</code></td></tr>
+<tr><td>5</td><td>Entry point</td><td><code>app/main.py</code> — FastAPI()</td></tr>
+<tr><td>6</td><td>Routes (thin)</td><td><code>app/api/routes/todos.py</code></td></tr>
+<tr><td>7</td><td>DTOs</td><td><code>app/schemas/todo.py</code></td></tr>
+<tr><td>8</td><td>Business logic</td><td><code>app/services/todo_service.py</code></td></tr>
+<tr><td>9</td><td>Tests</td><td><code>tests/test_todos.py</code></td></tr>
+<tr><td>10</td><td>Document how to run</td><td><code>README.md</code></td></tr>
+</table>
+<pre class="code"># app/main.py — entry point
+from fastapi import FastAPI
+from app.api.routes import todos
+
+app = FastAPI(title="My API")
+app.include_router(todos.router, prefix="/todos")
+
+# Run: uvicorn app.main:app --reload</pre>
+<div class="challenge"><b>Interview Q: &ldquo;Walk me through your project structure.&rdquo;</b><br>
+Start at root → app/ → explain each subfolder purpose → show main.py → one route file → mention tests/ and .env.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Hands-on: scaffold from template</h4>
+<ul class="checklist">
+  <li>Copy <code>real_project_template/</code> to <code>my-first-api/</code></li>
+  <li>Rename project in README.md</li>
+  <li>Add one new endpoint in routes/todos.py</li>
+  <li>Explain each folder aloud in 2 minutes</li>
+</ul>
+<span class="run-cmd">xcopy /E /I Projects\real_project_template Projects\my-first-api</span>
+<a class="file-link" href="Projects/real_project_template/README.md">Template README</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-42">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 42 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">Python-Set2 — Portfolio Overview</div>
+  <div class="slide-sub">Python-Set2 is a portfolio of six real project areas — pythonBasics, google-python-exercises, pandas, Django, Django REST, and Pipecat voice AI — each mapping to topics in this deck.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Python-Set2 is a portfolio of six real project areas — pythonBasics, google-python-exercises, pandas, Django, Django REST, and Pipecat voice AI — each mapping to topics in this deck.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I keep a structured portfolio in Python-Set2: fundamentals in pythonBasics/, classic exercises for regex and files, pandas notebooks for data, Django and DRF for full-stack REST, and Pipecat POCs for voice AI. I can point an interviewer to the exact folder for any topic they ask about.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p><b>Python-Set2</b> is your real project library — six top-level areas that map directly to this deck.</p>
+<table class="project-map">
+<tr><th>Folder</th><th>What it teaches</th><th>Deck slides</th></tr>
+<tr><td>pythonBasics/</td><td>OOP, collections, loops, modules, exceptions, pytest</td><td>09–14, 17–20, 22–24</td></tr>
+<tr><td>google-python-exercises/</td><td>File I/O, regex, string parsing</td><td>21, 23</td></tr>
+<tr><td>pandas/</td><td>Jupyter, DataFrames, CSV analysis</td><td>25 (stdlib) + data roles</td></tr>
+<tr><td>djangobasics/</td><td>Django MVC, templates, JWT API</td><td>27–31 (compare to FastAPI)</td></tr>
+<tr><td>DjangoRestBasics/</td><td>Django REST Framework serializers</td><td>27–29 (REST patterns)</td></tr>
+<tr><td>Pipecat-Project/</td><td>Voice AI, WebRTC, FastAPI + Pipecat</td><td>27–31, 42–47</td></tr>
+</table>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 Python-Set2/</span><span class="t-note">— your portfolio root</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 pythonBasics/</span><span class="t-note">— 7 topic modules</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 google-python-exercises/</span><span class="t-note">— 4 classic exercises</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 pandas/</span><span class="t-note">— Jupyter + CSV</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 djangobasics/meeting_planner/</span><span class="t-note">— Django + JWT</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 DjangoRestBasics/inventory/</span><span class="t-note">— DRF REST API</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 Pipecat-Project/</span><span class="t-note">— Voice AI POCs</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<div class="callout"><strong>Interview angle:</strong> &ldquo;I have a structured portfolio — basics in pythonBasics/, web APIs in Django and FastAPI-style projects, data in pandas notebooks, and a voice-AI POC with Pipecat.&rdquo;</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Explore the portfolio</h4>
+<ul class="checklist">
+  <li>Open <code>Python-Set2/</code> in VS Code / Cursor</li>
+  <li>Pick one folder per week — basics → exercises → Django → Pipecat</li>
+  <li>For each project, write a 2-minute verbal walkthrough</li>
+</ul>
+<a class="file-link" href="Python-Set2/">Python-Set2 root</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-43">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 43 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">pythonBasics — Topic Modules</div>
+  <div class="slide-sub">pythonBasics/ contains seven topic modules (MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting) — each a runnable mini-project reinforcing core Python skills.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>pythonBasics/ contains seven topic modules (MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting) — each a runnable mini-project reinforcing core Python skills.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;For OOP I open MyClass/ and walk through classes, self, and inheritance. For collections I use MyCollections/. For testing I show MyUnitTesting/ with pytest. Each folder is a focused module — it proves I didn't just read slides, I wrote and ran real code.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Seven self-contained modules — each folder is a mini-project with runnable examples.</p>
+<table class="project-map">
+<tr><th>Module</th><th>Topics</th><th>Maps to slide</th></tr>
+<tr><td>MyClass</td><td>classes, __init__, inheritance, properties</td><td>17–20 OOP</td></tr>
+<tr><td>MyCollections</td><td>list, dict, set, tuple, comprehensions</td><td>11–13</td></tr>
+<tr><td>MyLoops</td><td>for, while, range, enumerate</td><td>09–10</td></tr>
+<tr><td>MyModules</td><td>import, packages, __name__</td><td>21</td></tr>
+<tr><td>MyExceptionHandling</td><td>try/except, raise, custom errors</td><td>23</td></tr>
+<tr><td>MyDebug</td><td>pdb, logging, breakpoints</td><td>24</td></tr>
+<tr><td>MyUnitTesting</td><td>unittest / pytest patterns</td><td>24</td></tr>
+</table>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 pythonBasics/</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyClass/</span><span class="t-note">— OOP demos</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyCollections/</span><span class="t-note">— list, dict, set</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyLoops/</span><span class="t-note">— iteration</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyModules/</span><span class="t-note">— imports</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyExceptionHandling/</span><span class="t-note">— errors</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 MyDebug/</span><span class="t-note">— debugging</span></div><div class="t-row t-indent-1"><span class="t-green">📁 MyUnitTesting/</span><span class="t-note">— tests</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<div class="challenge"><b>Interview Q:</b> &ldquo;Show me OOP in Python.&rdquo;<br>
+Open <code>MyClass/</code> — explain class vs instance, <code>self</code>, and one inheritance example aloud.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Practice: one module per day</h4>
+<ul class="checklist">
+  <li>Run scripts in MyClass/ — explain each class</li>
+  <li>Complete MyCollections/ exercises</li>
+  <li>Write one pytest in MyUnitTesting/</li>
+</ul>
+<a class="file-link" href="Python-Set2/pythonBasics/MyClass/">MyClass</a>
+<a class="file-link" href="Python-Set2/pythonBasics/MyUnitTesting/">MyUnitTesting</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-44">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 44 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">Google Exercises &amp; Pandas Data</div>
+  <div class="slide-sub">google-python-exercises/ teaches file I/O, regex, and OS operations through classic puzzles.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>google-python-exercises/ teaches file I/O, regex, and OS operations through classic puzzles. pandas/ uses Jupyter notebooks to analyze Titanic and FIFA CSV datasets with DataFrames, groupby, and filtering.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;google-python-exercises/babynames/ is great for regex interviews — I parse files and count patterns. For data roles I open my Titanic notebook and explain read_csv, filtering, groupby, and handling missing values. pandas is like LINQ on in-memory tables.&rdquo;</p></div></div>
+    <div class="explain-right">
+<h3>google-python-exercises/</h3>
+<p>Classic Google Python exercises — file manipulation, regex, and string parsing (interview favorites).</p>
+<table class="project-map">
+<tr><th>Exercise</th><th>Skill</th></tr>
+<tr><td>basic/</td><td>Lists, strings, logic puzzles</td></tr>
+<tr><td>babynames/</td><td>Regex, file parsing, dict counting</td></tr>
+<tr><td>copyspecial/</td><td>os, shutil, file system traversal</td></tr>
+<tr><td>logpuzzle/</td><td>HTTP, image stitching, algorithms</td></tr>
+</table>
+<h3>pandas/</h3>
+<p>Jupyter notebooks for real-world CSV analysis — Titanic survival and FIFA stats.</p>
+<ul>
+<li><b>MyJupyterBasics.ipynb</b> — DataFrame intro, read_csv, head(), describe()</li>
+<li><b>Pandas_TitanicData.ipynb</b> — filtering, groupby, missing values</li>
+<li><b>Pandas_FIFAData.ipynb</b> — sorting, aggregation, visualization hooks</li>
+</ul>
+<div class="callout"><strong>C# parallel:</strong> pandas DataFrames ≈ LINQ on in-memory tables; Jupyter ≈ interactive C# script / LINQPad.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Run exercises</h4>
+<ul class="checklist">
+  <li>Complete babynames/ — practice regex aloud</li>
+  <li>Open Pandas_TitanicData.ipynb in Jupyter</li>
+  <li>Explain one groupby result in plain English</li>
+</ul>
+<span class="run-cmd">jupyter notebook Python-Set2/pandas/Pandas_TitanicData.ipynb</span>
+<a class="file-link" href="Python-Set2/google-python-exercises/babynames/">babynames</a>
+<a class="file-link" href="Python-Set2/pandas/Pandas_TitanicData.ipynb">Titanic notebook</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-45">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 45 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">Django &amp; Django REST Projects</div>
+  <div class="slide-sub">djangobasics/meeting_planner/ is a Django 4 app with models, templates, auth, and a JWT API.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>djangobasics/meeting_planner/ is a Django 4 app with models, templates, auth, and a JWT API. DjangoRestBasics/inventory/ is a multi-app DRF project with serializers and ViewSets for drink, merchant, and supplier resources.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Django gives me ORM, admin, auth, and templates out of the box — meeting_planner/ shows MVT plus a JWT API. DRF inventory/ shows serializers and ViewSets — similar to FastAPI routers plus Pydantic, but Django-native. I compare both when asked about Python web frameworks.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p>Two full web projects — compare to FastAPI slides 27–31. Django uses <b>MVT</b> (Model-View-Template); DRF adds REST serializers.</p>
+<h3>djangobasics/meeting_planner/</h3>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 meeting_planner/</span><span class="t-note">— Django 4 project</span></div><div class="t-row t-indent-1"><span class="t-file">📄 manage.py</span><span class="t-note">— entry point</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 meeting/</span><span class="t-note">— models, views, templates</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 myauth/</span><span class="t-note">— login / auth views</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 meetingapi_simplejwt/</span><span class="t-note">— JWT REST API</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 mywebsite/</span><span class="t-note">— static + welcome pages</span></div></div>
+<h3>DjangoRestBasics/inventory/</h3>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 inventory/</span><span class="t-note">— DRF multi-app API</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 drink/</span><span class="t-note">— Model + Serializer + ViewSet</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 merchant/</span><span class="t-note">— nested resources</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 supplier/</span><span class="t-note">— CRUD endpoints</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 core/</span><span class="t-note">— shared models</span></div></div>
+<div class="challenge"><b>Interview Q:</b> &ldquo;Django vs FastAPI?&rdquo;<br>
+Django = batteries-included (ORM, admin, auth, templates). FastAPI = lean async API with Pydantic. Both expose REST — Django via DRF, FastAPI natively.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Run Django projects</h4>
+<ul class="checklist">
+  <li>cd meeting_planner → python manage.py runserver</li>
+  <li>Explore meeting/models.py and migrations/</li>
+  <li>Compare drink/serializers.py to FastAPI Pydantic schemas</li>
+</ul>
+<span class="run-cmd">cd Python-Set2/djangobasics/meeting_planner && python manage.py runserver</span>
+<a class="file-link" href="Python-Set2/djangobasics/meeting_planner/meeting/models.py">Meeting models</a>
+<a class="file-link" href="Python-Set2/DjangoRestBasics/inventory/drink/serializers.py">DRF serializers</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-46">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 46 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">Pipecat — Voice AI POCs</div>
+  <div class="slide-sub">Pipecat-Project/ contains voice AI POCs: pipecat-quickstart (cloud), phase1 (local services), phase2 (full pipeline), and voice-bouncer (IVR-style auth).</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>Pipecat-Project/ contains voice AI POCs: pipecat-quickstart (cloud), phase1 (local services), phase2 (full pipeline), and voice-bouncer (IVR-style auth). Pipecat orchestrates STT → LLM → TTS over WebRTC.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I built voice pipelines in phases — first local STT/LLM/TTS, then the full Pipecat framework. voice-bouncer/ demos an IVR flow with step-by-step processors. It's the same layered architecture as a REST API, but streaming audio instead of JSON — FastAPI backend plus Pipecat processors plus WebRTC client.&rdquo;</p></div></div>
+    <div class="explain-right">
+<p><b>Pipecat-Project/</b> demonstrates real-time voice pipelines: STT → LLM → TTS over WebRTC, built in phases.</p>
+<table class="project-map">
+<tr><th>POC folder</th><th>Purpose</th></tr>
+<tr><td>pipecat-quickstart</td><td>Official Pipecat clone — cloud STT/LLM/TTS</td></tr>
+<tr><td>pipecat-voice-phase1</td><td>Local STT/LLM/TTS services + simple UI</td></tr>
+<tr><td>pipecat-voice-phase2</td><td>Full Pipecat framework pipeline (step 1–8)</td></tr>
+<tr><td>voice-bouncer</td><td>IVR-style voice auth demo (member ID, zip)</td></tr>
+<tr><td>Pipecat-Learning/</td><td>HTML tutorials + PipecatLearning.html</td></tr>
+</table>
+<div class="tree-mockup"><div class="t-row t-indent-0"><span class="t-folder">📁 Pipecat-Project/POC/</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 pipecat-quickstart/</span><span class="t-note">— cloud services</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 pipecat-voice-phase1/</span><span class="t-note">— local services</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 pipecat-voice-phase2/</span><span class="t-note">— full pipeline</span></div><div class="t-row t-indent-1"><span class="t-folder">📁 voice-bouncer/</span><span class="t-note">— voice auth IVR</span></div><div class="t-row t-indent-1"><span class="t-file">📁 Pipecat-Learning/</span><span class="t-note">— learning HTML</span></div><div class="tree-legend">
+<span><span class="dot dot-blue"></span> Source / app code</span>
+<span><span class="dot dot-green"></span> Tests</span>
+<span><span class="dot dot-purple"></span> Config / env</span>
+<span><span class="dot dot-orange"></span> Docs / scripts</span>
+</div></div>
+<div class="callout"><strong>Architecture:</strong> FastAPI backend + Pipecat processors + WebRTC client — same layered thinking as slides 37–41, but for streaming audio instead of JSON REST.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Voice AI practice</h4>
+<ul class="checklist">
+  <li>Read POC/Readme.md for phase overview</li>
+  <li>Run voice-bouncer step1_greeting.py</li>
+  <li>Open PipeCatLearningContent/PipecatAI.html</li>
+</ul>
+<a class="file-link" href="Python-Set2/Pipecat-Project/POC/Readme.md">POC Readme</a>
+<a class="file-link" href="Python-Set2/Pipecat-Project/POC/voice-bouncer/README.md">voice-bouncer</a>
+<a class="file-link" href="Python-Set2/Pipecat-Project/PipeCatLearningContent/PipecatAI.html">PipecatAI guide</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-47">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 47 of 48 &middot; Python-Set2 · Real Projects</div>
+  <div class="slide-title">Python-Set2 — Learning Path &amp; Interview Map</div>
+  <div class="slide-sub">A structured learning path through Python-Set2: week 1 basics, week 2 OOP/tests, week 3 pandas, week 4 web APIs, week 5 voice AI — with interview talking points for each area.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A structured learning path through Python-Set2: week 1 basics, week 2 OOP/tests, week 3 pandas, week 4 web APIs, week 5 voice AI — with interview talking points for each area.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;I studied Python-Set2 in order: pythonBasics for fundamentals, google exercises for regex, pandas for data, Django and DRF for REST, Pipecat for voice AI. In interviews I demo 2–3 projects deeply rather than listing everything — and I always connect each project back to the concept they're asking about.&rdquo;</p></div></div>
+    <div class="explain-right">
+<h3>Suggested study order</h3>
+<table>
+<tr><th>Week</th><th>Focus</th><th>Folder</th></tr>
+<tr><td>1</td><td>Core Python</td><td>pythonBasics/ + google-python-exercises/basic/</td></tr>
+<tr><td>2</td><td>OOP + tests</td><td>MyClass/ + MyUnitTesting/</td></tr>
+<tr><td>3</td><td>Data</td><td>pandas/ notebooks</td></tr>
+<tr><td>4</td><td>Web APIs</td><td>meeting_planner/ + inventory/ + Projects/ FastAPI</td></tr>
+<tr><td>5</td><td>Voice AI</td><td>Pipecat-Project/POC/ (phase1 → phase2)</td></tr>
+</table>
+<h3>What to say in interviews</h3>
+<ul>
+<li><b>Basics:</b> &ldquo;I practiced in pythonBasics/ — seven modules covering OOP through pytest.&rdquo;</li>
+<li><b>APIs:</b> &ldquo;I built REST with Django REST Framework and FastAPI — I know serializers vs Pydantic.&rdquo;</li>
+<li><b>Data:</b> &ldquo;I analyzed Titanic and FIFA datasets in Jupyter with pandas.&rdquo;</li>
+<li><b>Advanced:</b> &ldquo;I prototyped a voice pipeline with Pipecat — STT, LLM, TTS over WebRTC.&rdquo;</li>
+</ul>
+<div class="callout"><strong>Tip:</strong> Keep 2–3 projects demo-ready. Depth on one project beats listing ten you barely ran.</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Final Set2 checklist</h4>
+<ul class="checklist">
+  <li>Ran at least one script from each top-level folder</li>
+  <li>Can draw meeting_planner app structure from memory</li>
+  <li>Explained Pipecat STT→LLM→TTS flow in 60 seconds</li>
+  <li>Linked Set2 work to deck slides during mock interview</li>
+</ul>
+<a class="file-link" href="Python-Set2/pythonBasics/">pythonBasics</a>
+<a class="file-link" href="Python-Set2/Pipecat-Project/">Pipecat-Project</a>
+
+    </div>
+  </div>
+</div>
+</div><div class="slide" id="slide-48">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 48 of 48 &middot; Appendix</div>
+  <div class="slide-title">C# vs Python Quick Reference</div>
+  <div class="slide-sub">A quick reference mapping C# concepts to Python equivalents, covering syntax, collections, OOP, web development, and error handling — essential for developers transitioning between languages.</div>
+</div>
+<div class="slide-layout">
+  <div class="explain-top">
+    <div class="explain-left"><h3>Definition</h3><p>A quick reference mapping C# concepts to Python equivalents, covering syntax, collections, OOP, web development, and error handling — essential for developers transitioning between languages.</p><div class="interview-box"><b>How to explain in interview:</b><p>&ldquo;Coming from C#, I highlight key differences: no type declarations, indentation over braces, duck typing over interfaces, and Python's unified list type vs C# generics. I also note similarities: both are strongly typed, object-oriented, and have rich ecosystems for web and API development.&rdquo;</p></div></div>
+    <div class="explain-right">
+<table class="ref-table">
+<tr><th>Concept</th><th>C#</th><th>Python</th></tr>
+<tr><td>Print</td><td>Console.WriteLine()</td><td>print()</td></tr>
+<tr><td>Variable</td><td>int x = 5;</td><td>x = 5</td></tr>
+<tr><td>Foreach</td><td>foreach (var i in list)</td><td>for i in list:</td></tr>
+<tr><td>Class</td><td>class Person { }</td><td>class Person:</td></tr>
+<tr><td>Constructor</td><td>public Person() { }</td><td>def __init__(self):</td></tr>
+<tr><td>Null</td><td>null</td><td>None</td></tr>
+<tr><td>Interface</td><td>interface IRepo { }</td><td>ABC or duck typing</td></tr>
+<tr><td>Namespace</td><td>using System;</td><td>import module</td></tr>
+<tr><td>Web API</td><td>[HttpGet] controller</td><td>@app.get() FastAPI</td></tr>
+<tr><td>UI</td><td>WinForms / Blazor</td><td>Tkinter / Streamlit</td></tr>
+<tr><td>Exceptions</td><td>try/catch</td><td>try/except</td></tr>
+<tr><td>String format</td><td>$"Hello {name}"</td><td>f"Hello {name}"</td></tr>
+</table>
+<div class="callout"><strong>You made it!</strong> 48 slides — basics, OOP, API, UI, project structure, and Python-Set2 real projects. Review slides 17–20, 42–47, and 37–41 before your interview. Good luck!</div>
+</div>
+  </div>
+  <div class="practice-row">
+    <div class="practice-bottom practice-panel">
+      <h3>Practice</h3>
+      
+<h4>Final Checklist</h4>
+<ul class="checklist">
+  <li>Completed all Projects/ exercises</li>
+  <li>Ran FastAPI and Streamlit apps</li>
+  <li>Can explain 5 oral Q&A answers</li>
+  <li>Built the capstone todo project</li>
+  <li>Reviewed this cheat sheet</li>
+</ul>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav-bar">
+  <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>
+  <button class="btn-nav" onclick="goSlide(0)">&#9776; Navigation</button>
+  <span class="slide-info" id="slideInfo">Navigation</span>
+  <button class="btn-next" onclick="nextSlide()">Next &rarr;</button>
+</div>
+
+<script>
+let current = 0;
+const slideOrder = [0];
+for (let i = 2; i <= 48; i++) slideOrder.push(i);
+const totalTopics = 48;
+
+function showSlide(n) {
+  if (!slideOrder.includes(n)) return;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('slide-' + n);
+  if (el) {
+    el.classList.add('active');
+    current = n;
+    el.scrollTop = 0;
+    const info = document.getElementById('slideInfo');
+    if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
+  }
+}
+
+function goSlide(n) { showSlide(n); }
+
+function nextSlide() {
+  const idx = slideOrder.indexOf(current);
+  if (idx < slideOrder.length - 1) showSlide(slideOrder[idx + 1]);
+}
+
+function prevSlide() {
+  const idx = slideOrder.indexOf(current);
+  if (idx > 0) showSlide(slideOrder[idx - 1]);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+});
+
+function highlightAll() {
+  const keywords = new Set(['False','True','None','and','as','assert','async','await','break',
+    'class','continue','def','del','elif','else','except','finally','for','from','global',
+    'if','import','in','is','lambda','nonlocal','not','or','pass','raise','return','try',
+    'while','with','yield','self','print','len','range','type','int','str','float','bool',
+    'list','dict','set','tuple','super','open','enum','isinstance']);
+  document.querySelectorAll('pre.code').forEach(pre => {
+    let html = pre.innerHTML;
+    html = html.replace(/(#.*)$/gm, '<span class="cmt">$1</span>');
+    html = html.replace(/(&quot;[^&]*?&quot;|'[^']*?')/g, '<span class="str">$1</span>');
+    html = html.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+    keywords.forEach(kw => {
+      const re = new RegExp('\\b' + kw + '\\b', 'g');
+      html = html.replace(re, '<span class="kw">' + kw + '</span>');
+    });
+    pre.innerHTML = html;
+  });
+}
+document.addEventListener('DOMContentLoaded', () => { showSlide(0); highlightAll(); });
+</script>
+</body>
+</html>

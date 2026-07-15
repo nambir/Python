@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample — Comprehensions (VS2022 code style)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fff;
+  color: #1a1a2e;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 40px 40px;
+}
+
+.slide-body { display: flex; flex-direction: column; gap: 0; }
+
+/* Left: text + practice  |  Right: code */
+.main-split {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 28px;
+  align-items: start;
+}
+.panel-left { min-width: 0; }
+.panel-code {
+  min-width: 0;
+  position: sticky;
+  top: 12px;
+}
+
+.sample-banner {
+  background: #fff8e6;
+  border: 1px solid #f0c36d;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #7a5a00;
+}
+
+.slide-meta { font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }
+.slide-title { font-size: 26px; font-weight: 700; color: #1a1a2e; border-bottom: 3px solid #0066cc; padding-bottom: 4px; display: inline-block; }
+.slide-sub { font-size: 13px; color: #555; margin-top: 6px; margin-bottom: 14px; }
+
+h3 { font-size: 15px; color: #0066cc; margin: 10px 0 6px; }
+p { font-size: 13px; line-height: 1.5; margin-bottom: 6px; }
+
+.slide-body { display: flex; flex-direction: column; gap: 0; }
+
+.interview-box {
+  background: #e8f5e9;
+  border-left: 3px solid #28a745;
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+.interview-box p { margin: 6px 0 0; color: #1b5e20; font-style: italic; }
+
+.callout {
+  background: #f0f7ff;
+  border-left: 3px solid #0066cc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.panel-practice {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { padding: 3px 0; font-size: 12px; }
+.checklist li::before { content: "\2610  "; color: #0066cc; }
+
+/* ── VS2022-style editor (one <tr> per line) ── */
+.vs-editor {
+  background: #fff;
+  overflow: auto;
+  max-height: calc(100vh - 140px);
+}
+
+table.vs-code {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+table.vs-code td.gutter {
+  width: 44px;
+  min-width: 44px;
+  padding: 0 10px 0 6px;
+  text-align: right;
+  color: #2b91af;
+  user-select: none;
+  vertical-align: top;
+  border-right: 2px solid #c9a227;
+  background: #fff;
+}
+
+table.vs-code td.src {
+  padding: 0 0 0 14px;
+  white-space: pre;
+  vertical-align: top;
+  color: #000;
+}
+
+/* VS Light theme token colors */
+.t-kw  { color: #0000ff; }   /* keywords: for, in, if, def, class */
+.t-bi  { color: #0000ff; }   /* builtins: range, len, next, print */
+.t-cm  { color: #008000; }   /* comments */
+.t-str { color: #a31515; }   /* strings */
+.t-num { color: #098658; }   /* numbers */
+.t-op  { color: #000000; }   /* operators, punctuation */
+.t-id  { color: #000000; }   /* identifiers */
+
+.format-note {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 12px;
+  color: #666;
+}
+.format-note code {
+  font-family: Consolas, monospace;
+  font-size: 11px;
+  background: #f4f4f4;
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #333;
+}
+
+@media (max-width: 900px) {
+  .page { padding: 16px 16px 40px; }
+  .main-split { grid-template-columns: 1fr; }
+  .panel-code { position: static; }
+  .vs-editor { max-height: 50vh; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="sample-banner">
+    <strong>Sample page for your approval.</strong>
+    Code uses VS2022 Light colors (green comments, blue keywords, red strings) with one table row per line so line breaks always work in the browser and DevTools.
+  </div>
+
+  <div class="slide-meta">Slide 5 of 28 · Core Topics · SAMPLE</div>
+  <div class="slide-title">Comprehensions</div>
+  <p class="slide-sub">List, set, dict, and generator comprehensions — concise ways to build collections.</p>
+
+  <div class="slide-body">
+    <div class="main-split">
+      <div class="panel-left">
+        <h3>Definition</h3>
+        <p>Comprehensions let you build lists, sets, dicts, and generators in a single readable expression instead of a multi-line loop with <code>append</code>.</p>
+        <div class="interview-box">
+          <b>How to explain in interview:</b>
+          <p>&ldquo;List comprehensions are syntactic sugar for map+filter. Generator expressions are lazy — they yield one item at a time and use far less memory for large ranges.&rdquo;</p>
+        </div>
+        <div class="callout" style="margin-top:12px">Prefer comprehensions over manual loops when building collections — they are faster and more Pythonic.</div>
+        <div class="panel-practice" style="margin-top:14px">
+          <h3>Practice</h3>
+          <ul class="checklist">
+            <li>Build a dict comprehension from a list of tuples</li>
+            <li>Compare memory: list vs generator with sys.getsizeof</li>
+            <li>Filter a list of names starting with "A"</li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-code">
+        <div class="vs-editor">
+          <table class="vs-code" id="codeBlock"><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="format-note">
+    <strong>Technical approach:</strong> Python source is stored in a <code>&lt;script type="text/plain"&gt;</code> block.
+    A small tokenizer runs at load time and emits <code>&lt;tr&gt;&lt;td class="gutter"&gt;&lt;/td&gt;&lt;td class="src"&gt;…spans…&lt;/td&gt;&lt;/tr&gt;</code> per line.
+    If this look is OK, the same renderer will be applied to all slides in <code>PythonTraining.html</code>.
+  </div>
+</div>
+
+<script type="text/plain" id="source">
+# List comprehension
+squares = [n*n for n in range(6)]
+evens = [n for n in range(10) if n % 2 == 0]
+
+# Set comprehension
+unique = {c.lower() for c in "Hello"}
+
+# Dict comprehension
+word_len = {w: len(w) for w in ["hi", "hello"]}
+
+# Generator expression (lazy)
+gen = (n*n for n in range(1000000))
+next(gen)  # 0 — no full list in memory
+</script>
+
+<script>
+(function () {
+  const KEYWORDS = new Set([
+    'False','None','True','and','as','assert','async','await','break','class',
+    'continue','def','del','elif','else','except','finally','for','from',
+    'global','if','import','in','is','lambda','nonlocal','not','or','pass',
+    'raise','return','try','while','with','yield'
+  ]);
+  const BUILTINS = new Set([
+    'abs','all','any','bin','bool','bytes','chr','dict','enumerate','filter',
+    'float','format','frozenset','getattr','hasattr','hash','hex','id','input',
+    'int','isinstance','issubclass','iter','len','list','map','max','min','next',
+    'object','oct','open','ord','pow','print','range','repr','reversed','round',
+    'set','slice','sorted','str','sum','super','tuple','type','zip'
+  ]);
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function highlightLine(line) {
+    let out = '';
+    let i = 0;
+    while (i < line.length) {
+      const ch = line[i];
+
+      // comment
+      if (ch === '#') {
+        out += '<span class="t-cm">' + esc(line.slice(i)) + '</span>';
+        break;
+      }
+      // string (single or double quote)
+      if (ch === '"' || ch === "'") {
+        const q = ch;
+        let j = i + 1;
+        while (j < line.length) {
+          if (line[j] === '\\') { j += 2; continue; }
+          if (line[j] === q) { j++; break; }
+          j++;
+        }
+        out += '<span class="t-str">' + esc(line.slice(i, j)) + '</span>';
+        i = j;
+        continue;
+      }
+      // number
+      if (/[0-9]/.test(ch) && (i === 0 || !/[A-Za-z0-9_]/.test(line[i - 1]))) {
+        let j = i;
+        while (j < line.length && /[0-9._]/.test(line[j])) j++;
+        out += '<span class="t-num">' + esc(line.slice(i, j)) + '</span>';
+        i = j;
+        continue;
+      }
+      // identifier
+      if (/[A-Za-z_]/.test(ch)) {
+        let j = i;
+        while (j < line.length && /[A-Za-z0-9_]/.test(line[j])) j++;
+        const word = line.slice(i, j);
+        let cls = 't-id';
+        if (KEYWORDS.has(word)) cls = 't-kw';
+        else if (BUILTINS.has(word)) cls = 't-bi';
+        out += '<span class="' + cls + '">' + esc(word) + '</span>';
+        i = j;
+        continue;
+      }
+      // everything else (operators, brackets, spaces)
+      out += '<span class="t-op">' + esc(ch) + '</span>';
+      i++;
+    }
+    return out || '&#160;';
+  }
+
+  const source = document.getElementById('source').textContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = source.split('\n');
+  const tbody = document.querySelector('#codeBlock tbody');
+  const rows = lines.map((line, idx) =>
+    '<tr><td class="gutter">' + (idx + 1) + '</td><td class="src">' + highlightLine(line) + '</td></tr>'
+  ).join('\n');
+  tbody.innerHTML = rows;
+})();
+</script>
+</body>
+</html>

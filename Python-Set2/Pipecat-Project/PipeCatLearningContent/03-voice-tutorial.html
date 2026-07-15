@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice-to-Voice Implementation - PipecatAI Tutorial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .navigation {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #5a6fd8;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .content-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .content-section h3 {
+            color: #5a6fd8;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #ffffff;
+            border: 1px solid #d3d3d3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #24292e;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .code-block .keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .code-block .string {
+            color: #a31515;
+        }
+
+        .code-block .comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        .code-block .function {
+            color: #795e26;
+        }
+
+        .code-block .number {
+            color: #098658;
+        }
+
+        .code-block .operator {
+            color: #000000;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning {
+            background: #f8d7da;
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info {
+            background: #d1ecf1;
+            padding: 15px;
+            border-left: 4px solid #17a2b8;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .exercise {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #28a745;
+        }
+
+        .exercise h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .step-by-step {
+            background: #f8f9ff;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .step-by-step h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .step {
+            background: white;
+            border: 2px solid #e8ecff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            counter-increment: step-counter;
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .step-by-step {
+            counter-reset: step-counter;
+        }
+
+        .step h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            margin-left: 20px;
+        }
+
+        .demo-section {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .demo-section h3 {
+            color: #155724;
+            margin-bottom: 20px;
+        }
+
+        .demo-button {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #218838;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Voice-to-Voice Implementation</h1>
+            <p>Build your first conversational AI application</p>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-links">
+                <a href="PipecatAI.html">🏠 Home</a>
+                <a href="02-pipecat-fundamentals.html">← PipecatAI Basics</a>
+                <a href="#setup">Setup</a>
+                <a href="#implementation">Implementation</a>
+                <a href="04-mcp-integration.html">Next: MCP Integration →</a>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <h3>📊 Learning Progress</h3>
+            <div class="progress-steps">
+                <div class="step completed">Setup</div>
+                <div class="step completed">Python Basics</div>
+                <div class="step completed">PipecatAI</div>
+                <div class="step active">Voice Tutorial</div>
+                <div class="step">MCP Integration</div>
+            </div>
+        </div>
+
+        <div class="content-section" id="introduction">
+            <h2>🎯 Building Your First Voice AI</h2>
+            <p>In this tutorial, we'll create a complete voice-to-voice AI application that can:</p>
+            <ul>
+                <li>Listen to your voice input</li>
+                <li>Convert speech to text</li>
+                <li>Process the text with an AI model</li>
+                <li>Convert the response back to speech</li>
+                <li>Play the audio response</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>🎯 Goal:</strong> By the end of this tutorial, you'll have a working voice AI that can have conversations with you!
+            </div>
+        </div>
+
+        <div class="content-section" id="setup">
+            <h2>🛠️ Project Setup</h2>
+            
+            <div class="step-by-step">
+                <h3>📋 Step-by-Step Setup</h3>
+                
+                <div class="step">
+                    <h4>1. Create Project Directory</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Create a new directory for your project</span>
+mkdir voice_ai_app
+cd voice_ai_app</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>2. Install Required Packages</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Install PipecatAI and dependencies</span>
+pip install pipecat-ai openai python-dotenv asyncio</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>3. Create Environment File</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Create .env file</span>
+<span class="comment"># .env</span>
+OPENAI_API_KEY=your_openai_api_key_here</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>4. Create Main Application File</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Create main.py</span>
+touch main.py</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Important:</strong> Make sure you have a valid OpenAI API key. You can get one from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>.
+            </div>
+        </div>
+
+        <div class="content-section" id="implementation">
+            <h2>💻 Implementation</h2>
+            
+            <h3>Complete Voice AI Application</h3>
+            <div class="code-block">
+<pre><span class="keyword">import</span> asyncio
+<span class="keyword">import</span> os
+<span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv
+<span class="keyword">from</span> pipecat <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> pipecat.transports <span class="keyword">import</span> LocalTransport
+<span class="keyword">from</span> pipecat.processors.voice <span class="keyword">import</span> OpenAISTTProcessor, OpenAITTSProcessor
+<span class="keyword">from</span> pipecat.processors.llm <span class="keyword">import</span> OpenAILLMProcessor
+<span class="keyword">from</span> pipecat.processors.aggregators <span class="keyword">import</span> LLMAssistantResponseAggregator
+
+<span class="comment"># Load environment variables</span>
+load_dotenv()
+
+<span class="keyword">async def</span> <span class="function">main</span>():
+    <span class="comment"># Get API key from environment</span>
+    api_key = os.<span class="function">getenv</span>(<span class="string">"OPENAI_API_KEY"</span>)
+    <span class="keyword">if not</span> api_key:
+        <span class="function">print</span>(<span class="string">"Please set your OPENAI_API_KEY in the .env file"</span>)
+        <span class="keyword">return</span>
+
+    <span class="comment"># Create processors</span>
+    stt = OpenAISTTProcessor(api_key=api_key)
+    llm = OpenAILLMProcessor(api_key=api_key, model=<span class="string">"gpt-4"</span>)
+    tts = OpenAITTSProcessor(api_key=api_key)
+    
+    <span class="comment"># Create transport for local audio</span>
+    transport = LocalTransport()
+    
+    <span class="comment"># Create response aggregator</span>
+    aggregator = LLMAssistantResponseAggregator()
+    
+    <span class="comment"># Build the pipeline</span>
+    pipeline = Pipeline([
+        transport.<span class="function">input</span>(),  <span class="comment"># Audio input from microphone</span>
+        stt,                <span class="comment"># Speech to text</span>
+        llm,                <span class="comment"># AI processing</span>
+        aggregator,         <span class="comment"># Response aggregation</span>
+        tts,                <span class="comment"># Text to speech</span>
+        transport.<span class="function">output</span>()  <span class="comment"># Audio output to speakers</span>
+    ])
+    
+    <span class="function">print</span>(<span class="string">"🎤 Voice AI is ready! Start speaking..."</span>)
+    <span class="function">print</span>(<span class="string">"Press Ctrl+C to stop"</span>)
+    
+    <span class="keyword">try</span>:
+        <span class="comment"># Run the pipeline</span>
+        <span class="keyword">await</span> pipeline.<span class="function">run</span>()
+    <span class="keyword">except</span> KeyboardInterrupt:
+        <span class="function">print</span>(<span class="string">"\n👋 Voice AI stopped. Goodbye!"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    asyncio.<span class="function">run</span>(<span class="function">main</span>())</pre>
+            </div>
+
+            <div class="info">
+                <strong>📝 Code Explanation:</strong>
+                <ul>
+                    <li><strong>STT Processor:</strong> Converts your speech to text</li>
+                    <li><strong>LLM Processor:</strong> Processes the text and generates AI responses</li>
+                    <li><strong>TTS Processor:</strong> Converts AI responses back to speech</li>
+                    <li><strong>Transport:</strong> Handles audio input/output</li>
+                    <li><strong>Pipeline:</strong> Connects all components together</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section" id="enhanced-features">
+            <h2>🚀 Enhanced Features</h2>
+            
+            <h3>Adding Conversation Context</h3>
+            <div class="code-block">
+<pre># Enhanced version with conversation context
+import asyncio
+import os
+from dotenv import load_dotenv
+from pipecat import Pipeline
+from pipecat.transports import LocalTransport
+from pipecat.processors.voice import OpenAISTTProcessor, OpenAITTSProcessor
+from pipecat.processors.llm import OpenAILLMProcessor
+from pipecat.processors.aggregators import LLMAssistantResponseAggregator
+
+load_dotenv()
+
+async def main():
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("Please set your OPENAI_API_KEY in the .env file")
+        return
+
+    # Create processors with enhanced configuration
+    stt = OpenAISTTProcessor(
+        api_key=api_key,
+        model="whisper-1",
+        language="en"
+    )
+    
+    llm = OpenAILLMProcessor(
+        api_key=api_key,
+        model="gpt-4",
+        system_message="You are a helpful AI assistant. Keep responses concise and conversational."
+    )
+    
+    tts = OpenAITTSProcessor(
+        api_key=api_key,
+        model="tts-1",
+        voice="alloy"
+    )
+    
+    transport = LocalTransport()
+    aggregator = LLMAssistantResponseAggregator()
+    
+    # Build enhanced pipeline
+    pipeline = Pipeline([
+        transport.input(),
+        stt,
+        llm,
+        aggregator,
+        tts,
+        transport.output()
+    ])
+    
+    print("🎤 Enhanced Voice AI is ready!")
+    print("Features: Context awareness, better voice quality")
+    print("Press Ctrl+C to stop")
+    
+    try:
+        await pipeline.run()
+    except KeyboardInterrupt:
+        print("\n👋 Voice AI stopped. Goodbye!")
+
+if __name__ == "__main__":
+    asyncio.run(main())</pre>
+            </div>
+
+            <h3>Adding Error Handling</h3>
+            <div class="code-block">
+<pre># Version with comprehensive error handling
+import asyncio
+import os
+import logging
+from dotenv import load_dotenv
+from pipecat import Pipeline
+from pipecat.transports import LocalTransport
+from pipecat.processors.voice import OpenAISTTProcessor, OpenAITTSProcessor
+from pipecat.processors.llm import OpenAILLMProcessor
+from pipecat.processors.aggregators import LLMAssistantResponseAggregator
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+load_dotenv()
+
+async def main():
+    try:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            logger.error("OPENAI_API_KEY not found in environment variables")
+            return
+
+        logger.info("Initializing Voice AI components...")
+        
+        # Create processors with error handling
+        stt = OpenAISTTProcessor(api_key=api_key)
+        llm = OpenAILLMProcessor(api_key=api_key, model="gpt-4")
+        tts = OpenAITTSProcessor(api_key=api_key)
+        transport = LocalTransport()
+        aggregator = LLMAssistantResponseAggregator()
+        
+        # Build pipeline
+        pipeline = Pipeline([
+            transport.input(),
+            stt,
+            llm,
+            aggregator,
+            tts,
+            transport.output()
+        ])
+        
+        logger.info("Voice AI is ready! Start speaking...")
+        print("🎤 Voice AI is ready! Start speaking...")
+        print("Press Ctrl+C to stop")
+        
+        await pipeline.run()
+        
+    except Exception as e:
+        logger.error(f"Error running Voice AI: {e}")
+        print(f"❌ Error: {e}")
+    except KeyboardInterrupt:
+        logger.info("Voice AI stopped by user")
+        print("\n👋 Voice AI stopped. Goodbye!")
+
+if __name__ == "__main__":
+    asyncio.run(main())</pre>
+            </div>
+        </div>
+
+        <div class="content-section" id="testing">
+            <h2>🧪 Testing Your Application</h2>
+            
+            <div class="step-by-step">
+                <h3>📋 Testing Steps</h3>
+                
+                <div class="step">
+                    <h4>1. Run the Application</h4>
+                    <div class="code-block">
+<pre><span class="comment"># Run your voice AI application</span>
+python main.py</pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>2. Test Voice Input</h4>
+                    <p>Speak clearly into your microphone and test different phrases:</p>
+                    <ul>
+                        <li>"Hello, how are you?"</li>
+                        <li>"What's the weather like today?"</li>
+                        <li>"Tell me a joke"</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>3. Check Audio Output</h4>
+                    <p>Make sure you can hear the AI responses clearly through your speakers or headphones.</p>
+                </div>
+
+                <div class="step">
+                    <h4>4. Test Error Handling</h4>
+                    <p>Try speaking when there's background noise or speak very quietly to test error handling.</p>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>🎯 Demo Your Voice AI</h3>
+                <p>Once your application is running, try these conversation starters:</p>
+                <ul>
+                    <li>"What can you help me with?"</li>
+                    <li>"Tell me about artificial intelligence"</li>
+                    <li>"Help me plan my day"</li>
+                </ul>
+                <button class="demo-button" onclick="alert('Make sure your microphone and speakers are working!')">
+                    🎤 Test Audio Setup
+                </button>
+            </div>
+        </div>
+
+        <div class="content-section" id="troubleshooting">
+            <h2>🔧 Troubleshooting</h2>
+            
+            <h3>Common Issues and Solutions</h3>
+            
+            <div class="warning">
+                <strong>⚠️ No Audio Input:</strong>
+                <ul>
+                    <li>Check microphone permissions</li>
+                    <li>Ensure microphone is not muted</li>
+                    <li>Test microphone in other applications</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ No Audio Output:</strong>
+                <ul>
+                    <li>Check speaker/headphone connections</li>
+                    <li>Ensure audio output is not muted</li>
+                    <li>Test audio in other applications</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ API Errors:</strong>
+                <ul>
+                    <li>Verify your OpenAI API key is correct</li>
+                    <li>Check your API usage limits</li>
+                    <li>Ensure you have sufficient credits</li>
+                </ul>
+            </div>
+
+            <div class="info">
+                <strong>💡 Performance Tips:</strong>
+                <ul>
+                    <li>Use a good quality microphone for better speech recognition</li>
+                    <li>Speak clearly and at a moderate pace</li>
+                    <li>Minimize background noise</li>
+                    <li>Use headphones to prevent audio feedback</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section" id="next-steps">
+            <h2>🚀 What's Next?</h2>
+            <p>Congratulations! You've built your first voice AI application. In the next module, we'll learn about:</p>
+            <ul>
+                <li>Model Context Protocol (MCP) integration</li>
+                <li>Connecting your voice AI with external tools</li>
+                <li>Adding advanced features and capabilities</li>
+                <li>Building more sophisticated conversational flows</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>🎯 Ready to enhance your AI?</strong> Click the "Next: MCP Integration" button above to learn how to connect your voice AI with external tools and services!
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎯 Fantastic! You've built your first voice AI application. Ready for MCP integration?</p>
+            <p><em>Module 3 of 5 - Voice-to-Voice Implementation</em></p>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scrolling for navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add interactive effects to demo button
+            const demoButton = document.querySelector('.demo-button');
+            if (demoButton) {
+                demoButton.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                
+                demoButton.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
