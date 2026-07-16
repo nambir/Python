@@ -17,12 +17,16 @@ GLOSSARY: dict[int, str] = {
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>PATH</td><td>Windows environment variable listing folders where the OS searches for executables.</td><td><code>python</code> found in PATH</td></tr>
-<tr><td>pip</td><td>Python's package installer — downloads libraries from PyPI (like NuGet).</td><td><code>pip install pytest</code></td></tr>
+<tr><td>pip</td><td><b>pip = Pip Installs Packages</b>. Python's package installer — downloads libraries from PyPI (like NuGet).</td><td><code>pip install pytest</code></td></tr>
+<tr><td>python --version</td><td>Shows the Python interpreter version — the program that runs <code>.py</code> files.</td><td><code>Python 3.12.4</code></td></tr>
+<tr><td>pip --version</td><td>Shows the pip installer version, its install path, and which Python version it is connected to.</td><td><code>pip 25.3 ... (python 3.12)</code></td></tr>
 <tr><td>REPL</td><td>Read-Eval-Print Loop — interactive shell; type code, see result immediately.</td><td><code>python</code> then <code>2+2</code></td></tr>
 <tr><td>Script</td><td>A <code>.py</code> file run from the command line in one shot.</td><td><code>python app.py</code></td></tr>
 <tr><td>Interpreter path</td><td>Which Python executable your IDE uses — must match your venv.</td><td>Ctrl+Shift+P → Select Interpreter</td></tr>
 <tr><td>py launcher</td><td>Windows <code>py</code> command picks among multiple installed Python versions.</td><td><code>py -3.12 script.py</code></td></tr>
-<tr><td>__main__</td><td>Special module name when a file is run directly (not imported).</td><td><code>if __name__ == "__main__":</code></td></tr>
+<tr><td>__main__</td><td>Special module name when a file is run directly (not imported). Put this block at the <b>bottom</b> of the file.</td><td><code>if __name__ == "__main__":</code></td></tr>
+<tr><td>Top-to-bottom</td><td>Python executes statements in order. A name must exist <b>before</b> you call it.</td><td><code>def Add</code> above <code>Add(1,2)</code></td></tr>
+<tr><td>NameError</td><td>Raised when you use a name that is not defined yet — common if <code>def</code> is below the call.</td><td><code>name 'Add' is not defined</code></td></tr>
 </table>""",
     3: """
 <h3>Key terms explained</h3>
@@ -63,6 +67,8 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Membership (in)</td><td>Test if value exists in a collection.</td><td><code>5 in [1,5,9]</code></td></tr>
 <tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Test with:</b> <code>if x is None:</code> — use <code>is</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python.</td><td><code>if x is None:</code></td></tr>
 <tr><td>Bitwise</td><td>Operators on binary digits: <code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td><code>5 &amp; 3</code> → 1</td></tr>
+<tr><td>Assignment operators</td><td>Shorthand in-place update: <code>+= -= *=</code> etc.</td><td><code>n += 5</code></td></tr>
+<tr><td>Walrus (:=)</td><td>Assign and use value in one expression (3.8+).</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
 </table>""",
     6: """
 <h3>Key terms explained</h3>
@@ -115,6 +121,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>enumerate</td><td>Yield (index, value) pairs while looping.</td><td><code>enumerate(items)</code></td></tr>
 <tr><td>sorted</td><td>Return new sorted list — original unchanged.</td><td><code>sorted(nums)</code></td></tr>
 <tr><td>isinstance</td><td>Check if object is instance of type (supports inheritance).</td><td><code>isinstance(x, int)</code></td></tr>
+<tr><td>max / min</td><td>Largest / smallest item; optional <code>key=</code> for custom order.</td><td><code>max(scores, key=scores.get)</code></td></tr>
 </table>""",
     10: """
 <h3>Key terms explained</h3>
@@ -351,6 +358,57 @@ GLOSSARY: dict[int, str] = {
 <tr><td>try/catch vs try/except</td><td>Same concept — different keyword in Python.</td><td><code>except ValueError:</code></td></tr>
 <tr><td>NuGet vs pip</td><td>C# package manager vs Python package installer.</td><td><code>pip install</code></td></tr>
 <tr><td>Task vs coroutine</td><td>C# <code>async Task</code> vs Python <code>async def</code> coroutine.</td><td><code>await</code> both</td></tr>
+</table>""",
+    31: """
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>PEP</td><td>Python Enhancement Proposal — design doc for language/stdlib.</td><td>PEP 8</td></tr>
+<tr><td>PEP 8</td><td>Official style guide — indent, naming, imports.</td><td><code>snake_case</code></td></tr>
+<tr><td>PEP 257</td><td>Docstring conventions for modules and functions.</td><td><code>'''Load config.'''</code></td></tr>
+<tr><td>Zen of Python</td><td>PEP 20 — guiding principles.</td><td><code>import this</code></td></tr>
+<tr><td>pyproject.toml</td><td>Modern project config (PEP 621).</td><td><code>[project]</code></td></tr>
+<tr><td>Linter</td><td>Automated style/error checker.</td><td>ruff, flake8</td></tr>
+</table>""",
+    32: """
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>Reference counting</td><td>Track how many names point to an object.</td><td><code>sys.getrefcount</code></td></tr>
+<tr><td>Garbage collector</td><td>Breaks circular references refcount cannot free.</td><td><code>gc.collect()</code></td></tr>
+<tr><td>Generation (GC)</td><td>Young vs old object buckets for collection frequency.</td><td>gen 0, 1, 2</td></tr>
+<tr><td>weakref</td><td>Reference that does not keep object alive.</td><td><code>weakref.ref(obj)</code></td></tr>
+<tr><td>del</td><td>Remove a name binding from namespace.</td><td><code>del x</code></td></tr>
+</table>""",
+    33: """
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>Logger</td><td>Named logging channel — usually <code>__name__</code>.</td><td><code>getLogger(__name__)</code></td></tr>
+<tr><td>Log level</td><td>DEBUG, INFO, WARNING, ERROR, CRITICAL.</td><td><code>level=logging.INFO</code></td></tr>
+<tr><td>Handler</td><td>Where log records go — console, file, syslog.</td><td>StreamHandler</td></tr>
+<tr><td>Formatter</td><td>Pattern for timestamp, level, message.</td><td><code>%(asctime)s</code></td></tr>
+<tr><td>RotatingFileHandler</td><td>Log file with size-based rotation.</td><td><code>backupCount=3</code></td></tr>
+</table>""",
+    34: """
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>BaseModel</td><td>Pydantic schema base class with typed fields.</td><td><code>class User(BaseModel):</code></td></tr>
+<tr><td>ValidationError</td><td>Raised when input fails schema rules.</td><td>HTTP 422 in FastAPI</td></tr>
+<tr><td>Field()</td><td>Constraints and metadata on a field.</td><td><code>Field(ge=18)</code></td></tr>
+<tr><td>model_dump()</td><td>Export model to dict (Pydantic v2).</td><td><code>user.model_dump()</code></td></tr>
+<tr><td>from_attributes</td><td>Build schema from ORM object attributes.</td><td><code>model_config</code></td></tr>
+</table>""",
+    35: """
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>FastAPI</td><td>Modern async-capable web framework.</td><td><code>@app.get()</code></td></tr>
+<tr><td>SQLAlchemy</td><td>ORM and SQL toolkit for Python.</td><td><code>Session</code>, <code>Base</code></td></tr>
+<tr><td>Depends</td><td>FastAPI dependency injection — DB session, auth.</td><td><code>Depends(get_db)</code></td></tr>
+<tr><td>ORM model</td><td>Class mapped to database table.</td><td><code>__tablename__</code></td></tr>
+<tr><td>Response model</td><td>Pydantic schema for API output.</td><td><code>response_model=UserRead</code></td></tr>
 </table>""",
 }
 

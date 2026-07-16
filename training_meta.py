@@ -2,19 +2,19 @@
 
 TRAINING_META = {
     1: {
-        "definition": "Python is a high-level, general-purpose language. Interpretation means CPython reads your .py file, compiles it to bytecode (.pyc), then executes it line by line — unlike C# which compiles to native machine code ahead of time.",
-        "interview": "Python is not compiled to machine code like C#. Source becomes bytecode (.pyc) and the CPython interpreter runs it in a virtual machine loop. That is why we call it interpreted — you edit .py and run immediately. Indentation replaces braces; dynamic typing means no int x declarations.",
+        "definition": "We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.pyc) and executes the bytecode step by step. Python is a high-level, general-purpose language. C# .cs files are compiled first into a .NET assembly (.dll/.exe), then the CLR/JIT runs the IL.",
+        "interview": "A Python .py file can be launched directly with python app.py; CPython compiles it to bytecode (.pyc) and executes it in the interpreter. A C# .cs file is not run directly by JIT — it is compiled to a .NET assembly (.dll/.exe), then CLR/JIT runs the IL. In production, Python is usually deployed as source/package/container, not a DLL. C# commonly publishes a .dll run by dotnet or a self-contained .exe.",
     },
     2: {
-        "definition": "On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from VS Code/Cursor with the Python extension.",
-        "interview": "I download from python.org, check 'Add Python to PATH', verify with python --version and pip --version. I run scripts with python hello.py, quick tests in the REPL, and use py -3.12 when multiple versions are installed. In Cursor I select the interpreter and press F5 to debug.",
+        "definition": "On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from Cursor/VS Code with the Python extension. Other popular IDEs include PyCharm (JetBrains), Jupyter, Spyder, Visual Studio, and IDLE. Python scripts run top to bottom — define functions before calling them.",
+        "interview": "I download from python.org, check 'Add Python to PATH', verify with python --version and pip --version. I run scripts with python hello.py, quick tests in the REPL, and use py -3.12 when multiple versions are installed. In Cursor I select the interpreter and press F5 to debug. Unlike C#, Python script order matters: define functions first, put if __name__ == '__main__' at the bottom.",
     },
     3: {
         "definition": "Primitive types store a single value — for example int, float, str, and bool. Collection types store multiple values — for example list, tuple, set, and dict. This slide builds step by step: first primitives, then collections, then how dictionaries use keys.",
         "interview": "I use tuple when the number of items and meaning are fixed — GPS (lat, lng), RGB color, returning (status, data) from a function. Tuple is hashable so it works as dict key. I use list when I need append/remove/sort — todo items, query results, file lines. If someone could accidentally modify shared data, tuple protects it.",
     },
     4: {
-        "definition": "Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and VS Code/Cursor as your IDE.",
+        "definition": "Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and Cursor or VS Code as your main IDE.",
         "interview": "I organize learning in three layers: slides for theory, Projects/ for short exercises, Python-Set2/ for full apps. Each project gets its own venv. I open the repo root in Cursor, select the Python 3.12 interpreter, and run files with python or pytest.",
     },
     5: {
@@ -120,5 +120,25 @@ TRAINING_META = {
     30: {
         "definition": "Quick reference mapping C# concepts to Python — syntax, stubs (pass vs { }), null/None, OOP, web, async, and tooling — for developers transitioning between languages.",
         "interview": "Key shifts: no type declarations, indentation over braces, pass instead of empty { }, duck typing over interfaces, venv over NuGet global packages. pass ≈ { }; NotImplementedException ≈ NotImplementedError. Similarities: both OOP, both have rich web ecosystems, both use try/except like try/catch.",
+    },
+    31: {
+        "definition": "PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and modern packaging via pyproject.toml.",
+        "interview": "I follow PEP 8 with snake_case and 4-space indent, use ruff or Black in CI, and know PEP 20 principles from import this. pyproject.toml is the modern way to declare project metadata and dependencies.",
+    },
+    32: {
+        "definition": "Python uses reference counting plus a generational garbage collector for circular references. Understanding refs, gc, and weakref helps debug memory leaks.",
+        "interview": "Most objects die when refcount hits zero. Circular references need gc. del removes a name binding; with handles resource cleanup. I profile before tuning GC.",
+    },
+    33: {
+        "definition": "The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, module loggers, handlers, and rotation.",
+        "interview": "I use logging.getLogger(__name__), set INFO in prod, logger.exception in except blocks, and lazy % formatting. RotatingFileHandler for disk logs — never print in production services.",
+    },
+    34: {
+        "definition": "Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model_dump — core of FastAPI schemas.",
+        "interview": "Pydantic at API boundaries gives coercion and ValidationError with field paths. FastAPI returns 422 automatically. from_attributes maps ORM rows to response schemas.",
+    },
+    35: {
+        "definition": "FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM models, session per request via Depends.",
+        "interview": "Routes parse HTTP only; services own logic and transactions. Depends(get_db) scopes SQLAlchemy session like DbContext. Separate ORM models from Pydantic API schemas.",
     },
 }

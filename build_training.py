@@ -10,7 +10,7 @@ from slide_scenarios import scenarios_for
 
 OUTPUT = Path(__file__).parent / "PythonTraining.html"
 PROJECTS = Path(__file__).parent / "Projects"
-TOTAL_SLIDES = 30
+TOTAL_SLIDES = 35
 
 CSS = """
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -79,6 +79,68 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .keyword-box { background: #f8fafc; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #1a1a2e; }
 .keyword-box .step-pre { margin-top: 6px; }
 
+.flow-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 12px; }
+.flow-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+.flow-card h4 { font-size: 13px; color: #0066cc; margin: 0 0 8px; }
+.flow-steps { display: flex; flex-direction: column; gap: 6px; }
+.flow-step { background: #fff; border-left: 3px solid #0066cc; border-radius: 4px; padding: 7px 9px; font-size: 12px; line-height: 1.45; }
+.flow-step b { color: #1a1a2e; }
+.flow-code { display: block; margin-top: 4px; font-family: Consolas, monospace; font-size: 11px; color: #1a1a2e; background: #f0f7ff; padding: 6px 8px; border-radius: 3px; white-space: pre-wrap; }
+.flow-arrow { text-align: center; color: #0066cc; font-weight: 700; font-size: 14px; line-height: 1; }
+.flow-note { margin-top: 8px; font-size: 12px; color: #555; }
+
+/* ── Interpreter pipeline diagram (slide 1) ── */
+.interp-diagram { margin: 10px 0 14px; }
+.interp-row {
+  display: flex; align-items: stretch; justify-content: center; gap: 8px; flex-wrap: wrap;
+}
+.interp-side {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 90px; text-align: center;
+}
+.interp-side .interp-icon {
+  width: 52px; height: 52px; border-radius: 8px; border: 1px solid #cbd5e1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; background: #fff; margin-bottom: 6px;
+}
+.interp-side.source .interp-icon { background: #f0f7ff; border-color: #0066cc; }
+.interp-side.running .interp-icon { background: #f0fdf4; border-color: #16a34a; }
+.interp-side b { display: block; font-size: 12px; color: #1a1a2e; }
+.interp-side span { font-size: 10px; color: #555; }
+.interp-h-arrow {
+  display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 20px; padding: 0 2px;
+}
+.interp-box {
+  background: #fff7ed; border: 2px solid #f59e0b; border-radius: 10px;
+  padding: 18px 14px 10px; position: relative; min-width: 320px; flex: 1; max-width: 520px;
+}
+.interp-box::before {
+  content: "Interpreter";
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: #fff7ed; color: #1a1a2e; font-size: 13px; font-weight: 700;
+  padding: 0 8px;
+}
+.interp-inner {
+  display: flex; align-items: flex-start; justify-content: center; gap: 8px; flex-wrap: wrap;
+}
+.interp-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.interp-node {
+  background: #e2e8f0; border: 1px solid #94a3b8; border-radius: 6px;
+  padding: 10px 12px; min-width: 88px; text-align: center; font-size: 12px; font-weight: 700; color: #1a1a2e;
+}
+.interp-node.compiler { background: #e2e8f0; }
+.interp-node.bytecode {
+  background: #fef08a; border-color: #ca8a04; border-radius: 4px 12px 4px 4px;
+  min-height: 42px; display: flex; align-items: center; justify-content: center;
+}
+.interp-node.vm { background: #64748b; color: #fff; border-color: #475569; }
+.interp-inner-arrow { display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 18px; padding-top: 10px; }
+.interp-libs {
+  margin-top: 8px; background: #86efac; border: 1px solid #16a34a; border-radius: 6px;
+  padding: 8px 10px; font-size: 11px; font-weight: 700; color: #14532d; text-align: center; min-width: 100px;
+}
+.interp-v-arrow { color: #16a34a; font-weight: 700; font-size: 14px; line-height: 1; }
+
 .panel-practice { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-top: 14px; }
 .panel-practice h3 { margin-top: 0; font-size: 14px; color: #0066cc; }
 .checklist { list-style: none; margin: 0; padding: 0; }
@@ -125,6 +187,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
+  .flow-compare { grid-template-columns: 1fr; }
   .panel-code { position: static; }
   .vs-editor { max-height: 50vh; }
   .nav-bar { padding: 0 16px; }
@@ -333,6 +396,7 @@ MODULE_MAP = {
     range(1, 24): "Core Topics",
     range(24, 30): "Real Projects · Python-Set2",
     range(30, 31): "Appendix",
+    range(31, 36): "Extended Curriculum",
 }
 
 
@@ -392,6 +456,11 @@ SLIDE_PROJECT_FILES: dict[int, list[tuple[str, str | None]]] = {
     28: [("README.md", None)],
     29: [("README.md", None)],
     30: [("28_csharp_vs_python.md", None)],
+    31: [("31_pep_standards.md", None)],
+    32: [("32_memory_gc.py", "python Projects/32_memory_gc.py")],
+    33: [("33_logging.py", "python Projects/33_logging.py")],
+    34: [("34_pydantic_demo.py", "python Projects/34_pydantic_demo.py")],
+    35: [("35_fastapi_sqlalchemy.md", None)],
 }
 
 
@@ -489,6 +558,98 @@ def tree(rows):
     return f'<div class="tree-mockup">{rows}</div>'
 
 
+def python_vs_csharp_flow() -> str:
+    return '''
+<h3>Inside the Python interpreter</h3>
+<div class="interp-diagram">
+  <div class="interp-row">
+    <div class="interp-side source">
+      <div class="interp-icon">&#128196;</div>
+      <b>Source code</b>
+      <span><code>.py</code></span>
+    </div>
+    <div class="interp-h-arrow">&rarr;</div>
+    <div class="interp-box">
+      <div class="interp-inner">
+        <div class="interp-col">
+          <div class="interp-node compiler">Compiler</div>
+        </div>
+        <div class="interp-inner-arrow">&rarr;</div>
+        <div class="interp-col">
+          <div class="interp-node bytecode">Byte code</div>
+        </div>
+        <div class="interp-inner-arrow">&rarr;</div>
+        <div class="interp-col">
+          <div class="interp-node vm">Virtual machine</div>
+          <div class="interp-v-arrow">&uarr;</div>
+          <div class="interp-libs">Library modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="interp-h-arrow">&rarr;</div>
+    <div class="interp-side running">
+      <div class="interp-icon">&#128161;</div>
+      <b>Running code</b>
+      <span>output / result</span>
+    </div>
+  </div>
+  <p class="flow-note"><b>Read it:</b> Source code enters the Interpreter. Inside: Compiler → Byte code → Virtual machine. Library modules feed the Virtual machine. Result is running code.</p>
+</div>
+<h3>How code runs — Python vs C#</h3>
+<div class="flow-compare">
+  <div class="flow-card">
+    <h4>Python path — interpreter runs <code>.py</code></h4>
+    <div class="flow-steps">
+      <div class="flow-step"><b>1. Source file</b><code>.py</code><span class="flow-code">score = 75
+if score &gt;= 60:
+    print("Pass")</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>2. Run command</b><span class="flow-code">python app.py</span>The Python interpreter starts and reads the <code>.py</code> file.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>3. CPython compiles to bytecode</b><code>.pyc</code><span class="flow-code">1010110 0001001 1110001
+LOAD_NAME score
+COMPARE_OP &gt;=</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>4. Interpreter runs bytecode</b><br>CPython executes one bytecode instruction at a time.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>5. Output</b><span class="flow-code">Pass</span></div>
+    </div>
+  </div>
+  <div class="flow-card">
+    <h4>C# path — JIT does not run <code>.cs</code> directly</h4>
+    <div class="flow-steps">
+      <div class="flow-step"><b>1. Source file</b><code>.cs</code><span class="flow-code">int score = 75;
+if (score &gt;= 60)
+{
+    Console.WriteLine("Pass");
+}</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>2. Build command</b><span class="flow-code">dotnet build
+dotnet publish</span>The C# compiler must compile <code>.cs</code> first.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>3. Compiler builds assembly</b><code>.dll</code> / <code>.exe</code><span class="flow-code">IL_0001: ldc.i4.s 75
+IL_0003: bge.s PASS</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>4. .NET runtime runs it</b><br>CLR/JIT turns IL into native machine instructions while the app runs.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>5. Output</b><span class="flow-code">Pass</span></div>
+    </div>
+  </div>
+</div>
+<h3>Production — what goes to the server?</h3>
+<table class="data-tbl">
+<tr><th>Question</th><th>Python</th><th>C# / .NET</th></tr>
+<tr><td>Can the source file run directly?</td><td><span class="cell-yes"><span class="yn-yes"></span>Yes</span> — run <code>python app.py</code>. The interpreter reads <code>.py</code>.</td><td><span class="cell-no"><span class="yn-no"></span>No</span> — <code>.cs</code> must be compiled first.</td></tr>
+<tr><td>Intermediate form</td><td><code>.pyc</code> bytecode in <code>__pycache__</code>. It is an internal cache, not the main production package.</td><td><code>.dll</code> / <code>.exe</code> assembly containing IL. This is normally part of the production publish output.</td></tr>
+<tr><td>Runtime</td><td>Python interpreter / CPython virtual machine executes bytecode.</td><td>.NET runtime / CLR loads assembly; JIT compiles IL to native machine code.</td></tr>
+<tr><td>Typical production artifact</td><td>Project folder or package with <code>.py</code> files + <code>requirements.txt</code>, a virtual environment, or a Docker image.</td><td>Published folder containing <code>MyApp.dll</code> plus dependencies, or a self-contained <code>.exe</code>.</td></tr>
+<tr><td>Production command</td><td><code>python -m app</code>, <code>uvicorn app.main:app</code>, <code>gunicorn app:app</code>, or Docker runs one of these.</td><td><code>dotnet MyApp.dll</code>, Windows service, IIS, container, or self-contained <code>MyApp.exe</code>.</td></tr>
+<tr><td>Python production deployment</td><td>Usually <code>.py</code> source files + dependencies, often inside Docker. It can also be a <code>.whl</code> package, AWS Lambda zip, zipapp <code>.pyz</code>, or bundled <code>.exe</code> from PyInstaller. Normal Python apps are <b>not</b> DLLs.</td><td>.NET production commonly publishes a <code>.dll</code> run by <code>dotnet</code>, or a self-contained <code>.exe</code>.</td></tr>
+</table>
+<p class="flow-note"><b>Interview line:</b> A Python <code>.py</code> file can be launched by the Python interpreter; CPython compiles it to bytecode and runs that bytecode. A C# <code>.cs</code> file is not run by JIT directly; it is compiled into a .NET assembly, then CLR/JIT runs the IL. In production, Python is usually deployed as source/package/container, not as a DLL.</p>
+'''
+
+
 def audio_src(n: int) -> str:
     return f"audio/slide-{n:02d}.mp3"
 
@@ -531,6 +692,8 @@ def topic_intro(n):
     parts = []
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><p>{meta["definition"]}</p>')
+        if n == 1:
+            parts.append(python_vs_csharp_flow())
     steps = beginner.get("steps", [])
     if steps:
         parts.append('<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps">')
@@ -805,6 +968,7 @@ grid[frozenset({"a", "b"})] = "combo"
 <li><b>Slides 3–23</b> — Core topics with <code>Projects/</code> practice files</li>
 <li><b>Slides 24–29</b> — Real projects in <code>Python-Set2/</code></li>
 <li><b>Slide 30</b> — C# vs Python quick reference</li>
+<li><b>Slides 31–35</b> — Extended curriculum (PEP, memory/GC, logging, Pydantic, FastAPI+SQLAlchemy)</li>
 </ul>
 ''' + code('''# ── TYPICAL WORKFLOW ──
 # 1. Read slide in PythonTraining.html
@@ -838,7 +1002,9 @@ python oops_inheritance_BankAccount.py
 <tr><td>Logical</td><td>and or not</td></tr>
 <tr><td>Identity</td><td>is / is not</td></tr>
 <tr><td>Membership</td><td>in / not in</td></tr>
+<tr><td>Assignment</td><td>= += -= *= /= //= %= **= &amp;= |= ^= &lt;&lt;= &gt;&gt;=</td></tr>
 <tr><td>Bitwise</td><td>&amp; | ^ ~ &lt;&lt; &gt;&gt;</td></tr>
+<tr><td>Walrus</td><td>:= (assign inside expression)</td></tr>
 </table>
 ''' + code('''# ── ARITHMETIC ──
 17 / 5    # 3.4   true division (always float in Python 3)
@@ -878,7 +1044,24 @@ x is None        # True  - ALWAYS use is for None
 5 ^ 3    # 6   XOR:  101 ^ 011 = 110
 ~5       # -6  NOT (invert bits)
 8 << 1   # 16  left shift (multiply by 2)
-8 >> 1   # 4   right shift (divide by 2)''') + '''
+8 >> 1   # 4   right shift (divide by 2)
+
+# ── ASSIGNMENT OPERATORS ──
+n = 10
+n += 5     # 15  (same as n = n + 5)
+n -= 3     # 12
+n *= 2     # 24
+n //= 4    # 6
+n **= 2    # 36
+
+# ── WALRUS OPERATOR := (Python 3.8+) ──
+# assign AND use value in same expression
+data = ["a", "bb", "ccc"]
+if (n := len(data)) > 2:
+    print(f"Got {n} items")
+
+while (line := input("Name (empty to quit): ")) != "":
+    print(f"Hello, {line}")''') + '''
 <div class="challenge"><b>Interview trap:</b> <code>is</code> checks identity (same object in memory). Use <code>==</code> for value comparison. Use <code>is None</code>, never <code>== None</code>.</div>
 ''', '''
 <ul class="checklist">
@@ -1067,6 +1250,7 @@ def good(lst=None):     # DO THIS instead
 <tr><td>zip(a, b)</td><td>Pair elements</td></tr>
 <tr><td>enumerate(iter)</td><td>Index + value pairs</td></tr>
 <tr><td>sorted(iter)</td><td>Return sorted copy</td></tr>
+<tr><td>max(iter) / min(iter)</td><td>Largest / smallest item</td></tr>
 </table>
 ''' + code('''from functools import reduce
 
@@ -1099,7 +1283,16 @@ by_len = sorted(["hi", "hello", "hey"], key=len)
 # ── type inspection ──
 print(type(42))              # <class 'int'>
 print(isinstance(42, int))    # True
-print(isinstance(42, (int, float)))  # True''') + '''
+print(isinstance(42, (int, float)))  # True
+
+# ── max / min ──
+prices = [120, 45, 89, 200]
+max(prices)                  # 200
+min(prices)                  # 45
+max(prices, key=lambda p: -p)  # smallest via custom key
+
+scores = {"Anu": 90, "Ravi": 85}
+max(scores, key=scores.get)  # "Anu"''') + '''
 ''', '''
 <ul class="checklist">
   <li>Use map/filter vs list comprehension — compare readability</li>
@@ -2048,7 +2241,7 @@ def save_report_v2():
 # C#:  this.Name = name;        Python: self.name = name
 # C#:  using (var f = ...)       Python: with open(...) as f:
 # C#:  static void Main()        Python: if __name__ == "__main__":''') + '''
-<div class="callout"><strong>30 slides complete!</strong> Basics + setup + 21 core topics + 6 real projects + appendix. Review slides 1–2, 10, 17, 19, and 24–28 before interviews.</div>
+<div class="callout"><strong>35 slides complete!</strong> Basics + setup + 21 core topics + 6 real projects + appendix + 5 extended curriculum topics. Review slides 1–2, 10, 17, 19, 24–28, and 31–35 before interviews.</div>
 ''', '''
 <h4>Final checklist</h4>
 <ul class="checklist">
@@ -2056,6 +2249,254 @@ def save_report_v2():
   <li>Can explain GIL, decorators, and async</li>
   <li>Demo-ready on Django and one Pipecat POC</li>
   <li>Reviewed C# vs Python cheat sheet</li>
+</ul>
+'''),
+(31, "PEP Standards", '''
+<p>PEPs (Python Enhancement Proposals) document language changes, style guides, and packaging standards. You do not memorize every PEP — know the ones interviewers and teams reference daily.</p>
+<table class="ref-table">
+<tr><th>PEP</th><th>Topic</th><th>Why it matters</th></tr>
+<tr><td>PEP 8</td><td>Style Guide</td><td>4-space indent, snake_case, 79-char lines (soft), imports order</td></tr>
+<tr><td>PEP 257</td><td>Docstring Conventions</td><td>Triple-quoted module/class/function docs</td></tr>
+<tr><td>PEP 484 / 585</td><td>Type Hints</td><td><code>list[int]</code> instead of <code>List[int]</code> (3.9+)</td></tr>
+<tr><td>PEP 20</td><td>Zen of Python</td><td><code>import this</code> — readability counts</td></tr>
+<tr><td>PEP 440</td><td>Version Identifiers</td><td><code>1.2.3</code>, pre-release tags in pip</td></tr>
+<tr><td>PEP 508</td><td>Dependency Specifiers</td><td><code>package&gt;=1.0,&lt;2</code> in requirements</td></tr>
+<tr><td>PEP 517 / 518</td><td>Build System</td><td><code>pyproject.toml</code> for modern packaging</td></tr>
+</table>
+''' + code('''# ── PEP 8 style (examples) ──
+import os
+from pathlib import Path
+
+MAX_RETRIES = 3          # constants: UPPER_SNAKE
+
+def load_config(path: str) -> dict:
+    """Load JSON config from path (PEP 257 docstring)."""
+    ...
+
+class OrderService:      # classes: PascalCase
+    def process(self, order_id: int) -> None:
+        user_name = "anu"  # variables: snake_case
+
+# ── Zen of Python ──
+import this   # PEP 20 — run in REPL once
+
+# ── pyproject.toml (PEP 518 / 621) ──
+# [project]
+# name = "my-api"
+# version = "0.1.0"
+# dependencies = ["fastapi>=0.100"]''') + '''
+<div class="callout"><b>Interview tip:</b> PEP 8 is convention, not syntax — linters (<code>ruff</code>, <code>flake8</code>) enforce it in CI. Black auto-formats; teams still expect readable names and docstrings.</div>
+''', '''
+<ul class="checklist">
+  <li>Run <code>import this</code> in REPL and name 3 Zen lines</li>
+  <li>Refactor one script to PEP 8 naming (snake_case, 4 spaces)</li>
+  <li>Add a one-line docstring to every function in a practice file</li>
+</ul>
+'''),
+
+(32, "Memory Management & Garbage Collection", '''
+<p>Python manages memory for you — but understanding references, cycles, and the GC helps debug leaks and performance issues in long-running services.</p>
+<table class="ref-table">
+<tr><th>Concept</th><th>What happens</th></tr>
+<tr><td>Reference counting</td><td>Each object tracks how many names point to it; at zero, memory is freed immediately</td></tr>
+<tr><td>Garbage collector (gc)</td><td>Finds circular references reference counting cannot break</td></tr>
+<tr><td>Generations 0/1/2</td><td>Young objects collected more often — amortized cost</td></tr>
+<tr><td>Immutable interning</td><td>Small ints and some strings may be shared — affects <code>is</code> tests</td></tr>
+<tr><td>del</td><td>Removes a name binding — does not guarantee instant destruction</td></tr>
+</table>
+''' + code('''import sys
+import gc
+
+# ── Reference counting ──
+a = [1, 2, 3]
+print(sys.getrefcount(a))   # approximate count (+ interpreter overhead)
+
+b = a
+print(sys.getrefcount(a))   # higher — two names reference same list
+
+del b                       # removes name b, not necessarily the list yet
+
+# ── Circular reference (GC handles this) ──
+class Node:
+    def __init__(self):
+        self.ref = None
+
+x = Node()
+y = Node()
+x.ref = y
+y.ref = x   # cycle — refcount never hits 0 alone
+del x, y
+gc.collect()  # breaks cycle and reclaims
+
+# ── Weak references (avoid keeping objects alive) ──
+import weakref
+
+obj = {"key": "value"}
+ref = weakref.ref(obj)
+print(ref())        # dict still alive
+del obj
+print(ref())        # None — object collected''') + '''
+<div class="challenge"><b>C# comparison:</b> Python has no <code>IDisposable</code> pattern for every object — use <code>with</code> for files/sockets. GC is always on; you rarely call <code>gc.collect()</code> except when debugging leaks.</div>
+''', '''
+<ul class="checklist">
+  <li>Run <code>Projects/32_memory_gc.py</code> and watch refcount change</li>
+  <li>Explain difference between <code>del x</code> and <code>x = None</code></li>
+  <li>Describe when circular references need the GC</li>
+</ul>
+'''),
+
+(33, "Logging", '''
+<p>Use the <code>logging</code> module instead of <code>print()</code> in production — levels, timestamps, and handlers map cleanly to observability tools (like Serilog / ILogger in C#).</p>
+<table class="ref-table">
+<tr><th>Level</th><th>When to use</th></tr>
+<tr><td>DEBUG</td><td>Verbose dev detail — off in production usually</td></tr>
+<tr><td>INFO</td><td>Normal lifecycle events (startup, request handled)</td></tr>
+<tr><td>WARNING</td><td>Something unexpected but recoverable</td></tr>
+<tr><td>ERROR</td><td>Operation failed — app continues</td></tr>
+<tr><td>CRITICAL</td><td>Serious failure — may abort</td></tr>
+</table>
+''' + code('''import logging
+from logging.handlers import RotatingFileHandler
+
+# ── Basic setup ──
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+log = logging.getLogger(__name__)
+
+log.debug("won't show at INFO level")
+log.info("Server started")
+log.warning("Disk 85% full")
+log.error("Payment gateway timeout", exc_info=False)
+
+# ── Module logger (preferred) ──
+logger = logging.getLogger("orders.service")
+
+def charge(order_id: int) -> None:
+    logger.info("Charging order %s", order_id)
+    try:
+        ...
+    except TimeoutError:
+        logger.exception("Charge failed for %s", order_id)  # includes traceback
+
+# ── File + rotation ──
+handler = RotatingFileHandler("app.log", maxBytes=1_000_000, backupCount=3)
+handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
+logger.addHandler(handler)''') + '''
+<div class="callout"><b>Rule:</b> <code>logger.info("x=%s", x)</code> — lazy formatting. Avoid f-strings in log calls when the message might be filtered out.</div>
+''', '''
+<ul class="checklist">
+  <li>Replace <code>print</code> with <code>logging</code> in one practice script</li>
+  <li>Configure DEBUG to console and INFO to file</li>
+  <li>Use <code>logger.exception()</code> inside an <code>except</code> block once</li>
+</ul>
+'''),
+
+(34, "Pydantic", '''
+<p>Pydantic validates and parses data using type hints — the backbone of FastAPI request/response models (like DataAnnotations + DTOs in C#).</p>
+<table class="ref-table">
+<tr><th>Feature</th><th>Purpose</th></tr>
+<tr><td>BaseModel</td><td>Define schema with typed fields</td></tr>
+<tr><td>Validation</td><td>Coercion + constraints on assign</td></tr>
+<tr><td>model_dump()</td><td>Export to dict (v2; was <code>.dict()</code>)</td></tr>
+<tr><td>Field()</td><td>Defaults, ge/le, descriptions</td></tr>
+<tr><td>model_validator</td><td>Cross-field validation (v2)</td></tr>
+</table>
+''' + code('''from pydantic import BaseModel, Field, field_validator
+
+class CreateUser(BaseModel):
+    email: str
+    age: int = Field(ge=18, le=120)
+    tags: list[str] = []
+
+    @field_validator("email")
+    @classmethod
+    def email_must_have_at(cls, v: str) -> str:
+        if "@" not in v:
+            raise ValueError("invalid email")
+        return v.lower()
+
+# ── Parse / validate ──
+payload = {"email": "Anu@Example.COM", "age": "25"}  # age str OK
+user = CreateUser.model_validate(payload)
+print(user.model_dump())
+# {'email': 'anu@example.com', 'age': 25, 'tags': []}
+
+# ── Invalid data raises ValidationError ──
+try:
+    CreateUser.model_validate({"email": "bad", "age": 10})
+except Exception as e:
+    print(type(e).__name__, e)''') + '''
+<div class="callout"><b>FastAPI tie-in:</b> Route parameters typed as Pydantic models auto-validate JSON bodies and return 422 with field errors — no manual <code>if not email</code> checks in every handler.</div>
+''', '''
+<ul class="checklist">
+  <li>Install: <code>pip install pydantic</code></li>
+  <li>Run <code>python Projects/34_pydantic_demo.py</code></li>
+  <li>Add one <code>field_validator</code> for a business rule</li>
+</ul>
+'''),
+
+(35, "FastAPI with SQLAlchemy", '''
+<p>Typical production stack: <b>FastAPI</b> (HTTP + async) + <b>Pydantic</b> (schemas) + <b>SQLAlchemy</b> (ORM / DB) — similar to ASP.NET Core + EF Core.</p>
+<table class="ref-table">
+<tr><th>Layer</th><th>Responsibility</th></tr>
+<tr><td>routes / routers</td><td>HTTP only — thin handlers</td></tr>
+<tr><td>schemas (Pydantic)</td><td>API input/output validation</td></tr>
+<tr><td>models (SQLAlchemy)</td><td>Database tables and relationships</td></tr>
+<tr><td>services</td><td>Business logic, transactions</td></tr>
+<tr><td>session / engine</td><td>Connection pool, Unit of Work per request</td></tr>
+</table>
+''' + code('''# ── Stack overview (simplified) ──
+# pip install fastapi uvicorn sqlalchemy pydantic
+
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, Session, declarative_base
+
+DATABASE_URL = "sqlite:///./app.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class UserORM(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True)
+
+class UserCreate(BaseModel):
+    email: str
+
+class UserRead(BaseModel):
+    id: int
+    email: str
+    model_config = {"from_attributes": True}  # ORM → schema
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app = FastAPI()
+
+@app.post("/users", response_model=UserRead)
+def create_user(body: UserCreate, db: Session = Depends(get_db)):
+    row = UserORM(email=body.email)
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+# Run: uvicorn main:app --reload''') + '''
+<div class="callout"><b>Pattern:</b> Never return ORM objects without a response schema. Use <code>Depends(get_db)</code> so each request gets one session, closed in <code>finally</code> — like scoped DbContext in C#.</div>
+''', '''
+<ul class="checklist">
+  <li>Draw layers: route → service → ORM → DB</li>
+  <li>Compare SQLAlchemy session to EF Core DbContext</li>
+  <li>Read <code>Projects/35_fastapi_sqlalchemy.md</code> for folder layout</li>
 </ul>
 '''),
 ]
@@ -2093,6 +2534,10 @@ def build_nav():
     <div class="nav-section">
       <h3>Appendix</h3>
       {links(30, 30)}
+    </div>
+    <div class="nav-section">
+      <h3>Extended Curriculum</h3>
+      {links(31, 35)}
     </div>
   </div>
 </div>

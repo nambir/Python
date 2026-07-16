@@ -71,6 +71,68 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .keyword-box { background: #f8fafc; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #1a1a2e; }
 .keyword-box .step-pre { margin-top: 6px; }
 
+.flow-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 12px; }
+.flow-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
+.flow-card h4 { font-size: 13px; color: #0066cc; margin: 0 0 8px; }
+.flow-steps { display: flex; flex-direction: column; gap: 6px; }
+.flow-step { background: #fff; border-left: 3px solid #0066cc; border-radius: 4px; padding: 7px 9px; font-size: 12px; line-height: 1.45; }
+.flow-step b { color: #1a1a2e; }
+.flow-code { display: block; margin-top: 4px; font-family: Consolas, monospace; font-size: 11px; color: #1a1a2e; background: #f0f7ff; padding: 6px 8px; border-radius: 3px; white-space: pre-wrap; }
+.flow-arrow { text-align: center; color: #0066cc; font-weight: 700; font-size: 14px; line-height: 1; }
+.flow-note { margin-top: 8px; font-size: 12px; color: #555; }
+
+/* ── Interpreter pipeline diagram (slide 1) ── */
+.interp-diagram { margin: 10px 0 14px; }
+.interp-row {
+  display: flex; align-items: stretch; justify-content: center; gap: 8px; flex-wrap: wrap;
+}
+.interp-side {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 90px; text-align: center;
+}
+.interp-side .interp-icon {
+  width: 52px; height: 52px; border-radius: 8px; border: 1px solid #cbd5e1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; background: #fff; margin-bottom: 6px;
+}
+.interp-side.source .interp-icon { background: #f0f7ff; border-color: #0066cc; }
+.interp-side.running .interp-icon { background: #f0fdf4; border-color: #16a34a; }
+.interp-side b { display: block; font-size: 12px; color: #1a1a2e; }
+.interp-side span { font-size: 10px; color: #555; }
+.interp-h-arrow {
+  display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 20px; padding: 0 2px;
+}
+.interp-box {
+  background: #fff7ed; border: 2px solid #f59e0b; border-radius: 10px;
+  padding: 18px 14px 10px; position: relative; min-width: 320px; flex: 1; max-width: 520px;
+}
+.interp-box::before {
+  content: "Interpreter";
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: #fff7ed; color: #1a1a2e; font-size: 13px; font-weight: 700;
+  padding: 0 8px;
+}
+.interp-inner {
+  display: flex; align-items: flex-start; justify-content: center; gap: 8px; flex-wrap: wrap;
+}
+.interp-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.interp-node {
+  background: #e2e8f0; border: 1px solid #94a3b8; border-radius: 6px;
+  padding: 10px 12px; min-width: 88px; text-align: center; font-size: 12px; font-weight: 700; color: #1a1a2e;
+}
+.interp-node.compiler { background: #e2e8f0; }
+.interp-node.bytecode {
+  background: #fef08a; border-color: #ca8a04; border-radius: 4px 12px 4px 4px;
+  min-height: 42px; display: flex; align-items: center; justify-content: center;
+}
+.interp-node.vm { background: #64748b; color: #fff; border-color: #475569; }
+.interp-inner-arrow { display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 18px; padding-top: 10px; }
+.interp-libs {
+  margin-top: 8px; background: #86efac; border: 1px solid #16a34a; border-radius: 6px;
+  padding: 8px 10px; font-size: 11px; font-weight: 700; color: #14532d; text-align: center; min-width: 100px;
+}
+.interp-v-arrow { color: #16a34a; font-weight: 700; font-size: 14px; line-height: 1; }
+
 .panel-practice { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-top: 14px; }
 .panel-practice h3 { margin-top: 0; font-size: 14px; color: #0066cc; }
 .checklist { list-style: none; margin: 0; padding: 0; }
@@ -117,6 +179,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
+  .flow-compare { grid-template-columns: 1fr; }
   .panel-code { position: static; }
   .vs-editor { max-height: 50vh; }
   .nav-bar { padding: 0 16px; }
@@ -192,13 +255,17 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
       <h3>Appendix</h3>
       <a onclick="goSlide(30)">30. C# vs Python — Quick Reference</a>
     </div>
+    <div class="nav-section">
+      <h3>Extended Curriculum</h3>
+      <a onclick="goSlide(31)">31. PEP Standards</a><a onclick="goSlide(32)">32. Memory Management & Garbage Collection</a><a onclick="goSlide(33)">33. Logging</a><a onclick="goSlide(34)">34. Pydantic</a><a onclick="goSlide(35)">35. FastAPI with SQLAlchemy</a>
+    </div>
   </div>
 </div>
 </div><div class="slide" id="slide-1">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 1 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 1 of 35 &middot; Core Topics</div>
   <div class="slide-title">What is Python?</div>
-  <div class="slide-sub">Python is a high-level, general-purpose language. Interpretation means CPython reads your .py file, …</div>
+  <div class="slide-sub">We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.py…</div>
   <div class="audio-player" id="player-1" data-slide="1">
   <audio id="audio-1" preload="metadata" src="audio/slide-01.mp3"></audio>
   <div class="audio-controls">
@@ -216,7 +283,95 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><p>Python is a high-level, general-purpose language. Interpretation means CPython reads your .py file, compiles it to bytecode (.pyc), then executes it line by line — unlike C# which compiles to native machine code ahead of time.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is Python?</b><br>Python is a language you write in text files ending in <code>.py</code>. You run them with the <code>python</code> command — no separate compile step like C#.</li><li><b>Step 2 — Interpreted, not machine code</b><br>CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then runs it line by line. That is why we call Python <b>interpreted</b>.</li><li><b>Step 3 — Indentation = blocks</b><br>Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>.</li><li><b>Step 4 — Dynamic typing</b><br>You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime.</li></ul>
+      <h3>Definition</h3><p>We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.pyc) and executes the bytecode step by step. Python is a high-level, general-purpose language. C# .cs files are compiled first into a .NET assembly (.dll/.exe), then the CLR/JIT runs the IL.</p>
+<h3>Inside the Python interpreter</h3>
+<div class="interp-diagram">
+  <div class="interp-row">
+    <div class="interp-side source">
+      <div class="interp-icon">&#128196;</div>
+      <b>Source code</b>
+      <span><code>.py</code></span>
+    </div>
+    <div class="interp-h-arrow">&rarr;</div>
+    <div class="interp-box">
+      <div class="interp-inner">
+        <div class="interp-col">
+          <div class="interp-node compiler">Compiler</div>
+        </div>
+        <div class="interp-inner-arrow">&rarr;</div>
+        <div class="interp-col">
+          <div class="interp-node bytecode">Byte code</div>
+        </div>
+        <div class="interp-inner-arrow">&rarr;</div>
+        <div class="interp-col">
+          <div class="interp-node vm">Virtual machine</div>
+          <div class="interp-v-arrow">&uarr;</div>
+          <div class="interp-libs">Library modules</div>
+        </div>
+      </div>
+    </div>
+    <div class="interp-h-arrow">&rarr;</div>
+    <div class="interp-side running">
+      <div class="interp-icon">&#128161;</div>
+      <b>Running code</b>
+      <span>output / result</span>
+    </div>
+  </div>
+  <p class="flow-note"><b>Read it:</b> Source code enters the Interpreter. Inside: Compiler → Byte code → Virtual machine. Library modules feed the Virtual machine. Result is running code.</p>
+</div>
+<h3>How code runs — Python vs C#</h3>
+<div class="flow-compare">
+  <div class="flow-card">
+    <h4>Python path — interpreter runs <code>.py</code></h4>
+    <div class="flow-steps">
+      <div class="flow-step"><b>1. Source file</b><code>.py</code><span class="flow-code">score = 75
+if score &gt;= 60:
+    print("Pass")</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>2. Run command</b><span class="flow-code">python app.py</span>The Python interpreter starts and reads the <code>.py</code> file.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>3. CPython compiles to bytecode</b><code>.pyc</code><span class="flow-code">1010110 0001001 1110001
+LOAD_NAME score
+COMPARE_OP &gt;=</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>4. Interpreter runs bytecode</b><br>CPython executes one bytecode instruction at a time.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>5. Output</b><span class="flow-code">Pass</span></div>
+    </div>
+  </div>
+  <div class="flow-card">
+    <h4>C# path — JIT does not run <code>.cs</code> directly</h4>
+    <div class="flow-steps">
+      <div class="flow-step"><b>1. Source file</b><code>.cs</code><span class="flow-code">int score = 75;
+if (score &gt;= 60)
+{
+    Console.WriteLine("Pass");
+}</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>2. Build command</b><span class="flow-code">dotnet build
+dotnet publish</span>The C# compiler must compile <code>.cs</code> first.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>3. Compiler builds assembly</b><code>.dll</code> / <code>.exe</code><span class="flow-code">IL_0001: ldc.i4.s 75
+IL_0003: bge.s PASS</span></div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>4. .NET runtime runs it</b><br>CLR/JIT turns IL into native machine instructions while the app runs.</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-step"><b>5. Output</b><span class="flow-code">Pass</span></div>
+    </div>
+  </div>
+</div>
+<h3>Production — what goes to the server?</h3>
+<table class="data-tbl">
+<tr><th>Question</th><th>Python</th><th>C# / .NET</th></tr>
+<tr><td>Can the source file run directly?</td><td><span class="cell-yes"><span class="yn-yes"></span>Yes</span> — run <code>python app.py</code>. The interpreter reads <code>.py</code>.</td><td><span class="cell-no"><span class="yn-no"></span>No</span> — <code>.cs</code> must be compiled first.</td></tr>
+<tr><td>Intermediate form</td><td><code>.pyc</code> bytecode in <code>__pycache__</code>. It is an internal cache, not the main production package.</td><td><code>.dll</code> / <code>.exe</code> assembly containing IL. This is normally part of the production publish output.</td></tr>
+<tr><td>Runtime</td><td>Python interpreter / CPython virtual machine executes bytecode.</td><td>.NET runtime / CLR loads assembly; JIT compiles IL to native machine code.</td></tr>
+<tr><td>Typical production artifact</td><td>Project folder or package with <code>.py</code> files + <code>requirements.txt</code>, a virtual environment, or a Docker image.</td><td>Published folder containing <code>MyApp.dll</code> plus dependencies, or a self-contained <code>.exe</code>.</td></tr>
+<tr><td>Production command</td><td><code>python -m app</code>, <code>uvicorn app.main:app</code>, <code>gunicorn app:app</code>, or Docker runs one of these.</td><td><code>dotnet MyApp.dll</code>, Windows service, IIS, container, or self-contained <code>MyApp.exe</code>.</td></tr>
+<tr><td>Python production deployment</td><td>Usually <code>.py</code> source files + dependencies, often inside Docker. It can also be a <code>.whl</code> package, AWS Lambda zip, zipapp <code>.pyz</code>, or bundled <code>.exe</code> from PyInstaller. Normal Python apps are <b>not</b> DLLs.</td><td>.NET production commonly publishes a <code>.dll</code> run by <code>dotnet</code>, or a self-contained <code>.exe</code>.</td></tr>
+</table>
+<p class="flow-note"><b>Interview line:</b> A Python <code>.py</code> file can be launched by the Python interpreter; CPython compiles it to bytecode and runs that bytecode. A C# <code>.cs</code> file is not run by JIT directly; it is compiled into a .NET assembly, then CLR/JIT runs the IL. In production, Python is usually deployed as source/package/container, not as a DLL.</p>
+<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is Python?</b><br>Python is a language you write in text files ending in <code>.py</code>. You run them with the <code>python</code> command — no separate compile step like C#.</li><li><b>Step 2 — Interpreted, not machine code</b><br>CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>.</li><li><b>Step 3 — Indentation = blocks</b><br>Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>.</li><li><b>Step 4 — Dynamic typing</b><br>You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Indentation</b> = the block structure in Python. No <code>{ }</code> braces — spaces after <code>:</code> define what belongs to <code>if</code>, <code>for</code>, <code>def</code>.<br><b>Use when:</b> every control-flow block.<br><b>Trap:</b> mixing tabs and spaces → <code>IndentationError</code>.</div>
 <div class="keyword-box"><b>Dynamic typing</b> = a variable name can point to different types over time.<br><b>Example:</b> <code>x = 5</code> then <code>x = "hi"</code> — legal.<br><b>Not like C#:</b> no <code>int x</code> declaration required.</div>
@@ -264,7 +419,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 </ul>
 
 <div class="callout"><b>C# developer tip:</b> <code>python file.py</code> ≈ immediate run (no dotnet build). Replace <code>{ }</code> with indents. Replace <code>null</code> with <code>None</code>.</div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Is Python compiled or interpreted?</p><p class="qa-a"><b>A:</b> Both, in practice. Source is compiled to bytecode, then the interpreter executes bytecode. We say interpreted because you run <code>.py</code> directly without building an .exe first.</p><p class="qa-q"><b>Q:</b> How is Python different from C#?</p><p class="qa-a"><b>A:</b> No mandatory type declarations, indentation instead of braces, and duck typing — if it behaves like a duck, use it like a duck.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Is Python compiled or interpreted?</p><p class="qa-a"><b>A:</b> We run the <code>.py</code> file using the Python interpreter. Internally, CPython converts it into bytecode (<code>.pyc</code>) and executes the bytecode step by step. So Python is both compiled to bytecode and interpreted by the Python virtual machine.</p><p class="qa-q"><b>Q:</b> How is Python different from C#?</p><p class="qa-a"><b>A:</b> No mandatory type declarations, indentation instead of braces, and duck typing — if it behaves like a duck, use it like a duck.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -312,7 +467,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 </div>
 </div><div class="slide" id="slide-2">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 2 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 2 of 35 &middot; Core Topics</div>
   <div class="slide-title">Setup &amp; Run Python on Windows</div>
   <div class="slide-sub">On Windows, install Python from python.org, add it to PATH, verify with python --version, then run c…</div>
   <div class="audio-player" id="player-2" data-slide="2">
@@ -332,13 +487,39 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><p>On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from VS Code/Cursor with the Python extension.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Install Python</b><br>Download from python.org. On Windows, check <b>Add Python to PATH</b> so <code>python</code> works in PowerShell.</li><li><b>Step 2 — Verify install</b><br>Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready.</li><li><b>Step 3 — Three ways to run code</b><br><b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — open folder in Cursor, select interpreter, press F5.</li><li><b>Step 4 — Multiple Python versions</b><br>On Windows use <code>py -3.12 script.py</code> to pick a version when more than one is installed.</li></ul>
-<h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>if __name__ == "__main__":</b> = run this code only when the file is executed directly, not when imported.<br><b>Use when:</b> script entry point (like C# <code>Main</code>).<br><div class="step-pre">def main():
-    print("Hello")
+      <h3>Definition</h3><p>On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from Cursor/VS Code with the Python extension. Other popular IDEs include PyCharm (JetBrains), Jupyter, Spyder, Visual Studio, and IDLE. Python scripts run top to bottom — define functions before calling them.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Install Python</b><br>Download from python.org. On Windows, check <b>Add Python to PATH</b> so <code>python</code> works in PowerShell.</li><li><b>Step 2 — Verify install</b><br>Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready.<table class="data-tbl"><tr><th>Command</th><th>Example from your screen</th><th>Meaning</th></tr><tr><td><code>python --version</code></td><td><code>Python 3.12.4</code></td><td>This is the <b>Python interpreter version</b> — the program that runs <code>.py</code> files.</td></tr><tr><td><code>pip --version</code></td><td><code>pip 25.3 ... (python 3.12)</code></td><td>This is the <b>pip installer version</b>, plus the Python version and folder that pip is connected to.</td></tr></table><div class="callout"><b>pip = Pip Installs Packages</b>. It downloads Python libraries from PyPI, like NuGet downloads packages for .NET.</div></li><li><b>Step 3 — Three ways to run code</b><br><b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — you will mainly use <b>Cursor</b> or <b>VS Code</b>: open the folder, select the interpreter, and press F5 to debug. Other famous Python IDEs/editors: <b>PyCharm</b>, <b>Jupyter Notebook/Lab</b>, <b>Spyder</b>, <b>Visual Studio</b>, and built-in <b>IDLE</b>.<div class="step-pre">C:\Users\SangeethaLocalAccoun&gt;python
+Python 3.12.4 ... on win32
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; 2+2
+4
+&gt;&gt;&gt; exit()</div><p class="step-result"><b>Meaning:</b> <code>&gt;&gt;&gt;</code> is the Python REPL prompt. It waits for one Python expression or statement, runs it immediately, and prints the result.</p></li><li><b>Step 4 — Multiple Python versions</b><br>On Windows use <code>py -3.12 script.py</code> to pick a version when more than one is installed.</li><li><b>Step 5 — Define functions before you call them (not like C#)</b><br>Python runs a script <b>top to bottom</b>. When it reaches a call like <code>Add(1, 2)</code>, the name <code>Add</code> must already exist. If <code>def Add</code> is below the call, you get <code>NameError: name 'Add' is not defined</code>.<div class="callout"><b>C# difference:</b> Inside a C# class, method order usually does <b>not</b> matter — the compiler sees the whole type first. In a Python <code>.py</code> file, execution order <b>does</b> matter.</div><table class="data-tbl"><tr><th>Wrong order</th><th>Correct strategy</th></tr><tr><td><div class="step-pre">if __name__ == "__main__":
+    Add(1, 2)   # NameError!
+
+def Add(x, y):
+    print(f"Answer is={x + y}")</div></td><td><div class="step-pre">def Add(x, y):
+    print(f"Answer is={x + y}")
 
 if __name__ == "__main__":
-    main()</div></div>
+    print("hai")
+    Add(1, 2)</div></td></tr></table><p class="step-result"><b>Strategy:</b> put all <code>def</code> / <code>class</code> at the top; put <code>if __name__ == "__main__":</code> at the bottom (like C# <code>Main</code> entry point).</p></li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>if __name__ == "__main__":</b> = run this code only when the file is executed directly, not when imported.<br><b>Use when:</b> script entry point (like C# <code>Main</code>).<br><b>Strategy:</b> put all <code>def</code> / <code>class</code> above this block — Python runs top to bottom.<br><div class="step-pre">def Add(x, y):
+    print(f"Answer is={x + y}")
+
+if __name__ == "__main__":
+    Add(1, 2)</div></div>
+<div class="keyword-box"><b>NameError</b> = name used before it exists.<br><b>Trap:</b> call <code>Add(1, 2)</code> above <code>def Add</code> → <code>name 'Add' is not defined</code>.<br><b>C# contrast:</b> method order inside a class usually does not matter; in a Python script file, order does.<br><br><span class="cell-no"><span class="yn-no"></span>Wrong — will not work</span><div class="step-pre">if __name__ == "__main__":
+    print("hai")
+    Add(1, 2)      # NameError: name 'Add' is not defined
+
+def Add(x, y):
+    print(f"Answer is={x + y}")</div>
+<span class="cell-yes"><span class="yn-yes"></span>Correct — define first, call later</span><div class="step-pre">def Add(x, y):
+    print(f"Answer is={x + y}")
+
+if __name__ == "__main__":
+    print("hai")
+    Add(1, 2)</div></div>
 <div class="keyword-box"><b>REPL</b> = Read-Eval-Print Loop. Type one line, see result immediately.<br><b>Use when:</b> quick experiments.<br><b>Not for:</b> full applications — use a <code>.py</code> script.</div>
 
       
@@ -346,22 +527,28 @@ if __name__ == "__main__":
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>PATH</td><td>Windows environment variable listing folders where the OS searches for executables.</td><td><code>python</code> found in PATH</td></tr>
-<tr><td>pip</td><td>Python's package installer — downloads libraries from PyPI (like NuGet).</td><td><code>pip install pytest</code></td></tr>
+<tr><td>pip</td><td><b>pip = Pip Installs Packages</b>. Python's package installer — downloads libraries from PyPI (like NuGet).</td><td><code>pip install pytest</code></td></tr>
+<tr><td>python --version</td><td>Shows the Python interpreter version — the program that runs <code>.py</code> files.</td><td><code>Python 3.12.4</code></td></tr>
+<tr><td>pip --version</td><td>Shows the pip installer version, its install path, and which Python version it is connected to.</td><td><code>pip 25.3 ... (python 3.12)</code></td></tr>
 <tr><td>REPL</td><td>Read-Eval-Print Loop — interactive shell; type code, see result immediately.</td><td><code>python</code> then <code>2+2</code></td></tr>
 <tr><td>Script</td><td>A <code>.py</code> file run from the command line in one shot.</td><td><code>python app.py</code></td></tr>
 <tr><td>Interpreter path</td><td>Which Python executable your IDE uses — must match your venv.</td><td>Ctrl+Shift+P → Select Interpreter</td></tr>
 <tr><td>py launcher</td><td>Windows <code>py</code> command picks among multiple installed Python versions.</td><td><code>py -3.12 script.py</code></td></tr>
-<tr><td>__main__</td><td>Special module name when a file is run directly (not imported).</td><td><code>if __name__ == "__main__":</code></td></tr>
+<tr><td>__main__</td><td>Special module name when a file is run directly (not imported). Put this block at the <b>bottom</b> of the file.</td><td><code>if __name__ == "__main__":</code></td></tr>
+<tr><td>Top-to-bottom</td><td>Python executes statements in order. A name must exist <b>before</b> you call it.</td><td><code>def Add</code> above <code>Add(1,2)</code></td></tr>
+<tr><td>NameError</td><td>Raised when you use a name that is not defined yet — common if <code>def</code> is below the call.</td><td><code>name 'Add' is not defined</code></td></tr>
 </table>
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
 <tr><td>Try one line, explore an API</td><td><b>REPL</b></td><td>Instant feedback — type <code>python</code>, experiment</td></tr>
+<tr><td>Check Python and package installer setup</td><td><b>python --version + pip --version</b></td><td><code>python</code> shows interpreter version; <code>pip</code> shows installer version and linked Python path</td></tr>
 <tr><td>Run a complete program repeatedly</td><td><b>Script</b></td><td><code>python app.py</code> — reproducible, shareable</td></tr>
-<tr><td>Debug with breakpoints, step through</td><td><b>IDE (F5)</b></td><td>Cursor/VS Code debugger, watch variables</td></tr>
+<tr><td>Debug with breakpoints, step through</td><td><b>Cursor / VS Code (F5)</b></td><td>Daily choice: Cursor or VS Code. Other famous options: PyCharm, Jupyter Notebook/Lab, Spyder, Visual Studio, IDLE.</td></tr>
 <tr><td>One-off command in CI/CD pipeline</td><td><b>python -c</b></td><td>Inline without creating a file</td></tr>
 <tr><td>Multiple Python versions on one PC</td><td><b>py launcher</b></td><td><code>py -3.12 script.py</code> picks version</td></tr>
 <tr><td>Library imported by other modules</td><td><b>Module + __main__ guard</b></td><td>Runnable directly OR importable safely</td></tr>
+<tr><td>Avoid NameError for your own functions</td><td><b>defs first, main last</b></td><td>Define <code>Add</code> above; call it inside <code>if __name__ == "__main__":</code> at bottom — unlike C# class method order</td></tr>
 </table>
 <h3>Install Python on Windows</h3>
 <table class="data-tbl">
@@ -382,7 +569,7 @@ if __name__ == "__main__":
 <h3>Three ways to run Python</h3>
 
 <div class="tip"><b>PATH issue?</b> If <code>python</code> is not recognized, re-run the installer and enable PATH, or use the full path: <code>C:\Users\You\AppData\Local\Programs\Python\Python312\python.exe</code></div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How do you set up Python on a new Windows machine?</p><p class="qa-a"><b>A:</b> Install from python.org with PATH enabled, verify with <code>python --version</code>, create a project folder, optionally <code>python -m venv .venv</code>, and select that interpreter in the IDE.</p><p class="qa-q"><b>Q:</b> What is the REPL?</p><p class="qa-a"><b>A:</b> Read-Eval-Print Loop — an interactive shell. Type one line, see the result immediately. Good for quick experiments, not for full apps.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How do you set up Python on a new Windows machine?</p><p class="qa-a"><b>A:</b> Install from python.org with PATH enabled, verify with <code>python --version</code> and <code>pip --version</code>, create a project folder, optionally <code>python -m venv .venv</code>, and select that interpreter in the IDE.</p><p class="qa-q"><b>Q:</b> What is the difference between python --version and pip --version?</p><p class="qa-a"><b>A:</b> <code>python --version</code> shows the Python interpreter version, for example <code>Python 3.12.4</code>. <code>pip --version</code> shows the pip package installer version, for example <code>pip 25.3</code>, plus the Python version and install path it belongs to. <b>pip</b> means <b>Pip Installs Packages</b>.</p><p class="qa-q"><b>Q:</b> What is the REPL?</p><p class="qa-a"><b>A:</b> Read-Eval-Print Loop — an interactive shell. Type one line, see the result immediately. Good for quick experiments, not for full apps.</p><p class="qa-q"><b>Q:</b> Why do I get NameError if I put Add below if __name__?</p><p class="qa-a"><b>A:</b> Python executes the file top to bottom. When <code>Add(1, 2)</code> runs, <code>def Add</code> has not run yet, so the name does not exist. In C#, method order inside a class usually does not matter because the compiler compiles the whole type first. Strategy: define functions first; put <code>if __name__ == "__main__":</code> at the bottom.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -440,7 +627,7 @@ if __name__ == "__main__":
 </div>
 </div><div class="slide" id="slide-3">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 3 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 3 of 35 &middot; Core Topics</div>
   <div class="slide-title">Python Datatypes</div>
   <div class="slide-sub">Primitive types store a single value — for example int, float, str, and bool. Collection types store…</div>
   <div class="audio-player" id="player-3" data-slide="3">
@@ -591,7 +778,7 @@ grid[frozenset({"a", "b"})] = "perms"</div><p class="step-result">Both work — 
 </div>
 </div><div class="slide" id="slide-4">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 4 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 4 of 35 &middot; Core Topics</div>
   <div class="slide-title">Your Training Workspace</div>
   <div class="slide-sub">Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Pyth…</div>
   <div class="audio-player" id="player-4" data-slide="4">
@@ -611,7 +798,7 @@ grid[frozenset({"a", "b"})] = "perms"</div><p class="step-result">Both work — 
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><p>Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and VS Code/Cursor as your IDE.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Three learning layers</b><br><b>Slides</b> = theory. <b>Projects/</b> = short exercises per topic. <b>Python-Set2/</b> = real multi-file apps.</li><li><b>Step 2 — One venv per project</b><br>Run <code>python -m venv .venv</code> so each project has its own packages — do not install everything globally.</li><li><b>Step 3 — Open root in Cursor</b><br>Open <code>D:/Sangeetha/Python/</code>, select Python 3.12 interpreter, run files with <code>python Projects/xx_topic.py</code>.</li><li><b>Step 4 — Regenerate slides after edits</b><br>Edit <code>build_training.py</code> or <code>training_beginner.py</code>, then run <code>python build_training.py</code> — never hand-edit <code>PythonTraining.html</code>.</li></ul>
+      <h3>Definition</h3><p>Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and Cursor or VS Code as your main IDE.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Three learning layers</b><br><b>Slides</b> = theory. <b>Projects/</b> = short exercises per topic. <b>Python-Set2/</b> = real multi-file apps.</li><li><b>Step 2 — One venv per project</b><br>Run <code>python -m venv .venv</code> so each project has its own packages — do not install everything globally.</li><li><b>Step 3 — Open root in Cursor</b><br>Open <code>D:/Sangeetha/Python/</code>, select Python 3.12 interpreter, run files with <code>python Projects/xx_topic.py</code>.</li><li><b>Step 4 — Regenerate slides after edits</b><br>Edit <code>build_training.py</code> or <code>training_beginner.py</code>, then run <code>python build_training.py</code> — never hand-edit <code>PythonTraining.html</code>.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>__init__.py</b> = marks a folder as a Python <b>package</b> so you can <code>import myapp.utils</code>.<br><b>Can be empty</b> — often just <code>pass</code> or a one-line docstring.</div>
 <div class="keyword-box"><b>.venv/</b> = isolated Python + packages per project.<br><b>Rule:</b> never install project libraries globally — one venv per app.</div>
@@ -652,6 +839,7 @@ grid[frozenset({"a", "b"})] = "perms"</div><p class="step-result">Both work — 
 <li><b>Slides 3–23</b> — Core topics with <code>Projects/</code> practice files</li>
 <li><b>Slides 24–29</b> — Real projects in <code>Python-Set2/</code></li>
 <li><b>Slide 30</b> — C# vs Python quick reference</li>
+<li><b>Slides 31–35</b> — Extended curriculum (PEP, memory/GC, logging, Pydantic, FastAPI+SQLAlchemy)</li>
 </ul>
 
 <div class="callout"><b>C# developer tip:</b> <code>python file.py</code> ≈ <code>dotnet run</code> &middot; <code>pip install</code> ≈ <code>dotnet add package</code> &middot; <code>venv</code> ≈ per-project NuGet isolation</div>
@@ -690,7 +878,7 @@ grid[frozenset({"a", "b"})] = "perms"</div><p class="step-result">Both work — 
 </div>
 </div><div class="slide" id="slide-5">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 5 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 5 of 35 &middot; Core Topics</div>
   <div class="slide-title">Operators</div>
   <div class="slide-sub">Operators perform computation and comparison: arithmetic (+, -, *, /, //, %, **), comparison (==, !=…</div>
   <div class="audio-player" id="player-5" data-slide="5">
@@ -737,7 +925,22 @@ a | b   # 7   (OR)
 a ^ b   # 6   (XOR)
 ~a      # -6  (NOT)
 a &lt;&lt; 1  # 10  (left shift)
-a &gt;&gt; 1  # 2   (right shift)</div><p class="step-result"><b>Use case:</b> combine permission flags with <code>|</code>, test with <code>&amp;</code>.</p></li></ul>
+a &gt;&gt; 1  # 2   (right shift)</div><p class="step-result"><b>Use case:</b> combine permission flags with <code>|</code>, test with <code>&amp;</code>.</p></li><li><b>Step 5 — Assignment operators (+=, -=, …)</b><br>Shorthand updates a variable in place — same idea as C# <code>+=</code>.<div class="step-pre">n = 10
+n += 5     # 15  (n = n + 5)
+n -= 3     # 12
+n *= 2     # 24
+n //= 4    # 6
+n **= 2    # 36
+
+flags = 0
+flags |= 4   # set bit
+flags &amp;= ~2  # clear bit</div><p class="step-result"><b>All forms:</b> <code>= += -= *= /= //= %= **= &amp;= |= ^= &lt;&lt;= &gt;&gt;=</code></p></li><li><b>Step 6 — Walrus operator (:=)</b><br>Python 3.8+ — assign a value <b>and</b> use it inside the same expression (named after eyes looking like walrus tusks).<div class="step-pre">data = ["a", "bb", "ccc"]
+if (n := len(data)) &gt; 2:
+    print(f"Got {n} items")
+
+# classic pattern: read until empty
+while (line := input("Name: ")) != "":
+    print(f"Hello, {line}")</div><p class="step-result"><b>Use when:</b> you need the assigned value twice — avoids calling <code>len(data)</code> or <code>input()</code> twice.</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>None</b> = Python's "no value" (like C# <code>null</code>).<br><b>Test with:</b> <code>if x is None:</code> — never <code>x == None</code>.<br><b>Why is:</b> there is only one <code>None</code> object in memory.</div>
 <div class="keyword-box"><b>==</b> = same value. &nbsp; <b>is</b> = same object in memory.<br><div class="step-pre">a = [1, 2]; b = [1, 2]
@@ -745,6 +948,9 @@ a == b   # True
 a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</div>
 <div class="keyword-box"><b>//</b> = floor division (whole number result). <b>/</b> = true division (always float in Python 3).<br><b>Example:</b> <code>10 / 4</code> → <code>2.5</code>, <code>10 // 4</code> → <code>2</code>.</div>
 <div class="keyword-box"><b>in</b> = membership test — works on lists, strings, dict keys, sets.<br><b>Example:</b> <code>"py" in "python"</code> → <code>True</code>.</div>
+<div class="keyword-box"><b>+=</b> and friends = in-place assignment.<br><b>Example:</b> <code>n += 5</code> same as <code>n = n + 5</code>. Works on numbers, strings, lists.</div>
+<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br><div class="step-pre">if (n := len(data)) &gt; 0:
+    print(n)</div><b>Use when:</b> you need the value in the condition — not for every assignment.</div>
 
       
 <h3>Key terms explained</h3>
@@ -758,6 +964,8 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
 <tr><td>Membership (in)</td><td>Test if value exists in a collection.</td><td><code>5 in [1,5,9]</code></td></tr>
 <tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Test with:</b> <code>if x is None:</code> — use <code>is</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python.</td><td><code>if x is None:</code></td></tr>
 <tr><td>Bitwise</td><td>Operators on binary digits: <code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td><code>5 &amp; 3</code> → 1</td></tr>
+<tr><td>Assignment operators</td><td>Shorthand in-place update: <code>+= -= *=</code> etc.</td><td><code>n += 5</code></td></tr>
+<tr><td>Walrus (:=)</td><td>Assign and use value in one expression (3.8+).</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
 </table>
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
@@ -778,11 +986,13 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
 <tr><td>Logical</td><td>and or not</td></tr>
 <tr><td>Identity</td><td>is / is not</td></tr>
 <tr><td>Membership</td><td>in / not in</td></tr>
+<tr><td>Assignment</td><td>= += -= *= /= //= %= **= &amp;= |= ^= &lt;&lt;= &gt;&gt;=</td></tr>
 <tr><td>Bitwise</td><td>&amp; | ^ ~ &lt;&lt; &gt;&gt;</td></tr>
+<tr><td>Walrus</td><td>:= (assign inside expression)</td></tr>
 </table>
 
 <div class="challenge"><b>Interview trap:</b> <code>is</code> checks identity (same object in memory). Use <code>==</code> for value comparison. Use <code>is None</code>, never <code>== None</code>.</div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is the difference between == and is?</p><p class="qa-a"><b>A:</b> <code>==</code> compares values. <code>is</code> compares object identity (same memory address). Two equal lists can be <code>==</code> but not <code>is</code>. Use <code>is</code> for <code>None</code>.</p><p class="qa-q"><b>Q:</b> What is a common division trap in Python 3?</p><p class="qa-a"><b>A:</b> <code>10 / 4</code> returns <code>2.5</code> (float). Use <code>//</code> for floor division (<code>2</code>) when you need integers.</p><p class="qa-q"><b>Q:</b> What does // vs % do together?</p><p class="qa-a"><b>A:</b> For integers: <code>a == (a // b) * b + (a % b)</code>. Example: <code>10 // 4 = 2</code>, <code>10 % 4 = 2</code>.</p><p class="qa-q"><b>Q:</b> What is None and how do you test for it?</p><p class="qa-a"><b>A:</b> <code>None</code> means no value. Always use <code>if x is None:</code> — not <code>x == None</code>. There is only one <code>None</code> object in Python.</p><p class="qa-q"><b>Q:</b> When would you use bitwise operators?</p><p class="qa-a"><b>A:</b> Feature flags, network masks, fast multiply/divide by powers of 2 with shifts, or when working with binary protocols.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is the difference between == and is?</p><p class="qa-a"><b>A:</b> <code>==</code> compares values. <code>is</code> compares object identity (same memory address). Two equal lists can be <code>==</code> but not <code>is</code>. Use <code>is</code> for <code>None</code>.</p><p class="qa-q"><b>Q:</b> What is a common division trap in Python 3?</p><p class="qa-a"><b>A:</b> <code>10 / 4</code> returns <code>2.5</code> (float). Use <code>//</code> for floor division (<code>2</code>) when you need integers.</p><p class="qa-q"><b>Q:</b> What does // vs % do together?</p><p class="qa-a"><b>A:</b> For integers: <code>a == (a // b) * b + (a % b)</code>. Example: <code>10 // 4 = 2</code>, <code>10 % 4 = 2</code>.</p><p class="qa-q"><b>Q:</b> What is None and how do you test for it?</p><p class="qa-a"><b>A:</b> <code>None</code> means no value. Always use <code>if x is None:</code> — not <code>x == None</code>. There is only one <code>None</code> object in Python.</p><p class="qa-q"><b>Q:</b> When would you use bitwise operators?</p><p class="qa-a"><b>A:</b> Feature flags, network masks, fast multiply/divide by powers of 2 with shifts, or when working with binary protocols.</p><p class="qa-q"><b>Q:</b> What does += do?</p><p class="qa-a"><b>A:</b> <code>n += 5</code> is equivalent to <code>n = n + 5</code> — updates in place. Works for numbers, strings (<code>s += "x"</code>), and lists (<code>lst += [1]</code>).</p><p class="qa-q"><b>Q:</b> When should you use the walrus operator :=?</p><p class="qa-a"><b>A:</b> When you assign a value and immediately need it in a condition or loop — e.g. <code>if (n := len(items)) &gt; 0:</code>. Do not overuse; readability first.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -837,12 +1047,29 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
 <tr><td class="gutter">37</td><td class="src"><span class="t-op">~</span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># -6  NOT (invert bits)</span></td></tr>
 <tr><td class="gutter">38</td><td class="src"><span class="t-num">8</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 16  left shift (multiply by 2)</span></td></tr>
 <tr><td class="gutter">39</td><td class="src"><span class="t-num">8</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 4   right shift (divide by 2)</span></td></tr>
+<tr><td class="gutter">40</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-cm"># ── ASSIGNMENT OPERATORS ──</span></td></tr>
+<tr><td class="gutter">42</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">10</span></td></tr>
+<tr><td class="gutter">43</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 15  (same as n = n + 5)</span></td></tr>
+<tr><td class="gutter">44</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 12</span></td></tr>
+<tr><td class="gutter">45</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 24</span></td></tr>
+<tr><td class="gutter">46</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op">/</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">4</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 6</span></td></tr>
+<tr><td class="gutter">47</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op">*</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 36</span></td></tr>
+<tr><td class="gutter">48</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">49</td><td class="src"><span class="t-cm"># ── WALRUS OPERATOR := (Python 3.8+) ──</span></td></tr>
+<tr><td class="gutter">50</td><td class="src"><span class="t-cm"># assign AND use value in same expression</span></td></tr>
+<tr><td class="gutter">51</td><td class="src"><span class="t-id">data</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;a&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;bb&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;ccc&quot;</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">52</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">len</span><span class="t-op">(</span><span class="t-id">data</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">53</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">f</span><span class="t-str">&quot;Got {n} items&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">54</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">55</td><td class="src"><span class="t-kw">while</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">line</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">input</span><span class="t-op">(</span><span class="t-str">&quot;Name (empty to quit): &quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">!</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">56</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">f</span><span class="t-str">&quot;Hello, {line}&quot;</span><span class="t-op">)</span></td></tr>
 </tbody></table></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-6">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 6 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 6 of 35 &middot; Core Topics</div>
   <div class="slide-title">Conditional &amp; Flow Control</div>
   <div class="slide-sub">Flow control directs execution: if/elif/else for branching, for/while for loops, break/continue for …</div>
   <div class="audio-player" id="player-6" data-slide="6">
@@ -1013,7 +1240,7 @@ else:
 </div>
 </div><div class="slide" id="slide-7">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 7 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 7 of 35 &middot; Core Topics</div>
   <div class="slide-title">Comprehensions</div>
   <div class="slide-sub">Comprehensions build collections in one expression: list [x for x in items], set {x for x in items},…</div>
   <div class="audio-player" id="player-7" data-slide="7">
@@ -1121,7 +1348,7 @@ next(gen)   # 1</div></li></ul>
 </div>
 </div><div class="slide" id="slide-8">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 8 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 8 of 35 &middot; Core Topics</div>
   <div class="slide-title">Python Functions</div>
   <div class="slide-sub">Functions are defined with def. They support positional and keyword args, defaults, *args (extra pos…</div>
   <div class="audio-player" id="player-8" data-slide="8">
@@ -1290,7 +1517,7 @@ times3(10)   # 30</div></li></ul>
 </div>
 </div><div class="slide" id="slide-9">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 9 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 9 of 35 &middot; Core Topics</div>
   <div class="slide-title">Built-in Functions</div>
   <div class="slide-sub">Built-in functions operate on iterables and objects: map/filter/reduce transform data; zip/enumerate…</div>
   <div class="audio-player" id="player-9" data-slide="9">
@@ -1327,11 +1554,20 @@ id(x)                # unique object id
 isinstance(x, int)   # True
 isinstance(True, int)  # True — bool is subclass of int</div></li><li><b>Step 4 — range, len, sorted & reversed</b><br>Common sequence utilities — know which mutate vs return new objects.<table class="data-tbl"><tr><th>Function</th><th>Returns</th><th>Mutates?</th></tr><tr><td><code>len(x)</code></td><td>count</td><td class="cell-no"><span class="yn-no"></span>No</td></tr><tr><td><code>sorted(x)</code></td><td>new list</td><td class="cell-no"><span class="yn-no"></span>No</td></tr><tr><td><code>reversed(x)</code></td><td>iterator</td><td class="cell-no"><span class="yn-no"></span>No</td></tr><tr><td><code>list.sort()</code></td><td><code>None</code></td><td class="cell-yes"><span class="yn-yes"></span>Yes</td></tr></table><div class="step-pre">len([10, 20, 30])           # 3
 sorted([3, 1, 2])             # [1, 2, 3]
-list(reversed("abc"))         # ['c', 'b', 'a']</div></li></ul>
+list(reversed("abc"))         # ['c', 'b', 'a']</div></li><li><b>Step 5 — max & min</b><br><code>max()</code> and <code>min()</code> find the largest and smallest item — with optional <code>key=</code> for custom ordering.<div class="step-pre">prices = [120, 45, 89, 200]
+max(prices)                 # 200
+min(prices)                 # 45
+
+scores = {"Anu": 90, "Ravi": 85}
+max(scores, key=scores.get)  # "Anu" (highest score)
+min(scores, key=scores.get)  # "Ravi"
+
+max([], default=0)           # 0 — empty safe</div></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>sorted()</b> = returns <b>new</b> sorted list; original unchanged.<br><b>.sort()</b> = sorts list <b>in place</b>; returns <code>None</code>.<br><b>Trap:</b> <code>x = lst.sort()</code> makes <code>x</code> None.</div>
 <div class="keyword-box"><b>enumerate()</b> = gives <code>(index, value)</code> pairs — avoid manual <code>range(len())</code>.<br><b>zip()</b> = pair items from two sequences together.</div>
 <div class="keyword-box"><b>isinstance()</b> = type check that respects inheritance — prefer over <code>type(x) == int</code>.</div>
+<div class="keyword-box"><b>max()</b> / <b>min()</b> = largest / smallest item.<br><b>On dict:</b> compares keys by default — use <code>key=dict.get</code> for values.<br><b>Empty:</b> <code>max(items, default=0)</code> avoids ValueError.</div>
 
       
 <h3>Key terms explained</h3>
@@ -1344,6 +1580,7 @@ list(reversed("abc"))         # ['c', 'b', 'a']</div></li></ul>
 <tr><td>enumerate</td><td>Yield (index, value) pairs while looping.</td><td><code>enumerate(items)</code></td></tr>
 <tr><td>sorted</td><td>Return new sorted list — original unchanged.</td><td><code>sorted(nums)</code></td></tr>
 <tr><td>isinstance</td><td>Check if object is instance of type (supports inheritance).</td><td><code>isinstance(x, int)</code></td></tr>
+<tr><td>max / min</td><td>Largest / smallest item; optional <code>key=</code> for custom order.</td><td><code>max(scores, key=scores.get)</code></td></tr>
 </table>
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
@@ -1364,9 +1601,10 @@ list(reversed("abc"))         # ['c', 'b', 'a']</div></li></ul>
 <tr><td>zip(a, b)</td><td>Pair elements</td></tr>
 <tr><td>enumerate(iter)</td><td>Index + value pairs</td></tr>
 <tr><td>sorted(iter)</td><td>Return sorted copy</td></tr>
+<tr><td>max(iter) / min(iter)</td><td>Largest / smallest item</td></tr>
 </table>
 
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> sorted() vs list.sort()?</p><p class="qa-a"><b>A:</b> <code>sorted()</code> returns a new sorted list; original unchanged. <code>.sort()</code> mutates in place and returns <code>None</code>. Never assign <code>x = lst.sort()</code>.</p><p class="qa-q"><b>Q:</b> When do you use enumerate?</p><p class="qa-a"><b>A:</b> When you need both index and value: <code>for i, item in enumerate(items):</code> instead of manual <code>range(len(items))</code>.</p><p class="qa-q"><b>Q:</b> isinstance vs type() == ?</p><p class="qa-a"><b>A:</b> <code>isinstance(x, int)</code> respects inheritance (<code>True</code> for bool). <code>type(x) == int</code> is exact match only.</p><p class="qa-q"><b>Q:</b> map vs list comprehension?</p><p class="qa-a"><b>A:</b> Comprehensions are more Pythonic and readable. <code>map</code> is useful with existing functions: <code>map(str.strip, lines)</code>.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> sorted() vs list.sort()?</p><p class="qa-a"><b>A:</b> <code>sorted()</code> returns a new sorted list; original unchanged. <code>.sort()</code> mutates in place and returns <code>None</code>. Never assign <code>x = lst.sort()</code>.</p><p class="qa-q"><b>Q:</b> When do you use enumerate?</p><p class="qa-a"><b>A:</b> When you need both index and value: <code>for i, item in enumerate(items):</code> instead of manual <code>range(len(items))</code>.</p><p class="qa-q"><b>Q:</b> isinstance vs type() == ?</p><p class="qa-a"><b>A:</b> <code>isinstance(x, int)</code> respects inheritance (<code>True</code> for bool). <code>type(x) == int</code> is exact match only.</p><p class="qa-q"><b>Q:</b> map vs list comprehension?</p><p class="qa-a"><b>A:</b> Comprehensions are more Pythonic and readable. <code>map</code> is useful with existing functions: <code>map(str.strip, lines)</code>.</p><p class="qa-q"><b>Q:</b> max/min on empty iterable?</p><p class="qa-a"><b>A:</b> Without <code>default=</code>, raises <code>ValueError</code>. Use <code>max(items, default=0)</code> when empty is possible.</p><p class="qa-q"><b>Q:</b> max on a dict — what does it return?</p><p class="qa-a"><b>A:</b> By default compares <b>keys</b>. Use <code>max(d, key=d.get)</code> to find the key with the largest value.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -1414,12 +1652,21 @@ list(reversed("abc"))         # ['c', 'b', 'a']</div></li></ul>
 <tr><td class="gutter">30</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">type</span><span class="t-op">(</span><span class="t-num">42</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># &lt;class &#x27;int&#x27;&gt;</span></td></tr>
 <tr><td class="gutter">31</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">isinstance</span><span class="t-op">(</span><span class="t-num">42</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># True</span></td></tr>
 <tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">isinstance</span><span class="t-op">(</span><span class="t-num">42</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-bi">int</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># True</span></td></tr>
+<tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">34</td><td class="src"><span class="t-cm"># ── max / min ──</span></td></tr>
+<tr><td class="gutter">35</td><td class="src"><span class="t-id">prices</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">120</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">45</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">89</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">200</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-bi">max</span><span class="t-op">(</span><span class="t-id">prices</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 200</span></td></tr>
+<tr><td class="gutter">37</td><td class="src"><span class="t-bi">min</span><span class="t-op">(</span><span class="t-id">prices</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 45</span></td></tr>
+<tr><td class="gutter">38</td><td class="src"><span class="t-bi">max</span><span class="t-op">(</span><span class="t-id">prices</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">=</span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-id">p</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># smallest via custom key</span></td></tr>
+<tr><td class="gutter">39</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-id">scores</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;Anu&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">90</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Ravi&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">85</span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-bi">max</span><span class="t-op">(</span><span class="t-id">scores</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">=</span><span class="t-id">scores</span><span class="t-op">.</span><span class="t-id">get</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># &quot;Anu&quot;</span></td></tr>
 </tbody></table></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-10">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 10 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 10 of 35 &middot; Core Topics</div>
   <div class="slide-title">OOP Concepts</div>
   <div class="slide-sub">OOP models entities as classes and objects. Python supports __init__ constructors, single/multiple i…</div>
   <div class="audio-player" id="player-10" data-slide="10">
@@ -1578,7 +1825,7 @@ class Circle(Shape):
 </div>
 </div><div class="slide" id="slide-11">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 11 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 11 of 35 &middot; Core Topics</div>
   <div class="slide-title">Decorators</div>
   <div class="slide-sub">Decorators wrap functions or classes to add behavior without changing their source. They use @syntax…</div>
   <div class="audio-player" id="player-11" data-slide="11">
@@ -1725,7 +1972,7 @@ greet.__doc__    # Say hello</div></li></ul>
 </div>
 </div><div class="slide" id="slide-12">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 12 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 12 of 35 &middot; Core Topics</div>
   <div class="slide-title">Descriptors</div>
   <div class="slide-sub">Descriptors control attribute access via __get__, __set__, __delete__. The @property decorator is a …</div>
   <div class="audio-player" id="player-12" data-slide="12">
@@ -1852,7 +2099,7 @@ greet.__doc__    # Say hello</div></li></ul>
 </div>
 </div><div class="slide" id="slide-13">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 13 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 13 of 35 &middot; Core Topics</div>
   <div class="slide-title">Generators &amp; Iterators</div>
   <div class="slide-sub">Generators produce values lazily with yield. Iterators implement __iter__ and __next__. itertools pr…</div>
   <div class="audio-player" id="player-13" data-slide="13">
@@ -1996,7 +2243,7 @@ for key, group in groupby(data, key=lambda x: x[0]):
 </div>
 </div><div class="slide" id="slide-14">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 14 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 14 of 35 &middot; Core Topics</div>
   <div class="slide-title">Typing</div>
   <div class="slide-sub">Type hints annotate variables, parameters, and return types. typing provides Optional, Union, List, …</div>
   <div class="audio-player" id="player-14" data-slide="14">
@@ -2124,7 +2371,7 @@ mypy --strict my_project/</div><p class="step-result"><b>Tip:</b> run mypy in CI
 </div>
 </div><div class="slide" id="slide-15">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 15 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 15 of 35 &middot; Core Topics</div>
   <div class="slide-title">File Operations</div>
   <div class="slide-sub">File operations use open() with modes r/w/a, context managers (with) for safe closing, csv/json modu…</div>
   <div class="audio-player" id="player-15" data-slide="15">
@@ -2248,7 +2495,7 @@ for p in root.glob("*.csv"):
 </div>
 </div><div class="slide" id="slide-16">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 16 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 16 of 35 &middot; Core Topics</div>
   <div class="slide-title">Exception Handling</div>
   <div class="slide-sub">Exceptions are handled with try/except/else/finally. Python has a hierarchy of built-in exceptions. …</div>
   <div class="audio-player" id="player-16" data-slide="16">
@@ -2385,7 +2632,7 @@ except FileNotFoundError:
 </div>
 </div><div class="slide" id="slide-17">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 17 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 17 of 35 &middot; Core Topics</div>
   <div class="slide-title">Regular Expressions</div>
   <div class="slide-sub">Regular expressions match patterns in text using the re module: match, search, findall, groups, spec…</div>
   <div class="audio-player" id="player-17" data-slide="17">
@@ -2508,7 +2755,7 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
 </div>
 </div><div class="slide" id="slide-18">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 18 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 18 of 35 &middot; Core Topics</div>
   <div class="slide-title">Python Collections</div>
   <div class="slide-sub">collections module extends built-in types: Counter counts elements, defaultdict provides default val…</div>
   <div class="audio-player" id="player-18" data-slide="18">
@@ -2654,7 +2901,7 @@ class CaseInsensitiveDict(UserDict):
 </div>
 </div><div class="slide" id="slide-19">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 19 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 19 of 35 &middot; Core Topics</div>
   <div class="slide-title">Unit Testing</div>
   <div class="slide-sub">Unit testing verifies code with unittest (TestCase, setUp, tearDown) or pytest (simpler syntax). ass…</div>
   <div class="audio-player" id="player-19" data-slide="19">
@@ -2800,7 +3047,7 @@ def test_divide():
 </div>
 </div><div class="slide" id="slide-20">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 20 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 20 of 35 &middot; Core Topics</div>
   <div class="slide-title">Threading &amp; GIL</div>
   <div class="slide-sub">threading runs concurrent tasks in one process but is limited by the GIL for CPU-bound work. multipr…</div>
   <div class="audio-player" id="player-20" data-slide="20">
@@ -2933,7 +3180,7 @@ with ProcessPoolExecutor() as pool:
 </div>
 </div><div class="slide" id="slide-21">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 21 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 21 of 35 &middot; Core Topics</div>
   <div class="slide-title">Context Manager</div>
   <div class="slide-sub">Context managers guarantee setup/teardown via __enter__/__exit__ or the @contextmanager decorator. T…</div>
   <div class="audio-player" id="player-21" data-slide="21">
@@ -3060,7 +3307,7 @@ with ManagedResource() as r:
 </div>
 </div><div class="slide" id="slide-22">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 22 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 22 of 35 &middot; Core Topics</div>
   <div class="slide-title">Async / Await</div>
   <div class="slide-sub">asyncio runs concurrent I/O-bound tasks on one thread via an event loop. async def defines coroutine…</div>
   <div class="audio-player" id="player-22" data-slide="22">
@@ -3198,7 +3445,7 @@ async def main():
 </div>
 </div><div class="slide" id="slide-23">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 23 of 30 &middot; Core Topics</div>
+  <div class="slide-meta">Slide 23 of 35 &middot; Core Topics</div>
   <div class="slide-title">Virtual Environment</div>
   <div class="slide-sub">Virtual environments isolate project dependencies. venv creates them; pip installs packages; require…</div>
   <div class="audio-player" id="player-23" data-slide="23">
@@ -3318,7 +3565,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-24">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 24 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 24 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">Python-Set2 — Portfolio Overview</div>
   <div class="slide-sub">Python-Set2 is your portfolio of six real project areas covering fundamentals, exercises, data analy…</div>
   <div class="audio-player" id="player-24" data-slide="24">
@@ -3394,7 +3641,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-25">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 25 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 25 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">pythonBasics — Topic Modules</div>
   <div class="slide-sub">pythonBasics/ has seven modules — MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, M…</div>
   <div class="audio-player" id="player-25" data-slide="25">
@@ -3471,7 +3718,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-26">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 26 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 26 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">Google Exercises &amp; Pandas</div>
   <div class="slide-sub">google-python-exercises/ teaches classic puzzles (babynames, copyspecial, logpuzzle). pandas/ has Ju…</div>
   <div class="audio-player" id="player-26" data-slide="26">
@@ -3560,7 +3807,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-27">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 27 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 27 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">Django &amp; Django REST</div>
   <div class="slide-sub">djangobasics/meeting_planner/ is a Django 4 app with MVT, templates, auth, and JWT API. DjangoRestBa…</div>
   <div class="audio-player" id="player-27" data-slide="27">
@@ -3644,7 +3891,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-28">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 28 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 28 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">Pipecat — Voice AI POCs</div>
   <div class="slide-sub">Pipecat-Project/ contains voice AI POCs: pipecat-quickstart, phase1 (local STT/LLM/TTS), phase2 (ful…</div>
   <div class="audio-player" id="player-28" data-slide="28">
@@ -3728,7 +3975,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-29">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 29 of 30 &middot; Real Projects · Python-Set2</div>
+  <div class="slide-meta">Slide 29 of 35 &middot; Real Projects · Python-Set2</div>
   <div class="slide-title">Real Project Structure &amp; Learning Path</div>
   <div class="slide-sub">A real Python project separates concerns into folders: routes, services, schemas, models, tests, con…</div>
   <div class="audio-player" id="player-29" data-slide="29">
@@ -3813,7 +4060,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 </div>
 </div><div class="slide" id="slide-30">
 <div class="slide-hdr">
-  <div class="slide-meta">Slide 30 of 30 &middot; Appendix</div>
+  <div class="slide-meta">Slide 30 of 35 &middot; Appendix</div>
   <div class="slide-title">C# vs Python — Quick Reference</div>
   <div class="slide-sub">Quick reference mapping C# concepts to Python — syntax, stubs (pass vs { }), null/None, OOP, web, as…</div>
   <div class="audio-player" id="player-30" data-slide="30">
@@ -3904,7 +4151,7 @@ def save_report():
 </table>
 <div class="callout"><b>pass in Python</b> = no single C# keyword. Closest: empty <code>{ }</code> when the block must exist but do nothing yet. Stronger stub: <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code>. C# interfaces/abstract methods declare without a body — Python uses <code>pass</code> inside <code>class</code> or <code>def</code> instead.</div>
 
-<div class="callout"><strong>30 slides complete!</strong> Basics + setup + 21 core topics + 6 real projects + appendix. Review slides 1–2, 10, 17, 19, and 24–28 before interviews.</div>
+<div class="callout"><strong>35 slides complete!</strong> Basics + setup + 21 core topics + 6 real projects + appendix + 5 extended curriculum topics. Review slides 1–2, 10, 17, 19, 24–28, and 31–35 before interviews.</div>
 <div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is the C# equivalent of pass?</p><p class="qa-a"><b>A:</b> No exact keyword. Empty <code>{ }</code> for a stub block. <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code> when the method must exist but is not ready. C# interfaces use declaration without body — Python uses <code>pass</code> in <code>def</code> or <code>class</code>.</p><p class="qa-q"><b>Q:</b> Coming from C#, what surprised you in Python?</p><p class="qa-a"><b>A:</b> Indentation as syntax, dynamic typing, mutable default argument trap, and that <code>is</code> vs <code>==</code> matters. Similarities: OOP, exceptions, and large package ecosystems.</p><p class="qa-q"><b>Q:</b> null vs None — how do you test?</p><p class="qa-a"><b>A:</b> C#: <code>if (x == null)</code>. Python: <code>if x is None:</code> — use <code>is</code>, not <code>==</code>, because there is only one <code>None</code> object.</p><p class="qa-q"><b>Q:</b> this vs self?</p><p class="qa-a"><b>A:</b> Same role — current instance. C# <code>this</code> is implicit in instance methods. Python requires <code>self</code> as the first parameter explicitly: <code>def greet(self):</code>.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
@@ -3951,6 +4198,536 @@ def save_report():
 </tbody></table></div></div>
   </div>
 </div>
+</div><div class="slide" id="slide-31">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 31 of 35 &middot; Extended Curriculum</div>
+  <div class="slide-title">PEP Standards</div>
+  <div class="slide-sub">PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and mod…</div>
+  <div class="audio-player" id="player-31" data-slide="31">
+  <audio id="audio-31" preload="metadata" src="audio/slide-31.mp3"></audio>
+  <div class="audio-controls">
+    <button type="button" class="btn-play" id="play-btn-31" onclick="togglePlay(31)" title="Play / Pause (resumes where you left off)">&#9654;</button>
+    <button type="button" class="btn-reset" onclick="resetAudio(31)" title="Restart from beginning">&#8634;</button>
+    <input type="range" class="audio-seek" id="seek-31" min="0" max="1000" value="0" step="1"
+           aria-label="Seek narration"
+           oninput="onSeekDrag(31, this.value)"
+           onchange="onSeekCommit(31, this.value)">
+    <span class="audio-time" id="time-31">0:00 / 0:00</span>
+    <span class="audio-badge" title="Narration recorded at 0.75x speed">0.75x</span>
+  </div>
+</div>
+</div>
+<div class="slide-body">
+  <div class="main-split">
+    <div class="panel-left">
+      <h3>Definition</h3><p>PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and modern packaging via pyproject.toml.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is a PEP?</b><br>PEP = Python Enhancement Proposal — design documents for language features, style, and packaging. Some are informational; others become official standards.</li><li><b>Step 2 — PEP 8 style</b><br>4-space indent, <code>snake_case</code> for functions/variables, <code>PascalCase</code> for classes, imports grouped (stdlib → third-party → local). Linters enforce this in CI.</li><li><b>Step 3 — PEP 257 & type hints</b><br>Docstrings describe modules, classes, and public functions. PEP 484/585 define type hints — use <code>list[int]</code> in Python 3.9+.</li><li><b>Step 4 — Packaging PEPs</b><br>PEP 440 (versions), 508 (dependency specifiers), 518/621 (<code>pyproject.toml</code>) — how modern Python projects declare dependencies.</li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>PEP 8</b> = style convention, not syntax. <b>snake_case</b> functions, <b>PascalCase</b> classes, 4 spaces.<br><b>import this</b> = Zen of Python (PEP 20).</div>
+<div class="keyword-box"><b>pyproject.toml</b> = modern project metadata + dependencies (PEP 621). Replaces setup.py for many projects.</div>
+
+      
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>PEP</td><td>Python Enhancement Proposal — design doc for language/stdlib.</td><td>PEP 8</td></tr>
+<tr><td>PEP 8</td><td>Official style guide — indent, naming, imports.</td><td><code>snake_case</code></td></tr>
+<tr><td>PEP 257</td><td>Docstring conventions for modules and functions.</td><td><code>'''Load config.'''</code></td></tr>
+<tr><td>Zen of Python</td><td>PEP 20 — guiding principles.</td><td><code>import this</code></td></tr>
+<tr><td>pyproject.toml</td><td>Modern project config (PEP 621).</td><td><code>[project]</code></td></tr>
+<tr><td>Linter</td><td>Automated style/error checker.</td><td>ruff, flake8</td></tr>
+</table>
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Approach</th><th>Tool / PEP</th></tr>
+<tr><td>New team project</td><td>Agree on PEP 8 + formatter in CI</td><td>Black / ruff</td></tr>
+<tr><td>Public API function</td><td>One-line docstring + type hints</td><td>PEP 257, 484</td></tr>
+<tr><td>Package version bump</td><td>Semantic versioning in pyproject</td><td>PEP 440</td></tr>
+<tr><td>Interview "Python philosophy"</td><td>Cite Zen principles</td><td><code>import this</code></td></tr>
+</table>
+<p>PEPs (Python Enhancement Proposals) document language changes, style guides, and packaging standards. You do not memorize every PEP — know the ones interviewers and teams reference daily.</p>
+<table class="ref-table">
+<tr><th>PEP</th><th>Topic</th><th>Why it matters</th></tr>
+<tr><td>PEP 8</td><td>Style Guide</td><td>4-space indent, snake_case, 79-char lines (soft), imports order</td></tr>
+<tr><td>PEP 257</td><td>Docstring Conventions</td><td>Triple-quoted module/class/function docs</td></tr>
+<tr><td>PEP 484 / 585</td><td>Type Hints</td><td><code>list[int]</code> instead of <code>List[int]</code> (3.9+)</td></tr>
+<tr><td>PEP 20</td><td>Zen of Python</td><td><code>import this</code> — readability counts</td></tr>
+<tr><td>PEP 440</td><td>Version Identifiers</td><td><code>1.2.3</code>, pre-release tags in pip</td></tr>
+<tr><td>PEP 508</td><td>Dependency Specifiers</td><td><code>package&gt;=1.0,&lt;2</code> in requirements</td></tr>
+<tr><td>PEP 517 / 518</td><td>Build System</td><td><code>pyproject.toml</code> for modern packaging</td></tr>
+</table>
+
+<div class="callout"><b>Interview tip:</b> PEP 8 is convention, not syntax — linters (<code>ruff</code>, <code>flake8</code>) enforce it in CI. Black auto-formats; teams still expect readable names and docstrings.</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is PEP 8?</p><p class="qa-a"><b>A:</b> The official Python style guide — naming, indentation, line length, import order. Not enforced by the interpreter; teams use ruff, flake8, or Black.</p><p class="qa-q"><b>Q:</b> What is the Zen of Python?</p><p class="qa-a"><b>A:</b> PEP 20 — aphorisms like 'Readability counts' and 'Explicit is better than implicit'. Run <code>import this</code> in the REPL.</p><p class="qa-q"><b>Q:</b> PEP 8 vs a linter?</p><p class="qa-a"><b>A:</b> PEP 8 is the document; linters automate checks. Black formats code; ruff/flake8 report violations. CI fails on style drift.</p></div>
+      <div class="panel-practice">
+        <h3>Practice</h3>
+        
+<ul class="checklist">
+  <li>Run <code>import this</code> in REPL and name 3 Zen lines</li>
+  <li>Refactor one script to PEP 8 naming (snake_case, 4 spaces)</li>
+  <li>Add a one-line docstring to every function in a practice file</li>
+</ul>
+
+        <p class="project-label"><b>Practice files (Projects/):</b></p>
+<a class="file-link" href="Projects/31_pep_standards.md">31_pep_standards.md</a>
+      </div>
+    </div>
+    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── PEP 8 style (examples) ──</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">os</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pathlib</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Path</span></td></tr>
+<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-id">MAX_RETRIES</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># constants: UPPER_SNAKE</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">load_config</span><span class="t-op">(</span><span class="t-id">path</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Load JSON config from path (PEP 257 docstring).&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-op">.</span><span class="t-op">.</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">OrderService</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># classes: PascalCase</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">process</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">order_id</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">user_name</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;anu&quot;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># variables: snake_case</span></td></tr>
+<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-cm"># ── Zen of Python ──</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">this</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># PEP 20 — run in REPL once</span></td></tr>
+<tr><td class="gutter">17</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-cm"># ── pyproject.toml (PEP 518 / 621) ──</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-cm"># [project]</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-cm"># name = &quot;my-api&quot;</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-cm"># version = &quot;0.1.0&quot;</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-cm"># dependencies = [&quot;fastapi&gt;=0.100&quot;]</span></td></tr>
+</tbody></table></div></div>
+  </div>
+</div>
+</div><div class="slide" id="slide-32">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 32 of 35 &middot; Extended Curriculum</div>
+  <div class="slide-title">Memory Management & Garbage Collection</div>
+  <div class="slide-sub">Python uses reference counting plus a generational garbage collector for circular references. Unders…</div>
+  <div class="audio-player" id="player-32" data-slide="32">
+  <audio id="audio-32" preload="metadata" src="audio/slide-32.mp3"></audio>
+  <div class="audio-controls">
+    <button type="button" class="btn-play" id="play-btn-32" onclick="togglePlay(32)" title="Play / Pause (resumes where you left off)">&#9654;</button>
+    <button type="button" class="btn-reset" onclick="resetAudio(32)" title="Restart from beginning">&#8634;</button>
+    <input type="range" class="audio-seek" id="seek-32" min="0" max="1000" value="0" step="1"
+           aria-label="Seek narration"
+           oninput="onSeekDrag(32, this.value)"
+           onchange="onSeekCommit(32, this.value)">
+    <span class="audio-time" id="time-32">0:00 / 0:00</span>
+    <span class="audio-badge" title="Narration recorded at 0.75x speed">0.75x</span>
+  </div>
+</div>
+</div>
+<div class="slide-body">
+  <div class="main-split">
+    <div class="panel-left">
+      <h3>Definition</h3><p>Python uses reference counting plus a generational garbage collector for circular references. Understanding refs, gc, and weakref helps debug memory leaks.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Reference counting</b><br>Every object tracks how many references point to it. When count hits zero, memory is reclaimed immediately — fast for most objects.</li><li><b>Step 2 — Garbage collector</b><br>Circular references (A→B→A) keep refcounts &gt; 0 forever. The <code>gc</code> module periodically finds and breaks these cycles.</li><li><b>Step 3 — Generations</b><br>GC uses three generations — young objects collected often, old objects rarely. Tuning is rare; know it exists for leak debugging.</li><li><b>Step 4 — Practical tips</b><br><code>del</code> removes a name, not necessarily the object. Use <code>with</code> for files. Long-lived caches can cause memory growth — profile before optimizing.</li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>sys.getrefcount</b> = approximate reference count (debugging only).<br><b>gc.collect()</b> = force garbage collection — use when hunting circular-reference leaks.</div>
+<div class="keyword-box"><b>del name</b> removes the binding — object lives if other references exist.<br><b>with</b> = deterministic cleanup for files/sockets (not every object).</div>
+
+      
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>Reference counting</td><td>Track how many names point to an object.</td><td><code>sys.getrefcount</code></td></tr>
+<tr><td>Garbage collector</td><td>Breaks circular references refcount cannot free.</td><td><code>gc.collect()</code></td></tr>
+<tr><td>Generation (GC)</td><td>Young vs old object buckets for collection frequency.</td><td>gen 0, 1, 2</td></tr>
+<tr><td>weakref</td><td>Reference that does not keep object alive.</td><td><code>weakref.ref(obj)</code></td></tr>
+<tr><td>del</td><td>Remove a name binding from namespace.</td><td><code>del x</code></td></tr>
+</table>
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Approach</th><th>Why</th></tr>
+<tr><td>Long-running worker memory grows</td><td>Profile + check caches holding refs</td><td>Refcount won't free if referenced</td></tr>
+<tr><td>Parent/child mutual refs</td><td>weakref or break cycle on delete</td><td>GC may delay collection</td></tr>
+<tr><td>Debug "object still alive?"</td><td><code>sys.getrefcount</code>, <code>gc.get_referrers</code></td><td>Find unexpected references</td></tr>
+<tr><td>File handle cleanup</td><td><code>with open(...) as f</code></td><td>Deterministic — not GC-dependent</td></tr>
+</table>
+<p>Python manages memory for you — but understanding references, cycles, and the GC helps debug leaks and performance issues in long-running services.</p>
+<table class="ref-table">
+<tr><th>Concept</th><th>What happens</th></tr>
+<tr><td>Reference counting</td><td>Each object tracks how many names point to it; at zero, memory is freed immediately</td></tr>
+<tr><td>Garbage collector (gc)</td><td>Finds circular references reference counting cannot break</td></tr>
+<tr><td>Generations 0/1/2</td><td>Young objects collected more often — amortized cost</td></tr>
+<tr><td>Immutable interning</td><td>Small ints and some strings may be shared — affects <code>is</code> tests</td></tr>
+<tr><td>del</td><td>Removes a name binding — does not guarantee instant destruction</td></tr>
+</table>
+
+<div class="challenge"><b>C# comparison:</b> Python has no <code>IDisposable</code> pattern for every object — use <code>with</code> for files/sockets. GC is always on; you rarely call <code>gc.collect()</code> except when debugging leaks.</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How does Python free memory?</p><p class="qa-a"><b>A:</b> Primarily reference counting — when no names reference an object, it is freed. A generational GC handles circular references.</p><p class="qa-q"><b>Q:</b> What is a circular reference?</p><p class="qa-a"><b>A:</b> Two or more objects reference each other so refcounts never reach zero. Example: parent/child nodes pointing at each other — needs <code>gc.collect()</code> or weakref.</p><p class="qa-q"><b>Q:</b> del x vs x = None?</p><p class="qa-a"><b>A:</b> <code>del x</code> removes the name from the namespace. <code>x = None</code> rebinds to None but keeps the name. Neither guarantees instant destruction if other references exist.</p></div>
+      <div class="panel-practice">
+        <h3>Practice</h3>
+        
+<ul class="checklist">
+  <li>Run <code>Projects/32_memory_gc.py</code> and watch refcount change</li>
+  <li>Explain difference between <code>del x</code> and <code>x = None</code></li>
+  <li>Describe when circular references need the GC</li>
+</ul>
+
+        <p class="project-label"><b>Practice files (Projects/):</b></p>
+<a class="file-link" href="Projects/32_memory_gc.py">32_memory_gc.py</a>
+<span class="run-cmd">python Projects/32_memory_gc.py</span>
+      </div>
+    </div>
+    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">gc</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-cm"># ── Reference counting ──</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getrefcount</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># approximate count (+ interpreter overhead)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-id">b</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">a</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getrefcount</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># higher — two names reference same list</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">del</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># removes name b, not necessarily the list yet</span></td></tr>
+<tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-cm"># ── Circular reference (GC handles this) ──</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">ref</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">None</span></td></tr>
+<tr><td class="gutter">17</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-id">y</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-id">x</span><span class="t-op">.</span><span class="t-id">ref</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">y</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-id">y</span><span class="t-op">.</span><span class="t-id">ref</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># cycle — refcount never hits 0 alone</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-kw">del</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">y</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-id">gc</span><span class="t-op">.</span><span class="t-id">collect</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># breaks cycle and reclaims</span></td></tr>
+<tr><td class="gutter">24</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-cm"># ── Weak references (avoid keeping objects alive) ──</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">weakref</span></td></tr>
+<tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-id">obj</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;key&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;value&quot;</span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-id">ref</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">weakref</span><span class="t-op">.</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-id">obj</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># dict still alive</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-kw">del</span><span class="t-op"> </span><span class="t-id">obj</span></td></tr>
+<tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># None — object collected</span></td></tr>
+</tbody></table></div></div>
+  </div>
+</div>
+</div><div class="slide" id="slide-33">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 33 of 35 &middot; Extended Curriculum</div>
+  <div class="slide-title">Logging</div>
+  <div class="slide-sub">The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, mo…</div>
+  <div class="audio-player" id="player-33" data-slide="33">
+  <audio id="audio-33" preload="metadata" src="audio/slide-33.mp3"></audio>
+  <div class="audio-controls">
+    <button type="button" class="btn-play" id="play-btn-33" onclick="togglePlay(33)" title="Play / Pause (resumes where you left off)">&#9654;</button>
+    <button type="button" class="btn-reset" onclick="resetAudio(33)" title="Restart from beginning">&#8634;</button>
+    <input type="range" class="audio-seek" id="seek-33" min="0" max="1000" value="0" step="1"
+           aria-label="Seek narration"
+           oninput="onSeekDrag(33, this.value)"
+           onchange="onSeekCommit(33, this.value)">
+    <span class="audio-time" id="time-33">0:00 / 0:00</span>
+    <span class="audio-badge" title="Narration recorded at 0.75x speed">0.75x</span>
+  </div>
+</div>
+</div>
+<div class="slide-body">
+  <div class="main-split">
+    <div class="panel-left">
+      <h3>Definition</h3><p>The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, module loggers, handlers, and rotation.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Why not print()?</b><br>Production needs levels, timestamps, and routing to files/agents. <code>logging</code> is the standard library solution — like ILogger in .NET.</li><li><b>Step 2 — Levels</b><br>DEBUG &lt; INFO &lt; WARNING &lt; ERROR &lt; CRITICAL. Set root level to INFO in prod; DEBUG only when troubleshooting.</li><li><b>Step 3 — Logger per module</b><br><code>logger = logging.getLogger(__name__)</code> — hierarchical names (<code>app.orders.service</code>) map to configuration.</li><li><b>Step 4 — Handlers & format</b><br>Console handler for dev, RotatingFileHandler for disk. Use <code>%</code> formatting in log calls — not f-strings — for lazy evaluation.</li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>logging.getLogger(__name__)</b> = one logger per module — configure hierarchy from root.<br><b>logger.exception()</b> = ERROR level + full traceback — only inside <code>except</code>.</div>
+<div class="keyword-box"><b>Lazy logging:</b> <code>logger.info("id=%s", user_id)</code> — do not use f-string if message may be filtered.</div>
+
+      
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>Logger</td><td>Named logging channel — usually <code>__name__</code>.</td><td><code>getLogger(__name__)</code></td></tr>
+<tr><td>Log level</td><td>DEBUG, INFO, WARNING, ERROR, CRITICAL.</td><td><code>level=logging.INFO</code></td></tr>
+<tr><td>Handler</td><td>Where log records go — console, file, syslog.</td><td>StreamHandler</td></tr>
+<tr><td>Formatter</td><td>Pattern for timestamp, level, message.</td><td><code>%(asctime)s</code></td></tr>
+<tr><td>RotatingFileHandler</td><td>Log file with size-based rotation.</td><td><code>backupCount=3</code></td></tr>
+</table>
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Level</th><th>Pattern</th></tr>
+<tr><td>Request handled OK</td><td>INFO</td><td><code>logger.info("order %s created", id)</code></td></tr>
+<tr><td>Retry succeeded</td><td>WARNING</td><td>Recoverable anomaly</td></tr>
+<tr><td>Payment failed</td><td>ERROR</td><td><code>logger.exception(...)</code> in except</td></tr>
+<tr><td>Local debugging</td><td>DEBUG</td><td>Console only — off in prod</td></tr>
+<tr><td>Disk fills up</td><td>RotatingFileHandler</td><td>maxBytes + backupCount</td></tr>
+</table>
+<p>Use the <code>logging</code> module instead of <code>print()</code> in production — levels, timestamps, and handlers map cleanly to observability tools (like Serilog / ILogger in C#).</p>
+<table class="ref-table">
+<tr><th>Level</th><th>When to use</th></tr>
+<tr><td>DEBUG</td><td>Verbose dev detail — off in production usually</td></tr>
+<tr><td>INFO</td><td>Normal lifecycle events (startup, request handled)</td></tr>
+<tr><td>WARNING</td><td>Something unexpected but recoverable</td></tr>
+<tr><td>ERROR</td><td>Operation failed — app continues</td></tr>
+<tr><td>CRITICAL</td><td>Serious failure — may abort</td></tr>
+</table>
+
+<div class="callout"><b>Rule:</b> <code>logger.info("x=%s", x)</code> — lazy formatting. Avoid f-strings in log calls when the message might be filtered out.</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> logging vs print?</p><p class="qa-a"><b>A:</b> Logging has levels, can filter, add timestamps, route to files/syslog, and disable debug noise in production without code changes.</p><p class="qa-q"><b>Q:</b> Why logger.info('x=%s', x) instead of f-string?</p><p class="qa-a"><b>A:</b> Lazy formatting — if INFO is filtered out, the string is never built. f-strings always evaluate immediately.</p><p class="qa-q"><b>Q:</b> How do you log an exception with traceback?</p><p class="qa-a"><b>A:</b> Inside <code>except</code>: <code>logger.exception('message')</code> or <code>logger.error('msg', exc_info=True)</code>.</p></div>
+      <div class="panel-practice">
+        <h3>Practice</h3>
+        
+<ul class="checklist">
+  <li>Replace <code>print</code> with <code>logging</code> in one practice script</li>
+  <li>Configure DEBUG to console and INFO to file</li>
+  <li>Use <code>logger.exception()</code> inside an <code>except</code> block once</li>
+</ul>
+
+        <p class="project-label"><b>Practice files (Projects/):</b></p>
+<a class="file-link" href="Projects/33_logging.py">33_logging.py</a>
+<span class="run-cmd">python Projects/33_logging.py</span>
+      </div>
+    </div>
+    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">logging</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">handlers</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">RotatingFileHandler</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-cm"># ── Basic setup ──</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">basicConfig</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">level</span><span class="t-op">=</span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">INFO</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">format</span><span class="t-op">=</span><span class="t-str">&quot;%(asctime)s [%(levelname)s] %(name)s: %(message)s&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-id">log</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">getLogger</span><span class="t-op">(</span><span class="t-id">__name__</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">debug</span><span class="t-op">(</span><span class="t-str">&quot;won&#x27;t show at INFO level&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">info</span><span class="t-op">(</span><span class="t-str">&quot;Server started&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">warning</span><span class="t-op">(</span><span class="t-str">&quot;Disk 85% full&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">error</span><span class="t-op">(</span><span class="t-str">&quot;Payment gateway timeout&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">exc_info</span><span class="t-op">=</span><span class="t-kw">False</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">15</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-cm"># ── Module logger (preferred) ──</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-id">logger</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">getLogger</span><span class="t-op">(</span><span class="t-str">&quot;orders.service&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">18</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">charge</span><span class="t-op">(</span><span class="t-id">order_id</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">logger</span><span class="t-op">.</span><span class="t-id">info</span><span class="t-op">(</span><span class="t-str">&quot;Charging order %s&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">order_id</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-op">.</span><span class="t-op">.</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">TimeoutError</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">logger</span><span class="t-op">.</span><span class="t-id">exception</span><span class="t-op">(</span><span class="t-str">&quot;Charge failed for %s&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">order_id</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># includes traceback</span></td></tr>
+<tr><td class="gutter">25</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-cm"># ── File + rotation ──</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-id">handler</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">RotatingFileHandler</span><span class="t-op">(</span><span class="t-str">&quot;app.log&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">maxBytes</span><span class="t-op">=</span><span class="t-num">1_000_000</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">backupCount</span><span class="t-op">=</span><span class="t-num">3</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-id">handler</span><span class="t-op">.</span><span class="t-id">setFormatter</span><span class="t-op">(</span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">Formatter</span><span class="t-op">(</span><span class="t-str">&quot;%(levelname)s %(message)s&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-id">logger</span><span class="t-op">.</span><span class="t-id">addHandler</span><span class="t-op">(</span><span class="t-id">handler</span><span class="t-op">)</span></td></tr>
+</tbody></table></div></div>
+  </div>
+</div>
+</div><div class="slide" id="slide-34">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 34 of 35 &middot; Extended Curriculum</div>
+  <div class="slide-title">Pydantic</div>
+  <div class="slide-sub">Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model…</div>
+  <div class="audio-player" id="player-34" data-slide="34">
+  <audio id="audio-34" preload="metadata" src="audio/slide-34.mp3"></audio>
+  <div class="audio-controls">
+    <button type="button" class="btn-play" id="play-btn-34" onclick="togglePlay(34)" title="Play / Pause (resumes where you left off)">&#9654;</button>
+    <button type="button" class="btn-reset" onclick="resetAudio(34)" title="Restart from beginning">&#8634;</button>
+    <input type="range" class="audio-seek" id="seek-34" min="0" max="1000" value="0" step="1"
+           aria-label="Seek narration"
+           oninput="onSeekDrag(34, this.value)"
+           onchange="onSeekCommit(34, this.value)">
+    <span class="audio-time" id="time-34">0:00 / 0:00</span>
+    <span class="audio-badge" title="Narration recorded at 0.75x speed">0.75x</span>
+  </div>
+</div>
+</div>
+<div class="slide-body">
+  <div class="main-split">
+    <div class="panel-left">
+      <h3>Definition</h3><p>Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model_dump — core of FastAPI schemas.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — BaseModel</b><br>Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>).</li><li><b>Step 2 — Validation</b><br><code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths.</li><li><b>Step 3 — Serialization</b><br>v2: <code>model_validate(dict)</code> in, <code>model_dump()</code> out. For ORM rows use <code>model_config = {'from_attributes': True}</code>.</li><li><b>Step 4 — FastAPI integration</b><br>Route parameters typed as Pydantic models auto-parse JSON bodies and return 422 with structured errors — no manual validation boilerplate.</li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>BaseModel</b> = schema with validation on create.<br><b>model_validate(dict)</b> in, <b>model_dump()</b> out (Pydantic v2).</div>
+<div class="keyword-box"><b>Field(ge=18)</b> = constraint at declaration.<br><b>@field_validator</b> = custom cross-field or format rules.</div>
+
+      
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>BaseModel</td><td>Pydantic schema base class with typed fields.</td><td><code>class User(BaseModel):</code></td></tr>
+<tr><td>ValidationError</td><td>Raised when input fails schema rules.</td><td>HTTP 422 in FastAPI</td></tr>
+<tr><td>Field()</td><td>Constraints and metadata on a field.</td><td><code>Field(ge=18)</code></td></tr>
+<tr><td>model_dump()</td><td>Export model to dict (Pydantic v2).</td><td><code>user.model_dump()</code></td></tr>
+<tr><td>from_attributes</td><td>Build schema from ORM object attributes.</td><td><code>model_config</code></td></tr>
+</table>
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Boundary</th><th>Use Pydantic?</th><th>Example</th></tr>
+<tr><td>HTTP JSON body</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td>FastAPI <code>UserCreate</code></td></tr>
+<tr><td>Internal helper</td><td class="cell-no"><span class="yn-no"></span>Usually plain types</td><td><code>def add(a: int, b: int)</code></td></tr>
+<tr><td>Config from env/file</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td><code>Settings(BaseModel)</code></td></tr>
+<tr><td>ORM row to client</td><td class="cell-yes"><span class="yn-yes"></span>Response schema</td><td><code>from_attributes=True</code></td></tr>
+</table>
+<p>Pydantic validates and parses data using type hints — the backbone of FastAPI request/response models (like DataAnnotations + DTOs in C#).</p>
+<table class="ref-table">
+<tr><th>Feature</th><th>Purpose</th></tr>
+<tr><td>BaseModel</td><td>Define schema with typed fields</td></tr>
+<tr><td>Validation</td><td>Coercion + constraints on assign</td></tr>
+<tr><td>model_dump()</td><td>Export to dict (v2; was <code>.dict()</code>)</td></tr>
+<tr><td>Field()</td><td>Defaults, ge/le, descriptions</td></tr>
+<tr><td>model_validator</td><td>Cross-field validation (v2)</td></tr>
+</table>
+
+<div class="callout"><b>FastAPI tie-in:</b> Route parameters typed as Pydantic models auto-validate JSON bodies and return 422 with field errors — no manual <code>if not email</code> checks in every handler.</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is Pydantic used for?</p><p class="qa-a"><b>A:</b> Runtime validation and parsing using type hints — API schemas, config loading, data pipelines. Core of FastAPI request/response models.</p><p class="qa-q"><b>Q:</b> Pydantic vs dataclasses?</p><p class="qa-a"><b>A:</b> Dataclasses structure data; Pydantic validates, coerces types, and gives rich errors. Use Pydantic at API boundaries.</p><p class="qa-q"><b>Q:</b> What happens on validation failure?</p><p class="qa-a"><b>A:</b> <code>ValidationError</code> with a list of errors per field — FastAPI converts this to HTTP 422 JSON for clients.</p></div>
+      <div class="panel-practice">
+        <h3>Practice</h3>
+        
+<ul class="checklist">
+  <li>Install: <code>pip install pydantic</code></li>
+  <li>Run <code>python Projects/34_pydantic_demo.py</code></li>
+  <li>Add one <code>field_validator</code> for a business rule</li>
+</ul>
+
+        <p class="project-label"><b>Practice files (Projects/):</b></p>
+<a class="file-link" href="Projects/34_pydantic_demo.py">34_pydantic_demo.py</a>
+<span class="run-cmd">python Projects/34_pydantic_demo.py</span>
+      </div>
+    </div>
+    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pydantic</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">BaseModel</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">field_validator</span></td></tr>
+<tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">(</span><span class="t-id">BaseModel</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">email</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">age</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op">(</span><span class="t-id">ge</span><span class="t-op">=</span><span class="t-num">18</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">le</span><span class="t-op">=</span><span class="t-num">120</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">tags</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">[</span><span class="t-bi">str</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">field_validator</span><span class="t-op">(</span><span class="t-str">&quot;email&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">classmethod</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">email_must_have_at</span><span class="t-op">(</span><span class="t-id">cls</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-str">&quot;@&quot;</span><span class="t-op"> </span><span class="t-kw">not</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">(</span><span class="t-str">&quot;invalid email&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">.</span><span class="t-id">lower</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-cm"># ── Parse / validate ──</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-id">payload</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;email&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;Anu@Example.COM&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;age&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;25&quot;</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># age str OK</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-id">user</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">.</span><span class="t-id">model_validate</span><span class="t-op">(</span><span class="t-id">payload</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">user</span><span class="t-op">.</span><span class="t-id">model_dump</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-cm"># {&#x27;email&#x27;: &#x27;anu@example.com&#x27;, &#x27;age&#x27;: 25, &#x27;tags&#x27;: []}</span></td></tr>
+<tr><td class="gutter">20</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-cm"># ── Invalid data raises ValidationError ──</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">.</span><span class="t-id">model_validate</span><span class="t-op">(</span><span class="t-op">{</span><span class="t-str">&quot;email&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;bad&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;age&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">10</span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">Exception</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">type</span><span class="t-op">(</span><span class="t-id">e</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-id">__name__</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">)</span></td></tr>
+</tbody></table></div></div>
+  </div>
+</div>
+</div><div class="slide" id="slide-35">
+<div class="slide-hdr">
+  <div class="slide-meta">Slide 35 of 35 &middot; Extended Curriculum</div>
+  <div class="slide-title">FastAPI with SQLAlchemy</div>
+  <div class="slide-sub">FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM model…</div>
+  <div class="audio-player" id="player-35" data-slide="35">
+  <audio id="audio-35" preload="metadata" src="audio/slide-35.mp3"></audio>
+  <div class="audio-controls">
+    <button type="button" class="btn-play" id="play-btn-35" onclick="togglePlay(35)" title="Play / Pause (resumes where you left off)">&#9654;</button>
+    <button type="button" class="btn-reset" onclick="resetAudio(35)" title="Restart from beginning">&#8634;</button>
+    <input type="range" class="audio-seek" id="seek-35" min="0" max="1000" value="0" step="1"
+           aria-label="Seek narration"
+           oninput="onSeekDrag(35, this.value)"
+           onchange="onSeekCommit(35, this.value)">
+    <span class="audio-time" id="time-35">0:00 / 0:00</span>
+    <span class="audio-badge" title="Narration recorded at 0.75x speed">0.75x</span>
+  </div>
+</div>
+</div>
+<div class="slide-body">
+  <div class="main-split">
+    <div class="panel-left">
+      <h3>Definition</h3><p>FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM models, session per request via Depends.</p><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Layered stack</b><br>FastAPI (HTTP) + Pydantic (schemas) + SQLAlchemy (ORM) + database. Routes stay thin; services own transactions and business rules.</li><li><b>Step 2 — Session per request</b><br><code>Depends(get_db)</code> yields a SQLAlchemy session, commits on success, closes in <code>finally</code> — like scoped DbContext in EF Core.</li><li><b>Step 3 — ORM vs schema</b><br>ORM models map tables; Pydantic schemas map API contracts. Never expose ORM internals directly — use response models.</li><li><b>Step 4 — Async note</b><br>FastAPI supports async routes; use async SQLAlchemy (2.0 style) or run sync ORM in thread pool for I/O-bound DB work.</li></ul>
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>Depends(get_db)</b> = inject scoped SQLAlchemy session per request — commit/close in generator <code>finally</code>.</div>
+<div class="keyword-box"><b>response_model=UserRead</b> = Pydantic output schema — never return raw ORM without filtering fields.<br><b>from_attributes=True</b> = build schema from ORM row.</div>
+
+      
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>FastAPI</td><td>Modern async-capable web framework.</td><td><code>@app.get()</code></td></tr>
+<tr><td>SQLAlchemy</td><td>ORM and SQL toolkit for Python.</td><td><code>Session</code>, <code>Base</code></td></tr>
+<tr><td>Depends</td><td>FastAPI dependency injection — DB session, auth.</td><td><code>Depends(get_db)</code></td></tr>
+<tr><td>ORM model</td><td>Class mapped to database table.</td><td><code>__tablename__</code></td></tr>
+<tr><td>Response model</td><td>Pydantic schema for API output.</td><td><code>response_model=UserRead</code></td></tr>
+</table>
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Need</th><th>Layer</th><th>Technology</th></tr>
+<tr><td>HTTP routing</td><td>routes</td><td>FastAPI <code>@app.post</code></td></tr>
+<tr><td>Input validation</td><td>schemas</td><td>Pydantic <code>BaseModel</code></td></tr>
+<tr><td>Persist data</td><td>models + session</td><td>SQLAlchemy ORM</td></tr>
+<tr><td>Business rules</td><td>services</td><td>Plain Python module</td></tr>
+<tr><td>Full MVC web + admin</td><td>Django app</td><td>Prefer Django over raw FastAPI</td></tr>
+</table>
+<p>Typical production stack: <b>FastAPI</b> (HTTP + async) + <b>Pydantic</b> (schemas) + <b>SQLAlchemy</b> (ORM / DB) — similar to ASP.NET Core + EF Core.</p>
+<table class="ref-table">
+<tr><th>Layer</th><th>Responsibility</th></tr>
+<tr><td>routes / routers</td><td>HTTP only — thin handlers</td></tr>
+<tr><td>schemas (Pydantic)</td><td>API input/output validation</td></tr>
+<tr><td>models (SQLAlchemy)</td><td>Database tables and relationships</td></tr>
+<tr><td>services</td><td>Business logic, transactions</td></tr>
+<tr><td>session / engine</td><td>Connection pool, Unit of Work per request</td></tr>
+</table>
+
+<div class="callout"><b>Pattern:</b> Never return ORM objects without a response schema. Use <code>Depends(get_db)</code> so each request gets one session, closed in <code>finally</code> — like scoped DbContext in C#.</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How does FastAPI + SQLAlchemy compare to ASP.NET + EF?</p><p class="qa-a"><b>A:</b> FastAPI ≈ minimal Web API; Pydantic ≈ DTO validation; SQLAlchemy session ≈ DbContext; Depends ≈ DI scoped services.</p><p class="qa-q"><b>Q:</b> Where does business logic live?</p><p class="qa-a"><b>A:</b> In a service layer — not in route handlers. Routes parse HTTP, call service, return schema. Keeps tests and reuse clean.</p><p class="qa-q"><b>Q:</b> Why separate Pydantic from SQLAlchemy models?</p><p class="qa-a"><b>A:</b> API shape ≠ database shape — hide internal columns, version APIs, and validate input without leaking ORM details.</p></div>
+      <div class="panel-practice">
+        <h3>Practice</h3>
+        
+<ul class="checklist">
+  <li>Draw layers: route → service → ORM → DB</li>
+  <li>Compare SQLAlchemy session to EF Core DbContext</li>
+  <li>Read <code>Projects/35_fastapi_sqlalchemy.md</code> for folder layout</li>
+</ul>
+
+        <p class="project-label"><b>Practice files (Projects/):</b></p>
+<a class="file-link" href="Projects/35_fastapi_sqlalchemy.md">35_fastapi_sqlalchemy.md</a>
+      </div>
+    </div>
+    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── Stack overview (simplified) ──</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-cm"># pip install fastapi uvicorn sqlalchemy pydantic</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">fastapi</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">FastAPI</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Depends</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">HTTPException</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pydantic</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">BaseModel</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">sqlalchemy</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">create_engine</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Column</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Integer</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">String</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">sqlalchemy</span><span class="t-op">.</span><span class="t-id">orm</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sessionmaker</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Session</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">declarative_base</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-id">DATABASE_URL</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;sqlite:///./app.db&quot;</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-id">engine</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">create_engine</span><span class="t-op">(</span><span class="t-id">DATABASE_URL</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">connect_args</span><span class="t-op">=</span><span class="t-op">{</span><span class="t-str">&quot;check_same_thread&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">False</span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-id">SessionLocal</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">sessionmaker</span><span class="t-op">(</span><span class="t-id">bind</span><span class="t-op">=</span><span class="t-id">engine</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-id">Base</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">declarative_base</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">13</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">UserORM</span><span class="t-op">(</span><span class="t-id">Base</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">__tablename__</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;users&quot;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Column</span><span class="t-op">(</span><span class="t-id">Integer</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">primary_key</span><span class="t-op">=</span><span class="t-kw">True</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">email</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Column</span><span class="t-op">(</span><span class="t-id">String</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">unique</span><span class="t-op">=</span><span class="t-kw">True</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">18</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">UserCreate</span><span class="t-op">(</span><span class="t-id">BaseModel</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">email</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span></td></tr>
+<tr><td class="gutter">21</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">UserRead</span><span class="t-op">(</span><span class="t-id">BaseModel</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">id</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">email</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">model_config</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;from_attributes&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">True</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ORM → schema</span></td></tr>
+<tr><td class="gutter">26</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">get_db</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">SessionLocal</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">yield</span><span class="t-op"> </span><span class="t-id">db</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">finally</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">32</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">close</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">34</td><td class="src"><span class="t-id">app</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">FastAPI</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">35</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-op">@</span><span class="t-id">app</span><span class="t-op">.</span><span class="t-id">post</span><span class="t-op">(</span><span class="t-str">&quot;/users&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">response_model</span><span class="t-op">=</span><span class="t-id">UserRead</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">37</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">create_user</span><span class="t-op">(</span><span class="t-id">body</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">UserCreate</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">Session</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Depends</span><span class="t-op">(</span><span class="t-id">get_db</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">38</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">row</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">UserORM</span><span class="t-op">(</span><span class="t-id">email</span><span class="t-op">=</span><span class="t-id">body</span><span class="t-op">.</span><span class="t-id">email</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">39</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">add</span><span class="t-op">(</span><span class="t-id">row</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">commit</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">refresh</span><span class="t-op">(</span><span class="t-id">row</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">row</span></td></tr>
+<tr><td class="gutter">43</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">44</td><td class="src"><span class="t-cm"># Run: uvicorn main:app --reload</span></td></tr>
+</tbody></table></div></div>
+  </div>
+</div>
 </div>
 
 <div class="nav-bar">
@@ -3966,8 +4743,8 @@ let current = 0;
 let activeSlide = null;
 let seekDragging = false;
 const slideOrder = [0];
-for (let i = 1; i <= 30; i++) slideOrder.push(i);
-const totalTopics = 30;
+for (let i = 1; i <= 35; i++) slideOrder.push(i);
+const totalTopics = 35;
 
 function fmtTime(sec) {
   if (!isFinite(sec) || sec < 0) sec = 0;
@@ -4005,7 +4782,7 @@ function updateTimeUI(n) {
 }
 
 function pauseAllExcept(keep) {
-  for (let i = 0; i <= 30; i++) {
+  for (let i = 0; i <= 35; i++) {
     if (i === keep) continue;
     const a = getAudio(i);
     if (a && !a.paused) a.pause();
@@ -4061,7 +4838,7 @@ function onSeekCommit(n, val) {
 }
 
 function initAudioPlayers() {
-  for (let i = 0; i <= 30; i++) {
+  for (let i = 0; i <= 35; i++) {
     const audio = getAudio(i);
     if (!audio) continue;
     audio.addEventListener('timeupdate', () => {

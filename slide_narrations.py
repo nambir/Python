@@ -14,9 +14,16 @@ NARRATIONS = {
     ),
     1: (
         "Slide 1: What is Python? "
+        "We run the dot py file using the Python interpreter. "
+        "Internally, CPython converts it into bytecode, dot pyc, and executes the bytecode step by step. "
         "Python is a high-level, general-purpose language. "
-        "Unlike C-sharp, Python is interpreted: CPython reads your dot py file, "
-        "compiles it to bytecode, then executes it line by line. "
+        "A C-sharp dot cs file is different: the JIT does not run dot cs directly. "
+        "The C-sharp compiler first creates a dot NET assembly, usually a DLL or EXE. "
+        "Then the CLR and JIT run the intermediate language inside that assembly. "
+        "In production, Python is usually deployed as source files, a package, a virtual environment, "
+        "or a Docker image — not normally as a DLL. "
+        "Sometimes Python is zipped for AWS Lambda, packaged as a wheel, or bundled as an EXE with PyInstaller. "
+        "C-sharp production commonly uses dotnet MyApp dot dll, IIS, a service, a container, or a self-contained EXE. "
         "Indentation replaces braces. Dynamic typing means no int x declarations. "
         "Practice with Projects slash 00 underscore python underscore fundamentals dot py."
     ),
@@ -24,9 +31,21 @@ NARRATIONS = {
         "Slide 2: Setup and Run Python on Windows. "
         "Install from python dot org, check Add Python to PATH, "
         "verify with python dash dash version and pip dash dash version. "
-        "Run scripts with python hello dot py, quick tests in the REPL, "
+        "python dash dash version shows the Python interpreter version, for example Python 3 dot 12 dot 4. "
+        "pip dash dash version shows the pip installer version, for example pip 25 dot 3, "
+        "plus the install path and which Python version pip is connected to. "
+        "pip means Pip Installs Packages. "
+        "It downloads libraries from PyPI, similar to NuGet in dot NET. "
+        "For quick tests, type python to enter the REPL. "
+        "The triple greater-than prompt means Python is waiting for code. "
+        "If you type two plus two, Python immediately prints four. "
+        "Run full scripts with python hello dot py, "
         "and use py dash 3 dot 12 when multiple versions are installed. "
-        "In Cursor, select the interpreter and press F5 to debug."
+        "In Cursor or VS Code, select the interpreter and press F5 to debug. "
+        "Other famous Python tools include PyCharm from JetBrains, Jupyter Notebook and Lab, Spyder, Visual Studio, and IDLE. "
+        "Important difference from C-sharp: Python runs a script top to bottom. "
+        "If you call Add before def Add, you get NameError. "
+        "Strategy: define functions first, and put if name equals main at the bottom."
     ),
     3: (
         "Slide 3: Python Datatypes. "
@@ -233,5 +252,40 @@ NARRATIONS = {
         "None equals null — test with is None. "
         "self equals this but explicit. with equals using. "
         "venv plus pip equals NuGet per project."
+    ),
+    31: (
+        "Slide 31: PEP Standards. "
+        "Python Enhancement Proposals document style and packaging. "
+        "PEP 8 for snake_case and four-space indent. "
+        "PEP 257 for docstrings. PEP 20 Zen of Python via import this. "
+        "Modern projects use pyproject dot toml for dependencies."
+    ),
+    32: (
+        "Slide 32: Memory Management and Garbage Collection. "
+        "Reference counting frees objects when count hits zero. "
+        "Generational garbage collector breaks circular references. "
+        "Use del to remove a name binding. "
+        "Use with for file cleanup. weakref avoids keeping objects alive."
+    ),
+    33: (
+        "Slide 33: Logging. "
+        "Use the logging module instead of print in production. "
+        "Levels from DEBUG to CRITICAL. "
+        "Create a logger per module with getLogger dunder name. "
+        "Use logger dot exception inside except for tracebacks. "
+        "RotatingFileHandler for log rotation on disk."
+    ),
+    34: (
+        "Slide 34: Pydantic. "
+        "Validate and parse data with type hints using BaseModel. "
+        "Field constraints and field validators for business rules. "
+        "model validate and model dump in version two. "
+        "FastAPI returns four twenty two on ValidationError."
+    ),
+    35: (
+        "Slide 35: FastAPI with SQLAlchemy. "
+        "Thin routes, Pydantic schemas, SQLAlchemy ORM models, service layer. "
+        "Depends get db yields a session per request like scoped DbContext. "
+        "Never return raw ORM — use response models with from attributes."
     ),
 }

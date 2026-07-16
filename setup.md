@@ -8,7 +8,8 @@ Install these first:
 
 - **Git**: https://git-scm.com/downloads
 - **Python 3.12+**: https://www.python.org/downloads/
-- **Cursor or VS Code**
+- **Cursor or VS Code** for daily coding
+- Optional alternatives: **PyCharm**, **Jupyter Notebook/Lab**, **Spyder**, **Visual Studio**, or Python **IDLE**
 
 During Python installation on Windows, select:
 

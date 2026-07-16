@@ -23,6 +23,7 @@ Slide numbers in deck vs CSV topic #:
   CSV 20 -> Slide 23 Virtual Environment
 
 Slides 1-2 = intro/setup (not in CSV). Slide 4 = workspace. Slides 24-30 = projects appendix.
+Slides 31-35 = extended curriculum (PEP, memory/GC, logging, Pydantic, FastAPI+SQLAlchemy).
 """
 
 CSV_TOPICS: dict[int, list[str]] = {
@@ -39,6 +40,8 @@ CSV_TOPICS: dict[int, list[str]] = {
         "Comparison & logical operators",
         "Identity (is / is not) & membership (in / not in)",
         "Bitwise operators",
+        "Assignment operators (+=, -=, *=, …)",
+        "Walrus operator (:=)",
     ],
     6: [
         "if / elif / else",
@@ -65,6 +68,7 @@ CSV_TOPICS: dict[int, list[str]] = {
         "zip(), enumerate()",
         "type(), id(), isinstance()",
         "range(), len(), sorted(), reversed()",
+        "max(), min()",
     ],
     10: [
         "Class & object, __init__, self",
@@ -148,5 +152,35 @@ CSV_TOPICS: dict[int, list[str]] = {
         "venv — create, activate, deactivate",
         "pip — install, freeze, requirements.txt",
         "pyenv for Python version management",
+    ],
+    31: [
+        "PEP 8 — style guide (naming, indent, imports)",
+        "PEP 257 — docstring conventions",
+        "PEP 20 — Zen of Python",
+        "PEP 440 / 508 / 621 — versions, deps, pyproject.toml",
+    ],
+    32: [
+        "Reference counting",
+        "Garbage collector — circular references",
+        "Generational GC (0, 1, 2)",
+        "weakref, del, profiling leaks",
+    ],
+    33: [
+        "logging module — levels, loggers, handlers",
+        "basicConfig vs module loggers",
+        "RotatingFileHandler",
+        "logger.exception / exc_info",
+    ],
+    34: [
+        "Pydantic BaseModel",
+        "Field constraints & field_validator",
+        "model_validate / model_dump (v2)",
+        "FastAPI request/response schemas",
+    ],
+    35: [
+        "FastAPI routes & Depends",
+        "SQLAlchemy ORM models & Session",
+        "Pydantic vs ORM separation",
+        "Service layer & session-per-request",
     ],
 }

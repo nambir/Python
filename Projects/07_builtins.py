@@ -9,5 +9,6 @@ if __name__ == "__main__":
     print("reduce:", reduce(lambda a, b: a + b, nums))
     print("zip dict:", dict(zip(["a", "b"], [1, 2])))
     print("sorted tuples:", sorted([(1, "z"), (2, "a")], key=lambda t: t[1]))
+    print("max:", max(nums), "min:", min(nums))
     for i, v in enumerate(["a", "b"]):
         print("enumerate:", i, v)

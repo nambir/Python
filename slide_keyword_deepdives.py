@@ -9,7 +9,19 @@ KEYWORD_DEEPDIVES: dict[int, str] = {
 """,
     2: """
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>if __name__ == "__main__":</b> = run this code only when the file is executed directly, not when imported.<br><b>Use when:</b> script entry point (like C# <code>Main</code>).<br><div class="step-pre">def main():\n    print("Hello")\n\nif __name__ == "__main__":\n    main()</div></div>
+<div class="keyword-box"><b>if __name__ == "__main__":</b> = run this code only when the file is executed directly, not when imported.<br><b>Use when:</b> script entry point (like C# <code>Main</code>).<br><b>Strategy:</b> put all <code>def</code> / <code>class</code> above this block — Python runs top to bottom.<br><div class="step-pre">def Add(x, y):\n    print(f\"Answer is={x + y}\")\n\nif __name__ == \"__main__\":\n    Add(1, 2)</div></div>
+<div class="keyword-box"><b>NameError</b> = name used before it exists.<br><b>Trap:</b> call <code>Add(1, 2)</code> above <code>def Add</code> → <code>name 'Add' is not defined</code>.<br><b>C# contrast:</b> method order inside a class usually does not matter; in a Python script file, order does.<br><br><span class="cell-no"><span class="yn-no"></span>Wrong — will not work</span><div class="step-pre">if __name__ == "__main__":
+    print("hai")
+    Add(1, 2)      # NameError: name 'Add' is not defined
+
+def Add(x, y):
+    print(f"Answer is={x + y}")</div>
+<span class="cell-yes"><span class="yn-yes"></span>Correct — define first, call later</span><div class="step-pre">def Add(x, y):
+    print(f"Answer is={x + y}")
+
+if __name__ == "__main__":
+    print("hai")
+    Add(1, 2)</div></div>
 <div class="keyword-box"><b>REPL</b> = Read-Eval-Print Loop. Type one line, see result immediately.<br><b>Use when:</b> quick experiments.<br><b>Not for:</b> full applications — use a <code>.py</code> script.</div>
 """,
     3: """
@@ -28,6 +40,8 @@ KEYWORD_DEEPDIVES: dict[int, str] = {
 <div class="keyword-box"><b>==</b> = same value. &nbsp; <b>is</b> = same object in memory.<br><div class="step-pre">a = [1, 2]; b = [1, 2]\na == b   # True\na is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</div>
 <div class="keyword-box"><b>//</b> = floor division (whole number result). <b>/</b> = true division (always float in Python 3).<br><b>Example:</b> <code>10 / 4</code> → <code>2.5</code>, <code>10 // 4</code> → <code>2</code>.</div>
 <div class="keyword-box"><b>in</b> = membership test — works on lists, strings, dict keys, sets.<br><b>Example:</b> <code>"py" in "python"</code> → <code>True</code>.</div>
+<div class="keyword-box"><b>+=</b> and friends = in-place assignment.<br><b>Example:</b> <code>n += 5</code> same as <code>n = n + 5</code>. Works on numbers, strings, lists.</div>
+<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br><div class="step-pre">if (n := len(data)) &gt; 0:\n    print(n)</div><b>Use when:</b> you need the value in the condition — not for every assignment.</div>
 """,
     6: """
 <h3>Python keywords — deeper look</h3>
@@ -53,6 +67,7 @@ KEYWORD_DEEPDIVES: dict[int, str] = {
 <div class="keyword-box"><b>sorted()</b> = returns <b>new</b> sorted list; original unchanged.<br><b>.sort()</b> = sorts list <b>in place</b>; returns <code>None</code>.<br><b>Trap:</b> <code>x = lst.sort()</code> makes <code>x</code> None.</div>
 <div class="keyword-box"><b>enumerate()</b> = gives <code>(index, value)</code> pairs — avoid manual <code>range(len())</code>.<br><b>zip()</b> = pair items from two sequences together.</div>
 <div class="keyword-box"><b>isinstance()</b> = type check that respects inheritance — prefer over <code>type(x) == int</code>.</div>
+<div class="keyword-box"><b>max()</b> / <b>min()</b> = largest / smallest item.<br><b>On dict:</b> compares keys by default — use <code>key=dict.get</code> for values.<br><b>Empty:</b> <code>max(items, default=0)</code> avoids ValueError.</div>
 """,
     10: """
 <h3>Python keywords — deeper look</h3>
@@ -155,6 +170,31 @@ KEYWORD_DEEPDIVES: dict[int, str] = {
 <div class="keyword-box"><b>pass</b> (Python) has no C# keyword.<br><b>Closest:</b> empty <code>{ }</code> — valid block, does nothing.<br><b>Stub not ready:</b> <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code>.<br><b>C# interface:</b> <code>void Save();</code> — no body. Python: <code>def save(self): pass</code>.</div>
 <div class="keyword-box"><b>None</b> (Python) = <code>null</code> (C#). Test with <code>is None</code>, not <code>== None</code>.<br><b>Indentation</b> replaces braces. <b>venv</b> replaces global NuGet installs.<br><b>try/except</b> ≈ try/catch. <b>with</b> ≈ using.</div>
 <div class="keyword-box"><b>self</b> = <code>this</code> — but you must declare it: <code>def method(self, x):</code>.<br><b>elif</b> = <code>else if</code>. <b>True/False</b> are capitalized (not <code>true</code>/<code>false</code>).</div>
+""",
+    31: """
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>PEP 8</b> = style convention, not syntax. <b>snake_case</b> functions, <b>PascalCase</b> classes, 4 spaces.<br><b>import this</b> = Zen of Python (PEP 20).</div>
+<div class="keyword-box"><b>pyproject.toml</b> = modern project metadata + dependencies (PEP 621). Replaces setup.py for many projects.</div>
+""",
+    32: """
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>sys.getrefcount</b> = approximate reference count (debugging only).<br><b>gc.collect()</b> = force garbage collection — use when hunting circular-reference leaks.</div>
+<div class="keyword-box"><b>del name</b> removes the binding — object lives if other references exist.<br><b>with</b> = deterministic cleanup for files/sockets (not every object).</div>
+""",
+    33: """
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>logging.getLogger(__name__)</b> = one logger per module — configure hierarchy from root.<br><b>logger.exception()</b> = ERROR level + full traceback — only inside <code>except</code>.</div>
+<div class="keyword-box"><b>Lazy logging:</b> <code>logger.info("id=%s", user_id)</code> — do not use f-string if message may be filtered.</div>
+""",
+    34: """
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>BaseModel</b> = schema with validation on create.<br><b>model_validate(dict)</b> in, <b>model_dump()</b> out (Pydantic v2).</div>
+<div class="keyword-box"><b>Field(ge=18)</b> = constraint at declaration.<br><b>@field_validator</b> = custom cross-field or format rules.</div>
+""",
+    35: """
+<h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>Depends(get_db)</b> = inject scoped SQLAlchemy session per request — commit/close in generator <code>finally</code>.</div>
+<div class="keyword-box"><b>response_model=UserRead</b> = Pydantic output schema — never return raw ORM without filtering fields.<br><b>from_attributes=True</b> = build schema from ORM row.</div>
 """,
 }
 

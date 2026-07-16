@@ -18,11 +18,13 @@ SCENARIOS: dict[int, str] = {
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
 <tr><td>Try one line, explore an API</td><td><b>REPL</b></td><td>Instant feedback — type <code>python</code>, experiment</td></tr>
+<tr><td>Check Python and package installer setup</td><td><b>python --version + pip --version</b></td><td><code>python</code> shows interpreter version; <code>pip</code> shows installer version and linked Python path</td></tr>
 <tr><td>Run a complete program repeatedly</td><td><b>Script</b></td><td><code>python app.py</code> — reproducible, shareable</td></tr>
-<tr><td>Debug with breakpoints, step through</td><td><b>IDE (F5)</b></td><td>Cursor/VS Code debugger, watch variables</td></tr>
+<tr><td>Debug with breakpoints, step through</td><td><b>Cursor / VS Code (F5)</b></td><td>Daily choice: Cursor or VS Code. Other famous options: PyCharm, Jupyter Notebook/Lab, Spyder, Visual Studio, IDLE.</td></tr>
 <tr><td>One-off command in CI/CD pipeline</td><td><b>python -c</b></td><td>Inline without creating a file</td></tr>
 <tr><td>Multiple Python versions on one PC</td><td><b>py launcher</b></td><td><code>py -3.12 script.py</code> picks version</td></tr>
 <tr><td>Library imported by other modules</td><td><b>Module + __main__ guard</b></td><td>Runnable directly OR importable safely</td></tr>
+<tr><td>Avoid NameError for your own functions</td><td><b>defs first, main last</b></td><td>Define <code>Add</code> above; call it inside <code>if __name__ == "__main__":</code> at bottom — unlike C# class method order</td></tr>
 </table>""",
     3: """
 <h3>When to use which — scenarios</h3>
@@ -349,6 +351,53 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Install a library</td><td><code>pip install pkg</code></td><td><code>dotnet add package</code></td></tr>
 <tr><td>Async HTTP call</td><td><code>async def</code> + <code>await</code></td><td><code>async Task</code> + <code>await</code></td></tr>
 <tr><td>Define interface contract</td><td>ABC or duck typing</td><td><code>interface IRepo</code></td></tr>
+</table>""",
+    31: """
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Approach</th><th>Tool / PEP</th></tr>
+<tr><td>New team project</td><td>Agree on PEP 8 + formatter in CI</td><td>Black / ruff</td></tr>
+<tr><td>Public API function</td><td>One-line docstring + type hints</td><td>PEP 257, 484</td></tr>
+<tr><td>Package version bump</td><td>Semantic versioning in pyproject</td><td>PEP 440</td></tr>
+<tr><td>Interview "Python philosophy"</td><td>Cite Zen principles</td><td><code>import this</code></td></tr>
+</table>""",
+    32: """
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Approach</th><th>Why</th></tr>
+<tr><td>Long-running worker memory grows</td><td>Profile + check caches holding refs</td><td>Refcount won't free if referenced</td></tr>
+<tr><td>Parent/child mutual refs</td><td>weakref or break cycle on delete</td><td>GC may delay collection</td></tr>
+<tr><td>Debug "object still alive?"</td><td><code>sys.getrefcount</code>, <code>gc.get_referrers</code></td><td>Find unexpected references</td></tr>
+<tr><td>File handle cleanup</td><td><code>with open(...) as f</code></td><td>Deterministic — not GC-dependent</td></tr>
+</table>""",
+    33: """
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Situation</th><th>Level</th><th>Pattern</th></tr>
+<tr><td>Request handled OK</td><td>INFO</td><td><code>logger.info("order %s created", id)</code></td></tr>
+<tr><td>Retry succeeded</td><td>WARNING</td><td>Recoverable anomaly</td></tr>
+<tr><td>Payment failed</td><td>ERROR</td><td><code>logger.exception(...)</code> in except</td></tr>
+<tr><td>Local debugging</td><td>DEBUG</td><td>Console only — off in prod</td></tr>
+<tr><td>Disk fills up</td><td>RotatingFileHandler</td><td>maxBytes + backupCount</td></tr>
+</table>""",
+    34: """
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Boundary</th><th>Use Pydantic?</th><th>Example</th></tr>
+<tr><td>HTTP JSON body</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td>FastAPI <code>UserCreate</code></td></tr>
+<tr><td>Internal helper</td><td class="cell-no"><span class="yn-no"></span>Usually plain types</td><td><code>def add(a: int, b: int)</code></td></tr>
+<tr><td>Config from env/file</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td><code>Settings(BaseModel)</code></td></tr>
+<tr><td>ORM row to client</td><td class="cell-yes"><span class="yn-yes"></span>Response schema</td><td><code>from_attributes=True</code></td></tr>
+</table>""",
+    35: """
+<h3>When to use which — scenarios</h3>
+<table class="data-tbl scenario-tbl">
+<tr><th>Need</th><th>Layer</th><th>Technology</th></tr>
+<tr><td>HTTP routing</td><td>routes</td><td>FastAPI <code>@app.post</code></td></tr>
+<tr><td>Input validation</td><td>schemas</td><td>Pydantic <code>BaseModel</code></td></tr>
+<tr><td>Persist data</td><td>models + session</td><td>SQLAlchemy ORM</td></tr>
+<tr><td>Business rules</td><td>services</td><td>Plain Python module</td></tr>
+<tr><td>Full MVC web + admin</td><td>Django app</td><td>Prefer Django over raw FastAPI</td></tr>
 </table>""",
 }
 

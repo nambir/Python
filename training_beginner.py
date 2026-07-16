@@ -4,25 +4,31 @@ BEGINNER_CONTENT: dict[int, dict] = {
     1: {
         "steps": [
             {"title": "Step 1 — What is Python?", "body": "Python is a language you write in text files ending in <code>.py</code>. You run them with the <code>python</code> command — no separate compile step like C#."},
-            {"title": "Step 2 — Interpreted, not machine code", "body": "CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then runs it line by line. That is why we call Python <b>interpreted</b>."},
+            {"title": "Step 2 — Interpreted, not machine code", "body": "CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>."},
             {"title": "Step 3 — Indentation = blocks", "body": "Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>."},
             {"title": "Step 4 — Dynamic typing", "body": "You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime."},
         ],
         "interview_qa": [
-            {"q": "Is Python compiled or interpreted?", "a": "Both, in practice. Source is compiled to bytecode, then the interpreter executes bytecode. We say interpreted because you run <code>.py</code> directly without building an .exe first."},
+            {"q": "Is Python compiled or interpreted?", "a": "We run the <code>.py</code> file using the Python interpreter. Internally, CPython converts it into bytecode (<code>.pyc</code>) and executes the bytecode step by step. So Python is both compiled to bytecode and interpreted by the Python virtual machine."},
             {"q": "How is Python different from C#?", "a": "No mandatory type declarations, indentation instead of braces, and duck typing — if it behaves like a duck, use it like a duck."},
         ],
     },
     2: {
         "steps": [
             {"title": "Step 1 — Install Python", "body": "Download from python.org. On Windows, check <b>Add Python to PATH</b> so <code>python</code> works in PowerShell."},
-            {"title": "Step 2 — Verify install", "body": "Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready."},
-            {"title": "Step 3 — Three ways to run code", "body": "<b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — open folder in Cursor, select interpreter, press F5."},
+            {"title": "Step 2 — Verify install", "body": "Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready.<table class=\"data-tbl\"><tr><th>Command</th><th>Example from your screen</th><th>Meaning</th></tr><tr><td><code>python --version</code></td><td><code>Python 3.12.4</code></td><td>This is the <b>Python interpreter version</b> — the program that runs <code>.py</code> files.</td></tr><tr><td><code>pip --version</code></td><td><code>pip 25.3 ... (python 3.12)</code></td><td>This is the <b>pip installer version</b>, plus the Python version and folder that pip is connected to.</td></tr></table><div class=\"callout\"><b>pip = Pip Installs Packages</b>. It downloads Python libraries from PyPI, like NuGet downloads packages for .NET.</div>"},
+            {"title": "Step 3 — Three ways to run code", "body": "<b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — you will mainly use <b>Cursor</b> or <b>VS Code</b>: open the folder, select the interpreter, and press F5 to debug. Other famous Python IDEs/editors: <b>PyCharm</b>, <b>Jupyter Notebook/Lab</b>, <b>Spyder</b>, <b>Visual Studio</b>, and built-in <b>IDLE</b>.<div class=\"step-pre\">C:\\Users\\SangeethaLocalAccoun&gt;python\nPython 3.12.4 ... on win32\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n&gt;&gt;&gt; 2+2\n4\n&gt;&gt;&gt; exit()</div><p class=\"step-result\"><b>Meaning:</b> <code>&gt;&gt;&gt;</code> is the Python REPL prompt. It waits for one Python expression or statement, runs it immediately, and prints the result.</p>"},
             {"title": "Step 4 — Multiple Python versions", "body": "On Windows use <code>py -3.12 script.py</code> to pick a version when more than one is installed."},
+            {
+                "title": "Step 5 — Define functions before you call them (not like C#)",
+                "body": "Python runs a script <b>top to bottom</b>. When it reaches a call like <code>Add(1, 2)</code>, the name <code>Add</code> must already exist. If <code>def Add</code> is below the call, you get <code>NameError: name 'Add' is not defined</code>.<div class=\"callout\"><b>C# difference:</b> Inside a C# class, method order usually does <b>not</b> matter — the compiler sees the whole type first. In a Python <code>.py</code> file, execution order <b>does</b> matter.</div><table class=\"data-tbl\"><tr><th>Wrong order</th><th>Correct strategy</th></tr><tr><td><div class=\"step-pre\">if __name__ == \"__main__\":\n    Add(1, 2)   # NameError!\n\ndef Add(x, y):\n    print(f\"Answer is={x + y}\")</div></td><td><div class=\"step-pre\">def Add(x, y):\n    print(f\"Answer is={x + y}\")\n\nif __name__ == \"__main__\":\n    print(\"hai\")\n    Add(1, 2)</div></td></tr></table><p class=\"step-result\"><b>Strategy:</b> put all <code>def</code> / <code>class</code> at the top; put <code>if __name__ == \"__main__\":</code> at the bottom (like C# <code>Main</code> entry point).</p>",
+            },
         ],
         "interview_qa": [
-            {"q": "How do you set up Python on a new Windows machine?", "a": "Install from python.org with PATH enabled, verify with <code>python --version</code>, create a project folder, optionally <code>python -m venv .venv</code>, and select that interpreter in the IDE."},
+            {"q": "How do you set up Python on a new Windows machine?", "a": "Install from python.org with PATH enabled, verify with <code>python --version</code> and <code>pip --version</code>, create a project folder, optionally <code>python -m venv .venv</code>, and select that interpreter in the IDE."},
+            {"q": "What is the difference between python --version and pip --version?", "a": "<code>python --version</code> shows the Python interpreter version, for example <code>Python 3.12.4</code>. <code>pip --version</code> shows the pip package installer version, for example <code>pip 25.3</code>, plus the Python version and install path it belongs to. <b>pip</b> means <b>Pip Installs Packages</b>."},
             {"q": "What is the REPL?", "a": "Read-Eval-Print Loop — an interactive shell. Type one line, see the result immediately. Good for quick experiments, not for full apps."},
+            {"q": "Why do I get NameError if I put Add below if __name__?", "a": "Python executes the file top to bottom. When <code>Add(1, 2)</code> runs, <code>def Add</code> has not run yet, so the name does not exist. In C#, method order inside a class usually does not matter because the compiler compiles the whole type first. Strategy: define functions first; put <code>if __name__ == \"__main__\":</code> at the bottom."},
         ],
     },
     3: {
@@ -116,6 +122,14 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "title": "Step 4 — Bitwise",
                 "body": "Bitwise operators work on integer bits — common in flags, permissions, and low-level math.<div class=\"step-pre\">a, b = 5, 3   # 5 = 101, 3 = 011\na &amp; b   # 1   (AND)\na | b   # 7   (OR)\na ^ b   # 6   (XOR)\n~a      # -6  (NOT)\na &lt;&lt; 1  # 10  (left shift)\na &gt;&gt; 1  # 2   (right shift)</div><p class=\"step-result\"><b>Use case:</b> combine permission flags with <code>|</code>, test with <code>&amp;</code>.</p>",
             },
+            {
+                "title": "Step 5 — Assignment operators (+=, -=, …)",
+                "body": "Shorthand updates a variable in place — same idea as C# <code>+=</code>.<div class=\"step-pre\">n = 10\nn += 5     # 15  (n = n + 5)\nn -= 3     # 12\nn *= 2     # 24\nn //= 4    # 6\nn **= 2    # 36\n\nflags = 0\nflags |= 4   # set bit\nflags &amp;= ~2  # clear bit</div><p class=\"step-result\"><b>All forms:</b> <code>= += -= *= /= //= %= **= &amp;= |= ^= &lt;&lt;= &gt;&gt;=</code></p>",
+            },
+            {
+                "title": "Step 6 — Walrus operator (:=)",
+                "body": "Python 3.8+ — assign a value <b>and</b> use it inside the same expression (named after eyes looking like walrus tusks).<div class=\"step-pre\">data = [\"a\", \"bb\", \"ccc\"]\nif (n := len(data)) &gt; 2:\n    print(f\"Got {n} items\")\n\n# classic pattern: read until empty\nwhile (line := input(\"Name: \")) != \"\":\n    print(f\"Hello, {line}\")</div><p class=\"step-result\"><b>Use when:</b> you need the assigned value twice — avoids calling <code>len(data)</code> or <code>input()</code> twice.</p>",
+            },
         ],
         "interview_qa": [
             {"q": "What is the difference between == and is?", "a": "<code>==</code> compares values. <code>is</code> compares object identity (same memory address). Two equal lists can be <code>==</code> but not <code>is</code>. Use <code>is</code> for <code>None</code>."},
@@ -123,6 +137,8 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What does // vs % do together?", "a": "For integers: <code>a == (a // b) * b + (a % b)</code>. Example: <code>10 // 4 = 2</code>, <code>10 % 4 = 2</code>."},
             {"q": "What is None and how do you test for it?", "a": "<code>None</code> means no value. Always use <code>if x is None:</code> — not <code>x == None</code>. There is only one <code>None</code> object in Python."},
             {"q": "When would you use bitwise operators?", "a": "Feature flags, network masks, fast multiply/divide by powers of 2 with shifts, or when working with binary protocols."},
+            {"q": "What does += do?", "a": "<code>n += 5</code> is equivalent to <code>n = n + 5</code> — updates in place. Works for numbers, strings (<code>s += \"x\"</code>), and lists (<code>lst += [1]</code>)."},
+            {"q": "When should you use the walrus operator :=?", "a": "When you assign a value and immediately need it in a condition or loop — e.g. <code>if (n := len(items)) &gt; 0:</code>. Do not overuse; readability first."},
         ],
     },
     6: {
@@ -232,12 +248,18 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "title": "Step 4 — range, len, sorted & reversed",
                 "body": "Common sequence utilities — know which mutate vs return new objects.<table class=\"data-tbl\"><tr><th>Function</th><th>Returns</th><th>Mutates?</th></tr><tr><td><code>len(x)</code></td><td>count</td><td class=\"cell-no\"><span class=\"yn-no\"></span>No</td></tr><tr><td><code>sorted(x)</code></td><td>new list</td><td class=\"cell-no\"><span class=\"yn-no\"></span>No</td></tr><tr><td><code>reversed(x)</code></td><td>iterator</td><td class=\"cell-no\"><span class=\"yn-no\"></span>No</td></tr><tr><td><code>list.sort()</code></td><td><code>None</code></td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Yes</td></tr></table><div class=\"step-pre\">len([10, 20, 30])           # 3\nsorted([3, 1, 2])             # [1, 2, 3]\nlist(reversed(\"abc\"))         # ['c', 'b', 'a']</div>",
             },
+            {
+                "title": "Step 5 — max & min",
+                "body": "<code>max()</code> and <code>min()</code> find the largest and smallest item — with optional <code>key=</code> for custom ordering.<div class=\"step-pre\">prices = [120, 45, 89, 200]\nmax(prices)                 # 200\nmin(prices)                 # 45\n\nscores = {\"Anu\": 90, \"Ravi\": 85}\nmax(scores, key=scores.get)  # \"Anu\" (highest score)\nmin(scores, key=scores.get)  # \"Ravi\"\n\nmax([], default=0)           # 0 — empty safe</div>",
+            },
         ],
         "interview_qa": [
             {"q": "sorted() vs list.sort()?", "a": "<code>sorted()</code> returns a new sorted list; original unchanged. <code>.sort()</code> mutates in place and returns <code>None</code>. Never assign <code>x = lst.sort()</code>."},
             {"q": "When do you use enumerate?", "a": "When you need both index and value: <code>for i, item in enumerate(items):</code> instead of manual <code>range(len(items))</code>."},
             {"q": "isinstance vs type() == ?", "a": "<code>isinstance(x, int)</code> respects inheritance (<code>True</code> for bool). <code>type(x) == int</code> is exact match only."},
             {"q": "map vs list comprehension?", "a": "Comprehensions are more Pythonic and readable. <code>map</code> is useful with existing functions: <code>map(str.strip, lines)</code>."},
+            {"q": "max/min on empty iterable?", "a": "Without <code>default=</code>, raises <code>ValueError</code>. Use <code>max(items, default=0)</code> when empty is possible."},
+            {"q": "max on a dict — what does it return?", "a": "By default compares <b>keys</b>. Use <code>max(d, key=d.get)</code> to find the key with the largest value."},
         ],
     },
     10: {
@@ -672,6 +694,71 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Coming from C#, what surprised you in Python?", "a": "Indentation as syntax, dynamic typing, mutable default argument trap, and that <code>is</code> vs <code>==</code> matters. Similarities: OOP, exceptions, and large package ecosystems."},
             {"q": "null vs None — how do you test?", "a": "C#: <code>if (x == null)</code>. Python: <code>if x is None:</code> — use <code>is</code>, not <code>==</code>, because there is only one <code>None</code> object."},
             {"q": "this vs self?", "a": "Same role — current instance. C# <code>this</code> is implicit in instance methods. Python requires <code>self</code> as the first parameter explicitly: <code>def greet(self):</code>."},
+        ],
+    },
+    31: {
+        "steps": [
+            {"title": "Step 1 — What is a PEP?", "body": "PEP = Python Enhancement Proposal — design documents for language features, style, and packaging. Some are informational; others become official standards."},
+            {"title": "Step 2 — PEP 8 style", "body": "4-space indent, <code>snake_case</code> for functions/variables, <code>PascalCase</code> for classes, imports grouped (stdlib → third-party → local). Linters enforce this in CI."},
+            {"title": "Step 3 — PEP 257 & type hints", "body": "Docstrings describe modules, classes, and public functions. PEP 484/585 define type hints — use <code>list[int]</code> in Python 3.9+."},
+            {"title": "Step 4 — Packaging PEPs", "body": "PEP 440 (versions), 508 (dependency specifiers), 518/621 (<code>pyproject.toml</code>) — how modern Python projects declare dependencies."},
+        ],
+        "interview_qa": [
+            {"q": "What is PEP 8?", "a": "The official Python style guide — naming, indentation, line length, import order. Not enforced by the interpreter; teams use ruff, flake8, or Black."},
+            {"q": "What is the Zen of Python?", "a": "PEP 20 — aphorisms like 'Readability counts' and 'Explicit is better than implicit'. Run <code>import this</code> in the REPL."},
+            {"q": "PEP 8 vs a linter?", "a": "PEP 8 is the document; linters automate checks. Black formats code; ruff/flake8 report violations. CI fails on style drift."},
+        ],
+    },
+    32: {
+        "steps": [
+            {"title": "Step 1 — Reference counting", "body": "Every object tracks how many references point to it. When count hits zero, memory is reclaimed immediately — fast for most objects."},
+            {"title": "Step 2 — Garbage collector", "body": "Circular references (A→B→A) keep refcounts &gt; 0 forever. The <code>gc</code> module periodically finds and breaks these cycles."},
+            {"title": "Step 3 — Generations", "body": "GC uses three generations — young objects collected often, old objects rarely. Tuning is rare; know it exists for leak debugging."},
+            {"title": "Step 4 — Practical tips", "body": "<code>del</code> removes a name, not necessarily the object. Use <code>with</code> for files. Long-lived caches can cause memory growth — profile before optimizing."},
+        ],
+        "interview_qa": [
+            {"q": "How does Python free memory?", "a": "Primarily reference counting — when no names reference an object, it is freed. A generational GC handles circular references."},
+            {"q": "What is a circular reference?", "a": "Two or more objects reference each other so refcounts never reach zero. Example: parent/child nodes pointing at each other — needs <code>gc.collect()</code> or weakref."},
+            {"q": "del x vs x = None?", "a": "<code>del x</code> removes the name from the namespace. <code>x = None</code> rebinds to None but keeps the name. Neither guarantees instant destruction if other references exist."},
+        ],
+    },
+    33: {
+        "steps": [
+            {"title": "Step 1 — Why not print()?", "body": "Production needs levels, timestamps, and routing to files/agents. <code>logging</code> is the standard library solution — like ILogger in .NET."},
+            {"title": "Step 2 — Levels", "body": "DEBUG &lt; INFO &lt; WARNING &lt; ERROR &lt; CRITICAL. Set root level to INFO in prod; DEBUG only when troubleshooting."},
+            {"title": "Step 3 — Logger per module", "body": "<code>logger = logging.getLogger(__name__)</code> — hierarchical names (<code>app.orders.service</code>) map to configuration."},
+            {"title": "Step 4 — Handlers & format", "body": "Console handler for dev, RotatingFileHandler for disk. Use <code>%</code> formatting in log calls — not f-strings — for lazy evaluation."},
+        ],
+        "interview_qa": [
+            {"q": "logging vs print?", "a": "Logging has levels, can filter, add timestamps, route to files/syslog, and disable debug noise in production without code changes."},
+            {"q": "Why logger.info('x=%s', x) instead of f-string?", "a": "Lazy formatting — if INFO is filtered out, the string is never built. f-strings always evaluate immediately."},
+            {"q": "How do you log an exception with traceback?", "a": "Inside <code>except</code>: <code>logger.exception('message')</code> or <code>logger.error('msg', exc_info=True)</code>."},
+        ],
+    },
+    34: {
+        "steps": [
+            {"title": "Step 1 — BaseModel", "body": "Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>)."},
+            {"title": "Step 2 — Validation", "body": "<code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths."},
+            {"title": "Step 3 — Serialization", "body": "v2: <code>model_validate(dict)</code> in, <code>model_dump()</code> out. For ORM rows use <code>model_config = {'from_attributes': True}</code>."},
+            {"title": "Step 4 — FastAPI integration", "body": "Route parameters typed as Pydantic models auto-parse JSON bodies and return 422 with structured errors — no manual validation boilerplate."},
+        ],
+        "interview_qa": [
+            {"q": "What is Pydantic used for?", "a": "Runtime validation and parsing using type hints — API schemas, config loading, data pipelines. Core of FastAPI request/response models."},
+            {"q": "Pydantic vs dataclasses?", "a": "Dataclasses structure data; Pydantic validates, coerces types, and gives rich errors. Use Pydantic at API boundaries."},
+            {"q": "What happens on validation failure?", "a": "<code>ValidationError</code> with a list of errors per field — FastAPI converts this to HTTP 422 JSON for clients."},
+        ],
+    },
+    35: {
+        "steps": [
+            {"title": "Step 1 — Layered stack", "body": "FastAPI (HTTP) + Pydantic (schemas) + SQLAlchemy (ORM) + database. Routes stay thin; services own transactions and business rules."},
+            {"title": "Step 2 — Session per request", "body": "<code>Depends(get_db)</code> yields a SQLAlchemy session, commits on success, closes in <code>finally</code> — like scoped DbContext in EF Core."},
+            {"title": "Step 3 — ORM vs schema", "body": "ORM models map tables; Pydantic schemas map API contracts. Never expose ORM internals directly — use response models."},
+            {"title": "Step 4 — Async note", "body": "FastAPI supports async routes; use async SQLAlchemy (2.0 style) or run sync ORM in thread pool for I/O-bound DB work."},
+        ],
+        "interview_qa": [
+            {"q": "How does FastAPI + SQLAlchemy compare to ASP.NET + EF?", "a": "FastAPI ≈ minimal Web API; Pydantic ≈ DTO validation; SQLAlchemy session ≈ DbContext; Depends ≈ DI scoped services."},
+            {"q": "Where does business logic live?", "a": "In a service layer — not in route handlers. Routes parse HTTP, call service, return schema. Keeps tests and reuse clean."},
+            {"q": "Why separate Pydantic from SQLAlchemy models?", "a": "API shape ≠ database shape — hide internal columns, version APIs, and validate input without leaking ORM details."},
         ],
     },
 }
