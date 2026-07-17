@@ -26,22 +26,23 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Library imported by other modules</td><td><b>Module + __main__ guard</b></td><td>Runnable directly OR importable safely</td></tr>
 <tr><td>Avoid NameError for your own functions</td><td><b>defs first, main last</b></td><td>Define <code>Add</code> above; call it inside <code>if __name__ == "__main__":</code> at bottom — unlike C# class method order</td></tr>
 </table>""",
-    3: """
+    5: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
-<tr><td>GPS coordinate, RGB color, (x, y) point</td><td><b>tuple</b></td><td>Fixed fields — should not change accidentally</td></tr>
-<tr><td>Return multiple values from a function</td><td><b>tuple</b></td><td><code>return ok, data</code> — caller unpacks</td></tr>
-<tr><td>Dict key (grid cell, cache key)</td><td><b>tuple</b></td><td>Hashable — list as key raises TypeError</td></tr>
-<tr><td>Shopping cart, todo list, log entries</td><td><b>list</b></td><td>append, pop, sort — size changes</td></tr>
-<tr><td>User input, file lines, API rows</td><td><b>list</b></td><td>Unknown size — grows as you process</td></tr>
-<tr><td>Protect shared/default constants</td><td><b>tuple</b></td><td>Immutable — callee cannot mutate your data</td></tr>
-<tr><td>Lookup by unique key (username → profile)</td><td><b>dict</b></td><td>O(1) key-value access</td></tr>
-<tr><td>Remove duplicates, membership tests</td><td><b>set</b></td><td>Only unique items kept</td></tr>
-<tr><td>Immutable set as dict key</td><td><b>frozenset</b></td><td>Like set but hashable — <code>frozenset({1,2})</code></td></tr>
+<tr><td>GPS coordinate, RGB color, employee record</td><td><b>tuple</b></td><td>Fixed fields — should not change accidentally</td></tr>
+<tr><td>API returns success + payload</td><td><b>tuple</b> <code>(ok, data)</code></td><td>Caller unpacks; clear contract</td></tr>
+<tr><td>Composite cache / grid key</td><td><b>tuple</b></td><td>Hashable — list as key raises TypeError</td></tr>
+<tr><td>Need slightly less memory / fixed iteration</td><td><b>tuple</b></td><td>No over-allocation or resize bookkeeping</td></tr>
+<tr><td>Shopping cart, todo list, log lines</td><td><b>list</b></td><td>append, pop, sort — size changes</td></tr>
+<tr><td>Mix int + status + nested vendors</td><td><b>heterogeneous list</b></td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
+<tr><td>Watch list capacity grow</td><td><b>sys.getsizeof</b> while appending</td><td>See over-allocation jumps</td></tr>
+<tr><td>Lookup by unique key</td><td><b>dict</b></td><td>O(1) key-value access</td></tr>
+<tr><td>Remove duplicates / membership</td><td><b>set</b></td><td>Only unique items kept</td></tr>
+<tr><td>Immutable set as dict key</td><td><b>frozenset</b></td><td>Like set but hashable</td></tr>
 </table>
-<div class="callout"><b>Rule of thumb:</b> Fixed length + fixed meaning → <b>tuple</b>. Growing/reordering collection → <b>list</b>.</div>""",
-    4: """
+<div class="callout"><b>Rule of thumb:</b> Fixed length + fixed meaning → <b>tuple</b>. Growing / mixed working data → <b>list</b>.</div>""",
+    3: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -51,7 +52,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Regenerate slides after edits</td><td><b>build_training.py</b></td><td>Source of truth for HTML deck</td></tr>
 <tr><td>Isolated dependencies per project</td><td><b>.venv/ per folder</b></td><td>Avoid global pip conflicts</td></tr>
 </table>""",
-    5: """
+    7: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -63,7 +64,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Combine permission flags in binary</td><td><b>bitwise &amp; | ^</b></td><td>Low-level flags on integers</td></tr>
 <tr><td>Logical AND across conditions</td><td><b>and</b></td><td>Both must be True</td></tr>
 </table>""",
-    6: """
+    8: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -79,7 +80,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Search list, report if not found</td><td><b>for-else</b></td><td><code>else</code> runs only if no <code>break</code></td></tr>
 <tr><td>Fixed count (0 to N-1)</td><td><b>range(N)</b></td><td><code>for i in range(10)</code></td></tr>
 </table>""",
-    7: """
+    9: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -90,10 +91,12 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Side effects in loop (print, DB write)</td><td><b>plain for loop</b></td><td>Comprehensions should not have side effects</td></tr>
 <tr><td>Complex nested logic hard to read</td><td><b>plain for loop</b></td><td>Readability over cleverness</td></tr>
 </table>""",
-    8: """
+    10: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
+<tr><td>Logic with no side effects / easy to test</td><td><b>pure function</b></td><td>Same inputs → same output (FP)</td></tr>
+<tr><td>Pass/return functions (sorted key, factory)</td><td><b>higher-order / first-class</b></td><td><code>sorted(..., key=fn)</code></td></tr>
 <tr><td>Reusable logic with a name</td><td><b>def function</b></td><td>DRY — call from many places</td></tr>
 <tr><td>Optional parameter with default</td><td><b>default arg</b></td><td><code>greet(name, msg="Hi")</code></td></tr>
 <tr><td>Unknown number of positional args</td><td><b>*args</b></td><td>Wrapper functions, decorators</td></tr>
@@ -103,7 +106,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Tree/graph recursion (factorial, folders)</td><td><b>recursion</b></td><td>Problem defined in terms of itself</td></tr>
 <tr><td>Default mutable list argument</td><td><b>None trick</b></td><td><code>def f(lst=None)</code> — never <code>lst=[]</code></td></tr>
 </table>""",
-    9: """
+    11: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -116,7 +119,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Sort list in place</td><td><b>list.sort()</b></td><td>Mutates the list — no copy</td></tr>
 <tr><td>Check type with inheritance</td><td><b>isinstance</b></td><td>Better than <code>type(x)==int</code></td></tr>
 </table>""",
-    10: """
+    15: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -128,7 +131,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>User-friendly print vs debug repr</td><td><b>__str__ / __repr__</b></td><td><code>print(obj)</code> vs REPL display</td></tr>
 <tr><td>Multiple inheritance diamond problem</td><td><b>MRO</b></td><td>Check <code>Class.__mro__</code> for order</td></tr>
 </table>""",
-    11: """
+    18: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -139,7 +142,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Stack multiple behaviors</td><td><b>nested decorators</b></td><td><code>@a @b def f</code> — order matters</td></tr>
 <tr><td>Decorator needs configuration</td><td><b>decorator factory</b></td><td><code>@repeat(3)</code> — extra wrapper level</td></tr>
 </table>""",
-    12: """
+    16: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -149,18 +152,19 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Simple field with validation</td><td><b>@property</b></td><td>Prefer over full descriptor — less boilerplate</td></tr>
 <tr><td>ORM field lazy-loading from DB</td><td><b>descriptor</b></td><td>Framework-level attribute control</td></tr>
 </table>""",
-    13: """
+    17: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
+<tr><td>Huge CSV — avoid MemoryError</td><td><b>yield one row</b></td><td>Not <code>read().split()</code> into a giant list (Real Python)</td></tr>
 <tr><td>Read huge file line by line</td><td><b>generator (yield)</b></td><td>One line in memory at a time</td></tr>
-<tr><td>Infinite sequence (fibonacci, stream)</td><td><b>generator</b></td><td>Never materialize full list</td></tr>
-<tr><td>Custom collection class for for-loop</td><td><b>iterator protocol</b></td><td>Implement <code>__iter__</code>, <code>__next__</code></td></tr>
-<tr><td>Pipeline of transformations</td><td><b>itertools</b></td><td>chain, islice, groupby — memory efficient</td></tr>
+<tr><td>Infinite sequence (counters, streams)</td><td><b>generator</b></td><td>Never materialize full list</td></tr>
+<tr><td>Short lazy transform</td><td><b>generator expression</b></td><td><code>(parse(l) for l in f)</code></td></tr>
+<tr><td>Pipeline of transformations</td><td><b>chained generators / itertools</b></td><td>No giant intermediate lists</td></tr>
 <tr><td>Need random access by index</td><td><b>list</b></td><td>Generators are one-pass — no <code>gen[5]</code></td></tr>
 <tr><td>Need len() or reuse multiple times</td><td><b>list</b></td><td>Generators consumed once</td></tr>
 </table>""",
-    14: """
+    6: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -171,7 +175,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>FastAPI / Pydantic validation</td><td><b>type hints</b></td><td>Framework enforces at request time</td></tr>
 <tr><td>Quick throwaway script</td><td><b>skip hints</b></td><td>OK for learning — add in production code</td></tr>
 </table>""",
-    15: """
+    25: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -182,7 +186,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Binary files (images, PDF)</td><td><b>open("rb"/"wb")</b></td><td>Bytes mode — not text decoding</td></tr>
 <tr><td>Always close file even on crash</td><td><b>with statement</b></td><td>Context manager guarantees cleanup</td></tr>
 </table>""",
-    16: """
+    19: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -193,7 +197,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Expected success path logging</td><td><b>try/else</b></td><td><code>else</code> only when no exception</td></tr>
 <tr><td>Let crash for programming bugs</td><td><b>don't catch</b></td><td>KeyError, AttributeError = fix the code</td></tr>
 </table>""",
-    17: """
+    24: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -204,7 +208,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Parse structured file (CSV, JSON)</td><td><b>csv/json modules</b></td><td>Don't regex what has a proper parser</td></tr>
 <tr><td>Complex nested HTML</td><td><b>BeautifulSoup</b></td><td>Regex on HTML breaks — use HTML parser</td></tr>
 </table>""",
-    18: """
+    12: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -215,7 +219,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Merge config: env + file + defaults</td><td><b>ChainMap</b></td><td>Search dicts in order</td></tr>
 <tr><td>Need to mutate grouped data</td><td><b>defaultdict</b></td><td>Counter is for counting only</td></tr>
 </table>""",
-    19: """
+    23: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -237,7 +241,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Parallel CPU on all cores</td><td><b>ProcessPoolExecutor</b></td><td>True parallelism — separate memory</td></tr>
 <tr><td>Async HTTP (thousands of connections)</td><td><b>asyncio</b></td><td>Even better than threads for I/O scale</td></tr>
 </table>""",
-    21: """
+    26: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -248,7 +252,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Reusable resource class (pool, session)</td><td><b>__enter__/__exit__ class</b></td><td>Full control over lifecycle</td></tr>
 <tr><td>Manual try/finally everywhere</td><td><b>avoid — use with</b></td><td>with is cleaner and safer</td></tr>
 </table>""",
-    22: """
+    21: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -259,7 +263,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>FastAPI endpoint calling DB + HTTP</td><td><b>async def route</b></td><td>Non-blocking while waiting</td></tr>
 <tr><td>Simple script with one request</td><td><b>sync requests</b></td><td>async overhead not worth it</td></tr>
 </table>""",
-    23: """
+    27: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Scenario</th><th>Use</th><th>Why</th></tr>
@@ -270,7 +274,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Commit venv folder to git</td><td><b>never</b></td><td>Add <code>.venv/</code> to .gitignore</td></tr>
 <tr><td>Global pip install for everything</td><td><b>avoid</b></td><td>Project A breaks Project B</td></tr>
 </table>""",
-    24: """
+    29: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Goal</th><th>Start here</th><th>Why</th></tr>
@@ -281,7 +285,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>REST API demo</td><td><b>DjangoRestBasics/</b></td><td>Serializers, ViewSets, JSON</td></tr>
 <tr><td>Voice AI / async interview story</td><td><b>Pipecat-Project/</b></td><td>STT → LLM → TTS pipeline</td></tr>
 </table>""",
-    25: """
+    30: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Topic to practice</th><th>Module</th><th>Why</th></tr>
@@ -292,7 +296,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>try/except, raise custom errors</td><td><b>MyExceptionHandling/</b></td><td>Matches slide 16</td></tr>
 <tr><td>pytest, unittest patterns</td><td><b>MyUnitTesting/</b></td><td>Matches slide 19</td></tr>
 </table>""",
-    26: """
+    31: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Task</th><th>Tool</th><th>Why</th></tr>
@@ -303,7 +307,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Sort players by goals scored</td><td><b>FIFA notebook</b></td><td>sort_values, aggregation</td></tr>
 <tr><td>Production ETL pipeline</td><td><b>pandas script</b></td><td>Notebook for explore, .py for automate</td></tr>
 </table>""",
-    27: """
+    32: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Need</th><th>Choose</th><th>Why</th></tr>
@@ -314,7 +318,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Validate request/response JSON shape</td><td><b>DRF Serializer</b></td><td>Like Pydantic — to/from JSON</td></tr>
 <tr><td>Stateless mobile app authentication</td><td><b>JWT (simplejwt)</b></td><td>Token-based — no server session</td></tr>
 </table>""",
-    28: """
+    33: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Use case</th><th>POC</th><th>Why</th></tr>
@@ -325,7 +329,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Study architecture before coding</td><td><b>PipecatAI.html</b></td><td>Learning content in repo</td></tr>
 <tr><td>CPU-heavy local LLM inference</td><td><b>phase1 local models</b></td><td>Avoid cloud API costs in dev</td></tr>
 </table>""",
-    29: """
+    34: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Project type</th><th>Structure</th><th>Why</th></tr>
@@ -336,7 +340,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Week 1–2 learning</td><td><b>Projects/ + slides 1–10</b></td><td>Fundamentals before big projects</td></tr>
 <tr><td>Interview demo ready</td><td><b>one Set2 project deep</b></td><td>Depth beats breadth — know one well</td></tr>
 </table>""",
-    30: """
+    35: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Situation</th><th>Python approach</th><th>C# equivalent</th></tr>
@@ -352,7 +356,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Async HTTP call</td><td><code>async def</code> + <code>await</code></td><td><code>async Task</code> + <code>await</code></td></tr>
 <tr><td>Define interface contract</td><td>ABC or duck typing</td><td><code>interface IRepo</code></td></tr>
 </table>""",
-    31: """
+    4: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Situation</th><th>Approach</th><th>Tool / PEP</th></tr>
@@ -361,7 +365,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Package version bump</td><td>Semantic versioning in pyproject</td><td>PEP 440</td></tr>
 <tr><td>Interview "Python philosophy"</td><td>Cite Zen principles</td><td><code>import this</code></td></tr>
 </table>""",
-    32: """
+    13: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Situation</th><th>Approach</th><th>Why</th></tr>
@@ -370,7 +374,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Debug "object still alive?"</td><td><code>sys.getrefcount</code>, <code>gc.get_referrers</code></td><td>Find unexpected references</td></tr>
 <tr><td>File handle cleanup</td><td><code>with open(...) as f</code></td><td>Deterministic — not GC-dependent</td></tr>
 </table>""",
-    33: """
+    22: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Situation</th><th>Level</th><th>Pattern</th></tr>
@@ -380,7 +384,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Local debugging</td><td>DEBUG</td><td>Console only — off in prod</td></tr>
 <tr><td>Disk fills up</td><td>RotatingFileHandler</td><td>maxBytes + backupCount</td></tr>
 </table>""",
-    34: """
+    14: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Boundary</th><th>Use Pydantic?</th><th>Example</th></tr>
@@ -389,7 +393,7 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Config from env/file</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td><code>Settings(BaseModel)</code></td></tr>
 <tr><td>ORM row to client</td><td class="cell-yes"><span class="yn-yes"></span>Response schema</td><td><code>from_attributes=True</code></td></tr>
 </table>""",
-    35: """
+    28: """
 <h3>When to use which — scenarios</h3>
 <table class="data-tbl scenario-tbl">
 <tr><th>Need</th><th>Layer</th><th>Technology</th></tr>

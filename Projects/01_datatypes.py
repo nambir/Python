@@ -1,82 +1,79 @@
-"""Slide 3 — Python datatypes (CSV Batch 2 topic 1)."""
+"""Slide 5 — Python datatypes: realistic list/tuple usage."""
+import sys
 
 
-def step1_primitives():
-    age, price, name, is_student = 25, 99.5, "Ravi", True
-    print("primitives:", age, price, name, is_student)
+def demo_lists():
+    scores = [90, 85, 88]
+    vendors = ["Google", "Amazon", "Azure"]
+    order = [101, "SHIPPED", ["Google", "Amazon"]]
+    print("homogeneous ints:", scores)
+    print("homogeneous strs:", vendors)
+    print("heterogeneous:", order)
+    print("nested vendor:", order[2][0])
 
 
-def step2_collections():
-    numbers = [10, 20, 30]
-    point = (10, 20)
-    colors = {"red", "green"}
-    frozen = frozenset({"read", "write"})
-    student = {"name": "Ravi", "age": 15}
-    print("list:", numbers, "tuple:", point, "set:", colors)
-    print("frozenset:", frozen, "dict:", student)
+def demo_list_memory():
+    print("\n--- list memory growth (watch sizeof jump) ---")
+    cart = []
+    print(f"len=0  sizeof={sys.getsizeof(cart)}")
+    for i in range(12):
+        cart.append(i)
+        print(f"len={len(cart):2d}  sizeof={sys.getsizeof(cart)}")
 
 
-def step3_list_index_slice():
-    nums = [10, 20, 30, 40]
-    print("index:", nums[0], "last:", nums[-1], "slice:", nums[1:3])
-    nums.append(50)
-    print("after append:", nums)
+def demo_tuple_real():
+    lat_lng = (12.9716, 80.2212)
+    rgb = (255, 128, 0)
+    employee = ("E102", "Anu", 75000)
+
+    def fetch_user(user_id):
+        if user_id < 0:
+            return False, None
+        return True, {"id": user_id, "name": "Anu"}
+
+    ok, user = fetch_user(10)
+    cache = {("orders", 2026, 7): 42}
+    print("\n--- tuple real uses ---")
+    print("GPS:", lat_lng)
+    print("RGB:", rgb)
+    print("employee:", employee)
+    print("fetch:", ok, user)
+    print("dict key:", cache)
 
 
-def step4_tuple_pack_unpack():
-    point = (12.97, 80.22)
-    lat, lng = point
-    print("unpack:", lat, lng)
+def demo_tuple_vs_list_size():
+    a_list = [1, 2, 3]
+    a_tuple = (1, 2, 3)
+    print("\n--- memory: list vs tuple (same 3 ints) ---")
+    print("list  bytes:", sys.getsizeof(a_list))
+    print("tuple bytes:", sys.getsizeof(a_tuple))
+
+
+def demo_why_immutable_keys():
+    print("\n--- why dict keys must be immutable ---")
+    prices = {}
+    prices["apple"] = 40
+    prices[(12.97, 80.22)] = "Chennai warehouse"
+    print("OK str + tuple keys:", prices)
+
     try:
-        point = (12.97, 80.22)
-        point[0] = 15
+        prices[[12.97, 80.22]] = "fail"
     except TypeError as e:
-        print("tuple immutable:", e)
+        print("list as key:", e)
 
-
-def step5_set_unique():
-    tags = {"python", "code", "python"}
-    print("set unique:", tags)
-
-
-def step6_frozenset():
-    perms = frozenset({"read", "write"})
-    cache = {perms: "allowed"}
-    print("frozenset dict key:", cache)
     try:
-        perms.add("admin")
-    except AttributeError as e:
-        print("frozenset cannot change:", e)
-
-
-def step7_11_dict_keys():
-    grid = {}
-    grid[(1, 2)] = "cell"
-    try:
-        grid[[1, 2]] = "X"
+        prices[{"city": "Chennai"}] = "fail"
     except TypeError as e:
-        print("list key fails:", e)
-    try:
-        grid[{"id": 1}] = "data"
-    except TypeError as e:
-        print("dict key fails:", e)
+        print("dict as key:", e)
+
+    # Thought experiment printed as comments for learners:
+    print("If list keys were allowed and you mutated the list,")
+    print("hash would change and the value could not be found again.")
 
 
 if __name__ == "__main__":
-    print("=== Step 1: primitives ===")
-    step1_primitives()
-    print("\n=== Step 2: collections ===")
-    step2_collections()
-    print("\n=== Step 3: list index/slice ===")
-    step3_list_index_slice()
-    print("\n=== Step 4: tuple pack/unpack ===")
-    step4_tuple_pack_unpack()
-    print("\n=== Step 5: set uniqueness ===")
-    step5_set_unique()
-    print("\n=== Step 6: frozenset ===")
-    step6_frozenset()
-    print("\n=== Step 7-11: dict keys ===")
-    step7_11_dict_keys()
-    print("\n=== Step 13: summary ===")
-    print("Dict keys OK: int, str, tuple, frozenset")
-    print("Dict keys NOT OK: list, dict, set")
+    demo_lists()
+    demo_list_memory()
+    demo_tuple_real()
+    demo_tuple_vs_list_size()
+    demo_why_immutable_keys()

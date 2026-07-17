@@ -27,7 +27,7 @@ Slides 31-35 = extended curriculum (PEP, memory/GC, logging, Pydantic, FastAPI+S
 """
 
 CSV_TOPICS: dict[int, list[str]] = {
-    3: [
+    5: [
         "Primitive: int, float, str, bool",
         "List — mutability, indexing, slicing",
         "Tuple — immutability, packing/unpacking",
@@ -35,7 +35,7 @@ CSV_TOPICS: dict[int, list[str]] = {
         "Set — uniqueness, hashing",
         "Frozenset — immutable set, hashing, dict key",
     ],
-    5: [
+    7: [
         "Arithmetic: + - * / % // **",
         "Comparison & logical operators",
         "Identity (is / is not) & membership (in / not in)",
@@ -43,19 +43,19 @@ CSV_TOPICS: dict[int, list[str]] = {
         "Assignment operators (+=, -=, *=, …)",
         "Walrus operator (:=)",
     ],
-    6: [
+    8: [
         "if / elif / else",
         "for loop — iteration, range()",
         "while loop — condition, break, continue",
         "pass, else clause in loops",
     ],
-    7: [
+    9: [
         "List comprehension",
         "Set comprehension",
         "Dictionary comprehension",
         "Generator expression",
     ],
-    8: [
+    10: [
         "Positional & keyword arguments",
         "*args and **kwargs",
         "Recursion",
@@ -63,14 +63,14 @@ CSV_TOPICS: dict[int, list[str]] = {
         "Local and global scope (LEGB)",
         "Closures",
     ],
-    9: [
+    11: [
         "map(), filter(), reduce()",
         "zip(), enumerate()",
         "type(), id(), isinstance()",
         "range(), len(), sorted(), reversed()",
         "max(), min()",
     ],
-    10: [
+    15: [
         "Class & object, __init__, self",
         "Inheritance — single, multiple, MRO",
         "Encapsulation — private, protected (_)",
@@ -78,45 +78,45 @@ CSV_TOPICS: dict[int, list[str]] = {
         "Abstract classes (abc module)",
         "Dunder / magic methods",
     ],
-    11: [
+    18: [
         "Function decorators",
         "Class decorators",
         "functools.wraps",
     ],
-    12: [
+    16: [
         "__get__, __set__, __delete__",
         "Property vs descriptor",
     ],
-    13: [
+    17: [
         "Generator functions (yield)",
         "Generator state / frame internals",
         "Iterator protocol (__iter__, __next__)",
         "itertools module",
     ],
-    14: [
+    6: [
         "Type hints — basic annotations",
         "Optional, Union, List, Dict, Tuple",
         "TypeVar, Generic, Protocol",
         "mypy for static checking",
     ],
-    15: [
+    25: [
         "open() — read, write, append modes",
         "Context manager with 'with'",
         "CSV, JSON file handling",
         "pathlib module",
     ],
-    16: [
+    19: [
         "try / except / else / finally",
         "Built-in exceptions hierarchy",
         "Custom exceptions",
         "Raising and re-raising exceptions",
     ],
-    17: [
+    24: [
         "re module — match, search, findall",
         "Groups, special sequences",
         "Lookahead / lookbehind",
     ],
-    18: [
+    12: [
         "Counter",
         "OrderedDict",
         "defaultdict",
@@ -125,7 +125,7 @@ CSV_TOPICS: dict[int, list[str]] = {
         "deque",
         "UserDict, UserList, UserString",
     ],
-    19: [
+    23: [
         "unittest — TestCase, setUp, tearDown",
         "Order of execution in unit tests",
         "assert methods",
@@ -138,46 +138,46 @@ CSV_TOPICS: dict[int, list[str]] = {
         "multiprocessing as GIL workaround",
         "concurrent.futures",
     ],
-    21: [
+    26: [
         "contextlib.contextmanager",
         "__enter__ / __exit__ protocol",
     ],
-    22: [
+    21: [
         "asyncio — event loop basics",
         "async def, await, coroutines",
         "asyncio.gather(), asyncio.run()",
         "async context managers & iterators",
     ],
-    23: [
+    27: [
         "venv — create, activate, deactivate",
         "pip — install, freeze, requirements.txt",
         "pyenv for Python version management",
     ],
-    31: [
+    4: [
         "PEP 8 — style guide (naming, indent, imports)",
         "PEP 257 — docstring conventions",
         "PEP 20 — Zen of Python",
         "PEP 440 / 508 / 621 — versions, deps, pyproject.toml",
     ],
-    32: [
+    13: [
         "Reference counting",
         "Garbage collector — circular references",
         "Generational GC (0, 1, 2)",
         "weakref, del, profiling leaks",
     ],
-    33: [
+    22: [
         "logging module — levels, loggers, handlers",
         "basicConfig vs module loggers",
         "RotatingFileHandler",
         "logger.exception / exc_info",
     ],
-    34: [
+    14: [
         "Pydantic BaseModel",
         "Field constraints & field_validator",
         "model_validate / model_dump (v2)",
         "FastAPI request/response schemas",
     ],
-    35: [
+    28: [
         "FastAPI routes & Depends",
         "SQLAlchemy ORM models & Session",
         "Pydantic vs ORM separation",

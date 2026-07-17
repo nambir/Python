@@ -7,10 +7,12 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"title": "Step 2 — Interpreted, not machine code", "body": "CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>."},
             {"title": "Step 3 — Indentation = blocks", "body": "Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>."},
             {"title": "Step 4 — Dynamic typing", "body": "You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime."},
+            {"title": "Step 5 — Duck typing (real example)", "body": "If an object has the method you need, you can use it — no interface required.<div class=\"step-pre\">class EmailNotifier:\n    def send(self, msg):\n        return f\"Email: {msg}\"\n\ndef notify(channel, msg):\n    return channel.send(msg)  # needs .send() only\n\nnotify(EmailNotifier(), \"Order shipped\")</div><p class=\"step-result\"><b>Real use:</b> email / SMS / Slack notifiers, or anything with <code>.write()</code> for saving reports.</p>"},
         ],
         "interview_qa": [
             {"q": "Is Python compiled or interpreted?", "a": "We run the <code>.py</code> file using the Python interpreter. Internally, CPython converts it into bytecode (<code>.pyc</code>) and executes the bytecode step by step. So Python is both compiled to bytecode and interpreted by the Python virtual machine."},
-            {"q": "How is Python different from C#?", "a": "No mandatory type declarations, indentation instead of braces, and duck typing — if it behaves like a duck, use it like a duck."},
+            {"q": "How is Python different from C#?", "a": "No mandatory type declarations, indentation instead of braces, and duck typing — if it has <code>.send()</code>, treat it as a notifier. C# usually requires an interface; Python checks behavior at runtime."},
+            {"q": "Give a realistic duck typing example.", "a": "A <code>notify(channel, msg)</code> function that calls <code>channel.send(msg)</code>. Email, SMS, or Slack classes all work if they implement <code>send</code> — no shared base class required."},
         ],
     },
     2: {
@@ -31,7 +33,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Why do I get NameError if I put Add below if __name__?", "a": "Python executes the file top to bottom. When <code>Add(1, 2)</code> runs, <code>def Add</code> has not run yet, so the name does not exist. In C#, method order inside a class usually does not matter because the compiler compiles the whole type first. Strategy: define functions first; put <code>if __name__ == \"__main__\":</code> at the bottom."},
         ],
     },
-    3: {
+    5: {
         "steps": [
             {
                 "title": "Step 1 — What are Python data types?",
@@ -42,12 +44,12 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "Collections hold multiple values.<table class=\"data-tbl\"><tr><th>Type</th><th>Symbol</th><th>Can change?</th></tr><tr><td>List</td><td><code>[]</code></td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Yes</td></tr><tr><td>Tuple</td><td><code>()</code></td><td class=\"cell-no\"><span class=\"yn-no\"></span>No</td></tr><tr><td>Set</td><td><code>{a, b}</code></td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Yes</td></tr><tr><td>Frozenset</td><td><code>frozenset()</code></td><td class=\"cell-no\"><span class=\"yn-no\"></span>No</td></tr><tr><td>Dictionary</td><td><code>{key: value}</code></td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Values can change</td></tr></table>",
             },
             {
-                "title": "Step 3 — List: mutability, indexing, slicing",
-                "body": "Lists can grow and change. Index starts at 0; slice with <code>[start:stop]</code>.<div class=\"step-pre\">nums = [10, 20, 30, 40]\nnums[0]           # 10 — first item\nnums[-1]          # 40 — last item\nnums[1:3]         # [20, 30] — slice\nnums.append(50)   # list grows</div>",
+                "title": "Step 3 — List: homogeneous, heterogeneous, memory",
+                "body": "Lists can hold one type or mixed types. Memory grows in <b>jumps</b> (over-allocation), not +1 byte per append.<div class=\"step-pre\">scores = [90, 85, 88]                 # homogeneous ints\nvendors = [\"Google\", \"Amazon\"]       # homogeneous strs\norder = [101, \"SHIPPED\", [\"Google\", \"Amazon\"]]  # heterogeneous\n\nimport sys\ncart = []\nfor i in range(8):\n    cart.append(i)\n    print(len(cart), sys.getsizeof(cart))  # sizeof jumps</div><p class=\"step-result\"><b>Why jumps?</b> When capacity is full, CPython allocates a larger array and copies references — fewer expensive reallocations.</p>",
             },
             {
-                "title": "Step 4 — Tuple: immutability, packing, unpacking",
-                "body": "Tuples are fixed. Packing puts values together; unpacking assigns them to variables.<div class=\"step-pre\">point = (12.97, 80.22)    # packing\nlat, lng = point          # unpacking\n# point[0] = 15           # TypeError — cannot change\n\ndef divide(a, b):\n    return True, a / b    # packs (ok, result)\nok, val = divide(10, 2)   # unpack</div>",
+                "title": "Step 4 — Tuple: real scenarios + why often faster",
+                "body": "Tuples are fixed records — GPS, RGB, return pairs, dict keys.<div class=\"step-pre\">lat_lng = (12.97, 80.22)           # GPS\ndef fetch(id):\n    return True, {\"name\": \"Anu\"}   # (ok, data)\nok, user = fetch(10)\n\n# Usually leaner than list — no capacity buffer / resize logic\nimport sys\nprint(sys.getsizeof([1,2,3]), sys.getsizeof((1,2,3)))</div><p class=\"step-result\"><b>Performance:</b> tuple is fixed → no append bookkeeping → typically less memory and slightly faster iteration for fixed data.</p>",
             },
             {
                 "title": "Step 5 — Set: uniqueness",
@@ -66,20 +68,20 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "A key finds a value quickly — like a phone book.<div class=\"step-pre\">phone_book = {\"Ravi\": \"99999\", \"Priya\": \"88888\"}</div><p class=\"step-result\"><b>Key → Value:</b> <code>Ravi → 99999</code></p>",
             },
             {
-                "title": "Step 9 — Dictionary keys must not change",
-                "body": "Keys must stay the same after storing. Allowed: <code>10</code>, <code>\"Ravi\"</code>, <code>(1, 2)</code>, <code>frozenset({1,2})</code>. Not allowed: <code>[1, 2]</code>, <code>{\"x\": 1}</code>, plain <code>set</code>.",
+                "title": "Step 9 — Why keys must be immutable (the locker rule)",
+                "body": "A dictionary finds values using <code>hash(key)</code> — like assigning a <b>locker number</b>. That number must stay the same forever after you store the value.<div class=\"callout\"><b>If the key could change</b> (mutable), the locker number would change too — Python could not find your value again. So only <b>immutable</b> types are allowed as keys.</div><table class=\"data-tbl\"><tr><th>Allowed keys</th><th>Blocked keys</th></tr><tr><td><code>int</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bool</code>, <code>float</code></td><td><code>list</code>, <code>dict</code>, <code>set</code></td></tr></table>",
             },
             {
-                "title": "Step 10 — List cannot be a dictionary key",
-                "body": "<div class=\"step-pre\">grid = {}\ngrid[[1, 2]] = \"X\"</div><p class=\"step-result\"><b>Output:</b> <code>TypeError: unhashable type: 'list'</code></p>",
+                "title": "Step 10 — Example: list key fails (and why)",
+                "body": "<div class=\"step-pre\">prices = {}\nprices[(12.97, 80.22)] = \"Chennai\"   # tuple OK\nprices[[12.97, 80.22]] = \"Chennai\"   # list → TypeError</div><p class=\"step-result\"><b>Output:</b> <code>TypeError: unhashable type: 'list'</code></p><p><b>Thought experiment:</b> if a list key were allowed:</p><div class=\"step-pre\">key = [1, 2]\ndata[key] = \"secret\"\nkey.append(3)      # key changed → hash would change\n# data[[1, 2]] would no longer find \"secret\"</div><p class=\"step-result\">Python blocks this problem by refusing mutable keys up front.</p>",
             },
             {
-                "title": "Step 11 — Dictionary cannot be a dictionary key",
-                "body": "<div class=\"step-pre\">cache = {}\ncache[{\"id\": 1}] = \"data\"</div><p class=\"step-result\"><b>Output:</b> <code>TypeError: unhashable type: 'dict'</code></p>",
+                "title": "Step 11 — dict and set also fail as keys",
+                "body": "<div class=\"callout\"><b>Name tip:</b> <code>cache</code> is only a <b>variable name</b> (we chose it because this dict acts like a cache). It is not a special Python keyword.</div><div class=\"callout\"><b>{} tip:</b> <code>cache = {}</code> creates an empty <b>dictionary</b>, not a set. Empty set is <code>set()</code>. A non-empty set looks like <code>{\"a\", \"b\"}</code> (values only). A dict looks like <code>{\"id\": 1}</code> (key: value).</div><div class=\"step-pre\">cache = {}                 # empty DICT (not set!)\ncache[{\"id\": 1}] = \"data\"  # TypeError: unhashable type: 'dict'\ncache[{\"a\", \"b\"}] = \"x\"    # TypeError: unhashable type: 'set'\n\n# Compare:\nempty_dict = {}            # dict\nempty_set = set()          # set\nmy_set = {\"a\", \"b\"}        # set (no colon)\nmy_dict = {\"id\": 1}        # dict (has colon)</div><p class=\"step-result\"><b>Fix:</b> use <code>tuple</code> or <code>frozenset</code> instead of list/set as the <i>key</i>.</p>",
             },
             {
-                "title": "Step 12 — Tuple and frozenset as keys",
-                "body": "<div class=\"step-pre\">grid = {}\ngrid[(1, 2)] = \"cell\"\ngrid[frozenset({\"a\", \"b\"})] = \"perms\"</div><p class=\"step-result\">Both work — immutable, so hash stays fixed.</p>",
+                "title": "Step 12 — Tuple and frozenset as keys (safe)",
+                "body": "<div class=\"step-pre\">grid = {}\ngrid[(1, 2)] = \"cell\"                      # tuple — hash fixed\ngrid[frozenset({\"read\", \"write\"})] = \"ok\"  # frozenset — hash fixed</div><p class=\"step-result\">Real use: GPS cell <code>(lat, lng)</code>, cache key <code>(\"orders\", 2026, 7)</code>, permission set as frozenset.</p>",
             },
             {
                 "title": "Step 13 — Summary",
@@ -87,13 +89,17 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
         ],
         "interview_qa": [
+            {"q": "What is the difference between list and tuple?", "a": "List can append, slice, and change items — use for carts, rows, logs. Tuple is fixed — GPS, RGB, <code>return ok, data</code>, dict keys. Tuple usually uses less memory (no over-allocation) and is slightly faster for fixed-size data."},
+            {"q": "How does list memory grow on append?", "a": "CPython over-allocates capacity. When the buffer is full, it allocates a larger array (~1.125×) and copies references. That is why <code>sys.getsizeof</code> jumps in steps instead of growing by one item each time."},
+            {"q": "Can a list hold mixed types?", "a": "Yes. Homogeneous: <code>[1, 2, 3]</code> or <code>[\"a\", \"b\"]</code>. Heterogeneous: <code>[101, \"SHIPPED\", [\"Google\", \"Amazon\"]]</code> — int, str, and nested list together."},
+            {"q": "Give real tuple use cases.", "a": "GPS <code>(lat, lng)</code>, RGB color, employee record <code>(id, name, salary)</code>, function return <code>(ok, data)</code>, and composite dict keys like <code>(\"orders\", 2026, 7)</code>."},
+            {"q": "Why can't you use a list as a dict key?", "a": "Dicts locate values with <code>hash(key)</code> (like a locker number). A list can change after insert (<code>append</code>), so its hash would change and the value could not be found. Python raises <code>TypeError: unhashable type: 'list'</code>. Use a <code>tuple</code> instead: <code>prices[(12.97, 80.22)]</code>."},
+            {"q": "Why must dictionary keys be immutable?", "a": "Because the hash of the key must stay stable for the lifetime of the entry. Immutable types (<code>str</code>, <code>int</code>, <code>tuple</code>, <code>frozenset</code>) never change → safe. Mutable types (<code>list</code>, <code>dict</code>, <code>set</code>) can change → blocked."},
+            {"q": "What types can be dictionary keys?", "a": "Immutable / hashable types: <code>int</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bool</code>, <code>float</code>. Not <code>list</code>, <code>dict</code>, or mutable <code>set</code>."},
             {"q": "What is the difference between set and frozenset?", "a": "<code>set</code> is mutable — add/remove items. <code>frozenset</code> is immutable like tuple. Use frozenset when you need a set as a dict key."},
-            {"q": "What is the difference between list and tuple?", "a": "List can append, slice, and change items. Tuple is fixed — good for coordinates, return values, and dict keys."},
-            {"q": "Why can't you use a list as a dict key?", "a": "<code>grid[[1,2]] = \"X\"</code> → <code>TypeError: unhashable type: 'list'</code>. The list could change after storing."},
-            {"q": "What types can be dictionary keys?", "a": "Immutable types: <code>int</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bool</code>, <code>float</code>. Not <code>list</code>, <code>dict</code>, or mutable <code>set</code>."},
         ],
     },
-    4: {
+    3: {
         "steps": [
             {"title": "Step 1 — Three learning layers", "body": "<b>Slides</b> = theory. <b>Projects/</b> = short exercises per topic. <b>Python-Set2/</b> = real multi-file apps."},
             {"title": "Step 2 — One venv per project", "body": "Run <code>python -m venv .venv</code> so each project has its own packages — do not install everything globally."},
@@ -104,7 +110,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How do you organize your Python learning workspace?", "a": "Theory in slides, drills in Projects/, production patterns in Python-Set2. Each real project gets its own venv and requirements.txt."},
         ],
     },
-    5: {
+    7: {
         "steps": [
             {
                 "title": "Step 1 — Arithmetic (+ - * / % // **)",
@@ -141,7 +147,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "When should you use the walrus operator :=?", "a": "When you assign a value and immediately need it in a condition or loop — e.g. <code>if (n := len(items)) &gt; 0:</code>. Do not overuse; readability first."},
         ],
     },
-    6: {
+    8: {
         "steps": [
             {
                 "title": "Step 1 — if / elif / else",
@@ -170,7 +176,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "continue vs pass in a loop?", "a": "<code>continue</code> skips to the next iteration. <code>pass</code> does nothing but stays in the current iteration. Never use <code>pass</code> to skip loop items."},
         ],
     },
-    7: {
+    9: {
         "steps": [
             {
                 "title": "Step 1 — List comprehension",
@@ -196,7 +202,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "When should you NOT use a comprehension?", "a": "When logic is complex, has side effects, or needs multiple statements — use a regular for loop for readability."},
         ],
     },
-    8: {
+    10: {
         "steps": [
             {
                 "title": "Step 1 — Positional & Keyword args",
@@ -207,8 +213,12 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "<div class=\"callout\"><b>Mutable default trap</b> — never <code>def f(items=[])</code>. The same list is created once and shared across all calls. Use <code>items=None</code> and create a new list inside.</div><code>*args</code> collects extra positional args as a tuple. <code>**kwargs</code> collects extra keyword args as a dict.<div class=\"step-pre\">def log(msg, *args, **kwargs):\n    print(msg, args, kwargs)\n\nlog(\"start\", 1, 2, level=\"debug\")\n# start (1, 2) {'level': 'debug'}</div>",
             },
             {
-                "title": "Step 3 — Recursion",
-                "body": "A function calls itself until a base case stops it.<div class=\"step-pre\">def factorial(n):\n    if n &lt;= 1:\n        return 1\n    return n * factorial(n - 1)\n\nfactorial(5)   # 120</div><p class=\"step-result\"><b>Warning:</b> deep recursion can hit <code>RecursionError</code> — Python default limit ~1000.</p>",
+                "title": "Step 3 — Recursion & functional style",
+                "body": "FP often uses recursion instead of loops. A function calls itself until a base case.<div class=\"step-pre\">def factorial(n):\n    if n &lt;= 1:\n        return 1\n    return n * factorial(n - 1)\n\nfactorial(5)   # 120</div><p class=\"step-result\"><b>Warning:</b> deep recursion can hit <code>RecursionError</code> — Python default limit ~1000.</p>",
+            },
+            {
+                "title": "Step 3b — Pure & higher-order functions (FP)",
+                "body": "From the <a href=\"https://www.geeksforgeeks.org/blogs/functional-programming-paradigm/\" target=\"_blank\" rel=\"noopener\">Functional Programming paradigm</a>: a <b>pure</b> function always returns the same output for the same inputs and has no side effects. <b>Higher-order</b> functions take or return functions.<div class=\"step-pre\">def add(x, y):          # pure\n    return x + y\n\ndef apply_twice(fn, v): # higher-order\n    return fn(fn(v))\n\napply_twice(lambda n: n + 1, 5)  # 7</div>",
             },
             {
                 "title": "Step 4 — Lambda",
@@ -228,9 +238,11 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What are *args and **kwargs?", "a": "<code>*args</code> is a tuple of extra positional arguments. <code>**kwargs</code> is a dict of extra keyword arguments. Useful for wrappers and decorators."},
             {"q": "What is LEGB?", "a": "Name lookup order: Local (inside function), Enclosing (outer functions), Global (module), Builtin (built-in names like <code>len</code>)."},
             {"q": "Lambda vs def?", "a": "Lambda is limited to one expression, no statements. Use <code>def</code> for anything non-trivial — lambdas are for short keys and callbacks."},
+            {"q": "What is a pure function?", "a": "Same arguments always produce the same result, and it does not modify globals, mutate inputs, or do hidden I/O. Easier to test and safe for concurrency (FP / GeeksforGeeks)."},
+            {"q": "What is a higher-order function?", "a": "A function that takes another function as an argument or returns a function — e.g. <code>sorted(items, key=fn)</code>, <code>map</code>, <code>filter</code>, or a decorator factory."},
         ],
     },
-    9: {
+    11: {
         "steps": [
             {
                 "title": "Step 1 — map, filter & reduce",
@@ -262,7 +274,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "max on a dict — what does it return?", "a": "By default compares <b>keys</b>. Use <code>max(d, key=d.get)</code> to find the key with the largest value."},
         ],
     },
-    10: {
+    15: {
         "steps": [
             {
                 "title": "Step 1 — Class, Object, __init__ & self",
@@ -296,7 +308,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How does Python handle encapsulation?", "a": "By convention: <code>_attr</code> means internal. <code>__attr</code> name-mangles to <code>_ClassName__attr</code>. Not true access control — trust and documentation."},
         ],
     },
-    11: {
+    18: {
         "steps": [
             {
                 "title": "Step 1 — Function decorators",
@@ -318,7 +330,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Decorator vs inheritance for extending behavior?", "a": "Decorators compose behavior around a single function at runtime. Inheritance models is-a relationships between types."},
         ],
     },
-    12: {
+    16: {
         "steps": [
             {
                 "title": "Step 1 — __get__, __set__ & __delete__",
@@ -335,33 +347,34 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "When write a custom descriptor instead of @property?", "a": "When the same access logic must be reused across multiple classes or attributes — e.g. typed fields, lazy loading, or cached values."},
         ],
     },
-    13: {
+    17: {
         "steps": [
             {
-                "title": "Step 1 — yield & generator functions",
-                "body": "<code>return</code> ends a function. <code>yield</code> pauses and produces one value — the function becomes a generator.<div class=\"step-pre\">def count_up_to(n):\n    i = 1\n    while i &lt;= n:\n        yield i\n        i += 1\n\ng = count_up_to(3)\nnext(g)   # 1\nnext(g)   # 2</div>",
+                "title": "Step 1 — Lazy iterators (why generators exist)",
+                "body": "From <a href=\"https://realpython.com/introduction-to-python-generators/\" target=\"_blank\" rel=\"noopener\">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.",
             },
             {
-                "title": "Step 2 — Generator frame & state",
-                "body": "Each generator keeps its own stack frame — local variables survive between <code>yield</code> calls.<div class=\"step-pre\">def accumulator():\n    total = 0\n    while True:\n        value = yield total\n        if value is not None:\n            total += value\n\nacc = accumulator()\nnext(acc)        # prime — 0\nacc.send(10)     # 10\nacc.send(5)      # 15</div>",
+                "title": "Step 2 — yield vs return + generator expressions",
+                "body": "<code>return</code> ends the function with one value. <code>yield</code> produces a generator object and pauses between values.<div class=\"step-pre\">def csv_reader(path):\n    with open(path, encoding=\"utf-8\") as f:\n        for row in f:\n            yield row\n\n# Generator expression (same idea, shorter):\nrows = (line for line in open(path, encoding=\"utf-8\"))</div>",
             },
             {
-                "title": "Step 3 — __iter__, __next__ & iterator protocol",
-                "body": "An iterable has <code>__iter__</code>. An iterator has <code>__iter__</code> and <code>__next__</code>. <code>for</code> loops use this protocol.<div class=\"step-pre\">class CountDown:\n    def __init__(self, start):\n        self.current = start\n\n    def __iter__(self):\n        return self\n\n    def __next__(self):\n        if self.current &lt;= 0:\n            raise StopIteration\n        self.current -= 1\n        return self.current + 1</div>",
+                "title": "Step 3 — Infinite sequences & pipelines",
+                "body": "Only generators can model infinite sequences safely (memory is finite). You can also chain generators into a pipeline without building giant intermediate lists.<div class=\"step-pre\">def infinite_sequence():\n    n = 0\n    while True:\n        yield n\n        n += 1\n\ngen = infinite_sequence()\nnext(gen); next(gen)   # 0, then 1 — stop manually</div>",
             },
             {
-                "title": "Step 4 — itertools",
-                "body": "Standard library tools for efficient iteration patterns.<div class=\"step-pre\">from itertools import chain, islice, groupby\n\nlist(chain([1, 2], [3, 4]))        # [1, 2, 3, 4]\nlist(islice(range(100), 5))         # [0, 1, 2, 3, 4]\n\ndata = sorted([(\"a\", 1), (\"a\", 2), (\"b\", 3)])\nfor key, group in groupby(data, key=lambda x: x[0]):\n    print(key, list(group))</div>",
+                "title": "Step 4 — Iterator protocol & itertools",
+                "body": "An iterable has <code>__iter__</code>. An iterator has <code>__iter__</code> and <code>__next__</code>. <code>for</code> uses this until <code>StopIteration</code>.<div class=\"step-pre\">from itertools import chain, islice\nlist(chain([1, 2], [3, 4]))\nlist(islice(range(100), 5))</div>",
             },
         ],
         "interview_qa": [
-            {"q": "Generator vs list?", "a": "A list stores all values at once. A generator produces one value at a time — lower memory, lazy evaluation."},
-            {"q": "What does yield do?", "a": "Pauses the function, returns a value to the caller, and saves state. Next <code>next()</code> or loop iteration resumes after the yield."},
+            {"q": "Generator vs list?", "a": "A list stores all values at once. A generator produces one value at a time — lower memory, lazy evaluation (Real Python)."},
+            {"q": "When does a file reader MemoryError?", "a": "When you load the whole file into a list (<code>read().split()</code>). Fix: <code>for line in f: yield line</code> so only one line is in memory."},
+            {"q": "What does yield do?", "a": "Pauses the function, returns a value to the caller, and saves state. Next <code>next()</code> or loop iteration resumes after the yield. Using <code>return</code> instead ends after one value."},
+            {"q": "What is a generator expression?", "a": "Like a list comprehension but with parentheses: <code>(x*x for x in range(10**6))</code> — lazy, does not build the full list."},
             {"q": "What is StopIteration?", "a": "Raised when a generator is exhausted. <code>for</code> loops catch it automatically to end iteration."},
-            {"q": "When use itertools?", "a": "For chaining, slicing iterators, grouping sorted data, combinations/permutations — without building intermediate lists."},
         ],
     },
-    14: {
+    6: {
         "steps": [
             {
                 "title": "Step 1 — Basic type hints",
@@ -387,7 +400,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Why use mypy?", "a": "Finds type mismatches, missing returns, and wrong argument types before deployment — like a lightweight compiler check."},
         ],
     },
-    15: {
+    25: {
         "steps": [
             {
                 "title": "Step 1 — open, read, write & append modes",
@@ -413,7 +426,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Why encoding=utf-8 on Windows?", "a": "Windows default encoding may not be UTF-8. Explicit encoding avoids <code>UnicodeDecodeError</code> with non-ASCII text."},
         ],
     },
-    16: {
+    19: {
         "steps": [
             {
                 "title": "Step 1 — try, except, else & finally",
@@ -439,7 +452,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "finally vs else?", "a": "<code>else</code> runs on success only. <code>finally</code> runs always — use for cleanup like closing connections."},
         ],
     },
-    17: {
+    24: {
         "steps": [
             {
                 "title": "Step 1 — re.match, re.search & re.findall",
@@ -461,7 +474,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What is lookahead?", "a": "A zero-width assertion — checks what follows without consuming it. <code>(?=...)</code> positive, <code>(?!...)</code> negative."},
         ],
     },
-    18: {
+    12: {
         "steps": [
             {
                 "title": "Step 1 — Counter",
@@ -499,7 +512,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What is ChainMap for?", "a": "Layered config: defaults + user overrides + env vars. Lookup walks dicts left to right."},
         ],
     },
-    19: {
+    23: {
         "steps": [
             {
                 "title": "Step 1 — unittest TestCase, setUp & tearDown",
@@ -555,7 +568,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "ThreadPoolExecutor vs manual threads?", "a": "Executor manages a pool, queues work, and returns futures. Cleaner than manually creating and joining many threads."},
         ],
     },
-    21: {
+    26: {
         "steps": [
             {
                 "title": "Step 1 — contextlib.contextmanager",
@@ -573,7 +586,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What objects are context managers?", "a": "Files (<code>open</code>), locks (<code>threading.Lock</code>), database connections, and anything with <code>__enter__</code>/<code>__exit__</code>."},
         ],
     },
-    22: {
+    21: {
         "steps": [
             {
                 "title": "Step 1 — asyncio event loop",
@@ -599,7 +612,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What does asyncio.gather do?", "a": "Runs multiple coroutines concurrently and returns results in order. If one fails, others may still complete depending on options."},
         ],
     },
-    23: {
+    27: {
         "steps": [
             {
                 "title": "Step 1 — venv: create, activate & deactivate",
@@ -621,7 +634,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What happens if you forget to activate venv?", "a": "<code>pip install</code> may install to global Python — version conflicts across projects. Always check for <code>(.venv)</code> in prompt."},
         ],
     },
-    24: {
+    29: {
         "steps": [
             {"title": "Step 1 — Portfolio overview", "body": "Python-Set2 has six areas: basics, exercises, pandas, Django, DRF, Pipecat voice AI."},
             {"title": "Step 2 — Learning path", "body": "Slides → Projects/ drills → Set2 real apps. Each area maps to interview talking points."},
@@ -631,7 +644,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How do you present your Python portfolio?", "a": "I walk through pythonBasics for fundamentals, google-python-exercises for files/regex, Django/DRF for web APIs, and Pipecat for voice AI — each with a clear entry file."},
         ],
     },
-    25: {
+    30: {
         "steps": [
             {"title": "Step 1 — pythonBasics modules", "body": "Seven folders: MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting."},
             {"title": "Step 2 — One topic per folder", "body": "Each has runnable scripts — study slides first, then run and modify the matching folder."},
@@ -641,7 +654,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What is in pythonBasics?", "a": "Focused modules per curriculum topic — MyUnitTesting shows pytest patterns; MyClass shows OOP with real runnable examples."},
         ],
     },
-    26: {
+    31: {
         "steps": [
             {"title": "Step 1 — google-python-exercises", "body": "Classic puzzles: babynames (regex), copyspecial (files), logpuzzle — small focused scripts."},
             {"title": "Step 2 — pandas notebooks", "body": "Titanic and FIFA CSV analysis — <code>read_csv</code>, <code>groupby</code>, missing values."},
@@ -651,7 +664,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How did you practice data analysis?", "a": "Jupyter notebooks on Titanic — load CSV, clean nulls, groupby survival rates. Shows pandas fluency beyond toy scripts."},
         ],
     },
-    27: {
+    32: {
         "steps": [
             {"title": "Step 1 — Django meeting_planner", "body": "Full MVT app — models, templates, migrations, auth."},
             {"title": "Step 2 — DRF inventory", "body": "REST API with serializers and ViewSets — JSON in/out like Web API projects in C#."},
@@ -661,7 +674,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Django vs DRF vs FastAPI?", "a": "Django for full web apps with admin and ORM. DRF adds REST on Django. FastAPI for modern async APIs with Pydantic validation — I have examples of both."},
         ],
     },
-    28: {
+    33: {
         "steps": [
             {"title": "Step 1 — Voice pipeline", "body": "Speech-to-text → LLM → text-to-speech, often over WebRTC for real-time audio."},
             {"title": "Step 2 — Pipecat phases", "body": "phase1 local services, phase2 full pipeline, voice-bouncer IVR-style auth demo."},
@@ -671,7 +684,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "Explain your voice AI project.", "a": "Pipecat pipeline: audio in, STT to text, LLM for logic, TTS back to audio. voice-bouncer simulates IVR — greeting, member ID, zip validation."},
         ],
     },
-    29: {
+    34: {
         "steps": [
             {"title": "Step 1 — Folder conventions", "body": "Separate routes, services, models, tests, config — thin routes, fat services."},
             {"title": "Step 2 — Entry point", "body": "<code>main.py</code> or <code>manage.py</code> — know where execution starts."},
@@ -681,7 +694,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How do you structure a Python project?", "a": "main entry, routes thin, business logic in services, schemas/models separate, tests/ at root. Django uses apps per domain; Pipecat uses processors for audio streams."},
         ],
     },
-    30: {
+    35: {
         "steps": [
             {"title": "Step 1 — Syntax shifts", "body": "No <code>int x</code> declarations, indentation not braces, <code>self</code> not <code>this</code> (but same idea). <code>elif</code> not <code>else if</code>. <code>True</code>/<code>False</code> are capitalized."},
             {"title": "Step 2 — pass & empty blocks", "body": "<div class=\"callout\"><b>pass</b> has no single C# keyword.</div><b>Closest:</b> empty <code>{ }</code> when a method or block must exist but do nothing yet.<br><b>Stronger stub:</b> <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code>.<br><b>C# interfaces</b> declare methods without a body — Python uses <code>pass</code> inside <code>class</code> or <code>def</code> instead.<div class=\"step-pre\"># Python stub\ndef save_report():\n    pass\n\n# C# equivalent\n# void SaveReport() { }</div>"},
@@ -696,7 +709,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "this vs self?", "a": "Same role — current instance. C# <code>this</code> is implicit in instance methods. Python requires <code>self</code> as the first parameter explicitly: <code>def greet(self):</code>."},
         ],
     },
-    31: {
+    4: {
         "steps": [
             {"title": "Step 1 — What is a PEP?", "body": "PEP = Python Enhancement Proposal — design documents for language features, style, and packaging. Some are informational; others become official standards."},
             {"title": "Step 2 — PEP 8 style", "body": "4-space indent, <code>snake_case</code> for functions/variables, <code>PascalCase</code> for classes, imports grouped (stdlib → third-party → local). Linters enforce this in CI."},
@@ -709,7 +722,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "PEP 8 vs a linter?", "a": "PEP 8 is the document; linters automate checks. Black formats code; ruff/flake8 report violations. CI fails on style drift."},
         ],
     },
-    32: {
+    13: {
         "steps": [
             {"title": "Step 1 — Reference counting", "body": "Every object tracks how many references point to it. When count hits zero, memory is reclaimed immediately — fast for most objects."},
             {"title": "Step 2 — Garbage collector", "body": "Circular references (A→B→A) keep refcounts &gt; 0 forever. The <code>gc</code> module periodically finds and breaks these cycles."},
@@ -722,7 +735,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "del x vs x = None?", "a": "<code>del x</code> removes the name from the namespace. <code>x = None</code> rebinds to None but keeps the name. Neither guarantees instant destruction if other references exist."},
         ],
     },
-    33: {
+    22: {
         "steps": [
             {"title": "Step 1 — Why not print()?", "body": "Production needs levels, timestamps, and routing to files/agents. <code>logging</code> is the standard library solution — like ILogger in .NET."},
             {"title": "Step 2 — Levels", "body": "DEBUG &lt; INFO &lt; WARNING &lt; ERROR &lt; CRITICAL. Set root level to INFO in prod; DEBUG only when troubleshooting."},
@@ -735,7 +748,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "How do you log an exception with traceback?", "a": "Inside <code>except</code>: <code>logger.exception('message')</code> or <code>logger.error('msg', exc_info=True)</code>."},
         ],
     },
-    34: {
+    14: {
         "steps": [
             {"title": "Step 1 — BaseModel", "body": "Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>)."},
             {"title": "Step 2 — Validation", "body": "<code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths."},
@@ -748,7 +761,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "What happens on validation failure?", "a": "<code>ValidationError</code> with a list of errors per field — FastAPI converts this to HTTP 422 JSON for clients."},
         ],
     },
-    35: {
+    28: {
         "steps": [
             {"title": "Step 1 — Layered stack", "body": "FastAPI (HTTP) + Pydantic (schemas) + SQLAlchemy (ORM) + database. Routes stay thin; services own transactions and business rules."},
             {"title": "Step 2 — Session per request", "body": "<code>Depends(get_db)</code> yields a SQLAlchemy session, commits on success, closes in <code>finally</code> — like scoped DbContext in EF Core."},

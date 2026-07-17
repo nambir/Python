@@ -22,7 +22,7 @@ OUT_DIR = Path(__file__).parent / "audio"
 async def generate_one(slide_id: int, text: str, out_path: Path) -> None:
     communicate = edge_tts.Communicate(text, VOICE, rate=RATE)
     await communicate.save(str(out_path))
-    print(f"  OK slide-{slide_id:02d}.mp3 ({out_path.stat().st_size // 1024} KB)")
+    print(f"  OK slide-{slide_id:02d}.mp3 ({out_path.stat().st_size // 1024} KB, {len(text):,} chars)")
 
 
 async def main(slides: list[int] | None = None) -> None:

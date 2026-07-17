@@ -5,12 +5,13 @@ GLOSSARY: dict[int, str] = {
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Interpretation</td><td>Executing source via an <b>interpreter</b> (CPython) instead of compiling to machine code (.exe) first.</td><td><code>python hello.py</code></td></tr>
-<tr><td>Interpreter</td><td>Program that reads and runs Python — compiles to bytecode, then executes in a VM loop.</td><td><code>python</code></td></tr>
-<tr><td>Bytecode</td><td>Intermediate instructions in <code>__pycache__/*.pyc</code> between <code>.py</code> source and execution.</td><td><code>app.cpython-312.pyc</code></td></tr>
+<tr><td>CPython</td><td>The default Python implementation written in C — what you get when you install Python from python.org. It compiles <code>.py</code> to bytecode and runs it in a VM.</td><td><code>python --version</code></td></tr>
+<tr><td>Bytecode</td><td>Intermediate instructions (not machine code) stored in <code>__pycache__/*.pyc</code>. The virtual machine executes these step by step.<br><br><b>What it looks like:</b> inside the <code>.pyc</code> file the bytes are binary (e.g. <code>64 00 00 00 …</code>). When you disassemble, you see readable opcodes like <code>LOAD_NAME</code>, <code>COMPARE_OP</code>.</td><td><code>1010110 0001001 …</code><br><code>LOAD_NAME score</code><br><code>COMPARE_OP &gt;=</code></td></tr>
+<tr><td>Interpreter</td><td>The program that reads your <code>.py</code> file, builds bytecode, and executes it. In practice this is CPython.</td><td><code>python hello.py</code></td></tr>
+<tr><td>Virtual machine</td><td>Inside the interpreter — the loop that runs bytecode instructions one by one.</td><td>VM box in the diagram</td></tr>
 <tr><td>Dynamic typing</td><td>Variables not tied to one type — same name can hold int, then str.</td><td><code>x = 5; x = "hi"</code></td></tr>
 <tr><td>Indentation</td><td>Leading spaces (usually 4) define blocks — no <code>{ }</code> braces.</td><td><code>if True:</code> + indent</td></tr>
-<tr><td>Duck typing</td><td>Use an object if it has the right behavior — no interface keyword required.</td><td><code>animal.speak()</code></td></tr>
+<tr><td>Duck typing</td><td>If an object has the method you need, use it — no interface required.</td><td><code>channel.send(msg)</code></td></tr>
 </table>""",
     2: """
 <h3>Key terms explained</h3>
@@ -28,23 +29,23 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Top-to-bottom</td><td>Python executes statements in order. A name must exist <b>before</b> you call it.</td><td><code>def Add</code> above <code>Add(1,2)</code></td></tr>
 <tr><td>NameError</td><td>Raised when you use a name that is not defined yet — common if <code>def</code> is below the call.</td><td><code>name 'Add' is not defined</code></td></tr>
 </table>""",
-    3: """
+    5: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Tuple</td><td>Ordered, fixed sequence in parentheses — records, coordinates, return values.</td><td><code>point = (10, 20)</code></td></tr>
-<tr><td>Immutable</td><td>Object <b>cannot be changed in place</b> after creation.<br><br><b>Works:</b> read <code>t[0]</code>, slice <code>t[1:3]</code> (new tuple), <code>len</code>, <code>for x in t</code>, <code>x in t</code>, use as dict key.<br><br><b>Does NOT work:</b> <code>t[0] = 5</code>, <code>t.append()</code>, <code>t.pop()</code>, <code>del t[0]</code> → <code>TypeError</code> or <code>AttributeError</code>.<br><br><b>Why blocked:</b> Python must keep hash and size fixed for dict keys and memory safety — if contents could change, cached hash would be wrong.</td><td><code>t[0]=5</code> fails</td></tr>
-<tr><td>Mutable</td><td>Can change in place — lists grow/shrink with append/pop.</td><td><code>items.append(4)</code></td></tr>
-<tr><td>Slicing</td><td>Sub-sequence via <code>[start:stop:step]</code> — stop is exclusive.</td><td><code>nums[1:4]</code></td></tr>
-<tr><td>Packing</td><td>Combine values into one tuple using commas.</td><td><code>a, b = 1, 2</code></td></tr>
-<tr><td>Unpacking</td><td>Assign sequence elements to multiple variables at once.</td><td><code>x, y = point</code></td></tr>
-<tr><td>Index</td><td>Position starting at 0; <code>-1</code> is last item.</td><td><code>nums[-1]</code></td></tr>
-<tr><td>Hashable</td><td>Can be dict key / set member — tuple and frozenset yes; list and set no.</td><td><code>{(1,2): "A"}</code></td></tr>
-<tr><td>set</td><td>Mutable collection of unique items — duplicates removed.</td><td><code>{"a", "b"}</code></td></tr>
-<tr><td>frozenset</td><td>Immutable set — cannot add/remove. Can be a dict key.</td><td><code>frozenset({1,2})</code></td></tr>
-<tr><td>list</td><td>Mutable sequence — use when size or content changes.</td><td><code>cart.append(item)</code></td></tr>
+<tr><td>list</td><td>Mutable sequence — grows with <code>append</code>. Homogeneous or heterogeneous OK.</td><td><code>cart.append(item)</code></td></tr>
+<tr><td>Homogeneous list</td><td>All items same kind — all ints or all strings.</td><td><code>[90, 85]</code> / <code>["a","b"]</code></td></tr>
+<tr><td>Heterogeneous list</td><td>Mixed types in one list — common for records / nested data.</td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
+<tr><td>Over-allocation</td><td>List reserves extra capacity. When full, reallocates a bigger array and copies pointers — <code>sizeof</code> jumps.</td><td><code>sys.getsizeof(lst)</code></td></tr>
+<tr><td>Tuple</td><td>Fixed ordered record — GPS, RGB, return pairs, dict keys. Often leaner/faster than list for fixed data.</td><td><code>(12.97, 80.22)</code></td></tr>
+<tr><td>Immutable</td><td>Cannot change in place — no <code>t[0]=5</code>, no append.</td><td><code>TypeError</code> on assign</td></tr>
+<tr><td>Mutable</td><td>Can change in place — lists grow/shrink.</td><td><code>items.append(4)</code></td></tr>
+<tr><td>(ok, data) pattern</td><td>Function returns a 2-tuple: success flag + payload.</td><td><code>ok, user = fetch(10)</code></td></tr>
+<tr><td>Hashable</td><td>Object can be a dict key / set member because its <code>hash()</code> never changes.<br><br><b>Why required:</b> dict uses hash like a locker number to find values fast. If the key mutated, the locker number would change and the value would be lost.<br><br><b>OK:</b> str, int, tuple, frozenset.<br><b>Blocked:</b> list, dict, set → <code>TypeError: unhashable type</code>.</td><td><code>prices[(12.97, 80.22)]</code></td></tr>
+<tr><td>{} vs set()</td><td><code>{}</code> = empty <b>dict</b>. Empty set = <code>set()</code>. <code>{1,2}</code> = set. <code>{\"a\":1}</code> = dict.</td><td><code>d={}; s=set()</code></td></tr>
+<tr><td>set / frozenset</td><td>Unique items. frozenset is immutable (OK as dict key).</td><td><code>frozenset({1,2})</code></td></tr>
 </table>""",
-    4: """
+    3: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -55,7 +56,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>__init__.py</td><td>Makes a directory a Python <b>package</b> so you can <code>import</code> it.</td><td><code>myapp/__init__.py</code></td></tr>
 <tr><td>Module</td><td>Any single <code>.py</code> file containing Python code.</td><td><code>utils.py</code></td></tr>
 </table>""",
-    5: """
+    7: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -70,7 +71,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Assignment operators</td><td>Shorthand in-place update: <code>+= -= *=</code> etc.</td><td><code>n += 5</code></td></tr>
 <tr><td>Walrus (:=)</td><td>Assign and use value in one expression (3.8+).</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
 </table>""",
-    6: """
+    8: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -84,7 +85,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>for-else</td><td><code>else</code> on a loop runs only if the loop finished <b>without</b> <code>break</code>.<br><br><b>Not the same as:</b> <code>try/else</code> or <code>if/else</code>.<br><br><b>Use when:</b> search — report "not found" in <code>else</code>.</td><td>search pattern</td></tr>
 <tr><td>range</td><td>Generates sequence of numbers — often used with for.</td><td><code>range(3)</code> → 0,1,2</td></tr>
 </table>""",
-    7: """
+    9: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -95,10 +96,13 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Lazy evaluation</td><td>Compute values only when needed — saves memory.</td><td><code>next(gen)</code></td></tr>
 <tr><td>Filter clause</td><td>Optional <code>if</code> at end of comprehension to keep matching items.</td><td><code>if n % 2 == 0</code></td></tr>
 </table>""",
-    8: """
+    10: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>Pure function</td><td>Same args → same result; no side effects / no hidden I/O (FP).</td><td><code>def add(x,y): return x+y</code></td></tr>
+<tr><td>First-class function</td><td>Functions are values — assign, pass, return them.</td><td><code>fn = str.upper</code></td></tr>
+<tr><td>Higher-order function</td><td>Takes or returns a function.</td><td><code>sorted(xs, key=fn)</code></td></tr>
 <tr><td>def</td><td>Keyword to define a function.</td><td><code>def greet(name):</code></td></tr>
 <tr><td>Parameter</td><td>Variable in function definition receiving a value.</td><td><code>def f(x):</code></td></tr>
 <tr><td>Argument</td><td>Actual value passed when calling the function.</td><td><code>greet("Ali")</code></td></tr>
@@ -110,7 +114,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Closure</td><td>Inner function remembering variables from outer scope.</td><td>counter pattern</td></tr>
 <tr><td>LEGB</td><td>Scope lookup order: Local → Enclosing → Global → Builtin.</td><td>name resolution</td></tr>
 </table>""",
-    9: """
+    11: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -123,7 +127,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>isinstance</td><td>Check if object is instance of type (supports inheritance).</td><td><code>isinstance(x, int)</code></td></tr>
 <tr><td>max / min</td><td>Largest / smallest item; optional <code>key=</code> for custom order.</td><td><code>max(scores, key=scores.get)</code></td></tr>
 </table>""",
-    10: """
+    15: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -136,7 +140,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Encapsulation</td><td>Hide internal state — <code>_prefix</code> convention, <code>@property</code>.</td><td><code>self._balance</code></td></tr>
 <tr><td>MRO</td><td>Method Resolution Order — which parent method runs first.</td><td><code>Dog.__mro__</code></td></tr>
 </table>""",
-    11: """
+    18: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -147,7 +151,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Stacking</td><td>Multiple decorators applied bottom-up.</td><td><code>@a @b def f</code></td></tr>
 <tr><td>Higher-order function</td><td>Function that takes or returns another function.</td><td>decorator pattern</td></tr>
 </table>""",
-    12: """
+    16: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -157,18 +161,20 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Setter</td><td>Method called when attribute is assigned — validate here.</td><td><code>@temp.setter</code></td></tr>
 <tr><td>Managed attribute</td><td>Looks like field, runs code on get/set.</td><td><code>c.temp = 25</code></td></tr>
 </table>""",
-    13: """
+    17: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Generator</td><td>Function using <code>yield</code> — produces values lazily.</td><td><code>def gen(): yield 1</code></td></tr>
-<tr><td>yield</td><td>Pause function and return value; resume on next call.</td><td><code>yield n</code></td></tr>
-<tr><td>Iterator</td><td>Object with <code>__iter__</code> and <code>__next__</code> — consumed one step at a time.</td><td><code>next(it)</code></td></tr>
-<tr><td>Iterable</td><td>Object you can loop over — lists, generators, files.</td><td><code>for x in obj:</code></td></tr>
+<tr><td>Lazy iterator</td><td>Produces values on demand — does not store the whole sequence (Real Python / PEP 255).</td><td><code>for row in csv_reader(path)</code></td></tr>
+<tr><td>Generator</td><td>Function using <code>yield</code> — returns a lazy iterator.</td><td><code>def gen(): yield 1</code></td></tr>
+<tr><td>yield vs return</td><td><code>yield</code> pauses and continues; <code>return</code> ends with one value.</td><td><code>yield row</code></td></tr>
+<tr><td>Generator expression</td><td>Lazy comprehension with <code>( )</code> — like listcomp but no full list.</td><td><code>(n*n for n in range(10**6))</code></td></tr>
+<tr><td>MemoryError risk</td><td>Loading entire huge file into a list can crash; yield one line instead.</td><td><code>f.read().split()</code> bad</td></tr>
+<tr><td>Iterator / Iterable</td><td>Iterator: <code>__next__</code>. Iterable: can call <code>iter()</code> / use in <code>for</code>.</td><td><code>next(it)</code></td></tr>
 <tr><td>StopIteration</td><td>Raised when iterator has no more items.</td><td>end of for-loop</td></tr>
-<tr><td>itertools</td><td>Standard module with efficient iterator tools.</td><td><code>itertools.chain</code></td></tr>
+<tr><td>itertools</td><td>Efficient iterator tools — chain, islice, groupby.</td><td><code>itertools.chain</code></td></tr>
 </table>""",
-    14: """
+    6: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -179,7 +185,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>mypy</td><td>Static type checker — finds type errors before runtime.</td><td><code>mypy app.py</code></td></tr>
 <tr><td>Generic</td><td>Type parameterized by another type — <code>List[int]</code>.</td><td><code>Dict[str, int]</code></td></tr>
 </table>""",
-    15: """
+    25: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -190,7 +196,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>pathlib</td><td>Object-oriented file paths — cleaner than string concat.</td><td><code>Path("a")/"b"</code></td></tr>
 <tr><td>encoding</td><td>Character set for text files — UTF-8 handles all languages.</td><td><code>encoding="utf-8"</code></td></tr>
 </table>""",
-    16: """
+    19: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -201,7 +207,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Custom exception</td><td>Your own error class inheriting <code>Exception</code>.</td><td><code>class AppError(Exception):</code></td></tr>
 <tr><td>Traceback</td><td>Stack trace showing where error occurred.</td><td>printed on crash</td></tr>
 </table>""",
-    17: r"""
+    24: r"""
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -213,7 +219,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Group</td><td>Captured substring in parentheses — <code>m.group(1)</code>.</td><td><code>(\d{4})</code></td></tr>
 <tr><td>sub</td><td>Replace matches with replacement string.</td><td><code>re.sub(pat, "X", s)</code></td></tr>
 </table>""",
-    18: """
+    12: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -224,7 +230,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>ChainMap</td><td>Search multiple dicts as one — first match wins.</td><td>config layering</td></tr>
 <tr><td>OrderedDict</td><td>Dict remembering insertion order (built-in since 3.7).</td><td>legacy code</td></tr>
 </table>""",
-    19: """
+    23: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -246,7 +252,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>CPU-bound</td><td>Heavy computation — use <code>multiprocessing</code> not threads.</td><td>image processing</td></tr>
 <tr><td>ThreadPoolExecutor</td><td>Pool of worker threads for parallel I/O tasks.</td><td><code>concurrent.futures</code></td></tr>
 </table>""",
-    21: """
+    26: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -256,7 +262,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>@contextmanager</td><td>Decorator making generator function into context manager.</td><td><code>yield</code> splits setup/teardown</td></tr>
 <tr><td>with statement</td><td>Guarantees cleanup — preferred over manual try/finally.</td><td><code>with lock:</code></td></tr>
 </table>""",
-    22: """
+    21: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -267,7 +273,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>asyncio.gather</td><td>Run multiple coroutines concurrently, wait for all.</td><td><code>await gather(a(), b())</code></td></tr>
 <tr><td>Concurrency</td><td>Multiple tasks making progress — not same as parallel CPU.</td><td>async HTTP calls</td></tr>
 </table>""",
-    23: r"""
+    27: r"""
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -278,7 +284,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>pyenv</td><td>Tool to install/switch multiple Python versions on one machine.</td><td><code>pyenv install 3.12</code></td></tr>
 <tr><td>.gitignore</td><td>Exclude <code>.venv/</code> from git — never commit virtual envs.</td><td><code>.venv/</code> in file</td></tr>
 </table>""",
-    24: """
+    29: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -289,7 +295,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>djangobasics/</td><td>Full-stack web app — MVT pattern, ORM, templates.</td><td>meeting_planner/</td></tr>
 <tr><td>Pipecat-Project/</td><td>Voice AI pipeline — STT, LLM, TTS over WebRTC.</td><td>voice-bouncer/</td></tr>
 </table>""",
-    25: """
+    30: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -300,7 +306,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>MyExceptionHandling</td><td>try/except, raise, custom exceptions.</td><td>error demos</td></tr>
 <tr><td>MyUnitTesting</td><td>pytest and unittest examples.</td><td>test_*.py</td></tr>
 </table>""",
-    26: """
+    31: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -311,7 +317,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Jupyter</td><td>Interactive notebook — code cells + markdown + charts.</td><td><code>.ipynb</code></td></tr>
 <tr><td>CSV</td><td>Comma-separated values file — common data import format.</td><td>titanic.csv</td></tr>
 </table>""",
-    27: """
+    32: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -323,7 +329,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Serializer</td><td>Convert model instances to/from JSON — like Pydantic schemas.</td><td>DrinkSerializer</td></tr>
 <tr><td>JWT</td><td>JSON Web Token — stateless API authentication.</td><td>simplejwt/</td></tr>
 </table>""",
-    28: """
+    33: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -334,7 +340,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Pipecat</td><td>Framework for building voice AI pipelines.</td><td>processors chain</td></tr>
 <tr><td>IVR</td><td>Interactive Voice Response — phone menu style flow.</td><td>voice-bouncer/</td></tr>
 </table>""",
-    29: """
+    34: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -344,7 +350,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Service layer</td><td>Business logic separated from HTTP handlers.</td><td>services/user.py</td></tr>
 <tr><td>.env</td><td>Environment variables for secrets — never commit real keys.</td><td><code>DATABASE_URL</code></td></tr>
 </table>""",
-    30: """
+    35: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -359,7 +365,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>NuGet vs pip</td><td>C# package manager vs Python package installer.</td><td><code>pip install</code></td></tr>
 <tr><td>Task vs coroutine</td><td>C# <code>async Task</code> vs Python <code>async def</code> coroutine.</td><td><code>await</code> both</td></tr>
 </table>""",
-    31: """
+    4: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -370,7 +376,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>pyproject.toml</td><td>Modern project config (PEP 621).</td><td><code>[project]</code></td></tr>
 <tr><td>Linter</td><td>Automated style/error checker.</td><td>ruff, flake8</td></tr>
 </table>""",
-    32: """
+    13: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -380,7 +386,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>weakref</td><td>Reference that does not keep object alive.</td><td><code>weakref.ref(obj)</code></td></tr>
 <tr><td>del</td><td>Remove a name binding from namespace.</td><td><code>del x</code></td></tr>
 </table>""",
-    33: """
+    22: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -390,7 +396,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Formatter</td><td>Pattern for timestamp, level, message.</td><td><code>%(asctime)s</code></td></tr>
 <tr><td>RotatingFileHandler</td><td>Log file with size-based rotation.</td><td><code>backupCount=3</code></td></tr>
 </table>""",
-    34: """
+    14: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -400,7 +406,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>model_dump()</td><td>Export model to dict (Pydantic v2).</td><td><code>user.model_dump()</code></td></tr>
 <tr><td>from_attributes</td><td>Build schema from ORM object attributes.</td><td><code>model_config</code></td></tr>
 </table>""",
-    35: """
+    28: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
