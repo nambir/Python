@@ -151,13 +151,106 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .cdiag-arrow {
   display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 18px; padding: 0 2px;
 }
-.cdiag-stack { display: flex; flex-direction: column; gap: 6px; max-width: 520px; }
+.cdiag-stack { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
 .cdiag-layer {
   background: #fff7ed; border: 1.5px solid #f59e0b; border-radius: 8px;
   padding: 10px 14px; display: flex; gap: 12px; align-items: baseline;
 }
 .cdiag-layer b { font-size: 12px; color: #1a1a2e; min-width: 140px; }
 .cdiag-layer span { font-size: 11px; color: #555; }
+
+.cdiag-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px; max-width: 720px;
+}
+.cdiag-tile {
+  background: #f0fdf4; border: 1.5px solid #16a34a; border-radius: 8px;
+  padding: 10px 12px; text-align: center;
+}
+.cdiag-tile b { display: block; font-size: 12px; color: #14532d; margin-bottom: 4px; }
+.cdiag-tile span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-tree { max-width: 720px; text-align: center; }
+.cdiag-tree-root {
+  display: inline-block; background: #eff6ff; border: 2px solid #0066cc; border-radius: 8px;
+  padding: 10px 16px; margin: 0 auto;
+}
+.cdiag-tree-root b { display: block; font-size: 13px; color: #1a1a2e; }
+.cdiag-tree-root span { display: block; font-size: 10px; color: #555; margin-top: 3px; }
+.cdiag-tree-stem {
+  width: 2px; height: 14px; background: #94a3b8; margin: 0 auto;
+}
+.cdiag-tree-kids {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  border-top: 2px solid #cbd5e1; padding-top: 10px; margin-top: 0;
+}
+.cdiag-tree-child {
+  background: #f8fafc; border: 1.5px solid #64748b; border-radius: 8px;
+  padding: 8px 12px; min-width: 140px; max-width: 200px; text-align: center;
+}
+.cdiag-tree-child b { display: block; font-size: 12px; color: #1a1a2e; margin-bottom: 3px; }
+.cdiag-tree-child span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-cycle {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+  max-width: 720px; padding: 8px; background: #faf5ff; border: 1px dashed #a855f7; border-radius: 12px;
+}
+.cdiag-cycle-node {
+  background: #fff; border: 1.5px solid #7c3aed; border-radius: 999px;
+  padding: 8px 14px; text-align: center; min-width: 90px;
+}
+.cdiag-cycle-node b { display: block; font-size: 12px; color: #1a1a2e; }
+.cdiag-cycle-node span { display: block; font-size: 10px; color: #555; }
+.cdiag-cycle-arrow { color: #7c3aed; font-weight: 700; font-size: 16px; }
+.cdiag-cycle-back { font-size: 20px; }
+
+.cdiag-hub { max-width: 720px; text-align: center; }
+.cdiag-spokes {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 10px;
+}
+.cdiag-spoke {
+  background: #fdf2f8; border: 1.5px solid #db2777; border-radius: 8px;
+  padding: 8px 12px; min-width: 110px; max-width: 160px;
+}
+.cdiag-spoke b { display: block; font-size: 11px; color: #9d174d; margin-bottom: 2px; }
+.cdiag-spoke span { display: block; font-size: 10px; color: #555; }
+.cdiag-hub-core {
+  display: inline-block; background: #831843; color: #fff; border-radius: 10px;
+  padding: 12px 20px; box-shadow: 0 2px 8px rgba(131, 24, 67, 0.25);
+}
+.cdiag-hub-core b { display: block; font-size: 13px; color: #fff; }
+.cdiag-hub-core span { display: block; font-size: 10px; color: #fbcfe8; margin-top: 3px; }
+
+.cdiag-fork { max-width: 720px; text-align: center; }
+.cdiag-fork-q {
+  display: inline-block; background: #ecfeff; border: 2px solid #0891b2; border-radius: 8px;
+  padding: 10px 16px; font-size: 13px; color: #155e75;
+}
+.cdiag-fork-stem { width: 2px; height: 14px; background: #67e8f9; margin: 0 auto; }
+.cdiag-fork-arms {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px; border-top: 2px solid #a5f3fc; padding-top: 10px;
+}
+.cdiag-fork-arm {
+  background: #fff; border: 1.5px solid #0891b2; border-radius: 8px;
+  padding: 10px 12px; text-align: left;
+}
+.cdiag-fork-arm b { display: block; font-size: 12px; color: #155e75; margin-bottom: 3px; }
+.cdiag-fork-arm span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-compare {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: start;
+  max-width: 720px;
+}
+.cdiag-compare-col {
+  background: #f8fafc; border: 1.5px solid #64748b; border-radius: 8px; padding: 10px 14px;
+}
+.cdiag-compare-col h4 { font-size: 13px; color: #0066cc; margin: 0 0 6px; }
+.cdiag-compare-col ul { margin: 0 0 0 16px; padding: 0; }
+.cdiag-compare-col li { font-size: 11px; line-height: 1.45; margin-bottom: 3px; color: #334155; }
+.cdiag-compare-vs {
+  align-self: center; font-weight: 700; color: #94a3b8; font-size: 12px;
+}
 
 .real-life {
   margin: 10px 0 12px; padding: 10px 12px;
@@ -209,20 +302,45 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .nav-bar .btn-nav { background: #28a745; color: #fff; }
 .nav-bar .slide-info { font-size: 12px; color: #555; }
 
-.nav-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 44px); padding: 20px; }
+.nav-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 44px); padding: 12px 16px; }
 .nav-content h1 { font-size: 34px; margin-bottom: 4px; }
 .nav-content .sub { font-size: 16px; color: #0066cc; }
-.nav-content .org { font-size: 13px; color: #666; margin: 8px 0 24px; }
-.nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 960px; width: 100%; }
-.nav-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; max-height: 360px; overflow-y: auto; }
-.nav-section h3 { font-size: 13px; margin-bottom: 8px; border-bottom: 2px solid #0066cc; padding-bottom: 4px; }
-.nav-section a { display: block; padding: 3px 0; color: #0066cc; font-size: 11px; cursor: pointer; text-decoration: none; }
+.nav-content .org { font-size: 13px; color: #666; margin: 6px 0 14px; }
+.nav-grid {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px;
+  max-width: 1400px; width: calc(100vw - 48px);
+}
+.nav-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; overflow: visible; }
+.nav-section-1 { grid-column: span 5; }
+.nav-section-2 { grid-column: span 3; }
+.nav-section-3 { grid-column: span 4; }
+.nav-section-4 { grid-column: span 3; }
+.nav-section-5 { grid-column: span 6; }
+.nav-section-6 { grid-column: span 3; }
+.nav-section-1 .nav-links,
+.nav-section-3 .nav-links,
+.nav-section-5 .nav-links { column-count: 2; column-gap: 24px; }
+.nav-section h3 { font-size: 15px; margin-bottom: 7px; border-bottom: 2px solid #0066cc; padding-bottom: 4px; }
+.nav-section a { display: block; padding: 1px 0; color: #0066cc; font-size: 15px; cursor: pointer; text-decoration: none; }
 .nav-section a:hover { text-decoration: underline; }
+.nav-topic { margin: 0 0 7px; break-inside: avoid; }
+.nav-topic a.nav-main { font-weight: 600; }
+.nav-subs {
+  margin: 2px 0 0 14px; padding: 0; list-style: none;
+}
+.nav-subs li { line-height: 1.3; padding: 1px 0; }
+.nav-subs li::before { content: "– "; color: #64748b; }
+.nav-subs li a { display: inline; padding: 0; color: #0066cc; font-size: 15px; font-weight: 400; }
 
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
-  .flow-compare { grid-template-columns: 1fr; }
+  .nav-section { grid-column: 1 / -1; }
+  .nav-section-1 .nav-links,
+  .nav-section-3 .nav-links,
+  .nav-section-5 .nav-links { column-count: 1; }
+  .flow-compare, .cdiag-compare { grid-template-columns: 1fr; }
+  .cdiag-compare-vs { display: none; }
   .panel-code { position: static; }
   .vs-editor { max-height: 50vh; }
   .nav-bar { padding: 0 16px; }
@@ -436,6 +554,80 @@ WEEK_SECTIONS: list[tuple[str, list[int]]] = [
     ("Real Projects (Python-Set2)", list(range(29, 35))),
     ("Appendix", [35]),
 ]
+
+# Syllabus-style subtopics shown under each main nav link (mentor outline)
+SLIDE_SUBTOPICS: dict[int, list[str]] = {
+    1: ["Advantages vs C#", "Interpreted / bytecode", "Indentation", "Duck typing"],
+    2: ["Install & PATH", "pip / versions", "REPL vs script", "IDE (Cursor / VS Code)"],
+    3: ["Slides → Projects → Python-Set2", "venv per project"],
+    4: ["PEP 8", "PEP 257 docstrings", "PEP 20 Zen", "pyproject.toml"],
+    5: [
+        "Primitive: int, str, float, bool",
+        "List",
+        "Tuple",
+        "Dict",
+        "Set / frozenset",
+    ],
+    6: ["Type hints", "Optional / Union", "Protocol", "mypy"],
+    7: [
+        "Arithmetic",
+        "Comparison / Relational",
+        "Assignment",
+        "Logical",
+        "Bitwise",
+        "Membership (in)",
+        "Identity (is)",
+        "Walrus (:=)",
+    ],
+    8: ["if / elif / else", "while", "for", "break / continue / pass"],
+    9: ["List", "Set", "Dictionary", "Generator"],
+    10: [
+        "Positional & keyword args",
+        "Recursion",
+        "Anonymous (lambda)",
+        "Local & global scope",
+        "Pure / higher-order functions",
+    ],
+    11: [
+        "map",
+        "zip",
+        "filter",
+        "reduce",
+        "enumerate",
+        "type / id / range",
+        "sorted / max / min",
+    ],
+    12: ["Counter", "OrderedDict", "defaultdict", "namedtuple", "deque"],
+    13: ["Reference counting", "Generational GC", "weakref"],
+    14: ["BaseModel", "Field / validators", "model_validate / dump"],
+    15: [
+        "Class",
+        "Inheritance",
+        "Encapsulation",
+        "Polymorphism",
+        "Abstract classes",
+    ],
+    16: ["__get__ / __set__", "property", "Dunder / magic methods"],
+    17: ["yield", "Generator expressions", "Lazy iteration"],
+    18: ["@decorator syntax", "functools.wraps", "Common patterns"],
+    19: ["try / except / else / finally", "raise / custom exceptions"],
+    20: ["Threading", "Multiprocessing", "GIL"],
+    21: ["async / await", "asyncio.gather", "Event loop"],
+    22: ["Levels (DEBUG→CRITICAL)", "Handlers / formatters", "RotatingFileHandler"],
+    23: ["unittest / pytest", "assert", "mock / patch"],
+    24: ["re.search / match / findall", "Groups", "Raw strings"],
+    25: ["open / with", "pathlib", "json / csv"],
+    26: ["with protocol", "@contextmanager", "__enter__ / __exit__"],
+    27: ["python -m venv", "activate", "requirements.txt"],
+    28: ["Routes + Depends", "Pydantic schemas", "SQLAlchemy ORM", "Service layer"],
+    29: ["pythonBasics", "Google exercises", "Pandas", "Django / DRF", "Pipecat"],
+    30: ["MyClass", "MyCollections", "MyLoops", "MyModules", "MyUnitTesting"],
+    31: ["babynames (regex)", "copyspecial (files)", "Titanic (pandas)"],
+    32: ["MVT / templates", "Auth / JWT", "Serializers / ViewSets"],
+    33: ["STT → LLM → TTS", "WebRTC", "Voice pipeline phases"],
+    34: ["routes / services / schemas", "tests at root", "App-per-domain"],
+    35: ["null → None", "using → with", "pass / NotImplementedError", "venv ≈ NuGet"],
+}
 
 MODULE_MAP = {
     n: title
@@ -733,18 +925,18 @@ def topic_intro(n):
     parts = []
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><p>{meta["definition"]}</p>')
-        # Glossary sits right under Definition so terms (CPython, bytecode, …) are visible immediately
-        parts.append(glossary_for(n))
-        parts.append(real_life_for(n))
+        # Diagram sits right under Definition, then glossary and real-life example
         if n == 1:
             parts.append(python_vs_csharp_flow())
         else:
             parts.append(diagram_for(n))
-    else:
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
+    else:
         if n != 1:
             parts.append(diagram_for(n))
+        parts.append(glossary_for(n))
+        parts.append(real_life_for(n))
     steps = beginner.get("steps", [])
     if steps:
         parts.append('<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps">')
@@ -2657,20 +2849,34 @@ def save_report_v2():
 def build_nav():
     titles = {n: t for n, t, _, _ in CONTENT}
 
-    def links(nums: list[int]) -> str:
-        return "".join(
-            f'<a onclick="goSlide({n})">{n}. {titles[n]}</a>'
-            for n in nums
-            if n in titles
+    def topic_block(n: int) -> str:
+        if n not in titles:
+            return ""
+        subs = SLIDE_SUBTOPICS.get(n, [])
+        sub_html = ""
+        if subs:
+            items = "".join(
+                f'<li><a onclick="goSlide({n})">{html.escape(s)}</a></li>'
+                for s in subs
+            )
+            sub_html = f'<ul class="nav-subs">{items}</ul>'
+        return (
+            f'<div class="nav-topic">'
+            f'<a class="nav-main" onclick="goSlide({n})">{n}. {titles[n]}</a>'
+            f"{sub_html}"
+            f"</div>"
         )
 
+    def links(nums: list[int]) -> str:
+        return "".join(topic_block(n) for n in nums)
+
     sections = "".join(
-        f'''    <div class="nav-section">
+        f'''    <div class="nav-section nav-section-{index}">
       <h3>{title}</h3>
-      {links(nums)}
+      <div class="nav-links">{links(nums)}</div>
     </div>
 '''
-        for title, nums in WEEK_SECTIONS
+        for index, (title, nums) in enumerate(WEEK_SECTIONS, 1)
     )
     return f'''<div class="slide active" id="slide-0">
 <div class="nav-content">

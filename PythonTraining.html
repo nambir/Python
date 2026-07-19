@@ -141,13 +141,106 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .cdiag-arrow {
   display: flex; align-items: center; color: #64748b; font-weight: 700; font-size: 18px; padding: 0 2px;
 }
-.cdiag-stack { display: flex; flex-direction: column; gap: 6px; max-width: 520px; }
+.cdiag-stack { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
 .cdiag-layer {
   background: #fff7ed; border: 1.5px solid #f59e0b; border-radius: 8px;
   padding: 10px 14px; display: flex; gap: 12px; align-items: baseline;
 }
 .cdiag-layer b { font-size: 12px; color: #1a1a2e; min-width: 140px; }
 .cdiag-layer span { font-size: 11px; color: #555; }
+
+.cdiag-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px; max-width: 720px;
+}
+.cdiag-tile {
+  background: #f0fdf4; border: 1.5px solid #16a34a; border-radius: 8px;
+  padding: 10px 12px; text-align: center;
+}
+.cdiag-tile b { display: block; font-size: 12px; color: #14532d; margin-bottom: 4px; }
+.cdiag-tile span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-tree { max-width: 720px; text-align: center; }
+.cdiag-tree-root {
+  display: inline-block; background: #eff6ff; border: 2px solid #0066cc; border-radius: 8px;
+  padding: 10px 16px; margin: 0 auto;
+}
+.cdiag-tree-root b { display: block; font-size: 13px; color: #1a1a2e; }
+.cdiag-tree-root span { display: block; font-size: 10px; color: #555; margin-top: 3px; }
+.cdiag-tree-stem {
+  width: 2px; height: 14px; background: #94a3b8; margin: 0 auto;
+}
+.cdiag-tree-kids {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  border-top: 2px solid #cbd5e1; padding-top: 10px; margin-top: 0;
+}
+.cdiag-tree-child {
+  background: #f8fafc; border: 1.5px solid #64748b; border-radius: 8px;
+  padding: 8px 12px; min-width: 140px; max-width: 200px; text-align: center;
+}
+.cdiag-tree-child b { display: block; font-size: 12px; color: #1a1a2e; margin-bottom: 3px; }
+.cdiag-tree-child span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-cycle {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+  max-width: 720px; padding: 8px; background: #faf5ff; border: 1px dashed #a855f7; border-radius: 12px;
+}
+.cdiag-cycle-node {
+  background: #fff; border: 1.5px solid #7c3aed; border-radius: 999px;
+  padding: 8px 14px; text-align: center; min-width: 90px;
+}
+.cdiag-cycle-node b { display: block; font-size: 12px; color: #1a1a2e; }
+.cdiag-cycle-node span { display: block; font-size: 10px; color: #555; }
+.cdiag-cycle-arrow { color: #7c3aed; font-weight: 700; font-size: 16px; }
+.cdiag-cycle-back { font-size: 20px; }
+
+.cdiag-hub { max-width: 720px; text-align: center; }
+.cdiag-spokes {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 10px;
+}
+.cdiag-spoke {
+  background: #fdf2f8; border: 1.5px solid #db2777; border-radius: 8px;
+  padding: 8px 12px; min-width: 110px; max-width: 160px;
+}
+.cdiag-spoke b { display: block; font-size: 11px; color: #9d174d; margin-bottom: 2px; }
+.cdiag-spoke span { display: block; font-size: 10px; color: #555; }
+.cdiag-hub-core {
+  display: inline-block; background: #831843; color: #fff; border-radius: 10px;
+  padding: 12px 20px; box-shadow: 0 2px 8px rgba(131, 24, 67, 0.25);
+}
+.cdiag-hub-core b { display: block; font-size: 13px; color: #fff; }
+.cdiag-hub-core span { display: block; font-size: 10px; color: #fbcfe8; margin-top: 3px; }
+
+.cdiag-fork { max-width: 720px; text-align: center; }
+.cdiag-fork-q {
+  display: inline-block; background: #ecfeff; border: 2px solid #0891b2; border-radius: 8px;
+  padding: 10px 16px; font-size: 13px; color: #155e75;
+}
+.cdiag-fork-stem { width: 2px; height: 14px; background: #67e8f9; margin: 0 auto; }
+.cdiag-fork-arms {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px; border-top: 2px solid #a5f3fc; padding-top: 10px;
+}
+.cdiag-fork-arm {
+  background: #fff; border: 1.5px solid #0891b2; border-radius: 8px;
+  padding: 10px 12px; text-align: left;
+}
+.cdiag-fork-arm b { display: block; font-size: 12px; color: #155e75; margin-bottom: 3px; }
+.cdiag-fork-arm span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+
+.cdiag-compare {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: start;
+  max-width: 720px;
+}
+.cdiag-compare-col {
+  background: #f8fafc; border: 1.5px solid #64748b; border-radius: 8px; padding: 10px 14px;
+}
+.cdiag-compare-col h4 { font-size: 13px; color: #0066cc; margin: 0 0 6px; }
+.cdiag-compare-col ul { margin: 0 0 0 16px; padding: 0; }
+.cdiag-compare-col li { font-size: 11px; line-height: 1.45; margin-bottom: 3px; color: #334155; }
+.cdiag-compare-vs {
+  align-self: center; font-weight: 700; color: #94a3b8; font-size: 12px;
+}
 
 .real-life {
   margin: 10px 0 12px; padding: 10px 12px;
@@ -199,20 +292,45 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .nav-bar .btn-nav { background: #28a745; color: #fff; }
 .nav-bar .slide-info { font-size: 12px; color: #555; }
 
-.nav-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 44px); padding: 20px; }
+.nav-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 44px); padding: 12px 16px; }
 .nav-content h1 { font-size: 34px; margin-bottom: 4px; }
 .nav-content .sub { font-size: 16px; color: #0066cc; }
-.nav-content .org { font-size: 13px; color: #666; margin: 8px 0 24px; }
-.nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 960px; width: 100%; }
-.nav-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; max-height: 360px; overflow-y: auto; }
-.nav-section h3 { font-size: 13px; margin-bottom: 8px; border-bottom: 2px solid #0066cc; padding-bottom: 4px; }
-.nav-section a { display: block; padding: 3px 0; color: #0066cc; font-size: 11px; cursor: pointer; text-decoration: none; }
+.nav-content .org { font-size: 13px; color: #666; margin: 6px 0 14px; }
+.nav-grid {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px;
+  max-width: 1400px; width: calc(100vw - 48px);
+}
+.nav-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; overflow: visible; }
+.nav-section-1 { grid-column: span 5; }
+.nav-section-2 { grid-column: span 3; }
+.nav-section-3 { grid-column: span 4; }
+.nav-section-4 { grid-column: span 3; }
+.nav-section-5 { grid-column: span 6; }
+.nav-section-6 { grid-column: span 3; }
+.nav-section-1 .nav-links,
+.nav-section-3 .nav-links,
+.nav-section-5 .nav-links { column-count: 2; column-gap: 24px; }
+.nav-section h3 { font-size: 15px; margin-bottom: 7px; border-bottom: 2px solid #0066cc; padding-bottom: 4px; }
+.nav-section a { display: block; padding: 1px 0; color: #0066cc; font-size: 15px; cursor: pointer; text-decoration: none; }
 .nav-section a:hover { text-decoration: underline; }
+.nav-topic { margin: 0 0 7px; break-inside: avoid; }
+.nav-topic a.nav-main { font-weight: 600; }
+.nav-subs {
+  margin: 2px 0 0 14px; padding: 0; list-style: none;
+}
+.nav-subs li { line-height: 1.3; padding: 1px 0; }
+.nav-subs li::before { content: "– "; color: #64748b; }
+.nav-subs li a { display: inline; padding: 0; color: #0066cc; font-size: 15px; font-weight: 400; }
 
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
-  .flow-compare { grid-template-columns: 1fr; }
+  .nav-section { grid-column: 1 / -1; }
+  .nav-section-1 .nav-links,
+  .nav-section-3 .nav-links,
+  .nav-section-5 .nav-links { column-count: 1; }
+  .flow-compare, .cdiag-compare { grid-template-columns: 1fr; }
+  .cdiag-compare-vs { display: none; }
   .panel-code { position: static; }
   .vs-editor { max-height: 50vh; }
   .nav-bar { padding: 0 16px; }
@@ -268,29 +386,29 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   </div>
 </div>
   <div class="nav-grid">
-    <div class="nav-section">
+    <div class="nav-section nav-section-1">
       <h3>Week 1 — Foundations</h3>
-      <a onclick="goSlide(1)">1. What is Python?</a><a onclick="goSlide(2)">2. Setup &amp; Run Python on Windows</a><a onclick="goSlide(3)">3. Your Training Workspace</a><a onclick="goSlide(4)">4. PEP Standards</a><a onclick="goSlide(5)">5. Python Datatypes</a><a onclick="goSlide(6)">6. Typing</a><a onclick="goSlide(7)">7. Operators</a><a onclick="goSlide(8)">8. Conditional &amp; Flow Control</a><a onclick="goSlide(9)">9. Comprehensions</a><a onclick="goSlide(10)">10. Python Functions</a><a onclick="goSlide(11)">11. Built-in Functions</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(1)">1. What is Python?</a><ul class="nav-subs"><li><a onclick="goSlide(1)">Advantages vs C#</a></li><li><a onclick="goSlide(1)">Interpreted / bytecode</a></li><li><a onclick="goSlide(1)">Indentation</a></li><li><a onclick="goSlide(1)">Duck typing</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(2)">2. Setup &amp; Run Python on Windows</a><ul class="nav-subs"><li><a onclick="goSlide(2)">Install &amp; PATH</a></li><li><a onclick="goSlide(2)">pip / versions</a></li><li><a onclick="goSlide(2)">REPL vs script</a></li><li><a onclick="goSlide(2)">IDE (Cursor / VS Code)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(3)">3. Your Training Workspace</a><ul class="nav-subs"><li><a onclick="goSlide(3)">Slides → Projects → Python-Set2</a></li><li><a onclick="goSlide(3)">venv per project</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(4)">4. PEP Standards</a><ul class="nav-subs"><li><a onclick="goSlide(4)">PEP 8</a></li><li><a onclick="goSlide(4)">PEP 257 docstrings</a></li><li><a onclick="goSlide(4)">PEP 20 Zen</a></li><li><a onclick="goSlide(4)">pyproject.toml</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(5)">5. Python Datatypes</a><ul class="nav-subs"><li><a onclick="goSlide(5)">Primitive: int, str, float, bool</a></li><li><a onclick="goSlide(5)">List</a></li><li><a onclick="goSlide(5)">Tuple</a></li><li><a onclick="goSlide(5)">Dict</a></li><li><a onclick="goSlide(5)">Set / frozenset</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(6)">6. Typing</a><ul class="nav-subs"><li><a onclick="goSlide(6)">Type hints</a></li><li><a onclick="goSlide(6)">Optional / Union</a></li><li><a onclick="goSlide(6)">Protocol</a></li><li><a onclick="goSlide(6)">mypy</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(7)">7. Operators</a><ul class="nav-subs"><li><a onclick="goSlide(7)">Arithmetic</a></li><li><a onclick="goSlide(7)">Comparison / Relational</a></li><li><a onclick="goSlide(7)">Assignment</a></li><li><a onclick="goSlide(7)">Logical</a></li><li><a onclick="goSlide(7)">Bitwise</a></li><li><a onclick="goSlide(7)">Membership (in)</a></li><li><a onclick="goSlide(7)">Identity (is)</a></li><li><a onclick="goSlide(7)">Walrus (:=)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(8)">8. Conditional &amp; Flow Control</a><ul class="nav-subs"><li><a onclick="goSlide(8)">if / elif / else</a></li><li><a onclick="goSlide(8)">while</a></li><li><a onclick="goSlide(8)">for</a></li><li><a onclick="goSlide(8)">break / continue / pass</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(9)">9. Comprehensions</a><ul class="nav-subs"><li><a onclick="goSlide(9)">List</a></li><li><a onclick="goSlide(9)">Set</a></li><li><a onclick="goSlide(9)">Dictionary</a></li><li><a onclick="goSlide(9)">Generator</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(10)">10. Python Functions</a><ul class="nav-subs"><li><a onclick="goSlide(10)">Positional &amp; keyword args</a></li><li><a onclick="goSlide(10)">Recursion</a></li><li><a onclick="goSlide(10)">Anonymous (lambda)</a></li><li><a onclick="goSlide(10)">Local &amp; global scope</a></li><li><a onclick="goSlide(10)">Pure / higher-order functions</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(11)">11. Built-in Functions</a><ul class="nav-subs"><li><a onclick="goSlide(11)">map</a></li><li><a onclick="goSlide(11)">zip</a></li><li><a onclick="goSlide(11)">filter</a></li><li><a onclick="goSlide(11)">reduce</a></li><li><a onclick="goSlide(11)">enumerate</a></li><li><a onclick="goSlide(11)">type / id / range</a></li><li><a onclick="goSlide(11)">sorted / max / min</a></li></ul></div></div>
     </div>
-    <div class="nav-section">
+    <div class="nav-section nav-section-2">
       <h3>Week 2 — Collections & OOP</h3>
-      <a onclick="goSlide(12)">12. Python Collections</a><a onclick="goSlide(13)">13. Memory Management & Garbage Collection</a><a onclick="goSlide(14)">14. Pydantic</a><a onclick="goSlide(15)">15. OOP Concepts</a><a onclick="goSlide(16)">16. Descriptors</a><a onclick="goSlide(17)">17. Generators &amp; Iterators</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(12)">12. Python Collections</a><ul class="nav-subs"><li><a onclick="goSlide(12)">Counter</a></li><li><a onclick="goSlide(12)">OrderedDict</a></li><li><a onclick="goSlide(12)">defaultdict</a></li><li><a onclick="goSlide(12)">namedtuple</a></li><li><a onclick="goSlide(12)">deque</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(13)">13. Memory Management & Garbage Collection</a><ul class="nav-subs"><li><a onclick="goSlide(13)">Reference counting</a></li><li><a onclick="goSlide(13)">Generational GC</a></li><li><a onclick="goSlide(13)">weakref</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(14)">14. Pydantic</a><ul class="nav-subs"><li><a onclick="goSlide(14)">BaseModel</a></li><li><a onclick="goSlide(14)">Field / validators</a></li><li><a onclick="goSlide(14)">model_validate / dump</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(15)">15. OOP Concepts</a><ul class="nav-subs"><li><a onclick="goSlide(15)">Class</a></li><li><a onclick="goSlide(15)">Inheritance</a></li><li><a onclick="goSlide(15)">Encapsulation</a></li><li><a onclick="goSlide(15)">Polymorphism</a></li><li><a onclick="goSlide(15)">Abstract classes</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(16)">16. Descriptors</a><ul class="nav-subs"><li><a onclick="goSlide(16)">__get__ / __set__</a></li><li><a onclick="goSlide(16)">property</a></li><li><a onclick="goSlide(16)">Dunder / magic methods</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(17)">17. Generators &amp; Iterators</a><ul class="nav-subs"><li><a onclick="goSlide(17)">yield</a></li><li><a onclick="goSlide(17)">Generator expressions</a></li><li><a onclick="goSlide(17)">Lazy iteration</a></li></ul></div></div>
     </div>
-    <div class="nav-section">
+    <div class="nav-section nav-section-3">
       <h3>Week 3 — Advanced Core</h3>
-      <a onclick="goSlide(18)">18. Decorators</a><a onclick="goSlide(19)">19. Exception Handling</a><a onclick="goSlide(20)">20. Threading &amp; GIL</a><a onclick="goSlide(21)">21. Async / Await</a><a onclick="goSlide(22)">22. Logging</a><a onclick="goSlide(23)">23. Unit Testing</a><a onclick="goSlide(24)">24. Regular Expressions</a><a onclick="goSlide(25)">25. File Operations</a><a onclick="goSlide(26)">26. Context Manager</a><a onclick="goSlide(27)">27. Virtual Environment</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(18)">18. Decorators</a><ul class="nav-subs"><li><a onclick="goSlide(18)">@decorator syntax</a></li><li><a onclick="goSlide(18)">functools.wraps</a></li><li><a onclick="goSlide(18)">Common patterns</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(19)">19. Exception Handling</a><ul class="nav-subs"><li><a onclick="goSlide(19)">try / except / else / finally</a></li><li><a onclick="goSlide(19)">raise / custom exceptions</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(20)">20. Threading &amp; GIL</a><ul class="nav-subs"><li><a onclick="goSlide(20)">Threading</a></li><li><a onclick="goSlide(20)">Multiprocessing</a></li><li><a onclick="goSlide(20)">GIL</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(21)">21. Async / Await</a><ul class="nav-subs"><li><a onclick="goSlide(21)">async / await</a></li><li><a onclick="goSlide(21)">asyncio.gather</a></li><li><a onclick="goSlide(21)">Event loop</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(22)">22. Logging</a><ul class="nav-subs"><li><a onclick="goSlide(22)">Levels (DEBUG→CRITICAL)</a></li><li><a onclick="goSlide(22)">Handlers / formatters</a></li><li><a onclick="goSlide(22)">RotatingFileHandler</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(23)">23. Unit Testing</a><ul class="nav-subs"><li><a onclick="goSlide(23)">unittest / pytest</a></li><li><a onclick="goSlide(23)">assert</a></li><li><a onclick="goSlide(23)">mock / patch</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(24)">24. Regular Expressions</a><ul class="nav-subs"><li><a onclick="goSlide(24)">re.search / match / findall</a></li><li><a onclick="goSlide(24)">Groups</a></li><li><a onclick="goSlide(24)">Raw strings</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(25)">25. File Operations</a><ul class="nav-subs"><li><a onclick="goSlide(25)">open / with</a></li><li><a onclick="goSlide(25)">pathlib</a></li><li><a onclick="goSlide(25)">json / csv</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(26)">26. Context Manager</a><ul class="nav-subs"><li><a onclick="goSlide(26)">with protocol</a></li><li><a onclick="goSlide(26)">@contextmanager</a></li><li><a onclick="goSlide(26)">__enter__ / __exit__</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(27)">27. Virtual Environment</a><ul class="nav-subs"><li><a onclick="goSlide(27)">python -m venv</a></li><li><a onclick="goSlide(27)">activate</a></li><li><a onclick="goSlide(27)">requirements.txt</a></li></ul></div></div>
     </div>
-    <div class="nav-section">
+    <div class="nav-section nav-section-4">
       <h3>Week 4 — Web Stack</h3>
-      <a onclick="goSlide(28)">28. FastAPI with SQLAlchemy</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(28)">28. FastAPI with SQLAlchemy</a><ul class="nav-subs"><li><a onclick="goSlide(28)">Routes + Depends</a></li><li><a onclick="goSlide(28)">Pydantic schemas</a></li><li><a onclick="goSlide(28)">SQLAlchemy ORM</a></li><li><a onclick="goSlide(28)">Service layer</a></li></ul></div></div>
     </div>
-    <div class="nav-section">
+    <div class="nav-section nav-section-5">
       <h3>Real Projects (Python-Set2)</h3>
-      <a onclick="goSlide(29)">29. Python-Set2 — Portfolio Overview</a><a onclick="goSlide(30)">30. pythonBasics — Topic Modules</a><a onclick="goSlide(31)">31. Google Exercises &amp; Pandas</a><a onclick="goSlide(32)">32. Django &amp; Django REST</a><a onclick="goSlide(33)">33. Pipecat — Voice AI POCs</a><a onclick="goSlide(34)">34. Real Project Structure &amp; Learning Path</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(29)">29. Python-Set2 — Portfolio Overview</a><ul class="nav-subs"><li><a onclick="goSlide(29)">pythonBasics</a></li><li><a onclick="goSlide(29)">Google exercises</a></li><li><a onclick="goSlide(29)">Pandas</a></li><li><a onclick="goSlide(29)">Django / DRF</a></li><li><a onclick="goSlide(29)">Pipecat</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(30)">30. pythonBasics — Topic Modules</a><ul class="nav-subs"><li><a onclick="goSlide(30)">MyClass</a></li><li><a onclick="goSlide(30)">MyCollections</a></li><li><a onclick="goSlide(30)">MyLoops</a></li><li><a onclick="goSlide(30)">MyModules</a></li><li><a onclick="goSlide(30)">MyUnitTesting</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(31)">31. Google Exercises &amp; Pandas</a><ul class="nav-subs"><li><a onclick="goSlide(31)">babynames (regex)</a></li><li><a onclick="goSlide(31)">copyspecial (files)</a></li><li><a onclick="goSlide(31)">Titanic (pandas)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(32)">32. Django &amp; Django REST</a><ul class="nav-subs"><li><a onclick="goSlide(32)">MVT / templates</a></li><li><a onclick="goSlide(32)">Auth / JWT</a></li><li><a onclick="goSlide(32)">Serializers / ViewSets</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(33)">33. Pipecat — Voice AI POCs</a><ul class="nav-subs"><li><a onclick="goSlide(33)">STT → LLM → TTS</a></li><li><a onclick="goSlide(33)">WebRTC</a></li><li><a onclick="goSlide(33)">Voice pipeline phases</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(34)">34. Real Project Structure &amp; Learning Path</a><ul class="nav-subs"><li><a onclick="goSlide(34)">routes / services / schemas</a></li><li><a onclick="goSlide(34)">tests at root</a></li><li><a onclick="goSlide(34)">App-per-domain</a></li></ul></div></div>
     </div>
-    <div class="nav-section">
+    <div class="nav-section nav-section-6">
       <h3>Appendix</h3>
-      <a onclick="goSlide(35)">35. C# vs Python — Quick Reference</a>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(35)">35. C# vs Python — Quick Reference</a><ul class="nav-subs"><li><a onclick="goSlide(35)">null → None</a></li><li><a onclick="goSlide(35)">using → with</a></li><li><a onclick="goSlide(35)">pass / NotImplementedError</a></li><li><a onclick="goSlide(35)">venv ≈ NuGet</a></li></ul></div></div>
     </div>
   </div>
 </div>
@@ -317,26 +435,6 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.pyc) and executes the bytecode step by step. Python is a high-level, general-purpose language. C# .cs files are compiled first into a .NET assembly (.dll/.exe), then the CLR/JIT runs the IL.</p>
-<h3>Key terms explained</h3>
-<table class="data-tbl term-tbl">
-<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>CPython</td><td>The default Python implementation written in C — what you get when you install Python from python.org. It compiles <code>.py</code> to bytecode and runs it in a VM.</td><td><code>python --version</code></td></tr>
-<tr><td>Bytecode</td><td>Intermediate instructions (not machine code) stored in <code>__pycache__/*.pyc</code>. The virtual machine executes these step by step.<br><br><b>What it looks like:</b> inside the <code>.pyc</code> file the bytes are binary (e.g. <code>64 00 00 00 …</code>). When you disassemble, you see readable opcodes like <code>LOAD_NAME</code>, <code>COMPARE_OP</code>.</td><td><code>1010110 0001001 …</code><br><code>LOAD_NAME score</code><br><code>COMPARE_OP &gt;=</code></td></tr>
-<tr><td>Interpreter</td><td>The program that reads your <code>.py</code> file, builds bytecode, and executes it. In practice this is CPython.</td><td><code>python hello.py</code></td></tr>
-<tr><td>Virtual machine</td><td>Inside the interpreter — the loop that runs bytecode instructions one by one.</td><td>VM box in the diagram</td></tr>
-<tr><td>Dynamic typing</td><td>Variables not tied to one type — same name can hold int, then str.</td><td><code>x = 5; x = "hi"</code></td></tr>
-<tr><td>Indentation</td><td>Leading spaces (usually 4) define blocks — no <code>{ }</code> braces.</td><td><code>if True:</code> + indent</td></tr>
-<tr><td>Duck typing</td><td>If an object has the method you need, use it — no interface required.</td><td><code>channel.send(msg)</code></td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>Order automation bot:</b> A logistics team runs a nightly sync — no Visual Studio build; CPython executes the <code>.py</code> directly.<div class="step-pre">def sync_orders():
-    orders = fetch_from_api()
-    for order in orders:
-        if order.status == "NEW":
-            save_to_db(order)
-        else:
-            skip(order)
-
-if __name__ == "__main__":
-    sync_orders()</div></div>
 <h3>Inside the Python interpreter</h3>
 <div class="interp-diagram">
   <div class="interp-row">
@@ -424,7 +522,27 @@ IL_0003: bge.s PASS</span></div>
 <tr><td>Python production deployment</td><td>Usually <code>.py</code> source files + dependencies, often inside Docker. It can also be a <code>.whl</code> package, AWS Lambda zip, zipapp <code>.pyz</code>, or bundled <code>.exe</code> from PyInstaller. Normal Python apps are <b>not</b> DLLs.</td><td>.NET production commonly publishes a <code>.dll</code> run by <code>dotnet</code>, or a self-contained <code>.exe</code>.</td></tr>
 </table>
 <p class="flow-note"><b>Interview line:</b> A Python <code>.py</code> file can be launched by the Python interpreter; CPython compiles it to bytecode and runs that bytecode. A C# <code>.cs</code> file is not run by JIT directly; it is compiled into a .NET assembly, then CLR/JIT runs the IL. In production, Python is usually deployed as source/package/container, not as a DLL.</p>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is Python?</b><br>Python is a language you write in text files ending in <code>.py</code>. You run them with the <code>python</code> command — no separate compile step like C#.</li><li><b>Step 2 — Interpreted, not machine code</b><br>CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>.</li><li><b>Step 3 — Indentation = blocks</b><br>Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>.</li><li><b>Step 4 — Dynamic typing</b><br>You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime.</li><li><b>Step 5 — Duck typing (real example)</b><br>If an object has the method you need, you can use it — no interface required.<div class="step-pre">class EmailNotifier:
+
+<h3>Key terms explained</h3>
+<table class="data-tbl term-tbl">
+<tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
+<tr><td>CPython</td><td>The default Python implementation written in C — what you get when you install Python from python.org. It compiles <code>.py</code> to bytecode and runs it in a VM.</td><td><code>python --version</code></td></tr>
+<tr><td>Bytecode</td><td>Intermediate instructions (not machine code) stored in <code>__pycache__/*.pyc</code>. The virtual machine executes these step by step.<br><br><b>What it looks like:</b> inside the <code>.pyc</code> file the bytes are binary (e.g. <code>64 00 00 00 …</code>). When you disassemble, you see readable opcodes like <code>LOAD_NAME</code>, <code>COMPARE_OP</code>.</td><td><code>1010110 0001001 …</code><br><code>LOAD_NAME score</code><br><code>COMPARE_OP &gt;=</code></td></tr>
+<tr><td>Interpreter</td><td>The program that reads your <code>.py</code> file, builds bytecode, and executes it. In practice this is CPython.</td><td><code>python hello.py</code></td></tr>
+<tr><td>Virtual machine</td><td>Inside the interpreter — the loop that runs bytecode instructions one by one.</td><td>VM box in the diagram</td></tr>
+<tr><td>Dynamic typing</td><td>Variables not tied to one type — same name can hold int, then str.</td><td><code>x = 5; x = "hi"</code></td></tr>
+<tr><td>Indentation</td><td>Leading spaces (usually 4) define blocks — no <code>{ }</code> braces.</td><td><code>if True:</code> + indent</td></tr>
+<tr><td>Duck typing</td><td>If an object has the method you need, use it — no interface required.</td><td><code>channel.send(msg)</code></td></tr>
+</table><div class="real-life"><b>Real-life example:</b> <b>Order automation bot:</b> A logistics team runs a nightly sync — no Visual Studio build; CPython executes the <code>.py</code> directly.<div class="step-pre">def sync_orders():
+    orders = fetch_from_api()
+    for order in orders:
+        if order.status == "NEW":
+            save_to_db(order)
+        else:
+            skip(order)
+
+if __name__ == "__main__":
+    sync_orders()</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is Python?</b><br>Python is a language you write in text files ending in <code>.py</code>. You run them with the <code>python</code> command — no separate compile step like C#.</li><li><b>Step 2 — Interpreted, not machine code</b><br>CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>.</li><li><b>Step 3 — Indentation = blocks</b><br>Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>.</li><li><b>Step 4 — Dynamic typing</b><br>You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime.</li><li><b>Step 5 — Duck typing (real example)</b><br>If an object has the method you need, you can use it — no interface required.<div class="step-pre">class EmailNotifier:
     def send(self, msg):
         return f"Email: {msg}"
 
@@ -545,6 +663,9 @@ notify(EmailNotifier(), "Order shipped")</div><p class="step-result"><b>Real use
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from Cursor/VS Code with the Python extension. Other popular IDEs include PyCharm (JetBrains), Jupyter, Spyder, Visual Studio, and IDLE. Python scripts run top to bottom — define functions before calling them.</p>
+<h3>First-day setup checklist</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>1. Install</b><span>python.org — check Add to PATH</span></div><div class="cdiag-layer"><b>2. Verify</b><span>python --version  ·  pip --version</span></div><div class="cdiag-layer"><b>3. IDE</b><span>Cursor / VS Code — select interpreter</span></div><div class="cdiag-layer"><b>4. Run</b><span>python file.py  or  F5 debug</span></div><p class="flow-note">If python works but pip fails, use <code>python -m pip</code>.</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -564,15 +685,7 @@ python --version
 pip --version
 
 # Then in Cursor: Select Interpreter → Python 3.12
-python Projects/00_windows_setup.py</div></div>
-<h3>Setup path</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Install Python</b><span>python.org / Store</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Check versions</b><span>python --version</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>pip ready</b><span>pip --version</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Open IDE</b><span>Cursor / VS Code</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Run .py</b><span>python file.py</span></div>
-  </div>
-  <p class="flow-note">If python works but pip fails, repair PATH or use <code>python -m pip</code>.</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Install Python</b><br>Download from python.org. On Windows, check <b>Add Python to PATH</b> so <code>python</code> works in PowerShell.</li><li><b>Step 2 — Verify install</b><br>Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready.<table class="data-tbl"><tr><th>Command</th><th>Example from your screen</th><th>Meaning</th></tr><tr><td><code>python --version</code></td><td><code>Python 3.12.4</code></td><td>This is the <b>Python interpreter version</b> — the program that runs <code>.py</code> files.</td></tr><tr><td><code>pip --version</code></td><td><code>pip 25.3 ... (python 3.12)</code></td><td>This is the <b>pip installer version</b>, plus the Python version and folder that pip is connected to.</td></tr></table><div class="callout"><b>pip = Pip Installs Packages</b>. It downloads Python libraries from PyPI, like NuGet downloads packages for .NET.</div></li><li><b>Step 3 — Three ways to run code</b><br><b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — you will mainly use <b>Cursor</b> or <b>VS Code</b>: open the folder, select the interpreter, and press F5 to debug. Other famous Python IDEs/editors: <b>PyCharm</b>, <b>Jupyter Notebook/Lab</b>, <b>Spyder</b>, <b>Visual Studio</b>, and built-in <b>IDLE</b>.<div class="step-pre">C:\Users\SangeethaLocalAccoun&gt;python
+python Projects/00_windows_setup.py</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Install Python</b><br>Download from python.org. On Windows, check <b>Add Python to PATH</b> so <code>python</code> works in PowerShell.</li><li><b>Step 2 — Verify install</b><br>Run <code>python --version</code> and <code>pip --version</code>. If both work, Python and the package installer are ready.<table class="data-tbl"><tr><th>Command</th><th>Example from your screen</th><th>Meaning</th></tr><tr><td><code>python --version</code></td><td><code>Python 3.12.4</code></td><td>This is the <b>Python interpreter version</b> — the program that runs <code>.py</code> files.</td></tr><tr><td><code>pip --version</code></td><td><code>pip 25.3 ... (python 3.12)</code></td><td>This is the <b>pip installer version</b>, plus the Python version and folder that pip is connected to.</td></tr></table><div class="callout"><b>pip = Pip Installs Packages</b>. It downloads Python libraries from PyPI, like NuGet downloads packages for .NET.</div></li><li><b>Step 3 — Three ways to run code</b><br><b>REPL</b> — type <code>python</code> and try <code>2+2</code>. <b>Script</b> — <code>python hello.py</code>. <b>IDE</b> — you will mainly use <b>Cursor</b> or <b>VS Code</b>: open the folder, select the interpreter, and press F5 to debug. Other famous Python IDEs/editors: <b>PyCharm</b>, <b>Jupyter Notebook/Lab</b>, <b>Spyder</b>, <b>Visual Studio</b>, and built-in <b>IDLE</b>.<div class="step-pre">C:\Users\SangeethaLocalAccoun&gt;python
 Python 3.12.4 ... on win32
 Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; 2+2
@@ -718,6 +831,14 @@ if __name__ == "__main__":
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and Cursor or VS Code as your main IDE.</p>
+<h3>Training workspace</h3>
+<div class="cdiag cdiag-tree">
+  <div class="cdiag-tree-root"><b>Repo root</b><span>one Cursor window</span></div>
+  <div class="cdiag-tree-stem"></div>
+  <div class="cdiag-tree-kids"><div class="cdiag-tree-child"><b>Slides</b><span>PythonTraining.html — theory</span></div><div class="cdiag-tree-child"><b>Projects/</b><span>short drills per topic</span></div><div class="cdiag-tree-child"><b>Python-Set2/</b><span>full apps & demos</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -732,15 +853,7 @@ if __name__ == "__main__":
 # 2) Short practice
 python Projects/01_datatypes.py
 # 3) Deeper practice
-python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div>
-<h3>Training workspace flow</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Read slide</b><span>PythonTraining.html</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Open practice</b><span>Projects/</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Run & edit</b><span>python …</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Go deeper</b><span>Python-Set2/</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Three learning layers</b><br><b>Slides</b> = theory. <b>Projects/</b> = short exercises per topic. <b>Python-Set2/</b> = real multi-file apps.</li><li><b>Step 2 — One venv per project</b><br>Run <code>python -m venv .venv</code> so each project has its own packages — do not install everything globally.</li><li><b>Step 3 — Open root in Cursor</b><br>Open <code>D:/Sangeetha/Python/</code>, select Python 3.12 interpreter, run files with <code>python Projects/xx_topic.py</code>.</li><li><b>Step 4 — Regenerate slides after edits</b><br>Edit <code>build_training.py</code> or <code>training_beginner.py</code>, then run <code>python build_training.py</code> — never hand-edit <code>PythonTraining.html</code>.</li></ul>
+python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Three learning layers</b><br><b>Slides</b> = theory. <b>Projects/</b> = short exercises per topic. <b>Python-Set2/</b> = real multi-file apps.</li><li><b>Step 2 — One venv per project</b><br>Run <code>python -m venv .venv</code> so each project has its own packages — do not install everything globally.</li><li><b>Step 3 — Open root in Cursor</b><br>Open <code>D:/Sangeetha/Python/</code>, select Python 3.12 interpreter, run files with <code>python Projects/xx_topic.py</code>.</li><li><b>Step 4 — Regenerate slides after edits</b><br>Edit <code>build_training.py</code> or <code>training_beginner.py</code>, then run <code>python build_training.py</code> — never hand-edit <code>PythonTraining.html</code>.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>__init__.py</b> = marks a folder as a Python <b>package</b> so you can <code>import myapp.utils</code>.<br><b>Can be empty</b> — often just <code>pass</code> or a one-line docstring.</div>
 <div class="keyword-box"><b>.venv/</b> = isolated Python + packages per project.<br><b>Rule:</b> never install project libraries globally — one venv per app.</div>
@@ -832,6 +945,12 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and modern packaging via pyproject.toml.</p>
+<h3>PEP standards map</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>PEP 8</b><span>style / snake_case</span></div><div class="cdiag-tile"><b>PEP 257</b><span>docstrings</span></div><div class="cdiag-tile"><b>PEP 20</b><span>Zen · import this</span></div><div class="cdiag-tile"><b>PEP 621</b><span>pyproject.toml</span></div><div class="cdiag-tile"><b>ruff / Black</b><span>CI auto-check</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -847,15 +966,7 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div>
 
 # CI commands (PEP 8 + packaging)
 ruff check .
-# versions live in pyproject.toml (PEP 621)</div></div>
-<h3>PEP standards map</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>PEP 8</b><span>style / naming</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>PEP 257</b><span>docstrings</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>PEP 20</b><span>Zen / import this</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>PEP 621</b><span>pyproject.toml</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Linters</b><span>ruff / Black</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is a PEP?</b><br>PEP = Python Enhancement Proposal — design documents for language features, style, and packaging. Some are informational; others become official standards.</li><li><b>Step 2 — PEP 8 style</b><br>4-space indent, <code>snake_case</code> for functions/variables, <code>PascalCase</code> for classes, imports grouped (stdlib → third-party → local). Linters enforce this in CI.</li><li><b>Step 3 — PEP 257 & type hints</b><br>Docstrings describe modules, classes, and public functions. PEP 484/585 define type hints — use <code>list[int]</code> in Python 3.9+.</li><li><b>Step 4 — Packaging PEPs</b><br>PEP 440 (versions), 508 (dependency specifiers), 518/621 (<code>pyproject.toml</code>) — how modern Python projects declare dependencies.</li></ul>
+# versions live in pyproject.toml (PEP 621)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is a PEP?</b><br>PEP = Python Enhancement Proposal — design documents for language features, style, and packaging. Some are informational; others become official standards.</li><li><b>Step 2 — PEP 8 style</b><br>4-space indent, <code>snake_case</code> for functions/variables, <code>PascalCase</code> for classes, imports grouped (stdlib → third-party → local). Linters enforce this in CI.</li><li><b>Step 3 — PEP 257 & type hints</b><br>Docstrings describe modules, classes, and public functions. PEP 484/585 define type hints — use <code>list[int]</code> in Python 3.9+.</li><li><b>Step 4 — Packaging PEPs</b><br>PEP 440 (versions), 508 (dependency specifiers), 518/621 (<code>pyproject.toml</code>) — how modern Python projects declare dependencies.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>PEP 8</b> = style convention, not syntax. <b>snake_case</b> functions, <b>PascalCase</b> classes, 4 spaces.<br><b>import this</b> = Zen of Python (PEP 20).</div>
 <div class="keyword-box"><b>pyproject.toml</b> = modern project metadata + dependencies (PEP 621). Replaces setup.py for many projects.</div>
@@ -946,6 +1057,14 @@ ruff check .
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Primitive types store a single value — for example int, float, str, and bool. Collection types store multiple values — for example list, tuple, set, and dict. This slide builds step by step: first primitives, then collections, then how dictionaries use keys.</p>
+<h3>Which datatype?</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What do you need to store?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>One value</b><span>int · str · float · bool</span></div><div class="cdiag-fork-arm"><b>Growing / mixed</b><span>list []</span></div><div class="cdiag-fork-arm"><b>Fixed record</b><span>tuple () — hashable</span></div><div class="cdiag-fork-arm"><b>Lookup / unique</b><span>dict {} · set</span></div></div>
+  <p class="flow-note">Cart/logs → list. GPS / (ok, data) → tuple.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -967,15 +1086,7 @@ ruff check .
 cart.append({"sku": "C3", "qty": 3})  # list grows
 
 delivery_pin = (12.97, 80.22)  # fixed GPS — tuple
-order = [101, "SHIPPED", ["Google", "Amazon"]]  # heterogeneous</div></div>
-<h3>Choose a datatype</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Primitives</b><span>int str float bool</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>list</b><span>grows / mixed OK</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>tuple</b><span>fixed record</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>dict / set</b><span>lookup / unique</span></div>
-  </div>
-  <p class="flow-note">Cart/logs → list. GPS / (ok, data) → tuple. Watch list memory jump on append (over-allocation).</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What are Python data types?</b><br>A data type tells Python what kind of value is stored. Primitives hold one value.<div class="step-pre">age = 25          # int
+order = [101, "SHIPPED", ["Google", "Amazon"]]  # heterogeneous</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What are Python data types?</b><br>A data type tells Python what kind of value is stored. Primitives hold one value.<div class="step-pre">age = 25          # int
 price = 99.5      # float
 name = "Ravi"     # str
 is_student = True # bool</div></li><li><b>Step 2 — Collection data types</b><br>Collections hold multiple values.<table class="data-tbl"><tr><th>Type</th><th>Symbol</th><th>Can change?</th></tr><tr><td>List</td><td><code>[]</code></td><td class="cell-yes"><span class="yn-yes"></span>Yes</td></tr><tr><td>Tuple</td><td><code>()</code></td><td class="cell-no"><span class="yn-no"></span>No</td></tr><tr><td>Set</td><td><code>{a, b}</code></td><td class="cell-yes"><span class="yn-yes"></span>Yes</td></tr><tr><td>Frozenset</td><td><code>frozenset()</code></td><td class="cell-no"><span class="yn-no"></span>No</td></tr><tr><td>Dictionary</td><td><code>{key: value}</code></td><td class="cell-yes"><span class="yn-yes"></span>Values can change</td></tr></table></li><li><b>Step 3 — List: homogeneous, heterogeneous, memory</b><br>Lists can hold one type or mixed types. Memory grows in <b>jumps</b> (over-allocation), not +1 byte per append.<div class="step-pre">scores = [90, 85, 88]                 # homogeneous ints
@@ -1170,6 +1281,9 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Type hints annotate variables, parameters, and return types. typing provides Optional, Union, List, Dict, TypeVar, Generic, Protocol. mypy statically checks types before runtime.</p>
+<h3>Typing layers</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Write hints</b><span>def charge(amount: Decimal) -> str</span></div><div class="cdiag-layer"><b>Static check</b><span>mypy / pyright before run</span></div><div class="cdiag-layer"><b>Runtime (optional)</b><span>Pydantic / FastAPI enforce</span></div><div class="cdiag-layer"><b>Docs & IDE</b><span>autocomplete + clearer APIs</span></div><p class="flow-note">Hints alone do not change runtime — checkers / frameworks enforce them.</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1185,15 +1299,7 @@ def charge(amount: Decimal, currency: str) -> str:
     return f"Charged {amount} {currency}"
 
 # mypy error: charge("100", 91)  # wrong types
-charge(Decimal("100.00"), "INR")  # OK</div></div>
-<h3>Typing workflow</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Write hints</b><span>x: int</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Optional tools</b><span>mypy / pyright</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Catch bugs</b><span>before runtime</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Docs</b><span>clearer APIs</span></div>
-  </div>
-  <p class="flow-note">Hints do not change runtime by themselves — checkers enforce them.</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Basic type hints</b><br>Type hints document expected types. Python does not enforce them at runtime by default.<div class="step-pre">def greet(name: str) -&gt; str:
+charge(Decimal("100.00"), "INR")  # OK</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Basic type hints</b><br>Type hints document expected types. Python does not enforce them at runtime by default.<div class="step-pre">def greet(name: str) -&gt; str:
     return f"Hello, {name}"
 
 def add(a: int, b: int) -&gt; int:
@@ -1312,6 +1418,12 @@ mypy --strict my_project/</div><p class="step-result"><b>Tip:</b> run mypy in CI
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Operators perform computation and comparison: arithmetic (+, -, *, /, //, %, **), comparison (==, !=, <), logical (and, or, not), identity (is), membership (in), and bitwise (&, |, ^, ~, <<, >>).</p>
+<h3>Operator families</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>Arithmetic</b><span>+ − * / // % **</span></div><div class="cdiag-tile"><b>Compare</b><span>== != &lt; &gt;</span></div><div class="cdiag-tile"><b>Assign</b><span>= += :=</span></div><div class="cdiag-tile"><b>Logic</b><span>and or not</span></div><div class="cdiag-tile"><b>Membership</b><span>in · not in</span></div><div class="cdiag-tile"><b>Identity</b><span>is · is not</span></div><div class="cdiag-tile"><b>Bitwise</b><span>&amp; | ^ ~ &lt;&lt; &gt;&gt;</span></div><div class="cdiag-tile"><b>Walrus</b><span>n := len(x)</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1340,15 +1452,7 @@ if "GST" in tax_codes:
 
 lines = ["a", "b", "c"]
 if (n := len(lines)) > 0:
-    print(n)                 # walrus: assign + test</div></div>
-<h3>Operator families</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Arithmetic</b><span>+ - * / // % **</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Compare</b><span>== != < ></span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Assign</b><span>= += :=</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Logic</b><span>and or not</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Bits / in / is</b><span>& | in is</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Arithmetic (+ - * / % // **)</b><br>Python arithmetic operators work on numbers and some sequences.<div class="step-pre">a, b = 10, 4
+    print(n)                 # walrus: assign + test</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Arithmetic (+ - * / % // **)</b><br>Python arithmetic operators work on numbers and some sequences.<div class="step-pre">a, b = 10, 4
 a + b    # 14
 a - b    # 6
 a * b    # 40
@@ -1526,6 +1630,14 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Flow control directs execution: if/elif/else for branching, for/while for loops, break/continue for loop control, pass as a no-op placeholder, and an optional else on loops that runs when no break occurred.</p>
+<h3>Flow control choices</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What should the program do next?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>Branch</b><span>if / elif / else</span></div><div class="cdiag-fork-arm"><b>Repeat</b><span>for · while</span></div><div class="cdiag-fork-arm"><b>Skip / stop</b><span>continue · break</span></div><div class="cdiag-fork-arm"><b>Stub</b><span>pass (empty block)</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1551,15 +1663,7 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
         apply_default_tax(row)
 
 def apply_coupon():
-    pass                      # stub — fill later</div></div>
-<h3>Flow control</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Condition</b><span>if / elif / else</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Iterate</b><span>for / while</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Control</b><span>break / continue</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Stub</b><span>pass</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — if / elif / else</b><br>Run exactly one branch based on conditions. Indentation defines the block — no braces.<div class="step-pre">score = 85
+    pass                      # stub — fill later</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — if / elif / else</b><br>Run exactly one branch based on conditions. Indentation defines the block — no braces.<div class="step-pre">score = 85
 if score &gt;= 90:
     grade = "A"
 elif score &gt;= 75:
@@ -1718,6 +1822,12 @@ else:
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Comprehensions build collections in one expression: list [x for x in items], set {x for x in items}, dict {k: v for k, v in pairs}, and generator (x for x in items) which is lazy.</p>
+<h3>Comprehension shapes</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>List</b><span>[x for x in …]</span></div><div class="cdiag-tile"><b>Set</b><span>{x for x in …}</span></div><div class="cdiag-tile"><b>Dict</b><span>{k: v for …}</span></div><div class="cdiag-tile"><b>Generator</b><span>(x for x in …) lazy</span></div></div>
+  <p class="flow-note">Same idea: source → expression → optional filter. Shape = brackets.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1740,15 +1850,7 @@ net = [g - tax for g, tax in zip(gross, taxes) if g > 0]
 # Huge file → generator (lazy, saves RAM)
 def parse_lines(f):
     for line in f:
-        yield parse(line)</div></div>
-<h3>Comprehension pipeline</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Source</b><span>iterable</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Transform</b><span>expression</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Filter</b><span>optional if</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Result</b><span>list / set / dict / gen</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — List comprehension</b><br>Build a new list in one expression — replaces loop + <code>append</code>.<div class="step-pre">squares = [x * x for x in range(5)]
+        yield parse(line)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — List comprehension</b><br>Build a new list in one expression — replaces loop + <code>append</code>.<div class="step-pre">squares = [x * x for x in range(5)]
 # [0, 1, 4, 9, 16]
 
 evens = [x for x in range(10) if x % 2 == 0]
@@ -1847,6 +1949,13 @@ next(gen)   # 1</div></li></ul>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Functions are defined with def. Python also supports functional-programming ideas: pure functions, first-class/higher-order functions, recursion, and preferring immutable data — alongside *args/**kwargs, lambda, LEGB, and closures.</p>
+<h3>Function anatomy</h3>
+<div class="cdiag cdiag-hub">
+  <div class="cdiag-spokes"><div class="cdiag-spoke"><b>Args</b><span>pos / kw / *args / **kwargs</span></div><div class="cdiag-spoke"><b>Scope</b><span>LEGB lookup</span></div><div class="cdiag-spoke"><b>return</b><span>value out</span></div><div class="cdiag-spoke"><b>lambda</b><span>one-line anonymous</span></div><div class="cdiag-spoke"><b>Recursion</b><span>fn calls itself</span></div><div class="cdiag-spoke"><b>Higher-order</b><span>pass / return fn</span></div></div>
+  <div class="cdiag-hub-core"><b>def name(...)</b><span>callable unit</span></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1875,15 +1984,7 @@ def build_report(amounts, tax_fn):
         })
     return rows
 
-report = build_report([100, 200], calc_gst)</div></div>
-<h3>Function call path</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>def</b><span>define</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Args</b><span>pos / kw / *args</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Body</b><span>LEGB lookup</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>return</b><span>value out</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Positional & Keyword args</b><br>Positional args are matched by order. Keyword args are matched by name. Defaults go in the signature.<div class="step-pre">def greet(name, excited=False):
+report = build_report([100, 200], calc_gst)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Positional & Keyword args</b><br>Positional args are matched by order. Keyword args are matched by name. Defaults go in the signature.<div class="step-pre">def greet(name, excited=False):
     msg = f"Hello, {name}!"
     return msg + "!!!" if excited else msg
 
@@ -2062,6 +2163,12 @@ times3(10)   # 30</div></li></ul>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Built-in functions operate on iterables and objects: map/filter/reduce transform data; zip/enumerate pair iterables; type/id/isinstance inspect objects; range/len/sorted/reversed handle sequences.</p>
+<h3>Built-in toolbox</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>map</b><span>transform each</span></div><div class="cdiag-tile"><b>filter</b><span>keep matches</span></div><div class="cdiag-tile"><b>reduce</b><span>fold to one</span></div><div class="cdiag-tile"><b>zip</b><span>pair iterables</span></div><div class="cdiag-tile"><b>enumerate</b><span>index + value</span></div><div class="cdiag-tile"><b>sorted</b><span>new ordered list</span></div><div class="cdiag-tile"><b>max / min</b><span>extreme values</span></div><div class="cdiag-tile"><b>type / id</b><span>inspect object</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2085,15 +2192,7 @@ top = max(sales, key=lambda r: r["amount"])
 
 headers = ["name", "qty"]
 row = ["Pen", "12"]
-record = dict(zip(headers, row))</div></div>
-<h3>Built-in toolbox</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Transform</b><span>map / filter</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Combine</b><span>zip / enumerate</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Reduce</b><span>reduce / max / min</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Inspect</b><span>type / id / isinstance</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — map, filter & reduce</b><br><code>map</code> applies a function to every item. <code>filter</code> keeps truthy results. <code>reduce</code> folds a sequence (from <code>functools</code>).<div class="step-pre">nums = [1, 2, 3, 4]
+record = dict(zip(headers, row))</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — map, filter & reduce</b><br><code>map</code> applies a function to every item. <code>filter</code> keeps truthy results. <code>reduce</code> folds a sequence (from <code>functools</code>).<div class="step-pre">nums = [1, 2, 3, 4]
 list(map(lambda x: x * 2, nums))     # [2, 4, 6, 8]
 list(filter(lambda x: x % 2 == 0, nums))  # [2, 4]
 
@@ -2232,6 +2331,12 @@ max([], default=0)           # 0 — empty safe</div></li></ul>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>collections module extends built-in types: Counter counts elements, defaultdict provides default values, OrderedDict preserves order (less needed in 3.7+), ChainMap chains dicts, namedtuple creates tuple subclasses with names, deque is a fast double-ended queue.</p>
+<h3>collections module</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>Counter</b><span>tallies / pie charts</span></div><div class="cdiag-tile"><b>defaultdict</b><span>auto-create keys</span></div><div class="cdiag-tile"><b>deque</b><span>fast left/right ends</span></div><div class="cdiag-tile"><b>namedtuple</b><span>light records</span></div><div class="cdiag-tile"><b>OrderedDict</b><span>remember insert order</span></div><div class="cdiag-tile"><b>ChainMap</b><span>stack of dicts</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2254,15 +2359,7 @@ chat = deque(maxlen=100)
 chat.append("hi")
 
 Ticket = namedtuple("Ticket", "id status")
-t = Ticket(101, "open")</div></div>
-<h3>collections module</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Counter</b><span>counts</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>defaultdict</b><span>auto keys</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>deque</b><span>fast ends</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>namedtuple</b><span>fields</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>OrderedDict</b><span>order</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Counter</b><br>Counts hashable elements — like a frequency table.<div class="step-pre">from collections import Counter
+t = Ticket(101, "open")</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Counter</b><br>Counts hashable elements — like a frequency table.<div class="step-pre">from collections import Counter
 
 c = Counter("hello")
 # Counter({'l': 2, 'h': 1, 'e': 1, 'o': 1})
@@ -2399,6 +2496,12 @@ class CaseInsensitiveDict(UserDict):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Python uses reference counting plus a generational garbage collector for circular references. Understanding refs, gc, and weakref helps debug memory leaks.</p>
+<h3>Object memory lifecycle</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>Create</b><span>refcount = 1</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Share names</b><span>refcount ↑</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>del / rebind</b><span>refcount ↓</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Zero</b><span>free now</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note">Circular refs need <code>gc</code> (generational collector).</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2418,15 +2521,7 @@ def export_orders(path):
     with open(path, encoding="utf-8") as f:
         for line in f:
             yield line
-    # file closed here — don't wait for GC</div></div>
-<h3>Memory lifecycle</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Create object</b><span>refcount +1</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>More names</b><span>refcount ↑</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>del / rebind</b><span>refcount ↓</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Zero refs</b><span>free now</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Cycles</b><span>gc.collect</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Reference counting</b><br>Every object tracks how many references point to it. When count hits zero, memory is reclaimed immediately — fast for most objects.</li><li><b>Step 2 — Garbage collector</b><br>Circular references (A→B→A) keep refcounts &gt; 0 forever. The <code>gc</code> module periodically finds and breaks these cycles.</li><li><b>Step 3 — Generations</b><br>GC uses three generations — young objects collected often, old objects rarely. Tuning is rare; know it exists for leak debugging.</li><li><b>Step 4 — Practical tips</b><br><code>del</code> removes a name, not necessarily the object. Use <code>with</code> for files. Long-lived caches can cause memory growth — profile before optimizing.</li></ul>
+    # file closed here — don't wait for GC</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Reference counting</b><br>Every object tracks how many references point to it. When count hits zero, memory is reclaimed immediately — fast for most objects.</li><li><b>Step 2 — Garbage collector</b><br>Circular references (A→B→A) keep refcounts &gt; 0 forever. The <code>gc</code> module periodically finds and breaks these cycles.</li><li><b>Step 3 — Generations</b><br>GC uses three generations — young objects collected often, old objects rarely. Tuning is rare; know it exists for leak debugging.</li><li><b>Step 4 — Practical tips</b><br><code>del</code> removes a name, not necessarily the object. Use <code>with</code> for files. Long-lived caches can cause memory growth — profile before optimizing.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>sys.getrefcount</b> = approximate reference count (debugging only).<br><b>gc.collect()</b> = force garbage collection — use when hunting circular-reference leaks.</div>
 <div class="keyword-box"><b>del name</b> removes the binding — object lives if other references exist.<br><b>with</b> = deterministic cleanup for files/sockets (not every object).</div>
@@ -2525,6 +2620,9 @@ def export_orders(path):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model_dump — core of FastAPI schemas.</p>
+<h3>Pydantic validation stack</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Raw input</b><span>JSON / dict / form</span></div><div class="cdiag-layer"><b>BaseModel</b><span>typed schema</span></div><div class="cdiag-layer"><b>Field + validators</b><span>rules &amp; coerce</span></div><div class="cdiag-layer"><b>model_dump</b><span>clean dict out</span></div><p class="flow-note">Invalid → ValidationError (FastAPI → HTTP 422).</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2546,15 +2644,7 @@ class UserCreate(BaseModel):
 
 body = {"email": "Anu@Co.COM", "age": "25"}
 user = UserCreate.model_validate(body)
-# email → anu@co.com, age → 25; age &lt; 18 → 422</div></div>
-<h3>Pydantic validation</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Raw JSON/dict</b><span>input</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>BaseModel</b><span>schema</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Validate</b><span>Field / validators</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>model_dump</b><span>clean dict</span></div>
-  </div>
-  <p class="flow-note">Invalid data → ValidationError (FastAPI → HTTP 422).</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — BaseModel</b><br>Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>).</li><li><b>Step 2 — Validation</b><br><code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths.</li><li><b>Step 3 — Serialization</b><br>v2: <code>model_validate(dict)</code> in, <code>model_dump()</code> out. For ORM rows use <code>model_config = {'from_attributes': True}</code>.</li><li><b>Step 4 — FastAPI integration</b><br>Route parameters typed as Pydantic models auto-parse JSON bodies and return 422 with structured errors — no manual validation boilerplate.</li></ul>
+# email → anu@co.com, age → 25; age &lt; 18 → 422</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — BaseModel</b><br>Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>).</li><li><b>Step 2 — Validation</b><br><code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths.</li><li><b>Step 3 — Serialization</b><br>v2: <code>model_validate(dict)</code> in, <code>model_dump()</code> out. For ORM rows use <code>model_config = {'from_attributes': True}</code>.</li><li><b>Step 4 — FastAPI integration</b><br>Route parameters typed as Pydantic models auto-parse JSON bodies and return 422 with structured errors — no manual validation boilerplate.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>BaseModel</b> = schema with validation on create.<br><b>model_validate(dict)</b> in, <b>model_dump()</b> out (Pydantic v2).</div>
 <div class="keyword-box"><b>Field(ge=18)</b> = constraint at declaration.<br><b>@field_validator</b> = custom cross-field or format rules.</div>
@@ -2646,6 +2736,14 @@ user = UserCreate.model_validate(body)
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>OOP models entities as classes and objects. Python supports __init__ constructors, single/multiple inheritance with MRO, encapsulation via _ convention, polymorphism via overriding, ABC for abstract classes, and dunder methods for operator overloading.</p>
+<h3>OOP building blocks</h3>
+<div class="cdiag cdiag-tree">
+  <div class="cdiag-tree-root"><b>class Account</b><span>blueprint + __init__ + self</span></div>
+  <div class="cdiag-tree-stem"></div>
+  <div class="cdiag-tree-kids"><div class="cdiag-tree-child"><b>SavingsAccount</b><span>inherit — reuse deposit/withdraw</span></div><div class="cdiag-tree-child"><b>override month_end</b><span>polymorphism — same call, different behavior</span></div><div class="cdiag-tree-child"><b>ABC / abstract</b><span>force subclasses to implement</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2676,15 +2774,7 @@ class SavingsAccount(Account):
 
 accounts = [Account(100), SavingsAccount(200)]
 for a in accounts:
-    a.month_end()            # polymorphism</div></div>
-<h3>OOP building blocks</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>class</b><span>blueprint</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>__init__</b><span>create</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>self</b><span>instance</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>inherit</b><span>reuse</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>override</b><span>polymorphism</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Class, Object, __init__ & self</b><br>A class is a blueprint. An object is an instance. <code>__init__</code> initializes state; <code>self</code> refers to the current instance.<div class="step-pre">class Dog:
+    a.month_end()            # polymorphism</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Class, Object, __init__ & self</b><br>A class is a blueprint. An object is an instance. <code>__init__</code> initializes state; <code>self</code> refers to the current instance.<div class="step-pre">class Dog:
     def __init__(self, name):
         self.name = name
 
@@ -2832,6 +2922,13 @@ class Circle(Shape):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Descriptors control attribute access via __get__, __set__, __delete__. The @property decorator is a built-in descriptor for managed attributes without explicit getter/setter boilerplate.</p>
+<h3>Descriptor protocol</h3>
+<div class="cdiag cdiag-hub">
+  <div class="cdiag-spokes"><div class="cdiag-spoke"><b>__get__</b><span>read</span></div><div class="cdiag-spoke"><b>__set__</b><span>write / validate</span></div><div class="cdiag-spoke"><b>__delete__</b><span>remove</span></div><div class="cdiag-spoke"><b>@property</b><span>built-in descriptor</span></div></div>
+  <div class="cdiag-hub-core"><b>obj.x</b><span>attribute access</span></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2857,15 +2954,7 @@ class Product:
 
 p = Product()
 p.price = 99
-# p.price = -1  → ValueError</div></div>
-<h3>Descriptor protocol</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>attr access</b><span>obj.x</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>__get__</b><span>read</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>__set__</b><span>write</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>@property</b><span>common case</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — __get__, __set__ & __delete__</b><br>A descriptor is an object with at least one of these methods. It controls what happens when an attribute is accessed on a class.<div class="step-pre">class Validator:
+# p.price = -1  → ValueError</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — __get__, __set__ & __delete__</b><br>A descriptor is an object with at least one of these methods. It controls what happens when an attribute is accessed on a class.<div class="step-pre">class Validator:
     def __init__(self, name):
         self.name = name
 
@@ -2984,6 +3073,12 @@ p.price = 99
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Generators (PEP 255) return lazy iterators via yield — you can loop like a list without storing all values in memory. Critical for large files and streams. Generator expressions, infinite sequences, and generator pipelines are common patterns (Real Python).</p>
+<h3>Generator pause / resume</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>yield</b><span>pause + value</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>next()</b><span>resume</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>locals live</b><span>state kept</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>StopIteration</b><span>done</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note">Lazy — one item at a time; great for huge files.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3006,15 +3101,7 @@ def export(path, out):
             transformed = transform(row)
             dest.write(",".join(transformed) + "\n")
 
-# Bad: data = open(path).read().split()  → MemoryError on huge files</div></div>
-<h3>Generator execution</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>def + yield</b><span>pause</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>next()</b><span>resume</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>state kept</b><span>locals live</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>StopIteration</b><span>done</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + generator expressions</b><br><code>return</code> ends the function with one value. <code>yield</code> produces a generator object and pauses between values.<div class="step-pre">def csv_reader(path):
+# Bad: data = open(path).read().split()  → MemoryError on huge files</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + generator expressions</b><br><code>return</code> ends the function with one value. <code>yield</code> produces a generator object and pauses between values.<div class="step-pre">def csv_reader(path):
     with open(path, encoding="utf-8") as f:
         for row in f:
             yield row
@@ -3162,6 +3249,13 @@ list(islice(range(100), 5))</div></li></ul>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Decorators wrap functions or classes to add behavior without changing their source. They use @syntax, nested functions, closures, and functools.wraps to preserve metadata.</p>
+<h3>Decorator wrap</h3>
+<div class="cdiag cdiag-hub">
+  <div class="cdiag-spokes"><div class="cdiag-spoke"><b>before</b><span>log / auth / timer start</span></div><div class="cdiag-spoke"><b>call f</b><span>original body</span></div><div class="cdiag-spoke"><b>after</b><span>cleanup / log end</span></div><div class="cdiag-spoke"><b>wraps</b><span>keep name &amp; docstring</span></div></div>
+  <div class="cdiag-hub-core"><b>@decorator</b><span>f = wrap(f)</span></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3186,15 +3280,7 @@ def timer(fn):
 @timer
 def run_query():
     time.sleep(0.1)
-    return "ok"</div></div>
-<h3>Decorator wrap</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Original fn</b><span>f</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>@decorator</b><span>wrap</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Call site</b><span>f()</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Wrapper runs</b><span>before/after</span></div>
-  </div>
-  <p class="flow-note">Use <code>functools.wraps</code> to keep the original name/doc.</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Function decorators</b><br>A decorator wraps a function to add behavior without changing its source. <code>@decorator</code> is syntactic sugar for <code>func = decorator(func)</code>.<div class="step-pre">import time
+    return "ok"</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Function decorators</b><br>A decorator wraps a function to add behavior without changing its source. <code>@decorator</code> is syntactic sugar for <code>func = decorator(func)</code>.<div class="step-pre">import time
 
 def timer(func):
     def wrapper(*args, **kwargs):
@@ -3332,6 +3418,12 @@ greet.__doc__    # Say hello</div></li></ul>
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Exceptions are handled with try/except/else/finally. Python has a hierarchy of built-in exceptions. Custom exceptions inherit from Exception. raise and re-raise propagate errors up the call stack.</p>
+<h3>Exception path</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>try</b><span>risky code</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>except</b><span>handle</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>else</b><span>no error</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>finally</b><span>always</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note"><code>finally</code> runs even if you return or raise again.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3350,15 +3442,7 @@ greet.__doc__    # Say hello</div></li></ul>
     except OSError:
         return {"status": 500}
     finally:
-        temp.cleanup()   # always runs</div></div>
-<h3>Exception path</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>try</b><span>risky code</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>except</b><span>handle</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>else</b><span>no error</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>finally</b><span>always</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — try, except, else & finally</b><br>Handle errors gracefully. <code>else</code> runs if no exception. <code>finally</code> always runs.<div class="step-pre">try:
+        temp.cleanup()   # always runs</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — try, except, else & finally</b><br>Handle errors gracefully. <code>else</code> runs if no exception. <code>finally</code> always runs.<div class="step-pre">try:
     result = int(user_input)
 except ValueError:
     print("not a number")
@@ -3486,6 +3570,14 @@ except FileNotFoundError:
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>threading runs concurrent tasks in one process but is limited by the GIL for CPU-bound work. multiprocessing and concurrent.futures bypass or manage this for parallel execution.</p>
+<h3>Concurrency — pick the tool</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What is the work waiting on?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>I/O wait</b><span>threading · ThreadPoolExecutor (GIL OK)</span></div><div class="cdiag-fork-arm"><b>CPU heavy</b><span>multiprocessing · ProcessPoolExecutor</span></div><div class="cdiag-fork-arm"><b>Many sockets</b><span>asyncio (see next slide)</span></div></div>
+  <p class="flow-note">GIL = one Python bytecode thread at a time.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3507,13 +3599,7 @@ with ThreadPoolExecutor() as pool:
     images = list(pool.map(download, urls))
 
 with ProcessPoolExecutor() as pool:
-    out = list(pool.map(heavy_resize, images))</div></div>
-<h3>Concurrency choices</h3>
-<div class="cdiag cdiag-stack">
-  <div class="cdiag-layer"><b>threading</b><span>I/O wait — shared memory; limited by GIL for CPU</span></div><div class="cdiag-layer"><b>multiprocessing</b><span>CPU work — separate processes</span></div><div class="cdiag-layer"><b>concurrent.futures</b><span>ThreadPool / ProcessPool helpers</span></div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — threading.Thread & Lock</b><br>Threads share memory within one process. Use <code>Lock</code> to prevent race conditions.<div class="step-pre">import threading
+    out = list(pool.map(heavy_resize, images))</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — threading.Thread & Lock</b><br>Threads share memory within one process. Use <code>Lock</code> to prevent race conditions.<div class="step-pre">import threading
 
 counter = 0
 lock = threading.Lock()
@@ -3637,6 +3723,12 @@ with ProcessPoolExecutor() as pool:
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>asyncio runs concurrent I/O-bound tasks on one thread via an event loop. async def defines coroutines; await pauses until a result; asyncio.gather runs multiple coroutines; async with/async for extend context managers and iteration.</p>
+<h3>Async event loop</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>async def</b><span>coroutine</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>await</b><span>yield control</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>event loop</b><span>schedule others</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>gather</b><span>many at once</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note">Do not call blocking I/O inside async code.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3666,15 +3758,7 @@ async def notify():
         send_sms(),
         push(),
     )
-    return results</div></div>
-<h3>Async event loop</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>async def</b><span>coroutine</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>await</b><span>yield control</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>event loop</b><span>schedule</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>gather</b><span>run many</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — asyncio event loop</b><br>The loop schedules and runs coroutines cooperatively on one thread — ideal for many concurrent I/O waits.<div class="step-pre">import asyncio
+    return results</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — asyncio event loop</b><br>The loop schedules and runs coroutines cooperatively on one thread — ideal for many concurrent I/O waits.<div class="step-pre">import asyncio
 
 async def main():
     print("start")
@@ -3803,6 +3887,9 @@ async def main():
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, module loggers, handlers, and rotation.</p>
+<h3>Logging pipeline</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Logger</b><span>getLogger(__name__)</span></div><div class="cdiag-layer"><b>Level filter</b><span>DEBUG → CRITICAL</span></div><div class="cdiag-layer"><b>Handler</b><span>console / RotatingFileHandler</span></div><div class="cdiag-layer"><b>Formatter</b><span>time + level + message</span></div><p class="flow-note">Prefer <code>logger.info("x=%s", x)</code> over f-strings when filtered.</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3825,15 +3912,7 @@ def pay(order_id):
     try:
         logger.info("order %s paid", order_id)
     except Exception:
-        logger.exception("payment failed")</div></div>
-<h3>Logging pipeline</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Logger</b><span>getLogger</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Level</b><span>DEBUG→CRITICAL</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Handler</b><span>console / file</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Formatter</b><span>time + msg</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Why not print()?</b><br>Production needs levels, timestamps, and routing to files/agents. <code>logging</code> is the standard library solution — like ILogger in .NET.</li><li><b>Step 2 — Levels</b><br>DEBUG &lt; INFO &lt; WARNING &lt; ERROR &lt; CRITICAL. Set root level to INFO in prod; DEBUG only when troubleshooting.</li><li><b>Step 3 — Logger per module</b><br><code>logger = logging.getLogger(__name__)</code> — hierarchical names (<code>app.orders.service</code>) map to configuration.</li><li><b>Step 4 — Handlers & format</b><br>Console handler for dev, RotatingFileHandler for disk. Use <code>%</code> formatting in log calls — not f-strings — for lazy evaluation.</li></ul>
+        logger.exception("payment failed")</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Why not print()?</b><br>Production needs levels, timestamps, and routing to files/agents. <code>logging</code> is the standard library solution — like ILogger in .NET.</li><li><b>Step 2 — Levels</b><br>DEBUG &lt; INFO &lt; WARNING &lt; ERROR &lt; CRITICAL. Set root level to INFO in prod; DEBUG only when troubleshooting.</li><li><b>Step 3 — Logger per module</b><br><code>logger = logging.getLogger(__name__)</code> — hierarchical names (<code>app.orders.service</code>) map to configuration.</li><li><b>Step 4 — Handlers & format</b><br>Console handler for dev, RotatingFileHandler for disk. Use <code>%</code> formatting in log calls — not f-strings — for lazy evaluation.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>logging.getLogger(__name__)</b> = one logger per module — configure hierarchy from root.<br><b>logger.exception()</b> = ERROR level + full traceback — only inside <code>except</code>.</div>
 <div class="keyword-box"><b>Lazy logging:</b> <code>logger.info("id=%s", user_id)</code> — do not use f-string if message may be filtered.</div>
@@ -3930,6 +4009,12 @@ def pay(order_id):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Unit testing verifies code with unittest (TestCase, setUp, tearDown) or pytest (simpler syntax). assert methods check outcomes. unittest.mock patches dependencies. Tests run in a defined order per class.</p>
+<h3>Unit test cycle</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>Arrange</b><span>setUp / fixtures</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Act</b><span>call code</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Assert</b><span>assert / assertEqual</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Cleanup</b><span>tearDown</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note">Mock external APIs with <code>@patch</code> so CI stays offline.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3952,15 +4037,7 @@ def test_senior_citizen_gets_10_percent():
 @patch("payments.charge")
 def test_checkout_mocks_gateway(mock_charge):
     mock_charge.return_value = "ok"
-    assert checkout(100) == "ok"</div></div>
-<h3>Unit test cycle</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Arrange</b><span>setUp</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Act</b><span>call code</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Assert</b><span>assert*</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Cleanup</b><span>tearDown</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — unittest TestCase, setUp & tearDown</b><br>Class-based tests in the standard library — familiar if you know JUnit or NUnit.<div class="step-pre">import unittest
+    assert checkout(100) == "ok"</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — unittest TestCase, setUp & tearDown</b><br>Class-based tests in the standard library — familiar if you know JUnit or NUnit.<div class="step-pre">import unittest
 
 class TestMath(unittest.TestCase):
     def setUp(self):
@@ -4096,6 +4173,13 @@ def test_divide():
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Regular expressions match patterns in text using the re module: match, search, findall, groups, special sequences (\d, \w, \s), and lookahead/lookbehind for advanced matching.</p>
+<h3>Regex toolkit</h3>
+<div class="cdiag cdiag-hub">
+  <div class="cdiag-spokes"><div class="cdiag-spoke"><b>search</b><span>find anywhere</span></div><div class="cdiag-spoke"><b>match</b><span>only at start</span></div><div class="cdiag-spoke"><b>findall</b><span>all hits</span></div><div class="cdiag-spoke"><b>groups</b><span>(…) capture</span></div><div class="cdiag-spoke"><b>sub</b><span>replace</span></div><div class="cdiag-spoke"><b>raw r'…'</b><span>fewer \\ escapes</span></div></div>
+  <div class="cdiag-hub-core"><b>re module</b><span>pattern engine</span></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4118,15 +4202,7 @@ def redact(text):
     return clean
 
 log = "user 123-45-6789 logged in"
-print(redact(log))</div></div>
-<h3>Regex workflow</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Pattern</b><span>r'…'</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Compile/search</b><span>re module</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Match/groups</b><span>extract</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Replace/split</b><span>transform</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — re.match, re.search & re.findall</b><br>Three ways to find patterns in text.<table class="data-tbl"><tr><th>Function</th><th>Where it searches</th><th>Returns</th></tr><tr><td><code>match</code></td><td>start of string only</td><td>Match or None</td></tr><tr><td><code>search</code></td><td>anywhere in string</td><td>Match or None</td></tr><tr><td><code>findall</code></td><td>anywhere</td><td>list of all matches</td></tr></table><div class="step-pre">import re
+print(redact(log))</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — re.match, re.search & re.findall</b><br>Three ways to find patterns in text.<table class="data-tbl"><tr><th>Function</th><th>Where it searches</th><th>Returns</th></tr><tr><td><code>match</code></td><td>start of string only</td><td>Match or None</td></tr><tr><td><code>search</code></td><td>anywhere in string</td><td>Match or None</td></tr><tr><td><code>findall</code></td><td>anywhere</td><td>list of all matches</td></tr></table><div class="step-pre">import re
 text = "Order 42 done"
 re.search(r"\d+", text).group()    # "42"
 re.findall(r"\d+", "a1 b22")      # ["1", "22"]</div></li><li><b>Step 2 — Groups & special sequences</b><br>Parentheses capture parts. Special sequences match common patterns.<div class="step-pre">import re
@@ -4238,6 +4314,9 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>File operations use open() with modes r/w/a, context managers (with) for safe closing, csv/json modules for structured data, and pathlib for object-oriented path handling.</p>
+<h3>File I/O layers</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Locate</b><span>pathlib.Path / open path</span></div><div class="cdiag-layer"><b>with open</b><span>auto-close (even on error)</span></div><div class="cdiag-layer"><b>Read / write</b><span>text or bytes</span></div><div class="cdiag-layer"><b>Structured</b><span>csv · json modules</span></div></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4259,15 +4338,7 @@ def export_sales():
     with open("summary.json", "w", encoding="utf-8") as out:
         json.dump(summary, out, indent=2)
 
-    Path("archive").mkdir(exist_ok=True)</div></div>
-<h3>File I/O</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>open/path</b><span>locate</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>with</b><span>auto-close</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>read/write</b><span>bytes/text</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>CSV/JSON</b><span>structured</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — open, read, write & append modes</b><br>File modes control how a file is opened. Always specify <code>encoding="utf-8"</code> on Windows.<table class="data-tbl"><tr><th>Mode</th><th>Action</th></tr><tr><td><code>"r"</code></td><td>read (default)</td></tr><tr><td><code>"w"</code></td><td>write — overwrites</td></tr><tr><td><code>"a"</code></td><td>append — adds to end</td></tr><tr><td><code>"r+"</code></td><td>read and write</td></tr></table><div class="step-pre">f = open("log.txt", "a", encoding="utf-8")
+    Path("archive").mkdir(exist_ok=True)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — open, read, write & append modes</b><br>File modes control how a file is opened. Always specify <code>encoding="utf-8"</code> on Windows.<table class="data-tbl"><tr><th>Mode</th><th>Action</th></tr><tr><td><code>"r"</code></td><td>read (default)</td></tr><tr><td><code>"w"</code></td><td>write — overwrites</td></tr><tr><td><code>"a"</code></td><td>append — adds to end</td></tr><tr><td><code>"r+"</code></td><td>read and write</td></tr></table><div class="step-pre">f = open("log.txt", "a", encoding="utf-8")
 f.write("new line\n")
 f.close()</div></li><li><b>Step 2 — with context manager</b><br><code>with</code> guarantees the file closes even if an error occurs — like C# <code>using</code>.<div class="step-pre">with open("data.txt", "r", encoding="utf-8") as f:
     content = f.read()
@@ -4381,6 +4452,12 @@ for p in root.glob("*.csv"):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Context managers guarantee setup/teardown via __enter__/__exit__ or the @contextmanager decorator. The with statement triggers this protocol — used for files, locks, and database connections.</p>
+<h3>Context manager protocol</h3>
+<div class="cdiag">
+  <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>with</b><span>start</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>__enter__</b><span>acquire</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>body</b><span>use resource</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>__exit__</b><span>release</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
+  <p class="flow-note">Same idea as C# <code>using</code> — cleanup is guaranteed.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4404,15 +4481,7 @@ def session_scope():
         session.close()
 
 with session_scope() as db:
-    db.add(order)</div></div>
-<h3>Context manager</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>with expr</b><span>enter</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>__enter__</b><span>acquire</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>body</b><span>use resource</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>__exit__</b><span>release</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — contextlib.contextmanager</b><br>Write a context manager with <code>yield</code> between setup and teardown — no full class needed.<div class="step-pre">from contextlib import contextmanager
+    db.add(order)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — contextlib.contextmanager</b><br>Write a context manager with <code>yield</code> between setup and teardown — no full class needed.<div class="step-pre">from contextlib import contextmanager
 
 @contextmanager
 def temp_file(path):
@@ -4530,6 +4599,9 @@ with ManagedResource() as r:
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Virtual environments isolate project dependencies. venv creates them; pip installs packages; requirements.txt pins versions; pyenv manages multiple Python versions on one machine.</p>
+<h3>Virtual environment</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Create</b><span>python -m venv .venv</span></div><div class="cdiag-layer"><b>Activate</b><span>isolate this project</span></div><div class="cdiag-layer"><b>Install</b><span>pip install …</span></div><div class="cdiag-layer"><b>Freeze</b><span>pip freeze &gt; requirements.txt</span></div><p class="flow-note">Never install project libs into the global Python.</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4549,15 +4621,7 @@ pip install -r requirements.txt   # Django 4.2
 cd client_b
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt   # Django 5</div></div>
-<h3>Virtual environment</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>python -m venv</b><span>create</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>activate</b><span>isolate</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>pip install</b><span>packages</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>freeze</b><span>requirements.txt</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — venv: create, activate & deactivate</b><br>An isolated Python environment per project — separate packages from system Python.<div class="step-pre"># create
+pip install -r requirements.txt   # Django 5</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — venv: create, activate & deactivate</b><br>An isolated Python environment per project — separate packages from system Python.<div class="step-pre"># create
 python -m venv .venv
 
 # activate (Windows PowerShell)
@@ -4668,6 +4732,9 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM models, session per request via Depends.</p>
+<h3>FastAPI + SQLAlchemy layers</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Route (FastAPI)</b><span>HTTP in/out — thin</span></div><div class="cdiag-layer"><b>Schema (Pydantic)</b><span>validate request/response</span></div><div class="cdiag-layer"><b>Service</b><span>business rules + transaction</span></div><div class="cdiag-layer"><b>ORM (SQLAlchemy)</b><span>tables / Session</span></div><div class="cdiag-layer"><b>Database</b><span>SQLite / Postgres / …</span></div><p class="flow-note">Depends(get_db) ≈ scoped DbContext per request.</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4685,13 +4752,7 @@ def create_employee(
     db.add(emp)
     db.commit()
     db.refresh(emp)
-    return emp   # serialized via EmployeeRead, not raw ORM</div></div>
-<h3>FastAPI + SQLAlchemy layers</h3>
-<div class="cdiag cdiag-stack">
-  <div class="cdiag-layer"><b>Route (FastAPI)</b><span>HTTP in/out — thin</span></div><div class="cdiag-layer"><b>Schema (Pydantic)</b><span>validate request/response</span></div><div class="cdiag-layer"><b>Service</b><span>business rules + transaction</span></div><div class="cdiag-layer"><b>ORM (SQLAlchemy)</b><span>tables / Session</span></div><div class="cdiag-layer"><b>Database</b><span>SQLite / Postgres / …</span></div>
-  <p class="flow-note">Depends(get_db) ≈ scoped DbContext per request.</p>
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Layered stack</b><br>FastAPI (HTTP) + Pydantic (schemas) + SQLAlchemy (ORM) + database. Routes stay thin; services own transactions and business rules.</li><li><b>Step 2 — Session per request</b><br><code>Depends(get_db)</code> yields a SQLAlchemy session, commits on success, closes in <code>finally</code> — like scoped DbContext in EF Core.</li><li><b>Step 3 — ORM vs schema</b><br>ORM models map tables; Pydantic schemas map API contracts. Never expose ORM internals directly — use response models.</li><li><b>Step 4 — Async note</b><br>FastAPI supports async routes; use async SQLAlchemy (2.0 style) or run sync ORM in thread pool for I/O-bound DB work.</li></ul>
+    return emp   # serialized via EmployeeRead, not raw ORM</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Layered stack</b><br>FastAPI (HTTP) + Pydantic (schemas) + SQLAlchemy (ORM) + database. Routes stay thin; services own transactions and business rules.</li><li><b>Step 2 — Session per request</b><br><code>Depends(get_db)</code> yields a SQLAlchemy session, commits on success, closes in <code>finally</code> — like scoped DbContext in EF Core.</li><li><b>Step 3 — ORM vs schema</b><br>ORM models map tables; Pydantic schemas map API contracts. Never expose ORM internals directly — use response models.</li><li><b>Step 4 — Async note</b><br>FastAPI supports async routes; use async SQLAlchemy (2.0 style) or run sync ORM in thread pool for I/O-bound DB work.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Depends(get_db)</b> = inject scoped SQLAlchemy session per request — commit/close in generator <code>finally</code>.</div>
 <div class="keyword-box"><b>response_model=UserRead</b> = Pydantic output schema — never return raw ORM without filtering fields.<br><b>from_attributes=True</b> = build schema from ORM row.</div>
@@ -4802,6 +4863,14 @@ def create_employee(
   <div class="main-split no-code">
     <div class="panel-left">
       <h3>Definition</h3><p>Python-Set2 is your portfolio of six real project areas covering fundamentals, exercises, data analysis, Django web apps, REST APIs, and voice AI with Pipecat.</p>
+<h3>Portfolio map</h3>
+<div class="cdiag cdiag-tree">
+  <div class="cdiag-tree-root"><b>Python-Set2</b><span>interview demos</span></div>
+  <div class="cdiag-tree-stem"></div>
+  <div class="cdiag-tree-kids"><div class="cdiag-tree-child"><b>pythonBasics</b><span>core language topics</span></div><div class="cdiag-tree-child"><b>google + pandas</b><span>files, regex, data</span></div><div class="cdiag-tree-child"><b>Django / DRF</b><span>web + REST</span></div><div class="cdiag-tree-child"><b>Pipecat</b><span>voice AI</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4815,15 +4884,7 @@ def create_employee(
 python pythonBasics/MyClass/car.py
 python google-python-exercises/babynames/babynames.py
 # then show Django / DRF API
-# then show Pipecat voice POC</div></div>
-<h3>Portfolio path</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>pythonBasics</b><span>fundamentals</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>exercises</b><span>files/regex</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>pandas</b><span>data</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Django/DRF</b><span>web</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Pipecat</b><span>voice AI</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Portfolio overview</b><br>Python-Set2 has six areas: basics, exercises, pandas, Django, DRF, Pipecat voice AI.</li><li><b>Step 2 — Learning path</b><br>Slides → Projects/ drills → Set2 real apps. Each area maps to interview talking points.</li><li><b>Step 3 — Demo readiness</b><br>Pick 2–3 folders you can open and explain in a mock interview — structure, entry point, tests.</li></ul>
+# then show Pipecat voice POC</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Portfolio overview</b><br>Python-Set2 has six areas: basics, exercises, pandas, Django, DRF, Pipecat voice AI.</li><li><b>Step 2 — Learning path</b><br>Slides → Projects/ drills → Set2 real apps. Each area maps to interview talking points.</li><li><b>Step 3 — Demo readiness</b><br>Pick 2–3 folders you can open and explain in a mock interview — structure, entry point, tests.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Portfolio structure</b> = separate folders per domain (basics, web, data, voice).<br><b>Each project:</b> own <code>.venv</code> + <code>requirements.txt</code> + README entry point.</div>
 
@@ -4890,6 +4951,12 @@ python google-python-exercises/babynames/babynames.py
   <div class="main-split no-code">
     <div class="panel-left">
       <h3>Definition</h3><p>pythonBasics/ has seven modules — MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting — each with runnable scripts for one topic.</p>
+<h3>pythonBasics modules</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>MyClass</b><span>OOP</span></div><div class="cdiag-tile"><b>MyCollections</b><span>list/dict/set</span></div><div class="cdiag-tile"><b>MyLoops</b><span>flow control</span></div><div class="cdiag-tile"><b>MyModules</b><span>import / packages</span></div><div class="cdiag-tile"><b>MyException</b><span>try/except</span></div><div class="cdiag-tile"><b>MyDebug</b><span>pdb</span></div><div class="cdiag-tile"><b>MyUnitTesting</b><span>unittest / mock</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4902,15 +4969,7 @@ python google-python-exercises/babynames/babynames.py
 </table><div class="real-life"><b>Real-life example:</b> <b>Team onboarding:</b> New joiners open topic folders that map to slides.<div class="step-pre"># Clone → open modules
 cd Python-Set2/pythonBasics
 python MyClass/oops_inheritance_BankAccount.py   # ↔ slide 15 OOP
-python MyUnitTesting/calculator_unittest.py      # ↔ slide 23 tests</div></div>
-<h3>pythonBasics modules</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>MyClass</b><span>OOP</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>MyCollections</b><span>data</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>MyLoops</b><span>flow</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>MyException</b><span>errors</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>MyUnitTesting</b><span>pytest</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — pythonBasics modules</b><br>Seven folders: MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting.</li><li><b>Step 2 — One topic per folder</b><br>Each has runnable scripts — study slides first, then run and modify the matching folder.</li><li><b>Step 3 — MyClass focus</b><br>Inheritance, polymorphism, dunder methods — core OOP interview material.</li></ul>
+python MyUnitTesting/calculator_unittest.py      # ↔ slide 23 tests</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — pythonBasics modules</b><br>Seven folders: MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting.</li><li><b>Step 2 — One topic per folder</b><br>Each has runnable scripts — study slides first, then run and modify the matching folder.</li><li><b>Step 3 — MyClass focus</b><br>Inheritance, polymorphism, dunder methods — core OOP interview material.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Module vs package</b> = one <code>.py</code> file vs folder with <code>__init__.py</code>.<br><b>pythonBasics/</b> = one runnable script per curriculum topic.</div>
 
@@ -4978,6 +5037,20 @@ python MyUnitTesting/calculator_unittest.py      # ↔ slide 23 tests</div></div
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>google-python-exercises/ teaches classic puzzles (babynames, copyspecial, logpuzzle). pandas/ has Jupyter notebooks analyzing Titanic and FIFA CSV datasets.</p>
+<h3>Practice tracks</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Google exercises</h4>
+    <ul><li>babynames — regex on HTML</li><li>copyspecial — os / shutil</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Pandas notebook</h4>
+    <ul><li>read_csv</li><li>dropna / groupby</li><li>charts for stakeholders</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4997,15 +5070,7 @@ summary = (
       .mean()
 )
 print(summary)
-# present chart in Jupyter to stakeholders</div></div>
-<h3>Data practice path</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>google exercises</b><span>files + regex</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>CSV load</b><span>pandas</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>clean / groupby</b><span>analyze</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>notebook</b><span>explain results</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — google-python-exercises</b><br>Classic puzzles: babynames (regex), copyspecial (files), logpuzzle — small focused scripts.</li><li><b>Step 2 — pandas notebooks</b><br>Titanic and FIFA CSV analysis — <code>read_csv</code>, <code>groupby</code>, missing values.</li><li><b>Step 3 — Data skills</b><br>Like LINQ on in-memory tables — filter, group, aggregate without a database.</li></ul>
+# present chart in Jupyter to stakeholders</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — google-python-exercises</b><br>Classic puzzles: babynames (regex), copyspecial (files), logpuzzle — small focused scripts.</li><li><b>Step 2 — pandas notebooks</b><br>Titanic and FIFA CSV analysis — <code>read_csv</code>, <code>groupby</code>, missing values.</li><li><b>Step 3 — Data skills</b><br>Like LINQ on in-memory tables — filter, group, aggregate without a database.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Jupyter notebook</b> = mix code + output + markdown cells — great for data exploration (pandas).</div>
 
@@ -5085,6 +5150,20 @@ print(summary)
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>djangobasics/meeting_planner/ is a Django 4 app with MVT, templates, auth, and JWT API. DjangoRestBasics/inventory/ is a multi-app DRF project with serializers and ViewSets.</p>
+<h3>Web stack choices</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Django + DRF</h4>
+    <ul><li>MVT + admin + auth</li><li>Serializers / ViewSets</li><li>batteries included</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>FastAPI</h4>
+    <ul><li>async routes</li><li>Pydantic built-in</li><li>OpenAPI docs free</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5103,15 +5182,7 @@ def room_list(request):
 # DRF API for mobile
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
-    serializer_class = RoomSerializer</div></div>
-<h3>Web frameworks</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Django</b><span>full MVT + admin</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>DRF</b><span>REST on Django</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>FastAPI</b><span>async APIs + Pydantic</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Django meeting_planner</b><br>Full MVT app — models, templates, migrations, auth.</li><li><b>Step 2 — DRF inventory</b><br>REST API with serializers and ViewSets — JSON in/out like Web API projects in C#.</li><li><b>Step 3 — Compare frameworks</b><br>Django batteries-included vs FastAPI lightweight + type hints — know when to pick each.</li></ul>
+    serializer_class = RoomSerializer</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Django meeting_planner</b><br>Full MVT app — models, templates, migrations, auth.</li><li><b>Step 2 — DRF inventory</b><br>REST API with serializers and ViewSets — JSON in/out like Web API projects in C#.</li><li><b>Step 3 — Compare frameworks</b><br>Django batteries-included vs FastAPI lightweight + type hints — know when to pick each.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Django MVT</b> = Model-View-Template — batteries-included web framework.<br><b>DRF serializer</b> = validate and shape JSON like Pydantic in FastAPI.</div>
 
@@ -5186,6 +5257,12 @@ class RoomViewSet(viewsets.ModelViewSet):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Pipecat-Project/ contains voice AI POCs: pipecat-quickstart, phase1 (local STT/LLM/TTS), phase2 (full pipeline), and voice-bouncer (IVR-style auth demo).</p>
+<h3>Voice AI pipeline</h3>
+<div class="cdiag">
+  <div class="cdiag-row"><div class="cdiag-node"><b>Audio in</b><span>mic / WebRTC</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>STT</b><span>speech → text</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>LLM</b><span>decide reply</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>TTS</b><span>text → speech</span></div></div>
+  <p class="flow-note">Genuine pipeline — order matters (kept as left→right).</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5202,15 +5279,7 @@ class RoomViewSet(viewsets.ModelViewSet):
     else:
         reply = "Please say your member ID"
     speech = await tts.speak(reply)
-    return speech</div></div>
-<h3>Voice AI pipeline</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>Audio in</b><span>mic / WebRTC</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>STT</b><span>speech→text</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>LLM</b><span>logic</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>TTS</b><span>text→speech</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Voice pipeline</b><br>Speech-to-text → LLM → text-to-speech, often over WebRTC for real-time audio.</li><li><b>Step 2 — Pipecat phases</b><br>phase1 local services, phase2 full pipeline, voice-bouncer IVR-style auth demo.</li><li><b>Step 3 — Built incrementally</b><br>Local STT/TTS first, then framework integration — shows systematic debugging.</li></ul>
+    return speech</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Voice pipeline</b><br>Speech-to-text → LLM → text-to-speech, often over WebRTC for real-time audio.</li><li><b>Step 2 — Pipecat phases</b><br>phase1 local services, phase2 full pipeline, voice-bouncer IVR-style auth demo.</li><li><b>Step 3 — Built incrementally</b><br>Local STT/TTS first, then framework integration — shows systematic debugging.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Voice pipeline</b> = STT → LLM → TTS. <b>Pipecat</b> = framework for streaming audio processors (not JSON REST).</div>
 
@@ -5286,6 +5355,9 @@ class RoomViewSet(viewsets.ModelViewSet):
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>A real Python project separates concerns into folders: routes, services, schemas, models, tests, config. Python-Set2 projects demonstrate both learning structure and production patterns.</p>
+<h3>Project layout</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>main / entry</b><span>start app</span></div><div class="cdiag-layer"><b>routes/</b><span>HTTP only — thin</span></div><div class="cdiag-layer"><b>services/</b><span>business logic</span></div><div class="cdiag-layer"><b>schemas / models</b><span>DTOs + ORM</span></div><div class="cdiag-layer"><b>tests/</b><span>pytest at repo root</span></div></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5302,13 +5374,7 @@ app/
   models/          # DB / ORM
 tests/              # at repo root
 
-# routes call services — not raw SQL</div></div>
-<h3>Project layout</h3>
-<div class="cdiag cdiag-stack">
-  <div class="cdiag-layer"><b>main / entry</b><span>start app</span></div><div class="cdiag-layer"><b>routes</b><span>HTTP only</span></div><div class="cdiag-layer"><b>services</b><span>business logic</span></div><div class="cdiag-layer"><b>schemas / models</b><span>DTOs + ORM</span></div><div class="cdiag-layer"><b>tests/</b><span>pytest</span></div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Folder conventions</b><br>Separate routes, services, models, tests, config — thin routes, fat services.</li><li><b>Step 2 — Entry point</b><br><code>main.py</code> or <code>manage.py</code> — know where execution starts.</li><li><b>Step 3 — Tests outside app</b><br><code>tests/</code> folder at project root — pytest discovers <code>test_*.py</code>.</li></ul>
+# routes call services — not raw SQL</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Folder conventions</b><br>Separate routes, services, models, tests, config — thin routes, fat services.</li><li><b>Step 2 — Entry point</b><br><code>main.py</code> or <code>manage.py</code> — know where execution starts.</li><li><b>Step 3 — Tests outside app</b><br><code>tests/</code> folder at project root — pytest discovers <code>test_*.py</code>.</li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Thin routes, fat services</b> = HTTP layer only parses request; business logic lives in <code>services/</code>.<br><b>tests/</b> at project root — pytest discovers <code>test_*.py</code>.</div>
 
@@ -5385,6 +5451,20 @@ tests/              # at repo root
   <div class="main-split">
     <div class="panel-left">
       <h3>Definition</h3><p>Quick reference mapping C# concepts to Python — syntax, stubs (pass vs { }), null/None, OOP, web, async, and tooling — for developers transitioning between languages.</p>
+<h3>C# ↔ Python quick map</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>C#</h4>
+    <ul><li>{ } braces</li><li>null</li><li>this</li><li>using (…)</li><li>NuGet</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Python</h4>
+    <ul><li>indent + :</li><li>None / is None</li><li>self</li><li>with …</li><li>pip + venv</li></ul>
+  </div>
+  <p class="flow-note">Empty stub: C# { } ≈ Python <code>pass</code>. Stronger: NotImplementedException ≈ NotImplementedError.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5409,15 +5489,7 @@ def save_report():
 
 value = None
 if value is None:
-    print("no data")</div></div>
-<h3>C# → Python map</h3>
-<div class="cdiag">
-  <div class="cdiag-row">
-    <div class="cdiag-node"><b>{ }</b><span>indent + :</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>null</b><span>None / is None</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>this</b><span>self</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>using</b><span>with</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>NuGet</b><span>pip + venv</span></div>
-  </div>
-  
-</div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Syntax shifts</b><br>No <code>int x</code> declarations, indentation not braces, <code>self</code> not <code>this</code> (but same idea). <code>elif</code> not <code>else if</code>. <code>True</code>/<code>False</code> are capitalized.</li><li><b>Step 2 — pass & empty blocks</b><br><div class="callout"><b>pass</b> has no single C# keyword.</div><b>Closest:</b> empty <code>{ }</code> when a method or block must exist but do nothing yet.<br><b>Stronger stub:</b> <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code>.<br><b>C# interfaces</b> declare methods without a body — Python uses <code>pass</code> inside <code>class</code> or <code>def</code> instead.<div class="step-pre"># Python stub
+    print("no data")</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Syntax shifts</b><br>No <code>int x</code> declarations, indentation not braces, <code>self</code> not <code>this</code> (but same idea). <code>elif</code> not <code>else if</code>. <code>True</code>/<code>False</code> are capitalized.</li><li><b>Step 2 — pass & empty blocks</b><br><div class="callout"><b>pass</b> has no single C# keyword.</div><b>Closest:</b> empty <code>{ }</code> when a method or block must exist but do nothing yet.<br><b>Stronger stub:</b> <code>throw new NotImplementedException()</code> ≈ <code>raise NotImplementedError()</code>.<br><b>C# interfaces</b> declare methods without a body — Python uses <code>pass</code> inside <code>class</code> or <code>def</code> instead.<div class="step-pre"># Python stub
 def save_report():
     pass
 
