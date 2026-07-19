@@ -928,13 +928,11 @@ def topic_intro(n):
         # Diagram sits right under Definition, then glossary and real-life example
         if n == 1:
             parts.append(python_vs_csharp_flow())
-        else:
-            parts.append(diagram_for(n))
+        parts.append(diagram_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
     else:
-        if n != 1:
-            parts.append(diagram_for(n))
+        parts.append(diagram_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
     steps = beginner.get("steps", [])

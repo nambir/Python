@@ -523,6 +523,12 @@ IL_0003: bge.s PASS</span></div>
 </table>
 <p class="flow-note"><b>Interview line:</b> A Python <code>.py</code> file can be launched by the Python interpreter; CPython compiles it to bytecode and runs that bytecode. A C# <code>.cs</code> file is not run by JIT directly; it is compiled into a .NET assembly, then CLR/JIT runs the IL. In production, Python is usually deployed as source/package/container, not as a DLL.</p>
 
+<h3>Why teams pick Python</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>Fast to write</b><span>few lines vs C#</span></div><div class="cdiag-tile"><b>Batteries included</b><span>os · json · pathlib</span></div><div class="cdiag-tile"><b>Duck typing</b><span>if it has .send(), use it</span></div><div class="cdiag-tile"><b>Huge ecosystem</b><span>pip / PyPI</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -665,6 +671,20 @@ notify(EmailNotifier(), "Order shipped")</div><p class="step-result"><b>Real use
       <h3>Definition</h3><p>On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from Cursor/VS Code with the Python extension. Other popular IDEs include PyCharm (JetBrains), Jupyter, Spyder, Visual Studio, and IDLE. Python scripts run top to bottom — define functions before calling them.</p>
 <h3>First-day setup checklist</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>1. Install</b><span>python.org — check Add to PATH</span></div><div class="cdiag-layer"><b>2. Verify</b><span>python --version  ·  pip --version</span></div><div class="cdiag-layer"><b>3. IDE</b><span>Cursor / VS Code — select interpreter</span></div><div class="cdiag-layer"><b>4. Run</b><span>python file.py  or  F5 debug</span></div><p class="flow-note">If python works but pip fails, use <code>python -m pip</code>.</p></div>
+
+<h3>Three ways to run code</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>REPL</h4>
+    <ul><li>Type python</li><li>>>> prompt</li><li>Quick experiments</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Script / IDE</h4>
+    <ul><li>python hello.py</li><li>F5 in Cursor</li><li>Full programs</li></ul>
+  </div>
+  <p class="flow-note">Define functions first — scripts run top to bottom (unlike C# method order).</p>
+</div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -839,6 +859,9 @@ if __name__ == "__main__":
   
 </div>
 
+<h3>Study loop (repeat each topic)</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>1. Read slide</b><span>definition + diagram</span></div><div class="cdiag-layer"><b>2. Run Projects/</b><span>short practice file</span></div><div class="cdiag-layer"><b>3. Open Python-Set2</b><span>same idea in a real folder</span></div></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -948,6 +971,20 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div><h3>Step-by-s
 <h3>PEP standards map</h3>
 <div class="cdiag">
   <div class="cdiag-grid"><div class="cdiag-tile"><b>PEP 8</b><span>style / snake_case</span></div><div class="cdiag-tile"><b>PEP 257</b><span>docstrings</span></div><div class="cdiag-tile"><b>PEP 20</b><span>Zen · import this</span></div><div class="cdiag-tile"><b>PEP 621</b><span>pyproject.toml</span></div><div class="cdiag-tile"><b>ruff / Black</b><span>CI auto-check</span></div></div>
+  
+</div>
+
+<h3>Style vs packaging</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Style (humans)</h4>
+    <ul><li>PEP 8 naming</li><li>PEP 257 docstrings</li><li>PEP 20 Zen</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Packaging (tools)</h4>
+    <ul><li>PEP 621 pyproject.toml</li><li>ruff / Black in CI</li></ul>
+  </div>
   
 </div>
 
@@ -1063,6 +1100,20 @@ ruff check .
   <div class="cdiag-fork-stem"></div>
   <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>One value</b><span>int · str · float · bool</span></div><div class="cdiag-fork-arm"><b>Growing / mixed</b><span>list []</span></div><div class="cdiag-fork-arm"><b>Fixed record</b><span>tuple () — hashable</span></div><div class="cdiag-fork-arm"><b>Lookup / unique</b><span>dict {} · set</span></div></div>
   <p class="flow-note">Cart/logs → list. GPS / (ok, data) → tuple.</p>
+</div>
+
+<h3>Mutable vs immutable</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Can change</h4>
+    <ul><li>list</li><li>dict</li><li>set</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Cannot change</h4>
+    <ul><li>tuple</li><li>frozenset</li><li>str / int</li></ul>
+  </div>
+  <p class="flow-note">Only immutable values can be dict keys (hash must stay stable).</p>
 </div>
 
 <h3>Key terms explained</h3>
@@ -1284,6 +1335,20 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
 <h3>Typing layers</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Write hints</b><span>def charge(amount: Decimal) -> str</span></div><div class="cdiag-layer"><b>Static check</b><span>mypy / pyright before run</span></div><div class="cdiag-layer"><b>Runtime (optional)</b><span>Pydantic / FastAPI enforce</span></div><div class="cdiag-layer"><b>Docs & IDE</b><span>autocomplete + clearer APIs</span></div><p class="flow-note">Hints alone do not change runtime — checkers / frameworks enforce them.</p></div>
 
+<h3>Hints vs runtime</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Type hints alone</h4>
+    <ul><li>Documentation</li><li>IDE help</li><li>mypy can check</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Enforced at runtime</h4>
+    <ul><li>Pydantic models</li><li>FastAPI params</li></ul>
+  </div>
+  <p class="flow-note">Wrong: charge("100") may still run until a checker / validator stops it.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1421,6 +1486,14 @@ mypy --strict my_project/</div><p class="step-result"><b>Tip:</b> run mypy in CI
 <h3>Operator families</h3>
 <div class="cdiag">
   <div class="cdiag-grid"><div class="cdiag-tile"><b>Arithmetic</b><span>+ − * / // % **</span></div><div class="cdiag-tile"><b>Compare</b><span>== != &lt; &gt;</span></div><div class="cdiag-tile"><b>Assign</b><span>= += :=</span></div><div class="cdiag-tile"><b>Logic</b><span>and or not</span></div><div class="cdiag-tile"><b>Membership</b><span>in · not in</span></div><div class="cdiag-tile"><b>Identity</b><span>is · is not</span></div><div class="cdiag-tile"><b>Bitwise</b><span>&amp; | ^ ~ &lt;&lt; &gt;&gt;</span></div><div class="cdiag-tile"><b>Walrus</b><span>n := len(x)</span></div></div>
+  
+</div>
+
+<h3>Pick the right check</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What are you testing?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>Same value?</b><span>==</span></div><div class="cdiag-fork-arm"><b>Same object / None?</b><span>is  (use is None)</span></div><div class="cdiag-fork-arm"><b>Inside a collection?</b><span>in</span></div><div class="cdiag-fork-arm"><b>Whole numbers only?</b><span>// floor division</span></div></div>
   
 </div>
 
@@ -1638,6 +1711,20 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
   
 </div>
 
+<h3>Loop helpers</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>break / continue</h4>
+    <ul><li>break = leave loop</li><li>continue = next item</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>pass / for-else</h4>
+    <ul><li>pass = empty stub</li><li>else runs if no break</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1828,6 +1915,20 @@ else:
   <p class="flow-note">Same idea: source → expression → optional filter. Shape = brackets.</p>
 </div>
 
+<h3>Comprehension vs loop</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Loop (verbose)</h4>
+    <ul><li>net = []</li><li>for g, tax in …:</li><li>  if g > 0: append</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Comprehension</h4>
+    <ul><li>[g - tax for … if g > 0]</li><li>Same result, shorter</li></ul>
+  </div>
+  <p class="flow-note">Huge data → use generator ( ) so RAM stays low.</p>
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -1953,6 +2054,20 @@ next(gen)   # 1</div></li></ul>
 <div class="cdiag cdiag-hub">
   <div class="cdiag-spokes"><div class="cdiag-spoke"><b>Args</b><span>pos / kw / *args / **kwargs</span></div><div class="cdiag-spoke"><b>Scope</b><span>LEGB lookup</span></div><div class="cdiag-spoke"><b>return</b><span>value out</span></div><div class="cdiag-spoke"><b>lambda</b><span>one-line anonymous</span></div><div class="cdiag-spoke"><b>Recursion</b><span>fn calls itself</span></div><div class="cdiag-spoke"><b>Higher-order</b><span>pass / return fn</span></div></div>
   <div class="cdiag-hub-core"><b>def name(...)</b><span>callable unit</span></div>
+  
+</div>
+
+<h3>Pure vs side-effect</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Pure function</h4>
+    <ul><li>Same in → same out</li><li>No globals changed</li><li>Easy to test</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Impure</h4>
+    <ul><li>Prints / writes DB</li><li>Depends on time</li><li>Harder to test</li></ul>
+  </div>
   
 </div>
 
@@ -2169,6 +2284,14 @@ times3(10)   # 30</div></li></ul>
   
 </div>
 
+<h3>Which built-in?</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What do you need?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>Transform each</b><span>map / listcomp</span></div><div class="cdiag-fork-arm"><b>Keep some</b><span>filter</span></div><div class="cdiag-fork-arm"><b>Pair two lists</b><span>zip</span></div><div class="cdiag-fork-arm"><b>Index + value</b><span>enumerate</span></div><div class="cdiag-fork-arm"><b>One answer</b><span>reduce / max / min</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2337,6 +2460,14 @@ max([], default=0)           # 0 — empty safe</div></li></ul>
   
 </div>
 
+<h3>Which collection helper?</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What problem?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>Count items</b><span>Counter</span></div><div class="cdiag-fork-arm"><b>Missing key default</b><span>defaultdict</span></div><div class="cdiag-fork-arm"><b>Queue both ends</b><span>deque</span></div><div class="cdiag-fork-arm"><b>Named fields</b><span>namedtuple</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2502,6 +2633,20 @@ class CaseInsensitiveDict(UserDict):
   <p class="flow-note">Circular refs need <code>gc</code> (generational collector).</p>
 </div>
 
+<h3>Who frees memory?</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Reference counting</h4>
+    <ul><li>del / rebind</li><li>count → 0</li><li>freed immediately</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Garbage collector</h4>
+    <ul><li>Breaks cycles</li><li>A↔B both live</li><li>gc.collect()</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2623,6 +2768,20 @@ def export_orders(path):
 <h3>Pydantic validation stack</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Raw input</b><span>JSON / dict / form</span></div><div class="cdiag-layer"><b>BaseModel</b><span>typed schema</span></div><div class="cdiag-layer"><b>Field + validators</b><span>rules &amp; coerce</span></div><div class="cdiag-layer"><b>model_dump</b><span>clean dict out</span></div><p class="flow-note">Invalid → ValidationError (FastAPI → HTTP 422).</p></div>
 
+<h3>Hand checks vs Pydantic</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Manual ifs</h4>
+    <ul><li>if not email:</li><li>if age < 18:</li><li>easy to miss</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>BaseModel</h4>
+    <ul><li>types + Field</li><li>validators</li><li>HTTP 422 errors</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -2741,6 +2900,20 @@ user = UserCreate.model_validate(body)
   <div class="cdiag-tree-root"><b>class Account</b><span>blueprint + __init__ + self</span></div>
   <div class="cdiag-tree-stem"></div>
   <div class="cdiag-tree-kids"><div class="cdiag-tree-child"><b>SavingsAccount</b><span>inherit — reuse deposit/withdraw</span></div><div class="cdiag-tree-child"><b>override month_end</b><span>polymorphism — same call, different behavior</span></div><div class="cdiag-tree-child"><b>ABC / abstract</b><span>force subclasses to implement</span></div></div>
+  
+</div>
+
+<h3>Reuse strategies</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Inheritance</h4>
+    <ul><li>SavingsAccount(Account)</li><li>Is-a relationship</li><li>Override methods</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Composition</h4>
+    <ul><li>Account has Logger</li><li>Has-a relationship</li><li>Often clearer</li></ul>
+  </div>
   
 </div>
 
@@ -2929,6 +3102,20 @@ class Circle(Shape):
   
 </div>
 
+<h3>property vs custom descriptor</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>@property</h4>
+    <ul><li>One class</li><li>Simple get/set</li><li>Most common</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Custom descriptor</h4>
+    <ul><li>Reuse across models</li><li>__get__/__set__</li><li>ORM-style fields</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3077,6 +3264,20 @@ p.price = 99
 <div class="cdiag">
   <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>yield</b><span>pause + value</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>next()</b><span>resume</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>locals live</b><span>state kept</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>StopIteration</b><span>done</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
   <p class="flow-note">Lazy — one item at a time; great for huge files.</p>
+</div>
+
+<h3>List vs generator</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>List in memory</h4>
+    <ul><li>[…] stores all</li><li>Fast random access</li><li>Can MemoryError</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Generator</h4>
+    <ul><li>yield one-by-one</li><li>Tiny RAM</li><li>One pass</li></ul>
+  </div>
+  
 </div>
 
 <h3>Key terms explained</h3>
@@ -3256,6 +3457,9 @@ list(islice(range(100), 5))</div></li></ul>
   
 </div>
 
+<h3>What a decorator adds</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Before call</b><span>auth · timer start · retry setup</span></div><div class="cdiag-layer"><b>Original function</b><span>your real work</span></div><div class="cdiag-layer"><b>After call</b><span>log result · cleanup</span></div><p class="flow-note">Remember: @timer above def f means f = timer(f).</p></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3424,6 +3628,14 @@ greet.__doc__    # Say hello</div></li></ul>
   <p class="flow-note"><code>finally</code> runs even if you return or raise again.</p>
 </div>
 
+<h3>Exception strategy</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What went wrong?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>Known error</b><span>except ValueError: …</span></div><div class="cdiag-fork-arm"><b>Several types</b><span>except (OSError, KeyError):</span></div><div class="cdiag-fork-arm"><b>Cleanup always</b><span>finally: …</span></div><div class="cdiag-fork-arm"><b>Avoid</b><span>bare except:  (hides bugs)</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3578,6 +3790,20 @@ except FileNotFoundError:
   <p class="flow-note">GIL = one Python bytecode thread at a time.</p>
 </div>
 
+<h3>GIL impact</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>I/O-bound (OK)</h4>
+    <ul><li>Download / wait DB</li><li>threading fine</li><li>Threads release GIL while waiting</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>CPU-bound (not OK)</h4>
+    <ul><li>Heavy math</li><li>Use processes</li><li>Bypass GIL</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -3727,6 +3953,20 @@ with ProcessPoolExecutor() as pool:
 <div class="cdiag">
   <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>async def</b><span>coroutine</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>await</b><span>yield control</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>event loop</b><span>schedule others</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>gather</b><span>many at once</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
   <p class="flow-note">Do not call blocking I/O inside async code.</p>
+</div>
+
+<h3>Sync vs async</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Sync def</h4>
+    <ul><li>One call waits</li><li>Simple</li><li>Blocks the thread</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>async def + await</h4>
+    <ul><li>Yield while waiting</li><li>Many tasks</li><li>One event loop</li></ul>
+  </div>
+  
 </div>
 
 <h3>Key terms explained</h3>
@@ -3890,6 +4130,20 @@ async def main():
 <h3>Logging pipeline</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Logger</b><span>getLogger(__name__)</span></div><div class="cdiag-layer"><b>Level filter</b><span>DEBUG → CRITICAL</span></div><div class="cdiag-layer"><b>Handler</b><span>console / RotatingFileHandler</span></div><div class="cdiag-layer"><b>Formatter</b><span>time + level + message</span></div><p class="flow-note">Prefer <code>logger.info("x=%s", x)</code> over f-strings when filtered.</p></div>
 
+<h3>print vs logging</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>print</h4>
+    <ul><li>Dev only</li><li>No levels</li><li>Hard to turn off</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>logging</h4>
+    <ul><li>DEBUG→CRITICAL</li><li>File + console</li><li>logger.exception</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4013,6 +4267,20 @@ def pay(order_id):
 <div class="cdiag">
   <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>Arrange</b><span>setUp / fixtures</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Act</b><span>call code</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Assert</b><span>assert / assertEqual</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>Cleanup</b><span>tearDown</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
   <p class="flow-note">Mock external APIs with <code>@patch</code> so CI stays offline.</p>
+</div>
+
+<h3>unittest vs pytest</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>unittest</h4>
+    <ul><li>TestCase class</li><li>self.assertEqual</li><li>setUp / tearDown</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>pytest</h4>
+    <ul><li>Plain assert</li><li>Fixtures</li><li>Less boilerplate</li></ul>
+  </div>
+  
 </div>
 
 <h3>Key terms explained</h3>
@@ -4180,6 +4448,20 @@ def test_divide():
   
 </div>
 
+<h3>search vs match</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>re.search</h4>
+    <ul><li>Find anywhere</li><li>First hit</li><li>Most common</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>re.match</h4>
+    <ul><li>Only at start</li><li>Like ^pattern</li><li>Easy to misuse</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4316,6 +4598,20 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
       <h3>Definition</h3><p>File operations use open() with modes r/w/a, context managers (with) for safe closing, csv/json modules for structured data, and pathlib for object-oriented path handling.</p>
 <h3>File I/O layers</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Locate</b><span>pathlib.Path / open path</span></div><div class="cdiag-layer"><b>with open</b><span>auto-close (even on error)</span></div><div class="cdiag-layer"><b>Read / write</b><span>text or bytes</span></div><div class="cdiag-layer"><b>Structured</b><span>csv · json modules</span></div></div>
+
+<h3>open vs pathlib</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>open + with</h4>
+    <ul><li>with open(path) as f:</li><li>Auto-close</li><li>Read/write bytes/text</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>pathlib.Path</h4>
+    <ul><li>Path("a") / "b"</li><li>mkdir · exists</li><li>Cleaner joins</li></ul>
+  </div>
+  
+</div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -4456,6 +4752,20 @@ for p in root.glob("*.csv"):
 <div class="cdiag">
   <div class="cdiag-cycle"><div class="cdiag-cycle-node"><b>with</b><span>start</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>__enter__</b><span>acquire</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>body</b><span>use resource</span></div><div class="cdiag-cycle-arrow">&rarr;</div><div class="cdiag-cycle-node"><b>__exit__</b><span>release</span></div><div class="cdiag-cycle-arrow cdiag-cycle-back">&circlearrowleft;</div></div>
   <p class="flow-note">Same idea as C# <code>using</code> — cleanup is guaranteed.</p>
+</div>
+
+<h3>with vs try/finally</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>try/finally</h4>
+    <ul><li>Manual cleanup</li><li>Easy to forget</li><li>More lines</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>with / contextmgr</h4>
+    <ul><li>__enter__/__exit__</li><li>Always releases</li><li>C# using-like</li></ul>
+  </div>
+  
 </div>
 
 <h3>Key terms explained</h3>
@@ -4602,6 +4912,20 @@ with ManagedResource() as r:
 <h3>Virtual environment</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Create</b><span>python -m venv .venv</span></div><div class="cdiag-layer"><b>Activate</b><span>isolate this project</span></div><div class="cdiag-layer"><b>Install</b><span>pip install …</span></div><div class="cdiag-layer"><b>Freeze</b><span>pip freeze &gt; requirements.txt</span></div><p class="flow-note">Never install project libs into the global Python.</p></div>
 
+<h3>Global Python vs venv</h3>
+<div class="cdiag cdiag-compare">
+  <div class="cdiag-compare-col">
+    <h4>Global install</h4>
+    <ul><li>Shared by all apps</li><li>Version clashes</li><li>Risky</li></ul>
+  </div>
+  <div class="cdiag-compare-vs">vs</div>
+  <div class="cdiag-compare-col">
+    <h4>Per-project .venv</h4>
+    <ul><li>Isolated packages</li><li>requirements.txt</li><li>Safe for clients</li></ul>
+  </div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4734,6 +5058,12 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
       <h3>Definition</h3><p>FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM models, session per request via Depends.</p>
 <h3>FastAPI + SQLAlchemy layers</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Route (FastAPI)</b><span>HTTP in/out — thin</span></div><div class="cdiag-layer"><b>Schema (Pydantic)</b><span>validate request/response</span></div><div class="cdiag-layer"><b>Service</b><span>business rules + transaction</span></div><div class="cdiag-layer"><b>ORM (SQLAlchemy)</b><span>tables / Session</span></div><div class="cdiag-layer"><b>Database</b><span>SQLite / Postgres / …</span></div><p class="flow-note">Depends(get_db) ≈ scoped DbContext per request.</p></div>
+
+<h3>One API request</h3>
+<div class="cdiag">
+  <div class="cdiag-row"><div class="cdiag-node"><b>HTTP</b><span>route</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Pydantic</b><span>validate</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Service</b><span>logic</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>SQLAlchemy</b><span>DB</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Schema out</b><span>JSON</span></div></div>
+  <p class="flow-note">Never return raw ORM — use a response model.</p>
+</div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -4871,6 +5201,12 @@ def create_employee(
   
 </div>
 
+<h3>Interview demo path</h3>
+<div class="cdiag">
+  <div class="cdiag-row"><div class="cdiag-node"><b>Basics OOP</b><span>MyClass</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Regex / files</b><span>google exercises</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Web API</b><span>Django / DRF</span></div><div class="cdiag-arrow">&rarr;</div><div class="cdiag-node"><b>Voice AI</b><span>Pipecat</span></div></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -4956,6 +5292,9 @@ python google-python-exercises/babynames/babynames.py
   <div class="cdiag-grid"><div class="cdiag-tile"><b>MyClass</b><span>OOP</span></div><div class="cdiag-tile"><b>MyCollections</b><span>list/dict/set</span></div><div class="cdiag-tile"><b>MyLoops</b><span>flow control</span></div><div class="cdiag-tile"><b>MyModules</b><span>import / packages</span></div><div class="cdiag-tile"><b>MyException</b><span>try/except</span></div><div class="cdiag-tile"><b>MyDebug</b><span>pdb</span></div><div class="cdiag-tile"><b>MyUnitTesting</b><span>unittest / mock</span></div></div>
   
 </div>
+
+<h3>How to use a module</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Open matching slide</b><span>theory first</span></div><div class="cdiag-layer"><b>Run the .py script</b><span>see output</span></div><div class="cdiag-layer"><b>Change one line</b><span>confirm you understand</span></div></div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -5050,6 +5389,9 @@ python MyUnitTesting/calculator_unittest.py      # ↔ slide 23 tests</div></div
   </div>
   
 </div>
+
+<h3>Data homework pattern</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>Load</b><span>read_csv / open file</span></div><div class="cdiag-layer"><b>Clean</b><span>nulls · types</span></div><div class="cdiag-layer"><b>Analyze</b><span>groupby / regex extract</span></div><div class="cdiag-layer"><b>Explain</b><span>notebook / chart</span></div></div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -5164,6 +5506,9 @@ print(summary)
   
 </div>
 
+<h3>Typical web request</h3>
+<div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>URL → view / ViewSet</b><span>controller</span></div><div class="cdiag-layer"><b>Model / ORM</b><span>data</span></div><div class="cdiag-layer"><b>Template or Serializer</b><span>HTML / JSON out</span></div></div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5263,6 +5608,13 @@ class RoomViewSet(viewsets.ModelViewSet):
   <p class="flow-note">Genuine pipeline — order matters (kept as left→right).</p>
 </div>
 
+<h3>Pipecat building blocks</h3>
+<div class="cdiag cdiag-hub">
+  <div class="cdiag-spokes"><div class="cdiag-spoke"><b>STT</b><span>speech→text</span></div><div class="cdiag-spoke"><b>LLM</b><span>decide</span></div><div class="cdiag-spoke"><b>TTS</b><span>text→speech</span></div><div class="cdiag-spoke"><b>WebRTC</b><span>browser audio</span></div></div>
+  <div class="cdiag-hub-core"><b>Pipeline</b><span>audio in → out</span></div>
+  
+</div>
+
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
@@ -5357,6 +5709,14 @@ class RoomViewSet(viewsets.ModelViewSet):
       <h3>Definition</h3><p>A real Python project separates concerns into folders: routes, services, schemas, models, tests, config. Python-Set2 projects demonstrate both learning structure and production patterns.</p>
 <h3>Project layout</h3>
 <div class="cdiag cdiag-stack"><div class="cdiag-layer"><b>main / entry</b><span>start app</span></div><div class="cdiag-layer"><b>routes/</b><span>HTTP only — thin</span></div><div class="cdiag-layer"><b>services/</b><span>business logic</span></div><div class="cdiag-layer"><b>schemas / models</b><span>DTOs + ORM</span></div><div class="cdiag-layer"><b>tests/</b><span>pytest at repo root</span></div></div>
+
+<h3>Where does this code go?</h3>
+<div class="cdiag cdiag-fork">
+  <div class="cdiag-fork-q"><b>What is the code doing?</b></div>
+  <div class="cdiag-fork-stem"></div>
+  <div class="cdiag-fork-arms"><div class="cdiag-fork-arm"><b>HTTP only</b><span>routes/</span></div><div class="cdiag-fork-arm"><b>Business rule</b><span>services/</span></div><div class="cdiag-fork-arm"><b>Shape of data</b><span>schemas/</span></div><div class="cdiag-fork-arm"><b>DB table</b><span>models/</span></div><div class="cdiag-fork-arm"><b>Verify behavior</b><span>tests/</span></div></div>
+  
+</div>
 
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -5463,6 +5823,12 @@ tests/              # at repo root
     <ul><li>indent + :</li><li>None / is None</li><li>self</li><li>with …</li><li>pip + venv</li></ul>
   </div>
   <p class="flow-note">Empty stub: C# { } ≈ Python <code>pass</code>. Stronger: NotImplementedException ≈ NotImplementedError.</p>
+</div>
+
+<h3>Stub & null tips</h3>
+<div class="cdiag">
+  <div class="cdiag-grid"><div class="cdiag-tile"><b>pass</b><span>empty block for now</span></div><div class="cdiag-tile"><b>NotImplementedError</b><span>must implement later</span></div><div class="cdiag-tile"><b>None</b><span>like null — use is None</span></div><div class="cdiag-tile"><b>self</b><span>like this (explicit)</span></div></div>
+  
 </div>
 
 <h3>Key terms explained</h3>
