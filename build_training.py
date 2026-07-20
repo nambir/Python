@@ -9,6 +9,8 @@ from slide_glossary import glossary_for
 from slide_scenarios import scenarios_for
 from slide_diagrams import diagram_for
 from slide_real_life import real_life_for
+from slide_csharp_popups import render_csharp_popups
+from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, split_learn
 
 OUTPUT = Path(__file__).parent / "PythonTraining.html"
 PROJECTS = Path(__file__).parent / "Projects"
@@ -374,6 +376,50 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .nav-bar .btn-audio-nav:hover { background: #004499; }
 .audio-missing { font-size: 11px; color: #c62828; margin-top: 4px; }
+
+/* ── C# comparison — draggable float window ── */
+.btn-csharp-pop {
+  margin-left: 6px; padding: 2px 9px; font-size: 11px; font-weight: 600;
+  border: 1px solid #7c3aed; border-radius: 4px; background: #f5f3ff; color: #5b21b6;
+  cursor: pointer; vertical-align: baseline;
+}
+.btn-csharp-pop:hover { background: #ede9fe; }
+.csharp-float-win {
+  display: none; position: fixed; left: 80px; top: 72px; width: min(720px, calc(100vw - 24px));
+  max-height: calc(100vh - 88px); z-index: 2000;
+  background: #fff; border-radius: 10px; border: 1px solid #cbd5e1;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
+  flex-direction: column; overflow: hidden;
+}
+.csharp-float-win.open { display: flex; }
+.csharp-float-win.dragging { user-select: none; cursor: grabbing; }
+.csharp-float-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 10px 14px; border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%);
+  cursor: grab; flex-shrink: 0; user-select: none;
+}
+.csharp-float-win.dragging .csharp-float-hdr { cursor: grabbing; }
+.csharp-float-drag { color: #7c3aed; font-size: 14px; line-height: 1; letter-spacing: -2px; }
+.csharp-float-hdr h4 { margin: 0; flex: 1; font-size: 13px; color: #5b21b6; }
+.csharp-float-close {
+  width: 28px; height: 28px; border: none; border-radius: 6px; background: #ede9fe;
+  color: #5b21b6; font-size: 20px; line-height: 1; cursor: pointer; flex-shrink: 0;
+}
+.csharp-float-close:hover { background: #ddd6fe; }
+.csharp-float-body {
+  padding: 14px 16px 16px; font-size: 12px; line-height: 1.5; color: #1a1a2e;
+  overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0;
+}
+.csharp-float-body p { margin-bottom: 8px; }
+.csharp-float-body .vs-editor { margin: 6px 0 10px; max-height: none; overflow: visible; }
+.csharp-float-body .vs-editor-compact { max-height: none; }
+.csharp-float-body .vs-editor table.vs-code { font-size: 12px; width: 100%; table-layout: fixed; }
+.csharp-float-body .vs-editor table.vs-code td.src { white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; }
+.csharp-pop-tbl { margin-top: 6px; font-size: 11px; }
+.csharp-pop-tbl td { vertical-align: top; }
+.csharp-pop-tbl td:first-child { white-space: normal; }
+.csharp-pop-note { margin-top: 10px; color: #555; font-size: 11px; }
 """
 
 JS = """
@@ -523,14 +569,89 @@ function prevSlide() {
   const idx = slideOrder.indexOf(current);
   if (idx > 0) showSlide(slideOrder[idx - 1]);
 }
+let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
+
+function bringCsharpWinToFront(win) {
+  document.querySelectorAll('.csharp-float-win.open').forEach(w => { w.style.zIndex = '2000'; });
+  win.style.zIndex = '2010';
+}
+
+function centerCsharpWin(win) {
+  const w = win.offsetWidth || 720;
+  const h = win.offsetHeight || 480;
+  win.style.left = Math.max(12, (window.innerWidth - w) / 2) + 'px';
+  win.style.top = Math.max(12, (window.innerHeight - h) / 2) + 'px';
+}
+
+function openCsharpWin(id) {
+  const el = document.getElementById('csharp-win-' + id);
+  if (!el) return;
+  el.classList.add('open');
+  bringCsharpWinToFront(el);
+  if (!el.dataset.positioned) {
+    centerCsharpWin(el);
+    el.dataset.positioned = '1';
+  }
+}
+function openCsharpPop(id) { openCsharpWin(id); }
+
+function closeCsharpWin(id) {
+  const el = document.getElementById('csharp-win-' + id);
+  if (el) el.classList.remove('open');
+}
+function closeCsharpPop(id) { closeCsharpWin(id); }
+
+function closeAllCsharpWins() {
+  document.querySelectorAll('.csharp-float-win.open').forEach(el => el.classList.remove('open'));
+}
+
+function initCsharpFloatWindows() {
+  document.querySelectorAll('.csharp-float-win').forEach(win => {
+    const hdr = win.querySelector('.csharp-float-hdr');
+    if (!hdr) return;
+    hdr.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.csharp-float-close')) return;
+      bringCsharpWinToFront(win);
+      csharpDrag.active = true;
+      csharpDrag.win = win;
+      const rect = win.getBoundingClientRect();
+      csharpDrag.startX = e.clientX;
+      csharpDrag.startY = e.clientY;
+      csharpDrag.origLeft = rect.left;
+      csharpDrag.origTop = rect.top;
+      win.classList.add('dragging');
+      e.preventDefault();
+    });
+    win.addEventListener('mousedown', () => bringCsharpWinToFront(win));
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!csharpDrag.active || !csharpDrag.win) return;
+    const win = csharpDrag.win;
+    const dx = e.clientX - csharpDrag.startX;
+    const dy = e.clientY - csharpDrag.startY;
+    const w = win.offsetWidth;
+    const h = win.offsetHeight;
+    const left = Math.min(Math.max(0, csharpDrag.origLeft + dx), window.innerWidth - w);
+    const top = Math.min(Math.max(0, csharpDrag.origTop + dy), window.innerHeight - h);
+    win.style.left = left + 'px';
+    win.style.top = top + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (csharpDrag.win) csharpDrag.win.classList.remove('dragging');
+    csharpDrag.active = false;
+    csharpDrag.win = null;
+  });
+}
 document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
   if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
   if (e.key === 'a' || e.key === 'A') { e.preventDefault(); togglePlay(current); }
+  if (e.key === 'Escape') closeAllCsharpWins();
 });
 document.addEventListener('DOMContentLoaded', () => {
   initAudioPlayers();
+  initCsharpFloatWindows();
   showSlide(0);
 });
 """
@@ -640,23 +761,6 @@ def module_for(n):
     return MODULE_MAP.get(n, "Python Training 2026")
 
 
-_CODE_SNIPPETS: list[str] = []
-_CODE_MARKER = re.compile(r"<!--CODE:(\d+)-->")
-
-_PY_KEYWORDS = {
-    "False", "None", "True", "and", "as", "assert", "async", "await", "break", "class",
-    "continue", "def", "del", "elif", "else", "except", "finally", "for", "from",
-    "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass",
-    "raise", "return", "try", "while", "with", "yield",
-}
-_PY_BUILTINS = {
-    "abs", "all", "any", "bin", "bool", "bytes", "chr", "dict", "enumerate", "filter",
-    "float", "format", "frozenset", "getattr", "hasattr", "hash", "hex", "id", "input",
-    "int", "isinstance", "issubclass", "iter", "len", "list", "map", "max", "min", "next",
-    "object", "oct", "open", "ord", "pow", "print", "range", "repr", "reversed", "round",
-    "set", "slice", "sorted", "str", "sum", "super", "tuple", "type", "zip",
-}
-
 # slide_num -> list of (filename, run_command)
 SLIDE_PROJECT_FILES: dict[int, list[tuple[str, str | None]]] = {
     1: [("00_python_fundamentals.py", "python Projects/00_python_fundamentals.py")],
@@ -695,91 +799,6 @@ SLIDE_PROJECT_FILES: dict[int, list[tuple[str, str | None]]] = {
     34: [("34_pydantic_demo.py", "python Projects/34_pydantic_demo.py")],
     35: [("35_fastapi_sqlalchemy.md", None)],
 }
-
-
-def _span(cls: str, text: str) -> str:
-    return f'<span class="{cls}">{html.escape(text)}</span>'
-
-
-def highlight_line(line: str) -> str:
-    out: list[str] = []
-    i = 0
-    n = len(line)
-    while i < n:
-        ch = line[i]
-        if ch == "#":
-            out.append(_span("t-cm", line[i:]))
-            break
-        if ch in "\"'":
-            q = ch
-            j = i + 1
-            while j < n:
-                if line[j] == "\\":
-                    j += 2
-                    continue
-                if line[j] == q:
-                    j += 1
-                    break
-                j += 1
-            out.append(_span("t-str", line[i:j]))
-            i = j
-            continue
-        if ch.isdigit() and (i == 0 or not (line[i - 1].isalnum() or line[i - 1] == "_")):
-            j = i
-            while j < n and (line[j].isdigit() or line[j] in "._"):
-                j += 1
-            out.append(_span("t-num", line[i:j]))
-            i = j
-            continue
-        if ch.isalpha() or ch == "_":
-            j = i
-            while j < n and (line[j].isalnum() or line[j] == "_"):
-                j += 1
-            word = line[i:j]
-            if word in _PY_KEYWORDS:
-                cls = "t-kw"
-            elif word in _PY_BUILTINS:
-                cls = "t-bi"
-            else:
-                cls = "t-id"
-            out.append(_span(cls, word))
-            i = j
-            continue
-        out.append(_span("t-op", ch))
-        i += 1
-    return "".join(out) if out else "&#160;"
-
-
-def code(text: str) -> str:
-    idx = len(_CODE_SNIPPETS)
-    _CODE_SNIPPETS.append(text)
-    return f"<!--CODE:{idx}-->"
-
-
-def code_table(idx: int) -> str:
-    raw = _CODE_SNIPPETS[idx]
-    rows = []
-    for num, line in enumerate(raw.splitlines(), 1):
-        rows.append(
-            f'<tr><td class="gutter">{num}</td><td class="src">{highlight_line(line)}</td></tr>'
-        )
-    if not rows:
-        rows.append('<tr><td class="gutter">1</td><td class="src">&#160;</td></tr>')
-    body = "\n".join(rows)
-    return f'<div class="vs-editor"><table class="vs-code"><tbody>\n{body}\n</tbody></table></div>'
-
-
-def split_learn(learn: str) -> tuple[str, str]:
-    """Split learn HTML into notes (no code) and rendered code panels in order."""
-    notes_parts: list[str] = []
-    code_parts: list[str] = []
-    chunks = _CODE_MARKER.split(learn)
-    for i, chunk in enumerate(chunks):
-        if i % 2 == 0:
-            notes_parts.append(chunk)
-        else:
-            code_parts.append(code_table(int(chunk)))
-    return "".join(notes_parts), "\n".join(code_parts)
 
 
 def tree_row(indent, icon, name, cls, note=""):
@@ -2903,6 +2922,7 @@ def main():
 </head>
 <body>
 {"".join(slides)}
+{render_csharp_popups()}
 {NAV_BAR}
 <script>{JS}</script>
 </body>

@@ -1,5 +1,7 @@
 """Key terms explained tables for every slide in PythonTraining.html."""
 
+from slide_csharp_popups import csharp_compare_btn
+
 GLOSSARY: dict[int, str] = {
     1: """
 <h3>Key terms explained</h3>
@@ -35,7 +37,7 @@ GLOSSARY: dict[int, str] = {
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>list</td><td>Mutable sequence — grows with <code>append</code>. Homogeneous or heterogeneous OK.</td><td><code>cart.append(item)</code></td></tr>
 <tr><td>Homogeneous list</td><td>All items same kind — all ints or all strings.</td><td><code>[90, 85]</code> / <code>["a","b"]</code></td></tr>
-<tr><td>Heterogeneous list</td><td>Mixed types in one list — common for records / nested data.</td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
+<tr><td>Heterogeneous list</td><td>Mixed types in one list — common for records / nested data. __CSHARP_HETERO_BTN__</td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
 <tr><td>Over-allocation</td><td>List reserves extra capacity. When full, reallocates a bigger array and copies pointers — <code>sizeof</code> jumps.</td><td><code>sys.getsizeof(lst)</code></td></tr>
 <tr><td>Tuple</td><td>Fixed ordered record — GPS, RGB, return pairs, dict keys. Often leaner/faster than list for fixed data.</td><td><code>(12.97, 80.22)</code></td></tr>
 <tr><td>Immutable</td><td>Cannot change in place — no <code>t[0]=5</code>, no append.</td><td><code>TypeError</code> on assign</td></tr>
@@ -420,4 +422,7 @@ GLOSSARY: dict[int, str] = {
 
 
 def glossary_for(slide_num: int) -> str:
-    return GLOSSARY.get(slide_num, "")
+    text = GLOSSARY.get(slide_num, "")
+    if slide_num == 5:
+        text = text.replace("__CSHARP_HETERO_BTN__", csharp_compare_btn("hetero-list"))
+    return text

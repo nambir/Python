@@ -1,3 +1,6 @@
+import sys
+
+
 def Add(x, y):
     print(f"Answer is={x + y}")
     print(name)
@@ -19,7 +22,15 @@ print(company2)
 print(Salary)
 
 my_tuple = (name, age)
-print(my_tuple)
+list2=[1,2]
+print(list2)
+dict1={}
+dict1["name"]=name
+a_list = [1, 2, 3]
+a_tuple = (1, 2, 3)
+print("list bytes :", sys.getsizeof(a_list))
+print("tuple bytes:", sys.getsizeof(a_tuple))  # usually smaller
+#print(my_tuple)
 # if __name__ == "__main__":
 #     print("inside main function")
 #     Add(1, 2)

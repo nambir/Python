@@ -364,6 +364,50 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .nav-bar .btn-audio-nav:hover { background: #004499; }
 .audio-missing { font-size: 11px; color: #c62828; margin-top: 4px; }
+
+/* ── C# comparison — draggable float window ── */
+.btn-csharp-pop {
+  margin-left: 6px; padding: 2px 9px; font-size: 11px; font-weight: 600;
+  border: 1px solid #7c3aed; border-radius: 4px; background: #f5f3ff; color: #5b21b6;
+  cursor: pointer; vertical-align: baseline;
+}
+.btn-csharp-pop:hover { background: #ede9fe; }
+.csharp-float-win {
+  display: none; position: fixed; left: 80px; top: 72px; width: min(720px, calc(100vw - 24px));
+  max-height: calc(100vh - 88px); z-index: 2000;
+  background: #fff; border-radius: 10px; border: 1px solid #cbd5e1;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
+  flex-direction: column; overflow: hidden;
+}
+.csharp-float-win.open { display: flex; }
+.csharp-float-win.dragging { user-select: none; cursor: grabbing; }
+.csharp-float-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 10px 14px; border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%);
+  cursor: grab; flex-shrink: 0; user-select: none;
+}
+.csharp-float-win.dragging .csharp-float-hdr { cursor: grabbing; }
+.csharp-float-drag { color: #7c3aed; font-size: 14px; line-height: 1; letter-spacing: -2px; }
+.csharp-float-hdr h4 { margin: 0; flex: 1; font-size: 13px; color: #5b21b6; }
+.csharp-float-close {
+  width: 28px; height: 28px; border: none; border-radius: 6px; background: #ede9fe;
+  color: #5b21b6; font-size: 20px; line-height: 1; cursor: pointer; flex-shrink: 0;
+}
+.csharp-float-close:hover { background: #ddd6fe; }
+.csharp-float-body {
+  padding: 14px 16px 16px; font-size: 12px; line-height: 1.5; color: #1a1a2e;
+  overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0;
+}
+.csharp-float-body p { margin-bottom: 8px; }
+.csharp-float-body .vs-editor { margin: 6px 0 10px; max-height: none; overflow: visible; }
+.csharp-float-body .vs-editor-compact { max-height: none; }
+.csharp-float-body .vs-editor table.vs-code { font-size: 12px; width: 100%; table-layout: fixed; }
+.csharp-float-body .vs-editor table.vs-code td.src { white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; }
+.csharp-pop-tbl { margin-top: 6px; font-size: 11px; }
+.csharp-pop-tbl td { vertical-align: top; }
+.csharp-pop-tbl td:first-child { white-space: normal; }
+.csharp-pop-note { margin-top: 10px; color: #555; font-size: 11px; }
 </style>
 </head>
 <body>
@@ -1121,7 +1165,7 @@ ruff check .
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>list</td><td>Mutable sequence — grows with <code>append</code>. Homogeneous or heterogeneous OK.</td><td><code>cart.append(item)</code></td></tr>
 <tr><td>Homogeneous list</td><td>All items same kind — all ints or all strings.</td><td><code>[90, 85]</code> / <code>["a","b"]</code></td></tr>
-<tr><td>Heterogeneous list</td><td>Mixed types in one list — common for records / nested data.</td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
+<tr><td>Heterogeneous list</td><td>Mixed types in one list — common for records / nested data. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('hetero-list')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>[101, "SHIPPED", ["Google","Amazon"]]</code></td></tr>
 <tr><td>Over-allocation</td><td>List reserves extra capacity. When full, reallocates a bigger array and copies pointers — <code>sizeof</code> jumps.</td><td><code>sys.getsizeof(lst)</code></td></tr>
 <tr><td>Tuple</td><td>Fixed ordered record — GPS, RGB, return pairs, dict keys. Often leaner/faster than list for fixed data.</td><td><code>(12.97, 80.22)</code></td></tr>
 <tr><td>Immutable</td><td>Cannot change in place — no <code>t[0]=5</code>, no append.</td><td><code>TypeError</code> on assign</td></tr>
@@ -5960,6 +6004,81 @@ def save_report():
   </div>
 </div>
 </div>
+<div class="csharp-float-win" id="csharp-win-hetero-list" role="dialog" aria-labelledby="csharp-win-title-hetero-list"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-hetero-list">C# Comparison — Heterogeneous Lists</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('hetero-list')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
+<p>In <b>Python</b>, one <code>list</code> can hold mixed types naturally:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">order</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">101</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;Google&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Amazon&quot;</span><span class="t-op">]</span><span class="t-op">]</span></td></tr>
+</tbody></table></div>
+<p>In <b>C#</b>, <code>List&lt;T&gt;</code> is strongly typed — you cannot mix types unless <code>T</code> is <code>object</code>:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// Does NOT compile:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">nums</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">nums</span><span class="t-op">.</span><span class="t-id">Add</span><span class="t-op">(</span><span class="t-num">101</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-id">nums</span><span class="t-op">.</span><span class="t-id">Add</span><span class="t-op">(</span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// error</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-cm">// Works, but you lose compile-time type safety:</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">mixed</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">object</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-num">101</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Amazon&quot;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op">}</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op">)</span><span class="t-id">mixed</span><span class="t-op">[</span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">status</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op">)</span><span class="t-id">mixed</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">]</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p><b>More idiomatic in C#:</b></p>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Approach</th><th>What it is</th><th>When to use</th></tr>
+<tr>
+  <td><code>List&lt;object&gt;</code></td>
+  <td>A growable list where every item is stored as <code>object</code>. You must <b>cast</b> when reading.</td>
+  <td>Quick prototype or legacy code — avoid in new APIs.</td>
+</tr>
+<tr>
+  <td><code>(int Id, string Status, List&lt;string&gt; Vendors)</code></td>
+  <td><b>Yes — a ValueTuple.</b> A lightweight grouped value: fixed number of slots, each with a known type. Access by position (<code>Item1</code>) or by name (<code>Id</code>, <code>Status</code>).</td>
+  <td>Return 2–4 related values from a method, local grouping, no need for a separate class.</td>
+</tr>
+<tr>
+  <td><code>record Order(...)</code></td>
+  <td><b>A record type</b> (C# 9+) — a named class-like type with immutable-style fields, value-based equality, and clear field names.</td>
+  <td>Domain models, DTOs, API payloads — when the shape is reused across methods/classes.</td>
+</tr>
+</table>
+<p><b>2. ValueTuple example</b> — closest to Python’s heterogeneous list for a single “record”:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// ValueTuple — fixed slots, each position has a type</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">order</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">101</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Amazon&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-cm">// Named fields (same data, clearer to read)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">orderNamed</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">Id</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">101</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Status</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Vendors</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Amazon&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">orderNamed</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// 101</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">orderNamed</span><span class="t-op">.</span><span class="t-id">Status</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// SHIPPED</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">orderNamed</span><span class="t-op">.</span><span class="t-id">Vendors</span><span class="t-op">[</span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-cm">// Google</span></td></tr>
+</tbody></table></div>
+<p><b>3. Record example</b> — best when you want a reusable, named type:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// record — named type with fixed fields (C# 9+)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">record</span><span class="t-op"> </span><span class="t-id">Order</span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">Id</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Status</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">Vendors</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">order</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">Order</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-num">101</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-bi">List</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Amazon&quot;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">9</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">order</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// 101</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">order</span><span class="t-op">.</span><span class="t-id">Status</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// SHIPPED</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">order</span><span class="t-op">.</span><span class="t-id">Vendors</span><span class="t-op">[</span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-cm">// Google</span></td></tr>
+<tr><td class="gutter">13</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-cm">// Records compare by value, not reference:</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">Order</span><span class="t-op">(</span><span class="t-num">101</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">Order</span><span class="t-op">(</span><span class="t-num">101</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;SHIPPED&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-str">&quot;Google&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// True</span></td></tr>
+</tbody></table></div>
+<p class="csharp-pop-note"><b>Bottom line:</b> Python’s <code>[101, "SHIPPED", [...]]</code> maps best to a <b>named ValueTuple</b> or a <b>record</b> in C# — not <code>List&lt;object&gt;</code>, unless you truly need a dynamic mixed bag.</p>
+</div></div>
 
 <div class="nav-bar">
   <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>
@@ -6116,14 +6235,89 @@ function prevSlide() {
   const idx = slideOrder.indexOf(current);
   if (idx > 0) showSlide(slideOrder[idx - 1]);
 }
+let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
+
+function bringCsharpWinToFront(win) {
+  document.querySelectorAll('.csharp-float-win.open').forEach(w => { w.style.zIndex = '2000'; });
+  win.style.zIndex = '2010';
+}
+
+function centerCsharpWin(win) {
+  const w = win.offsetWidth || 720;
+  const h = win.offsetHeight || 480;
+  win.style.left = Math.max(12, (window.innerWidth - w) / 2) + 'px';
+  win.style.top = Math.max(12, (window.innerHeight - h) / 2) + 'px';
+}
+
+function openCsharpWin(id) {
+  const el = document.getElementById('csharp-win-' + id);
+  if (!el) return;
+  el.classList.add('open');
+  bringCsharpWinToFront(el);
+  if (!el.dataset.positioned) {
+    centerCsharpWin(el);
+    el.dataset.positioned = '1';
+  }
+}
+function openCsharpPop(id) { openCsharpWin(id); }
+
+function closeCsharpWin(id) {
+  const el = document.getElementById('csharp-win-' + id);
+  if (el) el.classList.remove('open');
+}
+function closeCsharpPop(id) { closeCsharpWin(id); }
+
+function closeAllCsharpWins() {
+  document.querySelectorAll('.csharp-float-win.open').forEach(el => el.classList.remove('open'));
+}
+
+function initCsharpFloatWindows() {
+  document.querySelectorAll('.csharp-float-win').forEach(win => {
+    const hdr = win.querySelector('.csharp-float-hdr');
+    if (!hdr) return;
+    hdr.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.csharp-float-close')) return;
+      bringCsharpWinToFront(win);
+      csharpDrag.active = true;
+      csharpDrag.win = win;
+      const rect = win.getBoundingClientRect();
+      csharpDrag.startX = e.clientX;
+      csharpDrag.startY = e.clientY;
+      csharpDrag.origLeft = rect.left;
+      csharpDrag.origTop = rect.top;
+      win.classList.add('dragging');
+      e.preventDefault();
+    });
+    win.addEventListener('mousedown', () => bringCsharpWinToFront(win));
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!csharpDrag.active || !csharpDrag.win) return;
+    const win = csharpDrag.win;
+    const dx = e.clientX - csharpDrag.startX;
+    const dy = e.clientY - csharpDrag.startY;
+    const w = win.offsetWidth;
+    const h = win.offsetHeight;
+    const left = Math.min(Math.max(0, csharpDrag.origLeft + dx), window.innerWidth - w);
+    const top = Math.min(Math.max(0, csharpDrag.origTop + dy), window.innerHeight - h);
+    win.style.left = left + 'px';
+    win.style.top = top + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (csharpDrag.win) csharpDrag.win.classList.remove('dragging');
+    csharpDrag.active = false;
+    csharpDrag.win = null;
+  });
+}
 document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
   if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
   if (e.key === 'a' || e.key === 'A') { e.preventDefault(); togglePlay(current); }
+  if (e.key === 'Escape') closeAllCsharpWins();
 });
 document.addEventListener('DOMContentLoaded', () => {
   initAudioPlayers();
+  initCsharpFloatWindows();
   showSlide(0);
 });
 </script>
