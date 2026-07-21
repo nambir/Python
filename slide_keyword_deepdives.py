@@ -5,7 +5,7 @@ KEYWORD_DEEPDIVES: dict[int, str] = {
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Indentation</b> = the block structure in Python. No <code>{ }</code> braces — spaces after <code>:</code> define what belongs to <code>if</code>, <code>for</code>, <code>def</code>.<br><b>Use when:</b> every control-flow block.<br><b>Trap:</b> mixing tabs and spaces → <code>IndentationError</code>.</div>
 <div class="keyword-box"><b>Dynamic typing</b> = a variable name can point to different types over time.<br><b>Example:</b> <code>x = 5</code> then <code>x = "hi"</code> — legal.<br><b>Not like C#:</b> no <code>int x</code> declaration required.</div>
-<div class="keyword-box"><b>Duck typing</b> = use it if it behaves correctly — no <code>interface</code> keyword.<br><b>Meaning:</b> if it walks like a duck and quacks like a duck, call <code>.quack()</code>.</div>
+<div class="keyword-box"><b>Duck typing</b> = another function uses an object <b>without knowing the class name</b> — only the behavior.<br><b>Normal:</b> a class having <code>.send()</code> is just OOP.<br><b>Duck typing:</b> <code>notify(channel, msg)</code> accepts Email / SMS / Slack if each has <code>.send()</code> — no interface.<br><b>Saying:</b> if it walks like a duck and quacks like a duck, treat it as a duck.</div>
 """,
     2: """
 <h3>Python keywords — deeper look</h3>

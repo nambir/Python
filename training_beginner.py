@@ -7,11 +7,56 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"title": "Step 2 — Interpreted, not machine code", "body": "CPython reads your file, builds <b>bytecode</b> (<code>.pyc</code>), then executes that bytecode step by step. That is why we call Python <b>interpreted</b>."},
             {"title": "Step 3 — Indentation = blocks", "body": "Instead of <code>{ }</code> braces, Python uses <b>indentation</b> (usually 4 spaces) after <code>if</code>, <code>for</code>, <code>def</code>."},
             {"title": "Step 4 — Dynamic typing", "body": "You do not write <code>int x</code>. A variable can hold a number, then a string — Python checks types at runtime."},
-            {"title": "Step 5 — Duck typing (real example)", "body": "If an object has the method you need, you can use it — no interface required.<div class=\"step-pre\">class EmailNotifier:\n    def send(self, msg):\n        return f\"Email: {msg}\"\n\ndef notify(channel, msg):\n    return channel.send(msg)  # needs .send() only\n\nnotify(EmailNotifier(), \"Order shipped\")</div><p class=\"step-result\"><b>Real use:</b> email / SMS / Slack notifiers, or anything with <code>.write()</code> for saving reports.</p>"},
+            {
+                "title": "Step 5 — Duck typing (real example)",
+                "body": (
+                    "<b>Key idea:</b> A class having a method is <b>normal</b>. "
+                    "<b>Duck typing</b> is when <b>another function</b> uses that object "
+                    "<b>without knowing the class name</b> — only the behavior.<br><br>"
+                    "<b>1) Normal:</b> you know the class and call its method."
+                    '<div class="step-pre">'
+                    "class EmailNotifier:\n"
+                    "    def send(self, msg):\n"
+                    '        return f"Email: {msg}"\n'
+                    "\n"
+                    "email = EmailNotifier()\n"
+                    'email.send("Order shipped")  # you know it is EmailNotifier'
+                    "</div>"
+                    "<b>2) Duck typing:</b> <code>notify</code> does not care about the class name — "
+                    "Email, SMS, or Slack all work if they have <code>.send()</code>."
+                    '<div class="step-pre">'
+                    "class EmailNotifier:\n"
+                    "    def send(self, msg):\n"
+                    '        return f"Email: {msg}"\n'
+                    "\n"
+                    "class SmsNotifier:\n"
+                    "    def send(self, msg):\n"
+                    '        return f"SMS: {msg}"\n'
+                    "\n"
+                    "class SlackNotifier:\n"
+                    "    def send(self, msg):\n"
+                    '        return f"Slack: {msg}"\n'
+                    "\n"
+                    "def notify(channel, msg):\n"
+                    "    return channel.send(msg)  # no class name — only needs .send()\n"
+                    "\n"
+                    'notify(EmailNotifier(), "Hi")\n'
+                    'notify(SmsNotifier(), "Hi")\n'
+                    'notify(SlackNotifier(), "Hi")'
+                    "</div>"
+                    '<p class="step-result">'
+                    "<b>Remember:</b> “If it walks like a duck and quacks like a duck, treat it as a duck.” "
+                    "In code: if it has <code>.send()</code>, call <code>.send()</code>. "
+                    "No shared base class / interface required. "
+                    "Same idea: <code>save(writer, text)</code> works with any object that has <code>.write()</code>."
+                    "</p>"
+                ),
+            },
         ],
         "interview_qa": [
             {"q": "Is Python compiled or interpreted?", "a": "We run the <code>.py</code> file using the Python interpreter. Internally, CPython converts it into bytecode (<code>.pyc</code>) and executes the bytecode step by step. So Python is both compiled to bytecode and interpreted by the Python virtual machine."},
             {"q": "How is Python different from C#?", "a": "No mandatory type declarations, indentation instead of braces, and duck typing — if it has <code>.send()</code>, treat it as a notifier. C# usually requires an interface; Python checks behavior at runtime."},
+            {"q": "What is duck typing — how is it different from a class that has a method?", "a": "A class having a method is normal OOP. Duck typing is when another function (like <code>notify(channel, msg)</code>) uses the object without knowing the class name — only that it has the needed behavior (<code>.send()</code>). Email, SMS, Slack all work with no shared base class. C# usually needs <code>interface INotifier</code>."},
             {"q": "Give a realistic duck typing example.", "a": "A <code>notify(channel, msg)</code> function that calls <code>channel.send(msg)</code>. Email, SMS, or Slack classes all work if they implement <code>send</code> — no shared base class required."},
         ],
     },

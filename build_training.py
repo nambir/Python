@@ -1063,8 +1063,9 @@ x = 42          # x holds an int
 x = "hello"     # now x holds a str - same name, new type
 print(type(x))  # <class 'str'>
 
-# ── DUCK TYPING: behavior matters, not declared type ──
-# Real use: any object with .send() works — email, SMS, Slack…
+# ── DUCK TYPING: another function uses object without knowing class name ──
+# Class having .send() = normal. Duck typing = notify() only needs .send()
+# Email / SMS / Slack all work — no shared base class / interface
 class EmailNotifier:
     def send(self, msg):
         return f"Email sent: {msg}"
@@ -1073,18 +1074,24 @@ class SmsNotifier:
     def send(self, msg):
         return f"SMS sent: {msg}"
 
+class SlackNotifier:
+    def send(self, msg):
+        return f"Slack: {msg}"
+
 def notify(channel, msg):
-    return channel.send(msg)   # no interface — just needs .send()
+    return channel.send(msg)   # no class name — behavior only
 
 print(notify(EmailNotifier(), "Order #104 shipped"))
 print(notify(SmsNotifier(), "OTP 4821"))
-# Same idea as file-like objects: anything with .write() can be passed to save()''') + '''
-<div class="callout"><b>C# developer tip:</b> <code>python file.py</code> ≈ immediate run (no dotnet build). Replace <code>{ }</code> with indents. Replace <code>null</code> with <code>None</code>. Duck typing ≈ “if it has the method I need, use it” — no interface required.</div>
+print(notify(SlackNotifier(), "Build done"))
+# Same idea: anything with .write() can be passed to save(writer, text)''') + '''
+<div class="callout"><b>Duck typing (memorize):</b> A class having a method is <b>normal</b>. Duck typing is when another function uses that object <b>without knowing the class name</b> — only the behavior (<code>.send()</code>). C# usually needs <code>interface INotifier</code>. Click <b>C# Comparison</b> on the Duck typing glossary row for the full table (interface vs <code>dynamic</code> vs extension methods).</div>
 ''', '''
 <ul class="checklist">
   <li>Explain interpretation vs compilation in your own words</li>
   <li>Find a <code>.pyc</code> file in <code>__pycache__/</code> after running a script</li>
   <li>Write an if/else block using indentation only</li>
+  <li>Explain duck typing vs “class has a method” using the <code>notify</code> example</li>
 </ul>
 '''),
 
