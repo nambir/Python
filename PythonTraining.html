@@ -1412,7 +1412,7 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
     <h4>Enforced at runtime</h4>
     <ul><li>Pydantic models</li><li>FastAPI params</li></ul>
   </div>
-  <p class="flow-note">Wrong: charge("100") may still run until a checker / validator stops it.</p>
+  <p class="flow-note">Without mypy: python app.py still runs charge("100", 91). With mypy: errors reported first.</p>
 </div>
 
 <h3>Key terms explained</h3>
@@ -1422,15 +1422,16 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
 <tr><td>Return type</td><td><code>-&gt;</code> annotation on what function returns.</td><td><code>-&gt; str:</code></td></tr>
 <tr><td>Optional</td><td>Value can be the type or <code>None</code>.</td><td><code>Optional[int]</code></td></tr>
 <tr><td>Union</td><td>Value can be one of several types.</td><td><code>Union[int, str]</code></td></tr>
-<tr><td>mypy</td><td>Static type checker — finds type errors before runtime.</td><td><code>mypy app.py</code></td></tr>
+<tr><td>mypy</td><td>Command-line type checker (<code>pip install mypy</code>). Does <b>not</b> run with <code>python</code> automatically.<br><br><b>Input:</b> <code>mypy app.py</code> &nbsp; <b>Output:</b> type error lines (program not executed).<br><br><b>Input:</b> <code>python app.py</code> &nbsp; <b>Output:</b> program runs; hints ignored (e.g. may print <code>Charged 100 91</code>).</td><td><code>mypy app.py</code></td></tr>
 <tr><td>Generic</td><td>Type parameterized by another type — <code>List[int]</code>.</td><td><code>Dict[str, int]</code></td></tr>
 </table><div class="real-life"><b>Real-life example:</b> <b>Payment API contract:</b> Type hints + mypy catch bad calls before production.<div class="step-pre">from decimal import Decimal
 
 def charge(amount: Decimal, currency: str) -> str:
     return f"Charged {amount} {currency}"
 
-# mypy error: charge("100", 91)  # wrong types
-charge(Decimal("100.00"), "INR")  # OK</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Basic type hints</b><br>Type hints document expected types. Python does not enforce them at runtime by default.<div class="step-pre">def greet(name: str) -&gt; str:
+# Bad call (wrong types):
+result = charge("100", 91)
+print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input (what you type)</th><th>Output (what you see)</th></tr><tr><td><b>Without mypy</b></td><td><code>python app.py</code></td><td>Hints ignored — program <b>runs</b>. Example print:<br><code>Charged 100 91</code><br>(no type error from Python itself)</td></tr><tr><td><b>With mypy</b></td><td><code>mypy app.py</code></td><td>Type errors reported — program is <b>not</b> executed. Example:<br><code>error: Argument 1 … expected "Decimal"</code><br><code>error: Argument 2 … expected "str"</code><br><code>Found 2 errors in 1 file</code></td></tr><tr><td><b>Correct call</b></td><td><code>charge(Decimal("100.00"), "INR")</code><br>then <code>python app.py</code></td><td><code>Charged 100.00 INR</code> — OK for mypy and Python</td></tr></table><p class="step-result"><b>Remember:</b> mypy does <b>not</b> run automatically with Python. You run it separately (or in CI).</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Basic type hints</b><br>Type hints document expected types. Python does not enforce them at runtime by default.<div class="step-pre">def greet(name: str) -&gt; str:
     return f"Hello, {name}"
 
 def add(a: int, b: int) -&gt; int:
@@ -1453,9 +1454,13 @@ class Stack(Generic[T]):
     def push(self, item: T) -&gt; None: ...
 
 class Drawable(Protocol):
-    def draw(self) -&gt; None: ...</div></li><li><b>Step 4 — mypy</b><br>Static type checker — catches type errors before runtime.<div class="step-pre"># terminal
-mypy my_module.py
-mypy --strict my_project/</div><p class="step-result"><b>Tip:</b> run mypy in CI alongside pytest to catch mismatches early.</p></li></ul>
+    def draw(self) -&gt; None: ...</div></li><li><b>Step 4 — with vs without mypy</b><br>Same bad call — compare <b>input</b> (command) and <b>output</b> (screen).<div class="step-pre">from decimal import Decimal
+
+def charge(amount: Decimal, currency: str) -> str:
+    return f"Charged {amount} {currency}"
+
+result = charge("100", 91)  # wrong types
+print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input</th><th>Output</th></tr><tr><td><b>Without mypy</b></td><td><code>python app.py</code></td><td>Program runs. Hints ignored.<br><code>Charged 100 91</code><br>(no automatic type error)</td></tr><tr><td><b>With mypy</b></td><td><code>mypy app.py</code></td><td>Does <b>not</b> run the program. Reports errors, e.g.:<br><code>error: Argument 1 to "charge" has incompatible type "str"; expected "Decimal"</code><br><code>error: Argument 2 to "charge" has incompatible type "int"; expected "str"</code><br><code>Found 2 errors in 1 file (checked 1 source file)</code></td></tr></table><p class="step-result"><b>Workflow:</b> <code>pip install mypy</code> → <code>mypy app.py</code> (fix if needed) → <code>python app.py</code>.</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Type hints</b> = documentation for humans and tools — <b>not enforced at runtime</b> by default.<br><b>Example:</b> <code>def f(x: int) -> str:</code></div>
 <div class="keyword-box"><b>Optional[T]</b> = value can be <code>T</code> or <code>None</code>.<br><b>mypy</b> = static checker that catches type mistakes before you run the app.</div>
@@ -1473,7 +1478,7 @@ mypy --strict my_project/</div><p class="step-result"><b>Tip:</b> run mypy in CI
 </table>
 
 <div class="tip">Type hints are optional at runtime but help IDEs, documentation, and tools like mypy and FastAPI validation.</div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Do type hints slow Python down?</p><p class="qa-a"><b>A:</b> No — they are stored as annotations and ignored at runtime unless you use a validator like Pydantic or FastAPI.</p><p class="qa-q"><b>Q:</b> Optional[str] means what?</p><p class="qa-a"><b>A:</b> The value can be a <code>str</code> or <code>None</code>. In 3.10+: <code>str | None</code>.</p><p class="qa-q"><b>Q:</b> What is a Protocol?</p><p class="qa-a"><b>A:</b> Defines an interface by method signatures — any class with matching methods satisfies it, without explicit inheritance.</p><p class="qa-q"><b>Q:</b> Why use mypy?</p><p class="qa-a"><b>A:</b> Finds type mismatches, missing returns, and wrong argument types before deployment — like a lightweight compiler check.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Do type hints slow Python down?</p><p class="qa-a"><b>A:</b> No — they are stored as annotations and ignored at runtime unless you use a validator like Pydantic or FastAPI.</p><p class="qa-q"><b>Q:</b> Optional[str] means what?</p><p class="qa-a"><b>A:</b> The value can be a <code>str</code> or <code>None</code>. In 3.10+: <code>str | None</code>.</p><p class="qa-q"><b>Q:</b> What is a Protocol?</p><p class="qa-a"><b>A:</b> Defines an interface by method signatures — any class with matching methods satisfies it, without explicit inheritance.</p><p class="qa-q"><b>Q:</b> Does mypy run automatically when I run python app.py?</p><p class="qa-a"><b>A:</b> No. <code>python app.py</code> ignores type hints and runs the code. You must run <code>mypy app.py</code> yourself (or in CI) to catch type mismatches before execution.</p><p class="qa-q"><b>Q:</b> Why does mypy flag charge("100", 91) when the hint uses Decimal?</p><p class="qa-a"><b>A:</b> Because argument types do not match: <code>"100"</code> is <code>str</code> (needs <code>Decimal</code>), and <code>91</code> is <code>int</code> (needs <code>str</code>).</p><p class="qa-q"><b>Q:</b> Why use mypy?</p><p class="qa-a"><b>A:</b> Finds type mismatches before deployment — like a lightweight compiler check. Without it, Python may still run bad calls.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -6311,19 +6316,48 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-kw">for</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op">+</span><span class="t-op">+</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">i</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>for x in iterable</code> ≈ C# <code>foreach</code>. <code>range(5)</code> ≈ <code>for (int i = 0; i &lt; 5; i++)</code>.</p></div></div><div class="csharp-float-win" id="csharp-win-type-hints" role="dialog" aria-labelledby="csharp-win-title-type-hints"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-type-hints">C# Comparison — Type Hints vs C# Types</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('type-hints')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — hints document intent; optional static check:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
-<tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">charge</span><span class="t-op">(</span><span class="t-id">amount</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">currency</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-str">&quot;Charged {amount} {currency}&quot;</span></td></tr>
-<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-cm"># mypy catches: charge(&quot;100&quot;, 91)</span></td></tr>
-</tbody></table></div><p>C# — types required at compile time:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
-<tr><td class="gutter">1</td><td class="src"><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Charge</span><span class="t-op">(</span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">amount</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">currency</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-op">$</span><span class="t-str">&quot;Charged {amount} {currency}&quot;</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>for x in iterable</code> ≈ C# <code>foreach</code>. <code>range(5)</code> ≈ <code>for (int i = 0; i &lt; 5; i++)</code>.</p></div></div><div class="csharp-float-win" id="csharp-win-type-hints" role="dialog" aria-labelledby="csharp-win-title-type-hints"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-type-hints">C# Comparison — Type Hints vs C# Types</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('type-hints')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
+<p><b>Same Python code</b> — compare with vs without mypy:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">decimal</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Decimal</span></td></tr>
+<tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">charge</span><span class="t-op">(</span><span class="t-id">amount</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">Decimal</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">currency</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-str">&quot;Charged {amount} {currency}&quot;</span></td></tr>
 <tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">6</td><td class="src"><span class="t-cm">// Charge(&quot;100&quot;, 91) — compile error</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Run <code>mypy</code> on Python projects for C#-like early type errors. FastAPI/Pydantic enforce at runtime too.</p></div></div><div class="csharp-float-win" id="csharp-win-listcomp-linq" role="dialog" aria-labelledby="csharp-win-title-listcomp-linq"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-listcomp-linq">C# Comparison — Comprehension vs LINQ</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('listcomp-linq')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python list comprehension:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">6</td><td class="src"><span class="t-cm"># Same bad call in both cases:</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-id">result</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">charge</span><span class="t-op">(</span><span class="t-str">&quot;100&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">91</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">result</span><span class="t-op">)</span></td></tr>
+</tbody></table></div>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Case</th><th>Input</th><th>Output</th></tr>
+<tr>
+  <td><b>Without mypy</b></td>
+  <td><code>python app.py</code></td>
+  <td>Program runs. Hints ignored.<br>
+  <code>Charged 100 91</code></td>
+</tr>
+<tr>
+  <td><b>With mypy</b></td>
+  <td><code>mypy app.py</code></td>
+  <td>Program not executed. Example errors:<br>
+  <code>error: Argument 1 … expected "Decimal"</code><br>
+  <code>error: Argument 2 … expected "str"</code><br>
+  <code>Found 2 errors in 1 file</code></td>
+</tr>
+</table>
+<p><b>C#</b> — types checked at compile time (always, like mypy but built-in):</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// C# — compiler blocks wrong types (like mypy, but automatic)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Charge</span><span class="t-op">(</span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">amount</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">currency</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-op">$</span><span class="t-str">&quot;Charged {amount} {currency}&quot;</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-cm">// Charge(&quot;100&quot;, 91);  // compile error — will not build</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-id">Charge</span><span class="t-op">(</span><span class="t-num">100.00</span><span class="t-id">m</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;INR&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// OK</span></td></tr>
+</tbody></table></div>
+<p class="csharp-pop-note"><b>Bottom line:</b> mypy is a separate command (<code>pip install mypy</code>). It does not run when you type <code>python app.py</code>. C# catches the same mismatch automatically at build time.</p>
+</div></div><div class="csharp-float-win" id="csharp-win-listcomp-linq" role="dialog" aria-labelledby="csharp-win-title-listcomp-linq"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-listcomp-linq">C# Comparison — Comprehension vs LINQ</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('listcomp-linq')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python list comprehension:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-id">squares</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">%</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">]</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">names</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">u</span><span class="t-op">.</span><span class="t-id">name</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">u</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">users</span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">u</span><span class="t-op">.</span><span class="t-id">active</span><span class="t-op">]</span></td></tr>
 </tbody></table></div><p>C# LINQ (similar idea):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>

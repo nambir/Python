@@ -434,15 +434,51 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "Generics make reusable typed containers. Protocols define structural typing (duck typing with types).<div class=\"step-pre\">from typing import TypeVar, Generic, Protocol\n\nT = TypeVar(\"T\")\n\nclass Stack(Generic[T]):\n    def push(self, item: T) -&gt; None: ...\n\nclass Drawable(Protocol):\n    def draw(self) -&gt; None: ...</div>",
             },
             {
-                "title": "Step 4 — mypy",
-                "body": "Static type checker — catches type errors before runtime.<div class=\"step-pre\"># terminal\nmypy my_module.py\nmypy --strict my_project/</div><p class=\"step-result\"><b>Tip:</b> run mypy in CI alongside pytest to catch mismatches early.</p>",
+                "title": "Step 4 — with vs without mypy",
+                "body": (
+                    "Same bad call — compare <b>input</b> (command) and <b>output</b> (screen)."
+                    '<div class="step-pre">'
+                    "from decimal import Decimal\n"
+                    "\n"
+                    "def charge(amount: Decimal, currency: str) -> str:\n"
+                    "    return f\"Charged {amount} {currency}\"\n"
+                    "\n"
+                    'result = charge("100", 91)  # wrong types\n'
+                    "print(result)"
+                    "</div>"
+                    '<table class="data-tbl">'
+                    "<tr><th>Case</th><th>Input</th><th>Output</th></tr>"
+                    "<tr>"
+                    "<td><b>Without mypy</b></td>"
+                    "<td><code>python app.py</code></td>"
+                    "<td>Program runs. Hints ignored.<br>"
+                    "<code>Charged 100 91</code><br>"
+                    "(no automatic type error)</td>"
+                    "</tr>"
+                    "<tr>"
+                    "<td><b>With mypy</b></td>"
+                    "<td><code>mypy app.py</code></td>"
+                    "<td>Does <b>not</b> run the program. Reports errors, e.g.:<br>"
+                    "<code>error: Argument 1 to \"charge\" has incompatible type \"str\"; expected \"Decimal\"</code><br>"
+                    "<code>error: Argument 2 to \"charge\" has incompatible type \"int\"; expected \"str\"</code><br>"
+                    "<code>Found 2 errors in 1 file (checked 1 source file)</code></td>"
+                    "</tr>"
+                    "</table>"
+                    '<p class="step-result">'
+                    "<b>Workflow:</b> <code>pip install mypy</code> → "
+                    "<code>mypy app.py</code> (fix if needed) → "
+                    "<code>python app.py</code>."
+                    "</p>"
+                ),
             },
         ],
         "interview_qa": [
             {"q": "Do type hints slow Python down?", "a": "No — they are stored as annotations and ignored at runtime unless you use a validator like Pydantic or FastAPI."},
             {"q": "Optional[str] means what?", "a": "The value can be a <code>str</code> or <code>None</code>. In 3.10+: <code>str | None</code>."},
             {"q": "What is a Protocol?", "a": "Defines an interface by method signatures — any class with matching methods satisfies it, without explicit inheritance."},
-            {"q": "Why use mypy?", "a": "Finds type mismatches, missing returns, and wrong argument types before deployment — like a lightweight compiler check."},
+            {"q": "Does mypy run automatically when I run python app.py?", "a": "No. <code>python app.py</code> ignores type hints and runs the code. You must run <code>mypy app.py</code> yourself (or in CI) to catch type mismatches before execution."},
+            {"q": "Why does mypy flag charge(\"100\", 91) when the hint uses Decimal?", "a": "Because argument types do not match: <code>\"100\"</code> is <code>str</code> (needs <code>Decimal</code>), and <code>91</code> is <code>int</code> (needs <code>str</code>)."},
+            {"q": "Why use mypy?", "a": "Finds type mismatches before deployment — like a lightweight compiler check. Without it, Python may still run bad calls."},
         ],
     },
     25: {

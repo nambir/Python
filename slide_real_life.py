@@ -72,9 +72,38 @@ REAL_LIFE: dict[int, str] = {
         "def charge(amount: Decimal, currency: str) -> str:\n"
         "    return f\"Charged {amount} {currency}\"\n"
         "\n"
-        '# mypy error: charge("100", 91)  # wrong types\n'
-        'charge(Decimal("100.00"), "INR")  # OK'
+        '# Bad call (wrong types):\n'
+        'result = charge("100", 91)\n'
+        "print(result)"
         "</div>"
+        '<table class="data-tbl">'
+        "<tr><th>Case</th><th>Input (what you type)</th><th>Output (what you see)</th></tr>"
+        "<tr>"
+        "<td><b>Without mypy</b></td>"
+        "<td><code>python app.py</code></td>"
+        "<td>Hints ignored — program <b>runs</b>. Example print:<br>"
+        "<code>Charged 100 91</code><br>"
+        "(no type error from Python itself)</td>"
+        "</tr>"
+        "<tr>"
+        "<td><b>With mypy</b></td>"
+        "<td><code>mypy app.py</code></td>"
+        "<td>Type errors reported — program is <b>not</b> executed. Example:<br>"
+        "<code>error: Argument 1 … expected \"Decimal\"</code><br>"
+        "<code>error: Argument 2 … expected \"str\"</code><br>"
+        "<code>Found 2 errors in 1 file</code></td>"
+        "</tr>"
+        "<tr>"
+        "<td><b>Correct call</b></td>"
+        "<td><code>charge(Decimal(\"100.00\"), \"INR\")</code><br>"
+        "then <code>python app.py</code></td>"
+        "<td><code>Charged 100.00 INR</code> — OK for mypy and Python</td>"
+        "</tr>"
+        "</table>"
+        '<p class="step-result">'
+        "<b>Remember:</b> mypy does <b>not</b> run automatically with Python. "
+        "You run it separately (or in CI)."
+        "</p>"
     ),
     7: (
         "<b>Invoice math:</b> Arithmetic, floor division, identity, membership, walrus."

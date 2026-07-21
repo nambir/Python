@@ -401,23 +401,52 @@ for (int i = 0; i < 5; i++)
 
 
 def _type_hints_body() -> str:
-    return (
-        _py_cs(
-            "Python — hints document intent; optional static check:",
-            """def charge(amount: float, currency: str) -> str:
-    return f\"Charged {amount} {currency}\"
+    py = """from decimal import Decimal
 
-# mypy catches: charge(\"100\", 91)""",
-            "C# — types required at compile time:",
-            """string Charge(decimal amount, string currency)
+def charge(amount: Decimal, currency: str) -> str:
+    return f"Charged {amount} {currency}"
+
+# Same bad call in both cases:
+result = charge("100", 91)
+print(result)"""
+
+    cs = """// C# — compiler blocks wrong types (like mypy, but automatic)
+string Charge(decimal amount, string currency)
 {
-    return $\"Charged {amount} {currency}\";
+    return $"Charged {amount} {currency}";
 }
 
-// Charge(\"100\", 91) — compile error""",
-        )
-        + _note("Run <code>mypy</code> on Python projects for C#-like early type errors. FastAPI/Pydantic enforce at runtime too.")
-    )
+// Charge("100", 91);  // compile error — will not build
+Charge(100.00m, "INR");  // OK"""
+
+    return f"""
+<p><b>Same Python code</b> — compare with vs without mypy:</p>
+{vs_editor(py, lang="python", compact=True)}
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Case</th><th>Input</th><th>Output</th></tr>
+<tr>
+  <td><b>Without mypy</b></td>
+  <td><code>python app.py</code></td>
+  <td>Program runs. Hints ignored.<br>
+  <code>Charged 100 91</code></td>
+</tr>
+<tr>
+  <td><b>With mypy</b></td>
+  <td><code>mypy app.py</code></td>
+  <td>Program not executed. Example errors:<br>
+  <code>error: Argument 1 … expected "Decimal"</code><br>
+  <code>error: Argument 2 … expected "str"</code><br>
+  <code>Found 2 errors in 1 file</code></td>
+</tr>
+</table>
+<p><b>C#</b> — types checked at compile time (always, like mypy but built-in):</p>
+{vs_editor(cs, lang="csharp", compact=True)}
+{_note(
+    "mypy is a separate command (<code>pip install mypy</code>). "
+    "It does not run when you type <code>python app.py</code>. "
+    "C# catches the same mismatch automatically at build time."
+)}
+"""
 
 
 def _listcomp_linq_body() -> str:

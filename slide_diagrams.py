@@ -535,7 +535,7 @@ EXTRA_DIAGRAMS: dict[int, str] = {
         "Hints vs runtime",
         ("Type hints alone", ["Documentation", "IDE help", "mypy can check"]),
         ("Enforced at runtime", ["Pydantic models", "FastAPI params"]),
-        "Wrong: charge(\"100\") may still run until a checker / validator stops it.",
+        "Without mypy: python app.py still runs charge(\"100\", 91). With mypy: errors reported first.",
     ),
     7: fork(
         "Pick the right check",

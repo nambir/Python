@@ -184,7 +184,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Return type</td><td><code>-&gt;</code> annotation on what function returns.</td><td><code>-&gt; str:</code></td></tr>
 <tr><td>Optional</td><td>Value can be the type or <code>None</code>.</td><td><code>Optional[int]</code></td></tr>
 <tr><td>Union</td><td>Value can be one of several types.</td><td><code>Union[int, str]</code></td></tr>
-<tr><td>mypy</td><td>Static type checker — finds type errors before runtime.</td><td><code>mypy app.py</code></td></tr>
+<tr><td>mypy</td><td>Command-line type checker (<code>pip install mypy</code>). Does <b>not</b> run with <code>python</code> automatically.<br><br><b>Input:</b> <code>mypy app.py</code> &nbsp; <b>Output:</b> type error lines (program not executed).<br><br><b>Input:</b> <code>python app.py</code> &nbsp; <b>Output:</b> program runs; hints ignored (e.g. may print <code>Charged 100 91</code>).</td><td><code>mypy app.py</code></td></tr>
 <tr><td>Generic</td><td>Type parameterized by another type — <code>List[int]</code>.</td><td><code>Dict[str, int]</code></td></tr>
 </table>""",
     25: """
