@@ -68,10 +68,10 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Identity (is)</td><td>Same object in memory — not just equal value. __CSHARP_IS_BTN__</td><td><code>a is b</code></td></tr>
 <tr><td>Equality (==)</td><td>Same value — different objects can be equal.</td><td><code>[1]==[1]</code> True</td></tr>
 <tr><td>Membership (in)</td><td>Test if value exists in a collection.</td><td><code>5 in [1,5,9]</code></td></tr>
-<tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Test with:</b> <code>if x is None:</code> — use <code>is</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python. __CSHARP_NONE_BTN__</td><td><code>if x is None:</code></td></tr>
+<tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Empty?</b> <code>if x is None:</code><br><b>Has value?</b> <code>if x is not None:</code> — use <code>is</code> / <code>is not</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python. __CSHARP_NONE_BTN__</td><td><code>if x is not None:</code></td></tr>
 <tr><td>Bitwise</td><td>Operators on binary digits: <code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td><code>5 &amp; 3</code> → 1</td></tr>
 <tr><td>Assignment operators</td><td>Shorthand in-place update: <code>+= -= *=</code> etc.</td><td><code>n += 5</code></td></tr>
-<tr><td>Walrus (:=)</td><td>Assign and use value in one expression (3.8+).</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
+<tr><td>Walrus (:=)</td><td>Assign <b>and</b> use a value in one expression (Python 3.8+).<br><br><b>Without:</b> <code>n = len(x)</code> then <code>if n &gt; 0:</code><br><b>With:</b> <code>if (n := len(x)) &gt; 0:</code> — same <code>n</code> usable in the body.<br><br><b>Use when:</b> value needed in condition + body (avoid calling <code>len</code>/<code>input</code> twice).<br><b>Avoid:</b> every assignment — plain <code>=</code> is clearer.</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
 </table>""",
     8: """
 <h3>Key terms explained</h3>
@@ -359,7 +359,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Static typing</td><td>C# declares types at compile time — <code>int x = 5</code>. __CSHARP_HINTS_BTN__</td><td>C# variable</td></tr>
 <tr><td>Dynamic typing</td><td>Python assigns without type declaration. __CSHARP_DYNAMIC_BTN__</td><td><code>x = 5</code></td></tr>
 <tr><td>Interface</td><td>C# contract — Python uses ABC or duck typing instead. __CSHARP_DUCK_BTN__</td><td><code>interface IRepo</code></td></tr>
-<tr><td>Null vs None</td><td>C# <code>null</code> — test with <code>== null</code>.</td><td>Python <code>None</code> — test with <code>is None</code>. __CSHARP_NONE_BTN__</td></tr>
+<tr><td>Null vs None</td><td>C# <code>null</code> — <code>== null</code> / <code>!= null</code> (or <code>is null</code> / <code>is not null</code>).</td><td>Python <code>None</code> — <code>is None</code> / <code>is not None</code>. __CSHARP_NONE_BTN__</td></tr>
 <tr><td>pass</td><td>No keyword — use empty <code>{ }</code> for a stub block.<br><br><b>Stronger stub:</b> <code>throw new NotImplementedException()</code>.<br><br><b>Interfaces:</b> declare method without body — no pass needed. __CSHARP_PASS_BTN__</td><td><code>pass</code> = block intentionally empty for now.<br><br><b>Stronger stub:</b> <code>raise NotImplementedError()</code>.</td></tr>
 <tr><td>this vs self</td><td><code>this</code> — implicit in instance methods.</td><td><code>self</code> — explicit first parameter. __CSHARP_SELF_BTN__</td></tr>
 <tr><td>using vs with</td><td><code>using (var f = ...)</code> — auto dispose.</td><td><code>with open(...) as f:</code> — context manager. __CSHARP_WITH_BTN__</td></tr>

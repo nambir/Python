@@ -41,7 +41,18 @@ if __name__ == "__main__":
 <div class="keyword-box"><b>//</b> = floor division (whole number result). <b>/</b> = true division (always float in Python 3).<br><b>Example:</b> <code>10 / 4</code> → <code>2.5</code>, <code>10 // 4</code> → <code>2</code>.</div>
 <div class="keyword-box"><b>in</b> = membership test — works on lists, strings, dict keys, sets.<br><b>Example:</b> <code>"py" in "python"</code> → <code>True</code>.</div>
 <div class="keyword-box"><b>+=</b> and friends = in-place assignment.<br><b>Example:</b> <code>n += 5</code> same as <code>n = n + 5</code>. Works on numbers, strings, lists.</div>
-<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br><div class="step-pre">if (n := len(data)) &gt; 0:\n    print(n)</div><b>Use when:</b> you need the value in the condition — not for every assignment.</div>
+<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br>
+<div class="step-pre"># without walrus
+n = len(data)
+if n &gt; 0:
+    print(n)
+
+# with walrus — assign + test together
+if (n := len(data)) &gt; 0:
+    print(n)</div>
+<b>Use when:</b> you need the value in the condition <b>and</b> in the body.<br>
+<b>Real use:</b> invoice line count, <code>while (line := input(...)) != "":</code>, match checks.<br>
+<b>Avoid:</b> using <code>:=</code> for every assignment — normal <code>=</code> is clearer then.</div>
 """,
     8: """
 <h3>Python keywords — deeper look</h3>

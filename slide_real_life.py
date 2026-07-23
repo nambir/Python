@@ -114,17 +114,41 @@ REAL_LIFE: dict[int, str] = {
         "pages = 25 // 10             # floor division → 2\n"
         "\n"
         "status = None\n"
-        "if status is None:           # use is, not ==\n"
+        "if status is None:           # empty?\n"
         '    print("pending")\n'
+        "\n"
+        'customer = "Ravi"\n'
+        "if customer is not None:     # has a value?\n"
+        '    print("bill to", customer)\n'
         "\n"
         'tax_codes = ["GST", "CGST"]\n'
         'if "GST" in tax_codes:\n'
         '    print("apply GST")\n'
         "\n"
-        "lines = [\"a\", \"b\", \"c\"]\n"
+        "# ── Walrus :=  (Python 3.8+) ──\n"
+        "# Assign AND use the value in one expression\n"
+        'lines = ["a", "b", "c"]\n'
+        "\n"
+        "# Without walrus (two steps):\n"
+        "n = len(lines)\n"
+        "if n > 0:\n"
+        "    print(n)                 # 3\n"
+        "\n"
+        "# With walrus (one expression):\n"
         "if (n := len(lines)) > 0:\n"
-        "    print(n)                 # walrus: assign + test"
+        "    print(n)                 # 3 — same result, shorter\n"
+        "\n"
+        "# Real invoice use: count items while checking\n"
+        "items = [\"Pen\", \"Notebook\", \"Bag\"]\n"
+        "if (count := len(items)) >= 3:\n"
+        '    print(f"Bulk order: {count} lines")'
         "</div>"
+        '<p class="step-result">'
+        "<b>None:</b> <code>is None</code> = empty; <code>is not None</code> = has a value.<br>"
+        "<b>Walrus <code>:=</code>:</b> assign inside <code>if</code>/<code>while</code> so you do not call "
+        "<code>len()</code> (or <code>input()</code>) twice. Use when the value is needed in the condition "
+        "<b>and</b> in the body. Do not use for every assignment — normal <code>=</code> is clearer then."
+        "</p>"
     ),
     8: (
         "<b>CSV import job:</b> Branch, skip bad rows, stop early, stub unfinished work."

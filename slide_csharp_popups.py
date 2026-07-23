@@ -318,47 +318,101 @@ Add(1, 2)  # OK — def ran first""",
 
 
 def _none_null_body() -> str:
-    return (
-        _py_cs(
-            "Python — single <code>None</code> object; test with <code>is</code>:",
-            """value = None
+    py = """value = None
 if value is None:
-    print("empty")""",
-            "C# — <code>null</code> reference; test with <code>==</code>:",
-            """string? value = null;
+    print("empty")
+
+# Not None:
+if value is not None:
+    print("has a value")"""
+
+    cs = """string? value = null;
 if (value == null)
     Console.WriteLine("empty");
 
 // C# 9+ pattern:
 if (value is null)
-    Console.WriteLine("empty");""",
-        )
-        + _note("Always use <code>if x is None:</code> in Python — not <code>== None</code> (works but not idiomatic).")
-    )
+    Console.WriteLine("empty");
+
+// Not null:
+if (value != null)
+    Console.WriteLine("has a value");
+
+if (value is not null)   // C# 9+
+    Console.WriteLine("has a value");"""
+
+    return f"""
+<p><b>Python</b> — single <code>None</code> object; test with <code>is</code> / <code>is not</code>:</p>
+{vs_editor(py, lang="python", compact=True)}
+
+<p><b>C#</b> — <code>null</code> reference; test with <code>==</code> / <code>!=</code> or <code>is</code> / <code>is not</code>:</p>
+{vs_editor(cs, lang="csharp", compact=True)}
+
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Check</th><th>Python</th><th>C#</th></tr>
+<tr>
+  <td>Is empty / null?</td>
+  <td><code>if value is None:</code></td>
+  <td><code>if (value == null)</code> or <code>if (value is null)</code></td>
+</tr>
+<tr>
+  <td>Has a value? (not None)</td>
+  <td><code>if value is not None:</code></td>
+  <td><code>if (value != null)</code> or <code>if (value is not null)</code></td>
+</tr>
+</table>
+
+{_note(
+    "Python: prefer <code>is None</code> / <code>is not None</code> (not <code>== None</code>). "
+    "C#: <code>== null</code> / <code>!= null</code>, or C# 9+ <code>is null</code> / <code>is not null</code>."
+)}
+"""
 
 
 def _is_vs_equals_body() -> str:
-    return (
-        _py_cs(
-            "Python — <code>==</code> value, <code>is</code> same object:",
-            """a = [1, 2]
+    py = """a = [1, 2]
 b = [1, 2]
-print(a == b)   # True  — same values
-print(a is b)   # False — different objects
+print(a == b)   # True
+print(a is b)   # False"""
 
-x = None
-print(x is None)  # correct check""",
-            "C# — <code>==</code> value (if overloaded), <code>ReferenceEquals</code> for identity:",
-            """var a = new[] { 1, 2 };
+    cs = """var a = new[] { 1, 2 };
 var b = new[] { 1, 2 };
-Console.WriteLine(a.SequenceEqual(b));  // value compare
-Console.WriteLine(ReferenceEquals(a, b));  // False
 
-string? x = null;
-Console.WriteLine(x is null);""",
-        )
-        + _note("Use <code>is</code> only for <code>None</code> and singletons in Python. Use <code>==</code> for value comparison.")
-    )
+Console.WriteLine(a == b);     // False
+// Console.WriteLine(a is b);  // INVALID — C# "is" needs a type, not another variable
+Console.WriteLine(a is int[]); // True  — type check (NOT identity)
+Console.WriteLine(ReferenceEquals(a, b)); // False — identity (like Python "is")
+Console.WriteLine(a.SequenceEqual(b));    // True  — same values (like Python "==")"""
+
+    return f"""
+<p><b>Python</b></p>
+{vs_editor(py, lang="python", compact=True)}
+
+<p><b>C#</b> — same data: both arrays are <code>{{1, 2}}</code></p>
+{vs_editor(cs, lang="csharp", compact=True)}
+
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Expression</th><th>Python result</th><th>C# result</th></tr>
+<tr>
+  <td><code>a == b</code></td>
+  <td><b>True</b> (same values)</td>
+  <td><b>False</b> (arrays: same object? — no)</td>
+</tr>
+<tr>
+  <td><code>a is b</code></td>
+  <td><b>False</b> (same object? — no)</td>
+  <td><b>Not valid</b> like Python. C# <code>is</code> checks <b>type</b>
+  (<code>a is int[]</code> → <b>True</b>). For identity use
+  <code>ReferenceEquals(a, b)</code> → <b>False</b></td>
+</tr>
+</table>
+
+{_note(
+    "C# <code>a == b</code> on arrays → <b>False</b>. "
+    "C# has no <code>a is b</code> identity check — use <code>ReferenceEquals(a, b)</code> → <b>False</b>. "
+    "Same values in C#: <code>SequenceEqual</code> → <b>True</b>."
+)}
+"""
 
 
 def _pass_stub_body() -> str:

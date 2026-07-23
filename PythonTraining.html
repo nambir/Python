@@ -1577,26 +1577,44 @@ print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input</th><th>Ou
 <tr><td>Identity (is)</td><td>Same object in memory — not just equal value. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('is-vs-equals')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>a is b</code></td></tr>
 <tr><td>Equality (==)</td><td>Same value — different objects can be equal.</td><td><code>[1]==[1]</code> True</td></tr>
 <tr><td>Membership (in)</td><td>Test if value exists in a collection.</td><td><code>5 in [1,5,9]</code></td></tr>
-<tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Test with:</b> <code>if x is None:</code> — use <code>is</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('none-null')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>if x is None:</code></td></tr>
+<tr><td>None</td><td><b>None</b> = no value (like C# <code>null</code>).<br><br><b>Empty?</b> <code>if x is None:</code><br><b>Has value?</b> <code>if x is not None:</code> — use <code>is</code> / <code>is not</code>, not <code>==</code>.<br><br><b>Why:</b> only one <code>None</code> object exists in Python. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('none-null')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>if x is not None:</code></td></tr>
 <tr><td>Bitwise</td><td>Operators on binary digits: <code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td><code>5 &amp; 3</code> → 1</td></tr>
 <tr><td>Assignment operators</td><td>Shorthand in-place update: <code>+= -= *=</code> etc.</td><td><code>n += 5</code></td></tr>
-<tr><td>Walrus (:=)</td><td>Assign and use value in one expression (3.8+).</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
+<tr><td>Walrus (:=)</td><td>Assign <b>and</b> use a value in one expression (Python 3.8+).<br><br><b>Without:</b> <code>n = len(x)</code> then <code>if n &gt; 0:</code><br><b>With:</b> <code>if (n := len(x)) &gt; 0:</code> — same <code>n</code> usable in the body.<br><br><b>Use when:</b> value needed in condition + body (avoid calling <code>len</code>/<code>input</code> twice).<br><b>Avoid:</b> every assignment — plain <code>=</code> is clearer.</td><td><code>if (n := len(x)) &gt; 0:</code></td></tr>
 </table><div class="real-life"><b>Real-life example:</b> <b>Invoice math:</b> Arithmetic, floor division, identity, membership, walrus.<div class="step-pre">qty = 3
 price = 250
 total = qty * price          # 750
 pages = 25 // 10             # floor division → 2
 
 status = None
-if status is None:           # use is, not ==
+if status is None:           # empty?
     print("pending")
+
+customer = "Ravi"
+if customer is not None:     # has a value?
+    print("bill to", customer)
 
 tax_codes = ["GST", "CGST"]
 if "GST" in tax_codes:
     print("apply GST")
 
+# ── Walrus :=  (Python 3.8+) ──
+# Assign AND use the value in one expression
 lines = ["a", "b", "c"]
+
+# Without walrus (two steps):
+n = len(lines)
+if n > 0:
+    print(n)                 # 3
+
+# With walrus (one expression):
 if (n := len(lines)) > 0:
-    print(n)                 # walrus: assign + test</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Arithmetic (+ - * / % // **)</b><br>Python arithmetic operators work on numbers and some sequences.<div class="step-pre">a, b = 10, 4
+    print(n)                 # 3 — same result, shorter
+
+# Real invoice use: count items while checking
+items = ["Pen", "Notebook", "Bag"]
+if (count := len(items)) >= 3:
+    print(f"Bulk order: {count} lines")</div><p class="step-result"><b>None:</b> <code>is None</code> = empty; <code>is not None</code> = has a value.<br><b>Walrus <code>:=</code>:</b> assign inside <code>if</code>/<code>while</code> so you do not call <code>len()</code> (or <code>input()</code>) twice. Use when the value is needed in the condition <b>and</b> in the body. Do not use for every assignment — normal <code>=</code> is clearer then.</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Arithmetic (+ - * / % // **)</b><br>Python arithmetic operators work on numbers and some sequences.<div class="step-pre">a, b = 10, 4
 a + b    # 14
 a - b    # 6
 a * b    # 40
@@ -1647,8 +1665,18 @@ a is b   # False</div><b>Use is for:</b> <code>None</code> only (in practice).</
 <div class="keyword-box"><b>//</b> = floor division (whole number result). <b>/</b> = true division (always float in Python 3).<br><b>Example:</b> <code>10 / 4</code> → <code>2.5</code>, <code>10 // 4</code> → <code>2</code>.</div>
 <div class="keyword-box"><b>in</b> = membership test — works on lists, strings, dict keys, sets.<br><b>Example:</b> <code>"py" in "python"</code> → <code>True</code>.</div>
 <div class="keyword-box"><b>+=</b> and friends = in-place assignment.<br><b>Example:</b> <code>n += 5</code> same as <code>n = n + 5</code>. Works on numbers, strings, lists.</div>
-<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br><div class="step-pre">if (n := len(data)) &gt; 0:
-    print(n)</div><b>Use when:</b> you need the value in the condition — not for every assignment.</div>
+<div class="keyword-box"><b>:=</b> walrus — assign inside an expression (Python 3.8+).<br>
+<div class="step-pre"># without walrus
+n = len(data)
+if n &gt; 0:
+    print(n)
+
+# with walrus — assign + test together
+if (n := len(data)) &gt; 0:
+    print(n)</div>
+<b>Use when:</b> you need the value in the condition <b>and</b> in the body.<br>
+<b>Real use:</b> invoice line count, <code>while (line := input(...)) != "":</code>, match checks.<br>
+<b>Avoid:</b> using <code>:=</code> for every assignment — normal <code>=</code> is clearer then.</div>
 
       
 <h3>When to use which — scenarios</h3>
@@ -5908,7 +5936,7 @@ tests/              # at repo root
 <tr><td>Static typing</td><td>C# declares types at compile time — <code>int x = 5</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('type-hints')" title="Open draggable C# comparison window">C# Comparison</button></td><td>C# variable</td></tr>
 <tr><td>Dynamic typing</td><td>Python assigns without type declaration. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('dynamic-typing')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>x = 5</code></td></tr>
 <tr><td>Interface</td><td>C# contract — Python uses ABC or duck typing instead. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('duck-typing')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>interface IRepo</code></td></tr>
-<tr><td>Null vs None</td><td>C# <code>null</code> — test with <code>== null</code>.</td><td>Python <code>None</code> — test with <code>is None</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('none-null')" title="Open draggable C# comparison window">C# Comparison</button></td></tr>
+<tr><td>Null vs None</td><td>C# <code>null</code> — <code>== null</code> / <code>!= null</code> (or <code>is null</code> / <code>is not null</code>).</td><td>Python <code>None</code> — <code>is None</code> / <code>is not None</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('none-null')" title="Open draggable C# comparison window">C# Comparison</button></td></tr>
 <tr><td>pass</td><td>No keyword — use empty <code>{ }</code> for a stub block.<br><br><b>Stronger stub:</b> <code>throw new NotImplementedException()</code>.<br><br><b>Interfaces:</b> declare method without body — no pass needed. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('pass-stub')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>pass</code> = block intentionally empty for now.<br><br><b>Stronger stub:</b> <code>raise NotImplementedError()</code>.</td></tr>
 <tr><td>this vs self</td><td><code>this</code> — implicit in instance methods.</td><td><code>self</code> — explicit first parameter. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('self-this')" title="Open draggable C# comparison window">C# Comparison</button></td></tr>
 <tr><td>using vs with</td><td><code>using (var f = ...)</code> — auto dispose.</td><td><code>with open(...) as f:</code> — context manager. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('with-using')" title="Open draggable C# comparison window">C# Comparison</button></td></tr>
@@ -6265,11 +6293,20 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">static</span><span class="t-op"> </span><span class="t-kw">void</span><span class="t-op"> </span><span class="t-id">Add</span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">y</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-id">y</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-op">}</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> In a <code>.py</code> script, define functions first; put <code>if __name__ == "__main__":</code> last.</p></div></div><div class="csharp-float-win" id="csharp-win-none-null" role="dialog" aria-labelledby="csharp-win-title-none-null"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-none-null">C# Comparison — None vs null</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('none-null')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — single <code>None</code> object; test with <code>is</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> In a <code>.py</code> script, define functions first; put <code>if __name__ == "__main__":</code> last.</p></div></div><div class="csharp-float-win" id="csharp-win-none-null" role="dialog" aria-labelledby="csharp-win-title-none-null"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-none-null">C# Comparison — None vs null</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('none-null')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
+<p><b>Python</b> — single <code>None</code> object; test with <code>is</code> / <code>is not</code>:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">None</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;empty&quot;</span><span class="t-op">)</span></td></tr>
-</tbody></table></div><p>C# — <code>null</code> reference; test with <code>==</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm"># Not None:</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">not</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;has a value&quot;</span><span class="t-op">)</span></td></tr>
+</tbody></table></div>
+
+<p><b>C#</b> — <code>null</code> reference; test with <code>==</code> / <code>!=</code> or <code>is</code> / <code>is not</code>:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">string</span><span class="t-op">?</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;empty&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
@@ -6277,23 +6314,69 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">5</td><td class="src"><span class="t-cm">// C# 9+ pattern:</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;empty&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Always use <code>if x is None:</code> in Python — not <code>== None</code> (works but not idiomatic).</p></div></div><div class="csharp-float-win" id="csharp-win-is-vs-equals" role="dialog" aria-labelledby="csharp-win-title-is-vs-equals"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-is-vs-equals">C# Comparison — is vs == vs ReferenceEquals</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('is-vs-equals')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — <code>==</code> value, <code>is</code> same object:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm">// Not null:</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">!</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;has a value&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-id">not</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// C# 9+</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;has a value&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Check</th><th>Python</th><th>C#</th></tr>
+<tr>
+  <td>Is empty / null?</td>
+  <td><code>if value is None:</code></td>
+  <td><code>if (value == null)</code> or <code>if (value is null)</code></td>
+</tr>
+<tr>
+  <td>Has a value? (not None)</td>
+  <td><code>if value is not None:</code></td>
+  <td><code>if (value != null)</code> or <code>if (value is not null)</code></td>
+</tr>
+</table>
+
+<p class="csharp-pop-note"><b>Bottom line:</b> Python: prefer <code>is None</code> / <code>is not None</code> (not <code>== None</code>). C#: <code>== null</code> / <code>!= null</code>, or C# 9+ <code>is null</code> / <code>is not null</code>.</p>
+</div></div><div class="csharp-float-win" id="csharp-win-is-vs-equals" role="dialog" aria-labelledby="csharp-win-title-is-vs-equals"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-is-vs-equals">C# Comparison — is vs == vs ReferenceEquals</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('is-vs-equals')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
+<p><b>Python</b></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">]</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">b</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">]</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># True  — same values</span></td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># False — different objects</span></td></tr>
-<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">6</td><td class="src"><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">None</span></td></tr>
-<tr><td class="gutter">7</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">x</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># correct check</span></td></tr>
-</tbody></table></div><p>C# — <code>==</code> value (if overloaded), <code>ReferenceEquals</code> for identity:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">3</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># True</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># False</span></td></tr>
+</tbody></table></div>
+
+<p><b>C#</b> — same data: both arrays are <code>{1, 2}</code></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">SequenceEqual</span><span class="t-op">(</span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// value compare</span></td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">ReferenceEquals</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// False</span></td></tr>
-<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">6</td><td class="src"><span class="t-kw">string</span><span class="t-op">?</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">7</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">x</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Use <code>is</code> only for <code>None</code> and singletons in Python. Use <code>==</code> for value comparison.</p></div></div><div class="csharp-float-win" id="csharp-win-pass-stub" role="dialog" aria-labelledby="csharp-win-title-pass-stub"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-pass-stub">C# Comparison — pass vs Empty Block</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('pass-stub')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — <code>pass</code> = empty block stub:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// False</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm">// Console.WriteLine(a is b);  // INVALID — C# &quot;is&quot; needs a type, not another variable</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op"> </span><span class="t-kw">is</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-cm">// True  — type check (NOT identity)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">ReferenceEquals</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-cm">// False — identity (like Python &quot;is&quot;)</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">SequenceEqual</span><span class="t-op">(</span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// True  — same values (like Python &quot;==&quot;)</span></td></tr>
+</tbody></table></div>
+
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Expression</th><th>Python result</th><th>C# result</th></tr>
+<tr>
+  <td><code>a == b</code></td>
+  <td><b>True</b> (same values)</td>
+  <td><b>False</b> (arrays: same object? — no)</td>
+</tr>
+<tr>
+  <td><code>a is b</code></td>
+  <td><b>False</b> (same object? — no)</td>
+  <td><b>Not valid</b> like Python. C# <code>is</code> checks <b>type</b>
+  (<code>a is int[]</code> → <b>True</b>). For identity use
+  <code>ReferenceEquals(a, b)</code> → <b>False</b></td>
+</tr>
+</table>
+
+<p class="csharp-pop-note"><b>Bottom line:</b> C# <code>a == b</code> on arrays → <b>False</b>. C# has no <code>a is b</code> identity check — use <code>ReferenceEquals(a, b)</code> → <b>False</b>. Same values in C#: <code>SequenceEqual</code> → <b>True</b>.</p>
+</div></div><div class="csharp-float-win" id="csharp-win-pass-stub" role="dialog" aria-labelledby="csharp-win-title-pass-stub"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-pass-stub">C# Comparison — pass vs Empty Block</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('pass-stub')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — <code>pass</code> = empty block stub:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">save_report</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># TODO later</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
