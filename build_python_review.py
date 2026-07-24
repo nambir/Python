@@ -7,6 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from python_review_content import DOCX_LEVEL, DOCX_NAME, DOCX_TITLE, QUESTIONS
+from python_review_algorithms import ALGORITHMS
 from slide_code import vs_editor
 
 OUTPUT = Path(__file__).parent / "PythonReview.html"
@@ -140,6 +141,17 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .q-doc .vs-editor { max-height: none; margin: 6px 0 10px; }
 .q-doc .expected { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0 12px; font-size: 12px; }
 .solution-label { font-size: 15px; color: #0066cc; margin: 4px 0 6px; font-weight: 700; }
+.algo-box {
+  background: #f0f7ff; border-left: 3px solid #0066cc; padding: 10px 12px;
+  border-radius: 4px; margin: 0 0 12px; font-size: 12px;
+}
+.algo-box .algo-title { font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.algo-box ol { margin: 0 0 0 18px; padding: 0; }
+.algo-box li { font-size: 12px; line-height: 1.45; margin-bottom: 4px; color: #1a1a2e; }
+.algo-box li.algo-intro {
+  font-weight: 600; background: #fff; border: 1px solid #cfe0f5;
+  border-radius: 4px; padding: 8px 10px; margin: 0 0 8px -4px; list-style-position: inside;
+}
 .panel-code.expanded .q-doc .vs-editor,
 .panel-code.expanded .vs-editor { max-height: none; }
 .panel-code.expanded .q-doc table.vs-code td.src,
@@ -347,6 +359,22 @@ def review_vs_editor(text: str) -> str:
     return vs_editor(padded, lang="python")
 
 
+def algorithm_block(q: dict) -> str:
+    steps = q.get("algorithm") or ALGORITHMS.get(q.get("id", ""), [])
+    if not steps:
+        return ""
+    items = []
+    for i, step in enumerate(steps):
+        cls = ' class="algo-intro"' if i == 0 else ""
+        items.append(f"<li{cls}>{esc(step)}</li>")
+    return (
+        '<div class="algo-box">'
+        '<div class="algo-title">Algorithm — how the solution works</div>'
+        f"<ol>{''.join(items)}</ol>"
+        "</div>"
+    )
+
+
 def question_doc_block(q: dict, *, include_stub: bool = True) -> str:
     """Full practice-doc question content (subsection, prompt, stub, expected)."""
     parts: list[str] = ['<div class="q-doc">']
@@ -413,6 +441,7 @@ def question_slide(num: int, q: dict) -> str:
         ]
         if has_code:
             body_parts.append('<div class="solution-label">Solution</div>')
+            body_parts.append(algorithm_block(q))
             body_parts.append(review_vs_editor(raw))
         body_parts.append("</div>")
         code_panel = "".join(body_parts)
