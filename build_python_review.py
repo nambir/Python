@@ -43,6 +43,48 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .panel-left { min-width: 0; padding-right: 8px; }
 .panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
+.panel-code .code-playground + .code-playground { margin-top: 14px; }
+.q-doc .code-playground { margin: 6px 0 10px; }
+
+.code-playground {
+  border: 1px solid #cfe0f5; border-radius: 6px; background: #fff; overflow: hidden;
+}
+.code-playground .code-toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-start;
+  margin-bottom: 0; padding: 6px 10px; background: #f0f7ff; border-bottom: 1px solid #cfe0f5;
+}
+.code-toolbar-label { font-size: 12px; font-weight: 700; color: #0066cc; margin-right: auto; }
+.btn-run-py, .btn-reset-py {
+  padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer;
+}
+.btn-run-py { background: #0066cc; color: #fff; }
+.btn-run-py:hover { background: #0052a3; }
+.btn-run-py:disabled { opacity: .6; cursor: wait; }
+.btn-reset-py { background: #fff; color: #555; border: 1px solid #ccc; }
+.btn-reset-py:hover { background: #f5f5f5; }
+.py-status { font-size: 11px; color: #666; }
+.py-editor {
+  display: block; width: 100%; min-height: 180px; max-height: calc(100vh - 280px);
+  padding: 10px 12px; border: none; resize: vertical;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
+  color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
+}
+.py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-output {
+  margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
+  background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
+  line-height: 1.45; white-space: pre-wrap; max-height: 180px; overflow: auto;
+}
+.py-output.err { color: #fecaca; }
+.py-highlight { border-top: 1px solid #e2e8f0; padding: 4px 10px 8px; background: #fafafa; }
+.py-highlight summary {
+  cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
+}
+.py-highlight .vs-editor { max-height: 40vh; border: none; }
+.panel-code.expanded .py-editor { max-height: calc(100vh - 220px); }
+.panel-code.expanded .code-playground table.vs-code td.src {
+  white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;
+}
 .split-divider {
   width: 12px; cursor: col-resize; align-self: stretch; min-height: 240px;
   position: relative; touch-action: none; user-select: none;
@@ -304,6 +346,8 @@ function nextSlide() {{ show(Math.min(current + 1, total)); }}
 function prevSlide() {{ show(Math.max(current - 1, 0)); }}
 function goSlide(n) {{ show(n); }}
 document.addEventListener('keydown', e => {{
+  const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+  if (tag === 'textarea' || tag === 'input' || (e.target && e.target.isContentEditable)) return;
   if (e.key === 'Escape') {{ collapseCodePanels(); return; }}
   if (e.key === 'ArrowRight') nextSlide();
   if (e.key === 'ArrowLeft') prevSlide();
@@ -312,11 +356,111 @@ document.addEventListener('keydown', e => {{
 window.addEventListener('DOMContentLoaded', () => {{
   initSplitDividers();
   applySavedSplit(document);
+  document.querySelectorAll('.py-editor').forEach(ed => {{
+    ed.dataset.original = ed.value;
+  }});
   const h = location.hash.replace('#','');
   if (h === 'nav' || h === '') show(0);
   else show(parseInt(h, 10) || 0);
 }});
 """
+
+# Raw string so '\n' stays as JS escape sequences (not real newlines).
+PLAYGROUND_JS = r"""
+/* ── In-browser Python (Pyodide) playground ── */
+let pyodideReady = null;
+function loadPyodideScript() {
+  return new Promise((resolve, reject) => {
+    if (typeof loadPyodide === 'function') { resolve(); return; }
+    const existing = document.querySelector('script[data-pyodide]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Pyodide script failed to load')));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+    s.async = true;
+    s.dataset.pyodide = '1';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error(
+      'Could not load Pyodide. Prefer http://localhost over file://, and check your network.'
+    ));
+    document.head.appendChild(s);
+  });
+}
+async function ensurePyodide(statusEl) {
+  if (pyodideReady) return pyodideReady;
+  if (statusEl) statusEl.textContent = 'Loading Python (first time)...';
+  await loadPyodideScript();
+  if (typeof loadPyodide !== 'function') {
+    throw new Error('Pyodide failed to load. Use http://localhost (not file://).');
+  }
+  pyodideReady = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+  const py = await pyodideReady;
+  if (statusEl) statusEl.textContent = 'Python ready';
+  return py;
+}
+function resetPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (ed) {
+    if (ed.dataset.original == null) ed.dataset.original = ed.defaultValue;
+    ed.value = ed.dataset.original;
+  }
+  if (out) { out.hidden = true; out.textContent = ''; out.classList.remove('err'); }
+  if (status) status.textContent = '';
+}
+async function runPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (!ed || !out) return;
+  btn.disabled = true;
+  out.hidden = false;
+  out.classList.remove('err');
+  out.textContent = '';
+  try {
+    const py = await ensurePyodide(status);
+    if (status) status.textContent = 'Running...';
+    let stdout = [];
+    let stderr = [];
+    py.setStdout({
+      batched: (s) => { stdout.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    py.setStderr({
+      batched: (s) => { stderr.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    try {
+      await py.runPythonAsync(ed.value);
+      const text = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = text || '(ran successfully — no printed output)';
+      if (stderr.length) out.classList.add('err');
+      if (status) status.textContent = 'Done';
+    } catch (err) {
+      out.classList.add('err');
+      const printed = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = (printed ? printed + '\n' : '') + String(err);
+      if (status) status.textContent = 'Error';
+    }
+  } catch (err) {
+    out.classList.add('err');
+    out.textContent = String(err);
+    if (status) status.textContent = 'Failed to start Python';
+  } finally {
+    btn.disabled = false;
+  }
+}
+"""
+
+JS = JS + PLAYGROUND_JS
 
 NAV_BAR = """
 <div id="codeBackdrop" class="code-backdrop" onclick="collapseCodePanels()"></div>
@@ -354,9 +498,9 @@ def concepts_list(concepts: list[str]) -> str:
 
 
 def review_vs_editor(text: str) -> str:
-    """VS-style code block with two blank lines after the last code line."""
+    """Editable + runnable VS-style code block (Pyodide Run button)."""
     padded = (text or "").rstrip("\n") + "\n\n\n"
-    return vs_editor(padded, lang="python")
+    return vs_editor(padded, lang="python", playground=True)
 
 
 def algorithm_block(q: dict) -> str:

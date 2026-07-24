@@ -33,6 +33,48 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .panel-left { min-width: 0; padding-right: 8px; }
 .panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
+.panel-code .code-playground + .code-playground { margin-top: 14px; }
+.q-doc .code-playground { margin: 6px 0 10px; }
+
+.code-playground {
+  border: 1px solid #cfe0f5; border-radius: 6px; background: #fff; overflow: hidden;
+}
+.code-playground .code-toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-start;
+  margin-bottom: 0; padding: 6px 10px; background: #f0f7ff; border-bottom: 1px solid #cfe0f5;
+}
+.code-toolbar-label { font-size: 12px; font-weight: 700; color: #0066cc; margin-right: auto; }
+.btn-run-py, .btn-reset-py {
+  padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer;
+}
+.btn-run-py { background: #0066cc; color: #fff; }
+.btn-run-py:hover { background: #0052a3; }
+.btn-run-py:disabled { opacity: .6; cursor: wait; }
+.btn-reset-py { background: #fff; color: #555; border: 1px solid #ccc; }
+.btn-reset-py:hover { background: #f5f5f5; }
+.py-status { font-size: 11px; color: #666; }
+.py-editor {
+  display: block; width: 100%; min-height: 180px; max-height: calc(100vh - 280px);
+  padding: 10px 12px; border: none; resize: vertical;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
+  color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
+}
+.py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-output {
+  margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
+  background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
+  line-height: 1.45; white-space: pre-wrap; max-height: 180px; overflow: auto;
+}
+.py-output.err { color: #fecaca; }
+.py-highlight { border-top: 1px solid #e2e8f0; padding: 4px 10px 8px; background: #fafafa; }
+.py-highlight summary {
+  cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
+}
+.py-highlight .vs-editor { max-height: 40vh; border: none; }
+.panel-code.expanded .py-editor { max-height: calc(100vh - 220px); }
+.panel-code.expanded .code-playground table.vs-code td.src {
+  white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;
+}
 .split-divider {
   width: 12px; cursor: col-resize; align-self: stretch; min-height: 240px;
   position: relative; touch-action: none; user-select: none;
@@ -243,7 +285,18 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q1_1_patient_bill.py">Q1_1_patient_bill.py</a><span class="run-cmd">python PythonReview/Q1_1_patient_bill.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Primitive Datatypes</div><p class="q-prompt"><b>Q1.1 (Coding):</b> You're working on a patient billing system. Write a function that calculates the total cost for a patient's hospital stay, handling different data types appropriately.</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Primitive Datatypes</div><p class="q-prompt"><b>Q1.1 (Coding):</b> You're working on a patient billing system. Write a function that calculates the total cost for a patient's hospital stay, handling different data types appropriately.</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def calculate_patient_bill(room_charge_per_day: float, days_stayed: int, 
+                          has_insurance: bool, patient_name: str) -&gt; dict:
+    &quot;&quot;&quot;
+    Calculate total bill for a patient
+    - Apply 20% discount if patient has insurance
+    - Return a dictionary with patient details and final amount
+    &quot;&quot;&quot;
+    # Your implementation here
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">calculate_patient_bill</span><span class="t-op">(</span><span class="t-id">room_charge_per_day</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">days_stayed</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">has_insurance</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">bool</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">patient_name</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -255,7 +308,45 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
-</tbody></table></div><div class="expected"><b>Expected Output:</b> Handle type conversions, boolean logic, and string formatting.</div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">A hospital stay costs money each day. We multiply days by the daily room price, take off an insurance discount if they have it, and show the final bill.</li><li>Validate that money and day inputs are usable (non-negative).</li><li>Calculate the stay subtotal from daily charge × days.</li><li>If insurance applies, compute a 20% discount; otherwise use zero discount.</li><li>Subtract the discount and round money to two decimal places.</li><li>Return patient details together with subtotal, discount, and final amount.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div><div class="expected"><b>Expected Output:</b> Handle type conversions, boolean logic, and string formatting.</div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">A hospital stay costs money each day. We multiply days by the daily room price, take off an insurance discount if they have it, and show the final bill.</li><li>Validate that money and day inputs are usable (non-negative).</li><li>Calculate the stay subtotal from daily charge × days.</li><li>If insurance applies, compute a 20% discount; otherwise use zero discount.</li><li>Subtract the discount and round money to two decimal places.</li><li>Return patient details together with subtotal, discount, and final amount.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Calculate an educational hospital-stay bill.&quot;&quot;&quot;
+from decimal import Decimal, ROUND_HALF_UP
+
+
+# Step 1: A hospital stay costs money each day. We multiply days by the daily room price, take off an insurance discount if they have it, and show the final bill.
+def calculate_patient_bill(
+    room_charge_per_day: float,
+    days_stayed: int,
+    has_insurance: bool,
+    patient_name: str,
+) -&gt; dict:
+    # Step 2: validate that money and day inputs are usable
+    if room_charge_per_day &lt; 0 or days_stayed &lt; 0:
+        raise ValueError(&quot;charges and days must be non-negative&quot;)
+
+    # Step 3: calculate stay subtotal (daily charge × days)
+    subtotal = Decimal(str(room_charge_per_day)) * days_stayed
+
+    # Step 4: apply 20% insurance discount, or zero if no insurance
+    discount = subtotal * Decimal(&quot;0.20&quot;) if has_insurance else Decimal(&quot;0&quot;)
+
+    # Step 5: subtract discount and round money to 2 decimal places
+    final = (subtotal - discount).quantize(Decimal(&quot;0.01&quot;), rounding=ROUND_HALF_UP)
+
+    # Step 6: return patient details with money breakdown
+    return {
+        &quot;patient_name&quot;: patient_name,
+        &quot;days_stayed&quot;: days_stayed,
+        &quot;subtotal&quot;: subtotal,
+        &quot;discount&quot;: discount,
+        &quot;final_amount&quot;: final,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(calculate_patient_bill(350.0, 3, True, &quot;Asha&quot;))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Calculate an educational hospital-stay bill.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">decimal</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Decimal</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ROUND_HALF_UP</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -294,7 +385,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">36</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">calculate_patient_bill</span><span class="t-op">(</span><span class="t-num">350.0</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">True</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Asha&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-2">
@@ -340,7 +431,23 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q1_3_medication_schedule.py">Q1_3_medication_schedule.py</a><span class="run-cmd">python PythonReview/Q1_3_medication_schedule.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">List Operations</div><p class="q-prompt"><b>Q1.3 (Coding):</b> You're managing a patient's medication schedule. Create a system to track daily medications:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">List Operations</div><p class="q-prompt"><b>Q1.3 (Coding):</b> You're managing a patient's medication schedule. Create a system to track daily medications:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def manage_medication_schedule(patient_medications: list) -&gt; dict:
+    &quot;&quot;&quot;
+    Given a list of medications with their schedules:
+    [(&#x27;Aspirin&#x27;, &#x27;8:00&#x27;), (&#x27;Insulin&#x27;, &#x27;8:00&#x27;), (&#x27;Aspirin&#x27;, &#x27;20:00&#x27;)]
+    
+    Return a dictionary grouped by time:
+    {&#x27;8:00&#x27;: [&#x27;Aspirin&#x27;, &#x27;Insulin&#x27;], &#x27;20:00&#x27;: [&#x27;Aspirin&#x27;]}
+    
+    Also implement methods to:
+    1. Add new medication
+    2. Remove medication at specific time
+    3. Get all medications for a specific time
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">manage_medication_schedule</span><span class="t-op">(</span><span class="t-id">patient_medications</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Given</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op"> </span><span class="t-id">of</span><span class="t-op"> </span><span class="t-id">medications</span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">their</span><span class="t-op"> </span><span class="t-id">schedules</span><span class="t-op">:</span></td></tr>
@@ -357,7 +464,51 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">15</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">16</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Medicines must be taken at different times. We put each medicine into a “box” labeled with its time, so we can quickly see what to take at 8:00 or add/remove one later.</li><li>Maintain a schedule of medication times and their corresponding medicines using a dictionary.</li><li>Create an empty dictionary called schedule.</li><li>Read each (medicine, time) from the input list.</li><li>If the time is not already present in schedule, create a new empty list for that time.</li><li>Add the medicine to the list for the corresponding time.</li><li>Repeat Steps 4–6 until all medications have been processed.</li><li>To add a medication later: if the time is missing, create its list; then append the medicine.</li><li>To remove a medication: if the time exists and the medicine is present, remove it; if the list becomes empty, delete that time from schedule.</li><li>To get medications for a specific time: if the time exists, return its list; otherwise return an empty list.</li><li>Return the final medication schedule.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Medicines must be taken at different times. We put each medicine into a “box” labeled with its time, so we can quickly see what to take at 8:00 or add/remove one later.</li><li>Maintain a schedule of medication times and their corresponding medicines using a dictionary.</li><li>Create an empty dictionary called schedule.</li><li>Read each (medicine, time) from the input list.</li><li>If the time is not already present in schedule, create a new empty list for that time.</li><li>Add the medicine to the list for the corresponding time.</li><li>Repeat Steps 4–6 until all medications have been processed.</li><li>To add a medication later: if the time is missing, create its list; then append the medicine.</li><li>To remove a medication: if the time exists and the medicine is present, remove it; if the list becomes empty, delete that time from schedule.</li><li>To get medications for a specific time: if the time exists, return its list; otherwise return an empty list.</li><li>Return the final medication schedule.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Group and manage a patient&#x27;s medication schedule.&quot;&quot;&quot;
+from collections import defaultdict
+
+
+# Step 1: Medicines must be taken at different times. We put each medicine into a &quot;box&quot; labeled with its time, so we can quickly see what to take at 8:00 or add/remove one later.
+class MedicationSchedule:
+    def __init__(self, medications: list[tuple[str, str]] = []):
+        # Step 2–3: maintain schedule as a dictionary; start empty (time -&gt; medicines)
+        self.by_time: dict[str, list[str]] = defaultdict(list)
+        # Steps 4–7: read each (medicine, time); ensure key exists; append medicine
+        for medication, time in medications:
+            self.add(medication, time)
+
+    def add(self, medication: str, time: str) -&gt; None:
+        # Step 8: add medication — create time list if missing, then append
+        self.by_time[time].append(medication)
+
+    def remove(self, medication: str, time: str) -&gt; bool:
+        # Step 9: remove medication if present; delete empty time keys
+        if medication not in self.by_time.get(time, []):
+            return False
+        self.by_time[time].remove(medication)
+        if not self.by_time[time]:
+            del self.by_time[time]
+        return True
+
+    def at(self, time: str) -&gt; list[str]:
+        # Step 10: get medications for a time, or empty list if missing
+        return list(self.by_time.get(time, []))
+
+    def grouped(self) -&gt; dict[str, list[str]]:
+        # Step 11: return the final medication schedule
+        return {t: list(m) for t, m in self.by_time.items()}
+
+
+def manage_medication_schedule(patient_medications: list[tuple[str, str]]) -&gt; dict[str, list[str]]:
+    # Steps 2–11 via the class, then return the final schedule
+    return MedicationSchedule(patient_medications).grouped()
+
+
+if __name__ == &quot;__main__&quot;:
+    print(manage_medication_schedule([(&quot;Aspirin&quot;, &quot;8:00&quot;), (&quot;Insulin&quot;, &quot;8:00&quot;), (&quot;Aspirin&quot;, &quot;20:00&quot;)]))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Group and manage a patient&#x27;s medication schedule.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">defaultdict</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -402,7 +553,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">manage_medication_schedule</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-op">(</span><span class="t-str">&quot;Aspirin&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;8:00&quot;</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-str">&quot;Insulin&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;8:00&quot;</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-str">&quot;Aspirin&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;20:00&quot;</span><span class="t-op">)</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">43</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">44</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-4">
@@ -448,7 +599,16 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q1_5_vital_signs.py">Q1_5_vital_signs.py</a><span class="run-cmd">python PythonReview/Q1_5_vital_signs.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Tuple Operations</div><p class="q-prompt"><b>Q1.5 (Coding):</b> Design a system to store immutable patient vital signs readings:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Tuple Operations</div><p class="q-prompt"><b>Q1.5 (Coding):</b> Design a system to store immutable patient vital signs readings:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def process_vital_signs(readings: list) -&gt; tuple:
+    &quot;&quot;&quot;
+    Process vital signs readings and return statistics
+    Input: [(120, 80, 98.6, &#x27;2024-01-15&#x27;), (115, 75, 99.1, &#x27;2024-01-16&#x27;)]
+    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">process_vital_signs</span><span class="t-op">(</span><span class="t-id">readings</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">tuple</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Process</span><span class="t-op"> </span><span class="t-id">vital</span><span class="t-op"> </span><span class="t-id">signs</span><span class="t-op"> </span><span class="t-id">readings</span><span class="t-op"> </span><span class="t-kw">and</span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">statistics</span></td></tr>
@@ -458,7 +618,39 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">9</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We have several days of blood pressure, temperature, and dates. We want simple summaries: average pressures, the hottest temperature, and the first-to-last date range.</li><li>Require at least one vital-sign reading.</li><li>Separate the readings into columns: systolic, diastolic, temperature, and date.</li><li>Compute average systolic and average diastolic.</li><li>Find the highest temperature.</li><li>Find the earliest and latest dates.</li><li>Return averages, max temperature, and the date range as one result.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We have several days of blood pressure, temperature, and dates. We want simple summaries: average pressures, the hottest temperature, and the first-to-last date range.</li><li>Require at least one vital-sign reading.</li><li>Separate the readings into columns: systolic, diastolic, temperature, and date.</li><li>Compute average systolic and average diastolic.</li><li>Find the highest temperature.</li><li>Find the earliest and latest dates.</li><li>Return averages, max temperature, and the date range as one result.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Summarize immutable vital-sign readings.&quot;&quot;&quot;
+
+
+# Step 1: We have several days of blood pressure, temperature, and dates. We want simple summaries: average pressures, the hottest temperature, and the first-to-last d...
+def process_vital_signs(
+    readings: list[tuple[int, int, float, str]],
+) -&gt; tuple[float, float, float, tuple[str, str]]:
+    # Step 2: require at least one reading
+    if not readings:
+        raise ValueError(&quot;at least one reading is required&quot;)
+
+    # Step 3: separate into systolic, diastolic, temperature, date columns
+    systolic, diastolic, temperatures, dates = zip(*readings)
+
+    # Step 4: average systolic and diastolic
+    avg_sys = sum(systolic) / len(systolic)
+    avg_dia = sum(diastolic) / len(diastolic)
+
+    # Step 5: highest temperature
+    max_temp = max(temperatures)
+
+    # Step 6: earliest and latest dates
+    date_range = (min(dates), max(dates))
+
+    # Step 7: return averages, max temperature, and date range
+    return (avg_sys, avg_dia, max_temp, date_range)
+
+
+if __name__ == &quot;__main__&quot;:
+    print(process_vital_signs([(120, 80, 98.6, &quot;2024-01-15&quot;), (115, 75, 99.1, &quot;2024-01-16&quot;)]))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Summarize immutable vital-sign readings.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -491,7 +683,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">process_vital_signs</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-op">(</span><span class="t-num">120</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">80</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">98.6</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;2024-01-15&quot;</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">115</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">75</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">99.1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;2024-01-16&quot;</span><span class="t-op">)</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">31</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">32</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-6">
@@ -560,7 +752,27 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q1_8_patient_records.py">Q1_8_patient_records.py</a><span class="run-cmd">python PythonReview/Q1_8_patient_records.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Dictionary Operations</div><p class="q-prompt"><b>Q1.8 (Coding):</b> Create a patient record management system using dictionaries:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Dictionary Operations</div><p class="q-prompt"><b>Q1.8 (Coding):</b> Create a patient record management system using dictionaries:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def patient_record_system():
+    &quot;&quot;&quot;
+    Create a system that manages patient records with nested dictionaries:
+    {
+        &#x27;patient_id&#x27;: {
+            &#x27;personal&#x27;: {&#x27;name&#x27;: &#x27;John&#x27;, &#x27;age&#x27;: 45, &#x27;gender&#x27;: &#x27;M&#x27;},
+            &#x27;medical&#x27;: {&#x27;allergies&#x27;: [&#x27;penicillin&#x27;], &#x27;blood_type&#x27;: &#x27;O+&#x27;},
+            &#x27;visits&#x27;: [{&#x27;date&#x27;: &#x27;2024-01-15&#x27;, &#x27;diagnosis&#x27;: &#x27;Hypertension&#x27;}]
+        }
+    }
+    
+    Implement:
+    1. Add new patient
+    2. Update patient information
+    3. Search patients by blood type
+    4. Get patient visit history
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">patient_record_system</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Create</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-id">system</span><span class="t-op"> </span><span class="t-id">that</span><span class="t-op"> </span><span class="t-id">manages</span><span class="t-op"> </span><span class="t-id">patient</span><span class="t-op"> </span><span class="t-id">records</span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">nested</span><span class="t-op"> </span><span class="t-id">dictionaries</span><span class="t-op">:</span></td></tr>
@@ -581,7 +793,49 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">19</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">20</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Think of a filing cabinet: each patient gets one folder (by id) with personal info, medical info, and visits. We add folders, update them, and search by blood type.</li><li>Keep patient records in a dictionary keyed by patient id.</li><li>To add a patient: reject duplicates, then store personal, medical, and an empty visits list.</li><li>To update a patient: merge the new fields into the existing record.</li><li>To search by blood type: collect ids whose medical blood type matches.</li><li>To get visit history: return a copy of that patient’s visits.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Think of a filing cabinet: each patient gets one folder (by id) with personal info, medical info, and visits. We add folders, update them, and search by blood type.</li><li>Keep patient records in a dictionary keyed by patient id.</li><li>To add a patient: reject duplicates, then store personal, medical, and an empty visits list.</li><li>To update a patient: merge the new fields into the existing record.</li><li>To search by blood type: collect ids whose medical blood type matches.</li><li>To get visit history: return a copy of that patient’s visits.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Manage nested patient records in memory.&quot;&quot;&quot;
+
+
+# Step 1: Think of a filing cabinet: each patient gets one folder (by id) with personal info, medical info, and visits. We add folders, update them, and search by bloo...
+class PatientRecords:
+    def __init__(self):
+        # Step 2: keep records in a dictionary keyed by patient id
+        self.records: dict[str, dict] = {}
+
+    def add(self, patient_id: str, personal: dict, medical: dict) -&gt; None:
+        # Step 3: reject duplicates; store personal, medical, empty visits
+        if patient_id in self.records:
+            raise ValueError(&quot;patient already exists&quot;)
+        self.records[patient_id] = {
+            &quot;personal&quot;: dict(personal),
+            &quot;medical&quot;: dict(medical),
+            &quot;visits&quot;: [],
+        }
+
+    def update(self, patient_id: str, **changes) -&gt; None:
+        # Step 4: merge new fields into the existing record
+        self.records[patient_id].update(changes)
+
+    def by_blood_type(self, blood_type: str) -&gt; list[str]:
+        # Step 5: collect ids whose medical blood type matches
+        return [
+            pid
+            for pid, r in self.records.items()
+            if r[&quot;medical&quot;].get(&quot;blood_type&quot;, &quot;&quot;).upper() == blood_type.upper()
+        ]
+
+    def visits(self, patient_id: str) -&gt; list[dict]:
+        # Step 6: return a copy of that patient&#x27;s visits
+        return list(self.records[patient_id][&quot;visits&quot;])
+
+
+if __name__ == &quot;__main__&quot;:
+    db = PatientRecords()
+    db.add(&quot;P1&quot;, {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 45}, {&quot;blood_type&quot;: &quot;O+&quot;, &quot;allergies&quot;: [&quot;penicillin&quot;]})
+    print(db.by_blood_type(&quot;o+&quot;))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Manage nested patient records in memory.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -624,7 +878,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">40</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">by_blood_type</span><span class="t-op">(</span><span class="t-str">&quot;o+&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">41</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">42</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-9">
@@ -693,7 +947,27 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q1_11_drug_interactions.py">Q1_11_drug_interactions.py</a><span class="run-cmd">python PythonReview/Q1_11_drug_interactions.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Set Operations</div><p class="q-prompt"><b>Q1.11 (Coding):</b> Implement a drug interaction checker using sets:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Set Operations</div><p class="q-prompt"><b>Q1.11 (Coding):</b> Implement a drug interaction checker using sets:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def check_drug_interactions(current_medications: set, new_medication: str, 
+                           interaction_db: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Check for drug interactions before prescribing new medication
+    
+    interaction_db = {
+        &#x27;aspirin&#x27;: {&#x27;warfarin&#x27;, &#x27;heparin&#x27;},
+        &#x27;warfarin&#x27;: {&#x27;aspirin&#x27;, &#x27;vitamin_k&#x27;},
+        ...
+    }
+    
+    Return: {
+        &#x27;safe&#x27;: bool,
+        &#x27;interactions&#x27;: set of conflicting drugs,
+        &#x27;recommendations&#x27;: list
+    }
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">check_drug_interactions</span><span class="t-op">(</span><span class="t-id">current_medications</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">set</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">new_medication</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">interaction_db</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -714,7 +988,45 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">19</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">20</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Before giving a new medicine, check if it fights with medicines the patient already takes. We look up known bad pairs and see if any of those partners are already on the list.</li><li>Normalize medication names so comparisons are case-insensitive.</li><li>Look up interaction partners for the new medication.</li><li>Find the overlap between current medications and those partners.</li><li>Mark the prescription safe only when there is no overlap.</li><li>Return safety, the conflict set, and a short recommendation.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Before giving a new medicine, check if it fights with medicines the patient already takes. We look up known bad pairs and see if any of those partners are already on the list.</li><li>Normalize medication names so comparisons are case-insensitive.</li><li>Look up interaction partners for the new medication.</li><li>Find the overlap between current medications and those partners.</li><li>Mark the prescription safe only when there is no overlap.</li><li>Return safety, the conflict set, and a short recommendation.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Check educational drug-interaction pairs.&quot;&quot;&quot;
+
+
+# Step 1: Before giving a new medicine, check if it fights with medicines the patient already takes. We look up known bad pairs and see if any of those partners are al...
+def check_drug_interactions(
+    current_medications: set[str],
+    new_medication: str,
+    interaction_db: dict[str, set[str]],
+) -&gt; dict:
+    # Step 2: normalize names for case-insensitive comparison
+    current = {m.lower() for m in current_medications}
+    new = new_medication.lower()
+
+    # Step 3: look up interaction partners for the new medication
+    partners = {m.lower() for m in interaction_db.get(new, set())}
+
+    # Step 4: find overlap between current meds and partners
+    conflicts = current &amp; partners
+
+    # Step 5: safe only when there is no overlap
+    safe = not conflicts
+
+    # Step 6: return safety, conflicts, and a short recommendation
+    return {
+        &quot;safe&quot;: safe,
+        &quot;interactions&quot;: conflicts,
+        &quot;recommendations&quot;: (
+            [&quot;Consult a clinician before prescribing.&quot;]
+            if conflicts
+            else [&quot;No listed interaction; still verify clinically.&quot;]
+        ),
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(check_drug_interactions({&quot;warfarin&quot;}, &quot;aspirin&quot;, {&quot;aspirin&quot;: {&quot;warfarin&quot;}}))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Check educational drug-interaction pairs.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -753,7 +1065,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">36</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">check_drug_interactions</span><span class="t-op">(</span><span class="t-op">{</span><span class="t-str">&quot;warfarin&quot;</span><span class="t-op">}</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;aspirin&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;aspirin&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;warfarin&quot;</span><span class="t-op">}</span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-12">
@@ -799,7 +1111,40 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q2_1_typed_validation.py">Q2_1_typed_validation.py</a><span class="run-cmd">python PythonReview/Q2_1_typed_validation.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q2.1 (Coding):</b> Create a strongly-typed patient data validation system:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q2.1 (Coding):</b> Create a strongly-typed patient data validation system:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from typing import List, Dict, Optional, Union, Tuple
+from dataclasses import dataclass
+from enum import Enum
+
+class BloodType(Enum):
+    A_POS = &quot;A+&quot;
+    A_NEG = &quot;A-&quot;
+    B_POS = &quot;B+&quot;
+    B_NEG = &quot;B-&quot;
+    AB_POS = &quot;AB+&quot;
+    AB_NEG = &quot;AB-&quot;
+    O_POS = &quot;O+&quot;
+    O_NEG = &quot;O-&quot;
+
+@dataclass
+class VitalSigns:
+    systolic: int
+    diastolic: int
+    temperature: float
+    heart_rate: int
+    timestamp: str
+
+def validate_patient_data(patient_id: str, 
+                         age: int,
+                         blood_type: BloodType,
+                         vitals: List[VitalSigns],
+                         emergency_contact: Optional[Dict[str, str]] = None) -&gt; bool:
+    &quot;&quot;&quot;
+    Validate patient data with proper type hints
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">typing</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">List</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Optional</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Union</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Tuple</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">dataclasses</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">dataclass</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">enum</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Enum</span></td></tr>
@@ -833,7 +1178,69 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">31</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">32</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Before we trust patient data, we check the basics: id and age look okay, blood type is a real choice, vitals are present and inside safe ranges, and emergency contact has name and phone if given.</li><li>Reject invalid identity inputs (blank id, age out of range, wrong blood-type type, empty vitals).</li><li>If an emergency contact is provided, require both name and phone.</li><li>Check every vital-sign reading against allowed ranges.</li><li>Return True only when all checks pass; otherwise False.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Before we trust patient data, we check the basics: id and age look okay, blood type is a real choice, vitals are present and inside safe ranges, and emergency contact has name and phone if given.</li><li>Reject invalid identity inputs (blank id, age out of range, wrong blood-type type, empty vitals).</li><li>If an emergency contact is provided, require both name and phone.</li><li>Check every vital-sign reading against allowed ranges.</li><li>Return True only when all checks pass; otherwise False.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Validate typed patient data.&quot;&quot;&quot;
+from dataclasses import dataclass
+from enum import Enum
+
+
+# Step 1: Before we trust patient data, we check the basics: id and age look okay, blood type is a real choice, vitals are present and inside safe ranges, and emergenc...
+class BloodType(Enum):
+    A_POS = &quot;A+&quot;
+    A_NEG = &quot;A-&quot;
+    B_POS = &quot;B+&quot;
+    B_NEG = &quot;B-&quot;
+    AB_POS = &quot;AB+&quot;
+    AB_NEG = &quot;AB-&quot;
+    O_POS = &quot;O+&quot;
+    O_NEG = &quot;O-&quot;
+
+
+@dataclass(frozen=True)
+class VitalSigns:
+    systolic: int
+    diastolic: int
+    temperature: float
+    heart_rate: int
+    timestamp: str
+
+
+def validate_patient_data(
+    patient_id: str,
+    age: int,
+    blood_type: BloodType,
+    vitals: list[VitalSigns],
+    emergency_contact: dict[str, str] | None = None,
+) -&gt; bool:
+    # Step 2: reject invalid identity inputs
+    if not patient_id.strip() or not 0 &lt;= age &lt;= 130 or not isinstance(blood_type, BloodType) or not vitals:
+        return False
+
+    # Step 3: if contact given, require name and phone
+    if emergency_contact is not None and not {&quot;name&quot;, &quot;phone&quot;} &lt;= emergency_contact.keys():
+        return False
+
+    # Step 4: check every vital-sign reading against allowed ranges
+    vitals_ok = all(
+        40 &lt;= v.systolic &lt;= 260
+        and 20 &lt;= v.diastolic &lt;= 180
+        and 85 &lt;= v.temperature &lt;= 110
+        and 20 &lt;= v.heart_rate &lt;= 250
+        for v in vitals
+    )
+
+    # Step 5: True only when all checks pass
+    return vitals_ok
+
+
+if __name__ == &quot;__main__&quot;:
+    print(
+        validate_patient_data(
+            &quot;P1&quot;, 42, BloodType.O_POS, [VitalSigns(120, 80, 98.6, 72, &quot;2025-01-01&quot;)]
+        )
+    )
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Validate typed patient data.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">dataclasses</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">dataclass</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">enum</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Enum</span></td></tr>
@@ -896,7 +1303,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">60</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">61</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">62</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-14">
@@ -942,7 +1349,19 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q3_1_medical_calculations.py">Q3_1_medical_calculations.py</a><span class="run-cmd">python PythonReview/Q3_1_medical_calculations.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Arithmetic Operators</div><p class="q-prompt"><b>Q3.1 (Coding):</b> Calculate BMI and medication dosage using various arithmetic operators:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Arithmetic Operators</div><p class="q-prompt"><b>Q3.1 (Coding):</b> Calculate BMI and medication dosage using various arithmetic operators:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def medical_calculations(weight_kg: float, height_m: float, 
+                        base_dosage_mg: float, patient_age: int) -&gt; dict:
+    &quot;&quot;&quot;
+    Calculate:
+    1. BMI using weight and height
+    2. Adjusted medication dosage (reduce by 10% for patients over 65)
+    3. Days supply if total medication is 1000mg and dosage is calculated above
+    4. Whether patient is in healthy BMI range (18.5-24.9)
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">medical_calculations</span><span class="t-op">(</span><span class="t-id">weight_kg</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">height_m</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">base_dosage_mg</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">patient_age</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -955,7 +1374,47 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We calculate BMI from weight and height, maybe lower the medicine dose for older patients, figure out how many days a bottle lasts, and say if BMI looks healthy.</li><li>Reject non-positive height or dosage.</li><li>Calculate BMI from weight and height.</li><li>Reduce dosage for patients over 65; otherwise keep the base dosage.</li><li>Estimate days of supply from a fixed total amount ÷ dosage.</li><li>Flag whether BMI falls in the healthy range.</li><li>Return BMI, adjusted dosage, days supply, and the healthy flag.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We calculate BMI from weight and height, maybe lower the medicine dose for older patients, figure out how many days a bottle lasts, and say if BMI looks healthy.</li><li>Reject non-positive height or dosage.</li><li>Calculate BMI from weight and height.</li><li>Reduce dosage for patients over 65; otherwise keep the base dosage.</li><li>Estimate days of supply from a fixed total amount ÷ dosage.</li><li>Flag whether BMI falls in the healthy range.</li><li>Return BMI, adjusted dosage, days supply, and the healthy flag.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Calculate educational BMI and dosage values.&quot;&quot;&quot;
+import math
+
+
+# Step 1: We calculate BMI from weight and height, maybe lower the medicine dose for older patients, figure out how many days a bottle lasts, and say if BMI looks heal...
+def medical_calculations(
+    weight_kg: float,
+    height_m: float,
+    base_dosage_mg: float,
+    patient_age: int,
+) -&gt; dict:
+    # Step 2: reject non-positive height or dosage
+    if height_m &lt;= 0 or base_dosage_mg &lt;= 0:
+        raise ValueError(&quot;height and dosage must be positive&quot;)
+
+    # Step 3: calculate BMI from weight and height
+    bmi = weight_kg / height_m**2
+
+    # Step 4: reduce dosage for age over 65; otherwise keep base
+    dosage = base_dosage_mg * (0.9 if patient_age &gt; 65 else 1)
+
+    # Step 5: estimate days of supply from fixed total ÷ dosage
+    days_supply = math.floor(1000 / dosage)
+
+    # Step 6: flag whether BMI is in the healthy range
+    healthy_bmi = 18.5 &lt;= bmi &lt;= 24.9
+
+    # Step 7: return BMI, dosage, days supply, and healthy flag
+    return {
+        &quot;bmi&quot;: round(bmi, 2),
+        &quot;adjusted_dosage_mg&quot;: round(dosage, 2),
+        &quot;days_supply&quot;: days_supply,
+        &quot;healthy_bmi&quot;: healthy_bmi,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(medical_calculations(70, 1.75, 50, 70))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Calculate educational BMI and dosage values.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">math</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -996,7 +1455,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">38</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">medical_calculations</span><span class="t-op">(</span><span class="t-num">70</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">1.75</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">50</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">70</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">39</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">40</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-16">
@@ -1019,7 +1478,21 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q3_2_triage.py">Q3_2_triage.py</a><span class="run-cmd">python PythonReview/Q3_2_triage.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Comparison and Logical Operators</div><p class="q-prompt"><b>Q3.2 (Coding):</b> Create a patient triage system using comparison operators:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Comparison and Logical Operators</div><p class="q-prompt"><b>Q3.2 (Coding):</b> Create a patient triage system using comparison operators:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def triage_patient(temperature: float, blood_pressure: tuple, 
+                  heart_rate: int, is_conscious: bool, 
+                  pain_level: int) -&gt; str:
+    &quot;&quot;&quot;
+    Determine patient priority based on vital signs:
+    - Critical: Temp &gt; 104°F OR BP &gt; (180, 120) OR Heart rate &gt; 120 OR unconscious
+    - Urgent: Temp &gt; 101°F OR BP &gt; (140, 90) OR Pain &gt; 7
+    - Standard: All other cases
+    
+    Use appropriate comparison and logical operators
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">triage_patient</span><span class="t-op">(</span><span class="t-id">temperature</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">blood_pressure</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">tuple</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">heart_rate</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">is_conscious</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">bool</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">pain_level</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">:</span></td></tr>
@@ -1034,7 +1507,37 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">13</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Like a traffic light for sick patients: check the scariest warning signs first (Critical), then medium ones (Urgent), otherwise they are Standard.</li><li>Read systolic and diastolic from the blood-pressure pair.</li><li>If any critical rule matches, return Critical.</li><li>Else if any urgent rule matches, return Urgent.</li><li>Otherwise return Standard.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Like a traffic light for sick patients: check the scariest warning signs first (Critical), then medium ones (Urgent), otherwise they are Standard.</li><li>Read systolic and diastolic from the blood-pressure pair.</li><li>If any critical rule matches, return Critical.</li><li>Else if any urgent rule matches, return Urgent.</li><li>Otherwise return Standard.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Apply educational vital-sign triage rules.&quot;&quot;&quot;
+
+
+# Step 1: Like a traffic light for sick patients: check the scariest warning signs first (Critical), then medium ones (Urgent), otherwise they are Standard.
+def triage_patient(
+    temperature: float,
+    blood_pressure: tuple[int, int],
+    heart_rate: int,
+    is_conscious: bool,
+    pain_level: int,
+) -&gt; str:
+    # Step 2: read systolic and diastolic from the BP pair
+    sys, dia = blood_pressure
+
+    # Step 3: if any critical rule matches, return Critical
+    if temperature &gt; 104 or sys &gt; 180 or dia &gt; 120 or heart_rate &gt; 120 or not is_conscious:
+        return &quot;Critical&quot;
+
+    # Step 4: else if any urgent rule matches, return Urgent
+    if temperature &gt; 101 or sys &gt; 140 or dia &gt; 90 or pain_level &gt; 7:
+        return &quot;Urgent&quot;
+
+    # Step 5: otherwise return Standard
+    return &quot;Standard&quot;
+
+
+if __name__ == &quot;__main__&quot;:
+    print(triage_patient(102, (130, 85), 90, True, 4))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Apply educational vital-sign triage rules.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1065,7 +1568,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">28</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">triage_patient</span><span class="t-op">(</span><span class="t-num">102</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">130</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">85</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">90</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">True</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">4</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">29</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">30</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-17">
@@ -1088,7 +1591,34 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q3_3_permissions.py">Q3_3_permissions.py</a><span class="run-cmd">python PythonReview/Q3_3_permissions.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Bitwise Operators</div><p class="q-prompt"><b>Q3.3 (Coding):</b> Implement a patient permission system using bitwise operators:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Bitwise Operators</div><p class="q-prompt"><b>Q3.3 (Coding):</b> Implement a patient permission system using bitwise operators:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">class PatientPermissions:
+    &quot;&quot;&quot;
+    Use bitwise operators to manage patient data access permissions:
+    READ = 1 (001)
+    WRITE = 2 (010)  
+    DELETE = 4 (100)
+    &quot;&quot;&quot;
+    READ = 1
+    WRITE = 2
+    DELETE = 4
+    
+    def __init__(self, permissions: int = 0):
+        self.permissions = permissions
+    
+    def add_permission(self, permission: int):
+        &quot;&quot;&quot;Add permission using bitwise OR&quot;&quot;&quot;
+        pass
+    
+    def remove_permission(self, permission: int):
+        &quot;&quot;&quot;Remove permission using bitwise operations&quot;&quot;&quot;
+        pass
+    
+    def has_permission(self, permission: int) -&gt; bool:
+        &quot;&quot;&quot;Check if permission exists using bitwise AND&quot;&quot;&quot;
+        pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">PatientPermissions</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Use</span><span class="t-op"> </span><span class="t-id">bitwise</span><span class="t-op"> </span><span class="t-id">operators</span><span class="t-op"> </span><span class="t-id">to</span><span class="t-op"> </span><span class="t-id">manage</span><span class="t-op"> </span><span class="t-id">patient</span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op"> </span><span class="t-id">access</span><span class="t-op"> </span><span class="t-id">permissions</span><span class="t-op">:</span></td></tr>
@@ -1116,7 +1646,41 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">26</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Permissions are like light switches: Read, Write, Delete. We flip switches on or off, and we can ask “is this switch on?”</li><li>Represent each permission as a distinct bit flag.</li><li>Store the current permissions as one integer.</li><li>To grant a permission: turn its bit on.</li><li>To revoke a permission: turn its bit off.</li><li>To check a permission: test whether the required bits are set.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Permissions are like light switches: Read, Write, Delete. We flip switches on or off, and we can ask “is this switch on?”</li><li>Represent each permission as a distinct bit flag.</li><li>Store the current permissions as one integer.</li><li>To grant a permission: turn its bit on.</li><li>To revoke a permission: turn its bit off.</li><li>To check a permission: test whether the required bits are set.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Manage bitwise patient-data permissions.&quot;&quot;&quot;
+
+
+# Step 1: Permissions are like light switches: Read, Write, Delete. We flip switches on or off, and we can ask “is this switch on?”
+class PatientPermissions:
+    # Step 2: represent each permission as a distinct bit flag
+    READ = 1
+    WRITE = 2
+    DELETE = 4
+    ALL = READ | WRITE | DELETE
+
+    def __init__(self, permissions: int = 0):
+        # Step 3: store current permissions as one integer
+        self.permissions = permissions
+
+    def add_permission(self, permission: int) -&gt; None:
+        # Step 4: grant a permission by turning its bit on
+        self.permissions |= permission
+
+    def remove_permission(self, permission: int) -&gt; None:
+        # Step 5: revoke a permission by turning its bit off
+        self.permissions &amp;= ~permission
+
+    def has_permission(self, permission: int) -&gt; bool:
+        # Step 6: check whether the required bits are set
+        return (self.permissions &amp; permission) == permission
+
+
+if __name__ == &quot;__main__&quot;:
+    p = PatientPermissions()
+    p.add_permission(p.READ | p.WRITE)
+    print(p.has_permission(p.WRITE), p.permissions)
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Manage bitwise patient-data permissions.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1151,7 +1715,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">32</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">has_permission</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">WRITE</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">permissions</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">34</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-18">
@@ -1174,7 +1738,23 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q3_4_eligibility.py">Q3_4_eligibility.py</a><span class="run-cmd">python PythonReview/Q3_4_eligibility.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Membership and Identity Operators</div><p class="q-prompt"><b>Q3.4 (Coding):</b> Implement patient eligibility checker:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Membership and Identity Operators</div><p class="q-prompt"><b>Q3.4 (Coding):</b> Implement patient eligibility checker:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def check_patient_eligibility(patient_age: int, symptoms: list, 
+                             insurance_types: list, medical_history: list) -&gt; dict:
+    &quot;&quot;&quot;
+    Use &#x27;in&#x27; and &#x27;not in&#x27; operators to check:
+    1. If patient has any critical symptoms
+    2. If patient&#x27;s insurance is accepted
+    3. If patient has conflicting medical history
+    
+    Use &#x27;is&#x27; and &#x27;is not&#x27; for None checks on optional data
+    &quot;&quot;&quot;
+    critical_symptoms = [&#x27;chest_pain&#x27;, &#x27;difficulty_breathing&#x27;, &#x27;severe_bleeding&#x27;]
+    accepted_insurance = [&#x27;medicare&#x27;, &#x27;aetna&#x27;, &#x27;bcbs&#x27;, &#x27;cigna&#x27;]
+    
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">check_patient_eligibility</span><span class="t-op">(</span><span class="t-id">patient_age</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">symptoms</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">insurance_types</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">medical_history</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -1191,7 +1771,51 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">15</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">16</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We answer four yes/no questions: scary symptoms? accepted insurance? bad history conflict? was history given at all? We do that by checking overlaps with known lists.</li><li>Define the reference sets: critical symptoms, accepted insurers, conflicting history.</li><li>Convert symptoms and history into sets (treat missing history as empty for comparison).</li><li>Detect overlap with critical symptoms.</li><li>Detect overlap with accepted insurance.</li><li>Detect overlap with conflicting history.</li><li>Record whether history was provided at all (None vs a list).</li><li>Return the four boolean results.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We answer four yes/no questions: scary symptoms? accepted insurance? bad history conflict? was history given at all? We do that by checking overlaps with known lists.</li><li>Define the reference sets: critical symptoms, accepted insurers, conflicting history.</li><li>Convert symptoms and history into sets (treat missing history as empty for comparison).</li><li>Detect overlap with critical symptoms.</li><li>Detect overlap with accepted insurance.</li><li>Detect overlap with conflicting history.</li><li>Record whether history was provided at all (None vs a list).</li><li>Return the four boolean results.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Evaluate educational patient eligibility facts.&quot;&quot;&quot;
+
+
+# Step 1: We answer four yes/no questions: scary symptoms? accepted insurance? bad history conflict? was history given at all? We do that by checking overlaps with kno...
+def check_patient_eligibility(
+    patient_age: int,
+    symptoms: list[str],
+    insurance_types: list[str],
+    medical_history: list[str] | None,
+) -&gt; dict:
+    # Step 2: define reference sets
+    critical = {&quot;chest_pain&quot;, &quot;difficulty_breathing&quot;, &quot;severe_bleeding&quot;}
+    accepted = {&quot;medicare&quot;, &quot;aetna&quot;, &quot;bcbs&quot;, &quot;cigna&quot;}
+    conflicting = {&quot;organ_transplant&quot;, &quot;active_bleeding&quot;}
+
+    # Step 3: convert symptoms/history to sets (missing history → empty for compare)
+    symptom_set = set(symptoms)
+    history = set(medical_history or [])
+
+    # Step 4: detect overlap with critical symptoms
+    has_critical_symptoms = bool(symptom_set &amp; critical)
+
+    # Step 5: detect overlap with accepted insurance
+    insurance_accepted = bool(set(insurance_types) &amp; accepted)
+
+    # Step 6: detect overlap with conflicting history
+    conflicting_history = bool(history &amp; conflicting)
+
+    # Step 7: record whether history was provided (None vs a list)
+    history_provided = medical_history is not None
+
+    # Step 8: return the four boolean results
+    return {
+        &quot;has_critical_symptoms&quot;: has_critical_symptoms,
+        &quot;insurance_accepted&quot;: insurance_accepted,
+        &quot;conflicting_history&quot;: conflicting_history,
+        &quot;history_provided&quot;: history_provided,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(check_patient_eligibility(50, [&quot;chest_pain&quot;], [&quot;aetna&quot;], None))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Evaluate educational patient eligibility facts.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1236,7 +1860,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">check_patient_eligibility</span><span class="t-op">(</span><span class="t-num">50</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;chest_pain&quot;</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;aetna&quot;</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">None</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">43</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">44</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-19">
@@ -1259,7 +1883,25 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q3_5_walrus_vitals.py">Q3_5_walrus_vitals.py</a><span class="run-cmd">python PythonReview/Q3_5_walrus_vitals.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Walrus Operator</div><p class="q-prompt"><b>Q3.5 (Coding):</b> Use walrus operator for efficient patient data processing:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Walrus Operator</div><p class="q-prompt"><b>Q3.5 (Coding):</b> Use walrus operator for efficient patient data processing:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def process_patient_vitals(patients_data: list) -&gt; list:
+    &quot;&quot;&quot;
+    Use walrus operator to efficiently process and filter patient data:
+    - Calculate BMI and filter patients with BMI &gt; 30
+    - Process temperature readings and flag fever cases
+    - Extract medication counts and identify patients with &gt; 5 medications
+    &quot;&quot;&quot;
+    results = []
+    
+    for patient in patients_data:
+        # Use walrus operator for BMI calculation and filtering
+        # Use walrus operator for temperature processing
+        # Use walrus operator for medication counting
+        pass
+    
+    return results
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">process_patient_vitals</span><span class="t-op">(</span><span class="t-id">patients_data</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Use</span><span class="t-op"> </span><span class="t-id">walrus</span><span class="t-op"> </span><span class="t-id">operator</span><span class="t-op"> </span><span class="t-id">to</span><span class="t-op"> </span><span class="t-id">efficiently</span><span class="t-op"> </span><span class="t-id">process</span><span class="t-op"> </span><span class="t-kw">and</span><span class="t-op"> </span><span class="t-bi">filter</span><span class="t-op"> </span><span class="t-id">patient</span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op">:</span></td></tr>
@@ -1278,7 +1920,47 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">results</span></td></tr>
 <tr><td class="gutter">17</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">18</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Walk through each patient once. While looking, note problems (high BMI, fever, too many medicines). Keep only the patients who got at least one note.</li><li>Prepare an empty results list.</li><li>For each patient, start an empty flags list.</li><li>Compute BMI and flag obesity when BMI is above 30.</li><li>Read temperature and flag fever when it is high enough.</li><li>Count medications and flag polypharmacy when the count is large.</li><li>If any flags exist, keep that patient’s id and flags.</li><li>Return only the flagged patients.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Walk through each patient once. While looking, note problems (high BMI, fever, too many medicines). Keep only the patients who got at least one note.</li><li>Prepare an empty results list.</li><li>For each patient, start an empty flags list.</li><li>Compute BMI and flag obesity when BMI is above 30.</li><li>Read temperature and flag fever when it is high enough.</li><li>Count medications and flag polypharmacy when the count is large.</li><li>If any flags exist, keep that patient’s id and flags.</li><li>Return only the flagged patients.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Process patient vitals with assignment expressions.&quot;&quot;&quot;
+
+
+# Step 1: Walk through each patient once. While looking, note problems (high BMI, fever, too many medicines). Keep only the patients who got at least one note.
+def process_patient_vitals(patients_data: list[dict]) -&gt; list[dict]:
+    # Step 2: prepare an empty results list
+    results = []
+
+    for patient in patients_data:
+        # Step 3: start an empty flags list for this patient
+        flags = []
+
+        # Step 4: compute BMI; flag obesity when BMI &gt; 30
+        if (bmi := patient[&quot;weight_kg&quot;] / patient[&quot;height_m&quot;] ** 2) &gt; 30:
+            flags.append(f&quot;obesity BMI={bmi:.1f}&quot;)
+
+        # Step 5: read temperature; flag fever when high enough
+        if (temp := patient.get(&quot;temperature&quot;, 0)) &gt;= 100.4:
+            flags.append(f&quot;fever {temp}&quot;)
+
+        # Step 6: count medications; flag polypharmacy when count is large
+        if (count := len(patient.get(&quot;medications&quot;, []))) &gt; 5:
+            flags.append(f&quot;polypharmacy {count}&quot;)
+
+        # Step 7: keep patient id and flags when any flag exists
+        if flags:
+            results.append({&quot;id&quot;: patient[&quot;id&quot;], &quot;flags&quot;: flags})
+
+    # Step 8: return only the flagged patients
+    return results
+
+
+if __name__ == &quot;__main__&quot;:
+    print(
+        process_patient_vitals(
+            [{&quot;id&quot;: &quot;P1&quot;, &quot;weight_kg&quot;: 95, &quot;height_m&quot;: 1.7, &quot;temperature&quot;: 101, &quot;medications&quot;: [&quot;a&quot;] * 6}]
+        )
+    )
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Process patient vitals with assignment expressions.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1319,7 +2001,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">38</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">39</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">40</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-20">
@@ -1342,7 +2024,41 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q4_1_diagnosis_flow.py">Q4_1_diagnosis_flow.py</a><span class="run-cmd">python PythonReview/Q4_1_diagnosis_flow.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q4.1 (Coding):</b> Create a comprehensive patient diagnosis workflow:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q4.1 (Coding):</b> Create a comprehensive patient diagnosis workflow:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def diagnose_patient(symptoms: list, vital_signs: dict, 
+                    medical_history: list, lab_results: dict) -&gt; dict:
+    &quot;&quot;&quot;
+    Implement a diagnosis decision tree using if-else, nested conditions:
+    
+    Priority flow:
+    1. Check for emergency conditions first
+    2. Evaluate chronic condition indicators
+    3. Consider common ailments
+    4. Default to further testing required
+    
+    Use nested if-else appropriately for complex medical decision making
+    &quot;&quot;&quot;
+    pass
+
+def patient_monitoring_loop(patient_id: str, monitoring_duration_hours: int):
+    &quot;&quot;&quot;
+    Use while loop to simulate patient vital signs monitoring
+    - Check vitals every 30 minutes
+    - Alert if vitals go outside normal ranges
+    - Break if patient is stable for 2 consecutive hours
+    &quot;&quot;&quot;
+    pass
+
+def daily_medication_schedule(patient_medications: dict):
+    &quot;&quot;&quot;
+    Use for loop to generate daily medication reminders
+    - Iterate through medication times
+    - Handle special cases (meals, sleep time)
+    - Generate patient-friendly schedule
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">diagnose_patient</span><span class="t-op">(</span><span class="t-id">symptoms</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">vital_signs</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">medical_history</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">lab_results</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -1377,7 +2093,50 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">32</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">34</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Decide what to do in order of urgency: emergencies first, then long-term issues, then common colds, else “need more tests.” Extra helpers make check-in messages and medicine reminder lines.</li><li>Check emergency conditions first and return immediately if they match.</li><li>Else check chronic indicators and return if they match.</li><li>Else check common-ailment indicators and return if they match.</li><li>Otherwise return a default “further testing” result.</li><li>For monitoring: emit a status message every fixed time interval.</li><li>For daily schedule: flatten each time → drug list into take instructions.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Decide what to do in order of urgency: emergencies first, then long-term issues, then common colds, else “need more tests.” Extra helpers make check-in messages and medicine reminder lines.</li><li>Check emergency conditions first and return immediately if they match.</li><li>Else check chronic indicators and return if they match.</li><li>Else check common-ailment indicators and return if they match.</li><li>Otherwise return a default “further testing” result.</li><li>For monitoring: emit a status message every fixed time interval.</li><li>For daily schedule: flatten each time → drug list into take instructions.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Run an educational, non-clinical assessment workflow.&quot;&quot;&quot;
+
+
+# Step 1: Decide what to do in order of urgency: emergencies first, then long-term issues, then common colds, else “need more tests.” Extra helpers make check-in messa...
+def diagnose_patient(
+    symptoms: list[str],
+    vital_signs: dict,
+    medical_history: list[str],
+    lab_results: dict,
+) -&gt; dict:
+    # Step 2: check emergency conditions first
+    if {&quot;chest_pain&quot;, &quot;severe_bleeding&quot;} &amp; set(symptoms) or vital_signs.get(&quot;temperature&quot;, 0) &gt; 104:
+        return {&quot;priority&quot;: &quot;emergency&quot;, &quot;action&quot;: &quot;immediate evaluation&quot;}
+
+    # Step 3: else check chronic indicators
+    if &quot;diabetes&quot; in medical_history and lab_results.get(&quot;glucose&quot;, 0) &gt; 180:
+        return {&quot;priority&quot;: &quot;chronic&quot;, &quot;action&quot;: &quot;review glucose management&quot;}
+
+    # Step 4: else check common-ailment indicators
+    if &quot;cough&quot; in symptoms and vital_signs.get(&quot;temperature&quot;, 0) &gt; 100.4:
+        return {&quot;priority&quot;: &quot;common&quot;, &quot;action&quot;: &quot;clinical assessment&quot;}
+
+    # Step 5: default — further testing
+    return {&quot;priority&quot;: &quot;unknown&quot;, &quot;action&quot;: &quot;further testing required&quot;}
+
+
+def patient_monitoring_loop(patient_id: str, monitoring_duration_hours: int) -&gt; list[str]:
+    # Step 6: emit a status message every 30 minutes
+    return [
+        f&quot;{patient_id}: checked at {minute} minutes&quot;
+        for minute in range(0, monitoring_duration_hours * 60, 30)
+    ]
+
+
+def daily_medication_schedule(patient_medications: dict[str, list[str]]) -&gt; list[str]:
+    # Step 7: flatten each time → drug list into take instructions
+    return [f&quot;{time}: take {drug}&quot; for time, drugs in patient_medications.items() for drug in drugs]
+
+
+if __name__ == &quot;__main__&quot;:
+    print(diagnose_patient([&quot;cough&quot;], {&quot;temperature&quot;: 101}, [], {}))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Run an educational, non-clinical assessment workflow.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1421,7 +2180,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">41</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">diagnose_patient</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-str">&quot;cough&quot;</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;temperature&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">101</span><span class="t-op">}</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">42</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">43</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-21">
@@ -1444,7 +2203,39 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q5_1_comprehensions.py">Q5_1_comprehensions.py</a><span class="run-cmd">python PythonReview/Q5_1_comprehensions.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q5.1 (Coding):</b> Implement efficient data processing using comprehensions:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q5.1 (Coding):</b> Implement efficient data processing using comprehensions:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def medical_data_processing(patient_records: list) -&gt; dict:
+    &quot;&quot;&quot;
+    Use different comprehensions to process medical data:
+    
+    1. List comprehension: Extract all patients with diabetes
+    2. Dictionary comprehension: Map patient IDs to their latest vital signs
+    3. Set comprehension: Get unique medications across all patients
+    4. Generator expression: Memory-efficient processing of large patient datasets
+    &quot;&quot;&quot;
+    
+    # List comprehension for diabetic patients
+    diabetic_patients = # Your code here
+    
+    # Dictionary comprehension for latest vitals
+    latest_vitals = # Your code here
+    
+    # Set comprehension for unique medications  
+    unique_medications = # Your code here
+    
+    # Generator for memory-efficient processing
+    def high_risk_patients():
+        # Generator expression here
+        pass
+    
+    return {
+        &#x27;diabetic_patients&#x27;: diabetic_patients,
+        &#x27;latest_vitals&#x27;: latest_vitals,
+        &#x27;unique_medications&#x27;: unique_medications,
+        &#x27;high_risk_generator&#x27;: high_risk_patients()
+    }
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">medical_data_processing</span><span class="t-op">(</span><span class="t-id">patient_records</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Use</span><span class="t-op"> </span><span class="t-id">different</span><span class="t-op"> </span><span class="t-id">comprehensions</span><span class="t-op"> </span><span class="t-id">to</span><span class="t-op"> </span><span class="t-id">process</span><span class="t-op"> </span><span class="t-id">medical</span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op">:</span></td></tr>
@@ -1477,7 +2268,49 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
 <tr><td class="gutter">31</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">32</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">From a pile of patient cards, pull out different views: who has diabetes, each person’s latest vitals, every unique medicine, and a “high risk” list we can walk one-by-one.</li><li>Build a list of patient ids that have diabetes.</li><li>Build a dictionary of each patient’s latest vital reading.</li><li>Build a set of all unique medications across patients.</li><li>Create a generator that yields high-risk patient ids.</li><li>Return the list, dictionary, set, and generator together.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">From a pile of patient cards, pull out different views: who has diabetes, each person’s latest vitals, every unique medicine, and a “high risk” list we can walk one-by-one.</li><li>Build a list of patient ids that have diabetes.</li><li>Build a dictionary of each patient’s latest vital reading.</li><li>Build a set of all unique medications across patients.</li><li>Create a generator that yields high-risk patient ids.</li><li>Return the list, dictionary, set, and generator together.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Use comprehensions and a generator for patient data.&quot;&quot;&quot;
+
+
+# Step 1: From a pile of patient cards, pull out different views: who has diabetes, each person’s latest vitals, every unique medicine, and a “high risk” list we can w...
+def analyze_patients(patients: list[dict]) -&gt; dict:
+    # Step 2: list of patient ids that have diabetes
+    diabetic = [p[&quot;id&quot;] for p in patients if &quot;diabetes&quot; in p.get(&quot;conditions&quot;, [])]
+
+    # Step 3: dictionary of each patient&#x27;s latest vital reading
+    latest = {p[&quot;id&quot;]: p[&quot;vitals&quot;][-1] for p in patients if p.get(&quot;vitals&quot;)}
+
+    # Step 4: set of all unique medications across patients
+    medications = {m for p in patients for m in p.get(&quot;medications&quot;, [])}
+
+    # Step 5: generator that yields high-risk patient ids
+    def high_risk():
+        return (p[&quot;id&quot;] for p in patients if p.get(&quot;risk_score&quot;, 0) &gt;= 8)
+
+    # Step 6: return list, dictionary, set, and generator together
+    return {
+        &quot;diabetic_patients&quot;: diabetic,
+        &quot;latest_vitals&quot;: latest,
+        &quot;unique_medications&quot;: medications,
+        &quot;high_risk_generator&quot;: high_risk(),
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    r = analyze_patients(
+        [
+            {
+                &quot;id&quot;: &quot;P1&quot;,
+                &quot;conditions&quot;: [&quot;diabetes&quot;],
+                &quot;vitals&quot;: [{&quot;bp&quot;: 130}],
+                &quot;medications&quot;: [&quot;aspirin&quot;],
+                &quot;risk_score&quot;: 9,
+            }
+        ]
+    )
+    print(r[&quot;diabetic_patients&quot;], list(r[&quot;high_risk_generator&quot;]))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Use comprehensions and a generator for patient data.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1520,7 +2353,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">40</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">r</span><span class="t-op">[</span><span class="t-str">&quot;diabetic_patients&quot;</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">r</span><span class="t-op">[</span><span class="t-str">&quot;high_risk_generator&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">41</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">42</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-22">
@@ -1566,7 +2399,31 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q6_1_appointments.py">Q6_1_appointments.py</a><span class="run-cmd">python PythonReview/Q6_1_appointments.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Positional &amp; Keyword Arguments</div><p class="q-prompt"><b>Q6.1 (Coding):</b> Design a flexible patient appointment scheduling function:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Positional &amp; Keyword Arguments</div><p class="q-prompt"><b>Q6.1 (Coding):</b> Design a flexible patient appointment scheduling function:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def schedule_appointment(patient_id, doctor_id, *appointment_details, 
+                        **scheduling_options):
+    &quot;&quot;&quot;
+    Create flexible appointment scheduling:
+    - Required: patient_id, doctor_id
+    - Variable positional: date, time, duration, appointment_type
+    - Keyword arguments: priority, notes, insurance_verification, etc.
+    
+    Handle different calling patterns:
+    schedule_appointment(&quot;P123&quot;, &quot;D456&quot;, &quot;2024-02-15&quot;, &quot;10:00&quot;)
+    schedule_appointment(&quot;P123&quot;, &quot;D456&quot;, priority=&quot;urgent&quot;, notes=&quot;follow-up&quot;)
+    &quot;&quot;&quot;
+    pass
+
+def update_patient_record(patient_id, /, name=None, age=None, *, 
+                         blood_type=None, emergency_contact=None):
+    &quot;&quot;&quot;
+    Demonstrate positional-only and keyword-only arguments
+    - patient_id must be positional
+    - blood_type and emergency_contact must be keyword-only
+    &quot;&quot;&quot;
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">schedule_appointment</span><span class="t-op">(</span><span class="t-id">patient_id</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">doctor_id</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-id">appointment_details</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op">*</span><span class="t-id">scheduling_options</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -1591,7 +2448,47 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">23</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">24</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Booking a visit needs patient and doctor for sure; extra details and options are optional bags we pack along. Updating a record also has strict rules about which arguments are required how.</li><li>Require patient id and doctor id.</li><li>Collect any extra positional appointment details.</li><li>Collect any keyword scheduling options.</li><li>For updates: require patient id positionally; allow optional name/age; require blood type / emergency contact as keywords only.</li><li>Return structured dictionaries for both operations.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Booking a visit needs patient and doctor for sure; extra details and options are optional bags we pack along. Updating a record also has strict rules about which arguments are required how.</li><li>Require patient id and doctor id.</li><li>Collect any extra positional appointment details.</li><li>Collect any keyword scheduling options.</li><li>For updates: require patient id positionally; allow optional name/age; require blood type / emergency contact as keywords only.</li><li>Return structured dictionaries for both operations.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Schedule flexible appointments and update records.&quot;&quot;&quot;
+
+
+# Step 1: Booking a visit needs patient and doctor for sure; extra details and options are optional bags we pack along. Updating a record also has strict rules about w...
+def schedule_appointment(patient_id, doctor_id, *appointment_details, **scheduling_options):
+    # Step 2: require patient id and doctor id
+    # Step 3: collect extra positional appointment details
+    # Step 4: collect keyword scheduling options
+    return {
+        &quot;patient_id&quot;: patient_id,
+        &quot;doctor_id&quot;: doctor_id,
+        &quot;details&quot;: appointment_details,
+        &quot;options&quot;: scheduling_options,
+    }
+
+
+def update_patient_record(
+    patient_id,
+    /,
+    name=None,
+    age=None,
+    *,
+    blood_type=None,
+    emergency_contact=None,
+):
+    # Step 5: patient_id positional-only; name/age optional; blood_type / contact keyword-only
+    # Step 6: return structured dictionaries for both operations
+    return {
+        &quot;patient_id&quot;: patient_id,
+        &quot;name&quot;: name,
+        &quot;age&quot;: age,
+        &quot;blood_type&quot;: blood_type,
+        &quot;emergency_contact&quot;: emergency_contact,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(schedule_appointment(&quot;P1&quot;, &quot;D1&quot;, &quot;2025-02-15&quot;, &quot;10:00&quot;, priority=&quot;urgent&quot;))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Schedule flexible appointments and update records.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1632,7 +2529,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">38</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">schedule_appointment</span><span class="t-op">(</span><span class="t-str">&quot;P1&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;D1&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;2025-02-15&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;10:00&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">priority</span><span class="t-op">=</span><span class="t-str">&quot;urgent&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">39</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">40</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-24">
@@ -1655,7 +2552,44 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q6_2_family_risk.py">Q6_2_family_risk.py</a><span class="run-cmd">python PythonReview/Q6_2_family_risk.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Recursion</div><p class="q-prompt"><b>Q6.2 (Coding):</b> Implement recursive functions for medical data structures:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Recursion</div><p class="q-prompt"><b>Q6.2 (Coding):</b> Implement recursive functions for medical data structures:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def calculate_family_risk_score(family_tree: dict, condition: str, 
+                               current_person: str, generation: int = 0) -&gt; float:
+    &quot;&quot;&quot;
+    Recursively calculate genetic risk score based on family history:
+    
+    family_tree = {
+        &#x27;john&#x27;: {
+            &#x27;conditions&#x27;: [&#x27;diabetes&#x27;, &#x27;hypertension&#x27;],
+            &#x27;parents&#x27;: [&#x27;mary&#x27;, &#x27;robert&#x27;],
+            &#x27;children&#x27;: [&#x27;jane&#x27;, &#x27;mike&#x27;]
+        },
+        &#x27;mary&#x27;: {
+            &#x27;conditions&#x27;: [&#x27;diabetes&#x27;],
+            &#x27;parents&#x27;: [],
+            &#x27;children&#x27;: [&#x27;john&#x27;]
+        }
+    }
+    
+    Risk scoring:
+    - Direct parent/child: 0.5 * base_risk
+    - Grandparent/grandchild: 0.25 * base_risk  
+    - Great-grandparent: 0.125 * base_risk
+    &quot;&quot;&quot;
+    pass
+
+def find_medication_interactions(drug: str, interaction_tree: dict, 
+                               visited: set = None) -&gt; set:
+    &quot;&quot;&quot;
+    Recursively find all possible drug interactions in a complex network
+    &quot;&quot;&quot;
+    if visited is None:
+        visited = set()
+    
+    # Implement recursive interaction detection
+    pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">calculate_family_risk_score</span><span class="t-op">(</span><span class="t-id">family_tree</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">condition</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">,</span><span class="t-op"> </span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">current_person</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">str</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">generation</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">float</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
@@ -1693,7 +2627,66 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">35</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">36</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Family risk is like climbing a family tree: if someone has the condition, add a score that gets smaller the farther up you go. Drug interactions are like following “friends of friends” without visiting the same person twice.</li><li>Track visited people/drugs so recursion does not loop forever.</li><li>Stop with zero (or empty) when the current node is missing or already visited.</li><li>Score the current person if they have the condition, scaled by generation.</li><li>Add scores from each parent by recursing one generation deeper.</li><li>For drug interactions: take direct neighbors, then recursively union their neighbors.</li><li>Return the accumulated score or interaction set.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Family risk is like climbing a family tree: if someone has the condition, add a score that gets smaller the farther up you go. Drug interactions are like following “friends of friends” without visiting the same person twice.</li><li>Track visited people/drugs so recursion does not loop forever.</li><li>Stop with zero (or empty) when the current node is missing or already visited.</li><li>Score the current person if they have the condition, scaled by generation.</li><li>Add scores from each parent by recursing one generation deeper.</li><li>For drug interactions: take direct neighbors, then recursively union their neighbors.</li><li>Return the accumulated score or interaction set.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Traverse family history and interaction graphs recursively.&quot;&quot;&quot;
+
+
+# Step 1: Family risk is like climbing a family tree: if someone has the condition, add a score that gets smaller the farther up you go. Drug interactions are like fol...
+def calculate_family_risk_score(
+    family_tree: dict,
+    condition: str,
+    current_person: str,
+    generation: int = 0,
+    visited=None,
+) -&gt; float:
+    # Step 2: track visited people so recursion does not loop
+    visited = set() if visited is None else visited
+
+    # Step 3: stop with zero when missing or already visited
+    if current_person in visited or current_person not in family_tree:
+        return 0.0
+    visited.add(current_person)
+    person = family_tree[current_person]
+
+    # Step 4: score current person if they have the condition, scaled by generation
+    own = 1.0 / (2**generation) if condition in person.get(&quot;conditions&quot;, []) else 0.0
+
+    # Step 5: add scores from each parent one generation deeper
+    # Step 7: return accumulated score
+    return own + sum(
+        calculate_family_risk_score(family_tree, condition, p, generation + 1, visited)
+        for p in person.get(&quot;parents&quot;, [])
+    )
+
+
+def find_medication_interactions(
+    drug: str,
+    interaction_tree: dict[str, set[str]],
+    visited=None,
+) -&gt; set[str]:
+    # Step 2: track visited drugs so recursion does not loop
+    visited = set() if visited is None else visited
+
+    # Step 3: stop with empty set when already visited
+    if drug in visited:
+        return set()
+    visited.add(drug)
+
+    # Step 6: take direct neighbors, then recursively union their neighbors
+    direct = set(interaction_tree.get(drug, set()))
+    if not direct:
+        return set()
+
+    # Step 7: return accumulated interaction set
+    return direct | set().union(
+        *(find_medication_interactions(d, interaction_tree, visited) for d in direct)
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    print(find_medication_interactions(&quot;a&quot;, {&quot;a&quot;: {&quot;b&quot;}, &quot;b&quot;: {&quot;c&quot;}}))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Traverse family history and interaction graphs recursively.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1753,7 +2746,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">57</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">find_medication_interactions</span><span class="t-op">(</span><span class="t-str">&quot;a&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;a&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;b&quot;</span><span class="t-op">}</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;b&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;c&quot;</span><span class="t-op">}</span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">58</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">59</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-25">
@@ -1776,7 +2769,34 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q6_3_lab_lambda.py">Q6_3_lab_lambda.py</a><span class="run-cmd">python PythonReview/Q6_3_lab_lambda.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Recursion</div><p class="q-prompt"><b>Q6.3 (Coding):</b> Use lambda functions for medical data processing:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Recursion</div><p class="q-prompt"><b>Q6.3 (Coding):</b> Use lambda functions for medical data processing:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def process_lab_results(lab_data: list) -&gt; dict:
+    &quot;&quot;&quot;
+    Use lambda functions with map, filter, and sorted for lab result processing:
+    
+    lab_data = [
+        {&#x27;test&#x27;: &#x27;glucose&#x27;, &#x27;value&#x27;: 120, &#x27;normal_range&#x27;: (70, 100)},
+        {&#x27;test&#x27;: &#x27;cholesterol&#x27;, &#x27;value&#x27;: 180, &#x27;normal_range&#x27;: (0, 200)},
+        {&#x27;test&#x27;: &#x27;hemoglobin&#x27;, &#x27;value&#x27;: 12.5, &#x27;normal_range&#x27;: (12, 16)}
+    ]
+    &quot;&quot;&quot;
+    
+    # Lambda to check if result is abnormal
+    abnormal_results = list(filter(# lambda here, lab_data))
+    
+    # Lambda to calculate how far from normal range
+    severity_scores = list(map(# lambda here, lab_data))
+    
+    # Lambda for custom sorting by severity
+    sorted_by_priority = sorted(lab_data, key=# lambda here)
+    
+    return {
+        &#x27;abnormal&#x27;: abnormal_results,
+        &#x27;severity_scores&#x27;: severity_scores,
+        &#x27;priority_order&#x27;: sorted_by_priority
+    }
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">process_lab_results</span><span class="t-op">(</span><span class="t-id">lab_data</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Use</span><span class="t-op"> </span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">functions</span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">map</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">filter</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">and</span><span class="t-op"> </span><span class="t-bi">sorted</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">lab</span><span class="t-op"> </span><span class="t-id">result</span><span class="t-op"> </span><span class="t-id">processing</span><span class="t-op">:</span></td></tr>
@@ -1804,7 +2824,36 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
 <tr><td class="gutter">26</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Each lab test has a “normal” window. We measure how far outside that window a value is, list the bad ones, score them, and sort the worst first.</li><li>Define how far a lab value sits outside its normal range (0 if inside).</li><li>Filter the rows that are outside range.</li><li>Map each row to a severity score.</li><li>Sort all rows by severity (worst first).</li><li>Return abnormal rows, scores, and the priority order.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Each lab test has a “normal” window. We measure how far outside that window a value is, list the bad ones, score them, and sort the worst first.</li><li>Define how far a lab value sits outside its normal range (0 if inside).</li><li>Filter the rows that are outside range.</li><li>Map each row to a severity score.</li><li>Sort all rows by severity (worst first).</li><li>Return abnormal rows, scores, and the priority order.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Process laboratory results with lambda functions.&quot;&quot;&quot;
+
+
+# Step 1: Each lab test has a “normal” window. We measure how far outside that window a value is, list the bad ones, score them, and sort the worst first.
+def process_lab_results(lab_data: list[dict]) -&gt; dict:
+    # Step 2: define how far a value sits outside its normal range (0 if inside)
+    deviation = lambda r: max(r[&quot;normal_range&quot;][0] - r[&quot;value&quot;], r[&quot;value&quot;] - r[&quot;normal_range&quot;][1], 0)
+
+    # Step 3: filter rows that are outside range
+    abnormal = list(filter(lambda r: deviation(r) &gt; 0, lab_data))
+
+    # Step 4: map each row to a severity score
+    scores = list(map(lambda r: {&quot;test&quot;: r[&quot;test&quot;], &quot;severity&quot;: deviation(r)}, lab_data))
+
+    # Step 5: sort all rows by severity (worst first)
+    priority_order = sorted(lab_data, key=deviation, reverse=True)
+
+    # Step 6: return abnormal rows, scores, and priority order
+    return {
+        &quot;abnormal&quot;: abnormal,
+        &quot;severity_scores&quot;: scores,
+        &quot;priority_order&quot;: priority_order,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(process_lab_results([{&quot;test&quot;: &quot;glucose&quot;, &quot;value&quot;: 120, &quot;normal_range&quot;: (70, 100)}]))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Process laboratory results with lambda functions.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -1834,7 +2883,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">27</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">process_lab_results</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-op">{</span><span class="t-str">&quot;test&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;glucose&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;value&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">120</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;normal_range&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">70</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">100</span><span class="t-op">)</span><span class="t-op">}</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">28</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">29</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-26">
@@ -1857,7 +2906,35 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q6_4_scope.py">Q6_4_scope.py</a><span class="run-cmd">python PythonReview/Q6_4_scope.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Local and Global Scope</div><p class="q-prompt"><b>Q6.4 (Coding):</b> Demonstrate scope management in medical system:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><div class="q-sub">Local and Global Scope</div><p class="q-prompt"><b>Q6.4 (Coding):</b> Demonstrate scope management in medical system:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Global configuration
+HOSPITAL_CONFIG = {
+    &#x27;max_patients_per_doctor&#x27;: 50,
+    &#x27;emergency_threshold_temp&#x27;: 104.0,
+    &#x27;default_appointment_duration&#x27;: 30
+}
+
+def patient_management_system():
+    &quot;&quot;&quot;
+    Demonstrate proper scope management:
+    - Global variables for hospital configuration
+    - Local variables for patient processing
+    - Proper use of global keyword when needed
+    &quot;&quot;&quot;
+    
+    def assign_doctor(patient_severity: str):
+        # Access global config appropriately
+        # Use local variables for calculations
+        # Modify global state when necessary (use global keyword)
+        pass
+    
+    def update_hospital_capacity(new_limit: int):
+        # Properly modify global configuration
+        pass
+    
+    return assign_doctor, update_hospital_capacity
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Global configuration</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">HOSPITAL_CONFIG</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&#x27;max_patients_per_doctor&#x27;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">50</span><span class="t-op">,</span></td></tr>
@@ -1886,7 +2963,44 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">26</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">assign_doctor</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">update_hospital_capacity</span></td></tr>
 <tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">28</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">The hospital has shared settings on a notice board (global). Nested helpers can read that board, and one helper is allowed to update a number on it after checking it is valid.</li><li>Keep shared hospital settings in a module-level configuration.</li><li>Inside a factory function, define a helper that reads capacity from that configuration.</li><li>Choose doctor type from severity while reading the shared capacity.</li><li>Define a helper that updates the shared capacity after validating the new limit.</li><li>Return both helpers so callers can use them.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">The hospital has shared settings on a notice board (global). Nested helpers can read that board, and one helper is allowed to update a number on it after checking it is valid.</li><li>Keep shared hospital settings in a module-level configuration.</li><li>Inside a factory function, define a helper that reads capacity from that configuration.</li><li>Choose doctor type from severity while reading the shared capacity.</li><li>Define a helper that updates the shared capacity after validating the new limit.</li><li>Return both helpers so callers can use them.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Demonstrate intentional global and local scope.&quot;&quot;&quot;
+
+# Step 2: shared hospital settings in a module-level configuration
+HOSPITAL_CONFIG = {
+    &quot;max_patients_per_doctor&quot;: 50,
+    &quot;emergency_threshold_temp&quot;: 104.0,
+    &quot;default_appointment_duration&quot;: 30,
+}
+
+
+# Step 1: The hospital has shared settings on a notice board (global). Nested helpers can read that board, and one helper is allowed to update a number on it after che...
+def patient_management_system():
+    # Step 3: helper that reads capacity from the shared configuration
+    def assign_doctor(patient_severity: str) -&gt; dict:
+        # Step 4: choose doctor type from severity; read shared capacity
+        return {
+            &quot;severity&quot;: patient_severity,
+            &quot;capacity&quot;: HOSPITAL_CONFIG[&quot;max_patients_per_doctor&quot;],
+            &quot;doctor_type&quot;: &quot;emergency&quot; if patient_severity == &quot;critical&quot; else &quot;general&quot;,
+        }
+
+    def update_hospital_capacity(new_limit: int) -&gt; None:
+        # Step 5: validate then update the shared capacity
+        if new_limit &lt; 1:
+            raise ValueError(&quot;limit must be positive&quot;)
+        HOSPITAL_CONFIG[&quot;max_patients_per_doctor&quot;] = new_limit
+
+    # Step 6: return both helpers for callers
+    return assign_doctor, update_hospital_capacity
+
+
+if __name__ == &quot;__main__&quot;:
+    assign, update = patient_management_system()
+    update(40)
+    print(assign(&quot;critical&quot;))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Demonstrate intentional global and local scope.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># Step 2: shared hospital settings in a module-level configuration</span></td></tr>
@@ -1924,7 +3038,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">35</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">assign</span><span class="t-op">(</span><span class="t-str">&quot;critical&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">36</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-27">
@@ -1970,7 +3084,64 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q7_1_builtins_analysis.py">Q7_1_builtins_analysis.py</a><span class="run-cmd">python PythonReview/Q7_1_builtins_analysis.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q7.1 (Coding):</b> Comprehensive use of built-in functions for medical data:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q7.1 (Coding):</b> Comprehensive use of built-in functions for medical data:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">def medical_data_analysis(patient_records: list, lab_results: list) -&gt; dict:
+    &quot;&quot;&quot;
+    Use various built-in functions to analyze medical data:
+    
+    patient_records = [
+        {&#x27;id&#x27;: &#x27;P001&#x27;, &#x27;age&#x27;: 45, &#x27;medications&#x27;: [&#x27;aspirin&#x27;, &#x27;lisinopril&#x27;]},
+        {&#x27;id&#x27;: &#x27;P002&#x27;, &#x27;age&#x27;: 67, &#x27;medications&#x27;: [&#x27;metformin&#x27;, &#x27;aspirin&#x27;]},
+    ]
+    
+    lab_results = [
+        (&#x27;P001&#x27;, [120, 80, 98.6]),  # glucose, bp_sys, temp
+        (&#x27;P002&#x27;, [140, 90, 99.1]),
+    ]
+    &quot;&quot;&quot;
+    
+    # Use map() to extract patient ages
+    ages = list(map(# Your code here))
+    
+    # Use filter() to find elderly patients (age &gt; 65)
+    elderly = list(filter(# Your code here))
+    
+    # Use zip() to combine patient data with lab results
+    combined_data = list(zip(# Your code here))
+    
+    # Use enumerate() to process patients with index
+    indexed_patients = list(enumerate(# Your code here))
+    
+    # Use reduce() to find patient with most medications
+    from functools import reduce
+    most_medications = reduce(# Your code here)
+    
+    # Use sorted() with custom key for complex sorting
+    sorted_by_risk = sorted(# Your code here)
+    
+    # Use min/max for vital statistics
+    min_age = min(# Your code here)
+    max_temp = max(# Your code here)
+    
+    # Use type() and id() for debugging patient data issues
+    data_types = {pid: type(data) for pid, data in # Your code here}
+    
+    # Use range() for generating appointment time slots
+    time_slots = list(range(# Your code here))
+    
+    return {
+        &#x27;ages&#x27;: ages,
+        &#x27;elderly_patients&#x27;: elderly,
+        &#x27;combined_data&#x27;: combined_data,
+        &#x27;indexed_patients&#x27;: indexed_patients,
+        &#x27;patient_most_meds&#x27;: most_medications,
+        &#x27;risk_sorted&#x27;: sorted_by_risk,
+        &#x27;statistics&#x27;: {&#x27;min_age&#x27;: min_age, &#x27;max_temp&#x27;: max_temp},
+        &#x27;data_types&#x27;: data_types,
+        &#x27;available_slots&#x27;: time_slots
+    }
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">medical_data_analysis</span><span class="t-op">(</span><span class="t-id">patient_records</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">lab_results</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">dict</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Use</span><span class="t-op"> </span><span class="t-id">various</span><span class="t-op"> </span><span class="t-id">built</span><span class="t-op">-</span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">functions</span><span class="t-op"> </span><span class="t-id">to</span><span class="t-op"> </span><span class="t-id">analyze</span><span class="t-op"> </span><span class="t-id">medical</span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op">:</span></td></tr>
@@ -2028,7 +3199,72 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">55</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
 <tr><td class="gutter">56</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">57</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We use Python’s built-in tools like a toolbox: pull ages, filter older patients, pair records with labs, sort by risk, and compute simple min/max stats.</li><li>Extract ages with map; filter elderly patients.</li><li>Use reduce to find the patient with the most medications.</li><li>Pair records with labs using zip; number patients with enumerate.</li><li>Sort patients by risk-related keys.</li><li>Compute simple statistics with min and max.</li><li>Record types with type(), and build time slots with range().</li><li>Return all analysis pieces in one dictionary.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">We use Python’s built-in tools like a toolbox: pull ages, filter older patients, pair records with labs, sort by risk, and compute simple min/max stats.</li><li>Extract ages with map; filter elderly patients.</li><li>Use reduce to find the patient with the most medications.</li><li>Pair records with labs using zip; number patients with enumerate.</li><li>Sort patients by risk-related keys.</li><li>Compute simple statistics with min and max.</li><li>Record types with type(), and build time slots with range().</li><li>Return all analysis pieces in one dictionary.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;Analyze simple medical records with Python built-ins.&quot;&quot;&quot;
+from functools import reduce
+
+
+# Step 1: We use Python’s built-in tools like a toolbox: pull ages, filter older patients, pair records with labs, sort by risk, and compute simple min/max stats.
+def medical_data_analysis(
+    patient_records: list[dict],
+    lab_results: list[tuple[str, list[float]]],
+) -&gt; dict:
+    # Step 2: extract ages with map; filter elderly patients
+    ages = list(map(lambda p: p[&quot;age&quot;], patient_records))
+    elderly = list(filter(lambda p: p[&quot;age&quot;] &gt; 65, patient_records))
+
+    # Step 3: reduce to the patient with the most medications
+    most = (
+        reduce(
+            lambda a, b: a if len(a[&quot;medications&quot;]) &gt;= len(b[&quot;medications&quot;]) else b,
+            patient_records,
+        )
+        if patient_records
+        else None
+    )
+
+    # Step 4: pair records with labs (zip); number patients (enumerate)
+    combined = list(zip(patient_records, lab_results))
+    indexed = list(enumerate(patient_records))
+
+    # Step 5: sort patients by risk-related keys
+    risk_sorted = sorted(
+        patient_records,
+        key=lambda p: (p[&quot;age&quot;], len(p[&quot;medications&quot;])),
+        reverse=True,
+    )
+
+    # Step 6: simple statistics with min and max
+    min_age = min(ages, default=None)
+    max_temp = max((v[2] for _, v in lab_results), default=None)
+
+    # Step 7: record types with type(); time slots with range()
+    data_types = {pid: type(data).__name__ for pid, data in lab_results}
+    available_slots = list(range(8, 17))
+
+    # Step 8: return all analysis pieces in one dictionary
+    return {
+        &quot;ages&quot;: ages,
+        &quot;elderly_patients&quot;: elderly,
+        &quot;combined_data&quot;: combined,
+        &quot;indexed_patients&quot;: indexed,
+        &quot;patient_most_meds&quot;: most,
+        &quot;risk_sorted&quot;: risk_sorted,
+        &quot;statistics&quot;: {&quot;min_age&quot;: min_age, &quot;max_temp&quot;: max_temp},
+        &quot;data_types&quot;: data_types,
+        &quot;available_slots&quot;: available_slots,
+    }
+
+
+if __name__ == &quot;__main__&quot;:
+    print(
+        medical_data_analysis(
+            [{&quot;id&quot;: &quot;P1&quot;, &quot;age&quot;: 67, &quot;medications&quot;: [&quot;a&quot;, &quot;b&quot;]}],
+            [(&quot;P1&quot;, [120, 80, 98.6])],
+        )
+    )
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Analyze simple medical records with Python built-ins.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">functools</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">reduce</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -2094,7 +3330,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">63</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">64</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">65</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-29">
@@ -2370,7 +3606,38 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
       <div class="panel-practice"><h3>Practice</h3><a class="file-link" href="PythonReview/Q8_1_patient_system.py">Q8_1_patient_system.py</a><span class="run-cmd">python PythonReview/Q8_1_patient_system.py</span></div>
 </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q8.1 (Integration):</b> Create a complete patient management class that demonstrates all learned concepts:</p><h3>Question stub</h3><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-toolbar"><button type="button" class="btn-code-expand" onclick="toggleCodeExpand(this)">Expand</button></div><div class="q-doc"><p class="q-prompt"><b>Q8.1 (Integration):</b> Create a complete patient management class that demonstrates all learned concepts:</p><h3>Question stub</h3><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">class PatientManagementSystem:
+    &quot;&quot;&quot;
+    Integrate all Python concepts in a comprehensive healthcare system:
+    - Use appropriate data types for different medical data
+    - Implement type hints throughout
+    - Use comprehensions for data processing
+    - Apply functional programming concepts
+    - Handle different types of medical operations
+    &quot;&quot;&quot;
+    
+    def __init__(self):
+        # Initialize with appropriate data structures
+        pass
+    
+    def add_patient(self, **patient_data):
+        # Use **kwargs and type validation
+        pass
+    
+    def update_vitals(self, patient_id: str, *vitals, **metadata):
+        # Demonstrate *args and **kwargs usage
+        pass
+    
+    def generate_report(self, filter_func=lambda p: True):
+        # Use lambda functions and generators
+        pass
+    
+    def batch_process(self, operations: list):
+        # Use map, filter, reduce appropriately
+        pass
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">PatientManagementSystem</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Integrate</span><span class="t-op"> </span><span class="t-bi">all</span><span class="t-op"> </span><span class="t-id">Python</span><span class="t-op"> </span><span class="t-id">concepts</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-id">comprehensive</span><span class="t-op"> </span><span class="t-id">healthcare</span><span class="t-op"> </span><span class="t-id">system</span><span class="t-op">:</span></td></tr>
@@ -2402,7 +3669,45 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">29</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">pass</span></td></tr>
 <tr><td class="gutter">30</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">31</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Build a tiny hospital app: store patients, add them carefully, attach vitals, print a filtered report, and run a list of jobs on the whole system.</li><li>Initialize an empty patient store.</li><li>Add a patient only when id is a non-empty string and not already present.</li><li>Append vitals using variable positional values plus optional metadata.</li><li>Generate a report by yielding patients that pass an optional filter.</li><li>Run a batch of operations against the system and collect their results.</li></ol></div><div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div></div><div class="solution-label">Solution</div><div class="algo-box"><div class="algo-title">Algorithm — how the solution works</div><ol><li class="algo-intro">Build a tiny hospital app: store patients, add them carefully, attach vitals, print a filtered report, and run a list of jobs on the whole system.</li><li>Initialize an empty patient store.</li><li>Add a patient only when id is a non-empty string and not already present.</li><li>Append vitals using variable positional values plus optional metadata.</li><li>Generate a report by yielding patients that pass an optional filter.</li><li>Run a batch of operations against the system and collect their results.</li></ol></div><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">&quot;&quot;&quot;A small integrated, educational patient-management system.&quot;&quot;&quot;
+
+
+# Step 1: Build a tiny hospital app: store patients, add them carefully, attach vitals, print a filtered report, and run a list of jobs on the whole system.
+class PatientManagementSystem:
+    def __init__(self):
+        # Step 2: initialize an empty patient store
+        self.patients: dict[str, dict] = {}
+
+    def add_patient(self, **patient_data):
+        # Step 3: add only when id is a non-empty string and not a duplicate
+        patient_id = patient_data.get(&quot;id&quot;)
+        if not isinstance(patient_id, str) or not patient_id:
+            raise ValueError(&quot;a non-empty id is required&quot;)
+        if patient_id in self.patients:
+            raise ValueError(&quot;duplicate id&quot;)
+        self.patients[patient_id] = {**patient_data, &quot;vitals&quot;: []}
+
+    def update_vitals(self, patient_id: str, *vitals, **metadata):
+        # Step 4: append vitals (positional values + optional metadata)
+        self.patients[patient_id][&quot;vitals&quot;].append({&quot;values&quot;: tuple(vitals), **metadata})
+
+    def generate_report(self, filter_func=lambda p: True):
+        # Step 5: yield patients that pass an optional filter
+        return ({&quot;id&quot;: pid, **p} for pid, p in self.patients.items() if filter_func(p))
+
+    def batch_process(self, operations: list):
+        # Step 6: run each operation against the system and collect results
+        return list(map(lambda operation: operation(self), operations))
+
+
+if __name__ == &quot;__main__&quot;:
+    system = PatientManagementSystem()
+    system.add_patient(id=&quot;P1&quot;, name=&quot;Asha&quot;, age=42)
+    system.update_vitals(&quot;P1&quot;, 120, 80, 98.6, at=&quot;09:00&quot;)
+    print(list(system.generate_report()))
+
+
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;A small integrated, educational patient-management system.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -2441,7 +3746,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 <tr><td class="gutter">36</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">system</span><span class="t-op">.</span><span class="t-id">generate_report</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div>
@@ -2548,6 +3853,8 @@ function nextSlide() { show(Math.min(current + 1, total)); }
 function prevSlide() { show(Math.max(current - 1, 0)); }
 function goSlide(n) { show(n); }
 document.addEventListener('keydown', e => {
+  const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+  if (tag === 'textarea' || tag === 'input' || (e.target && e.target.isContentEditable)) return;
   if (e.key === 'Escape') { collapseCodePanels(); return; }
   if (e.key === 'ArrowRight') nextSlide();
   if (e.key === 'ArrowLeft') prevSlide();
@@ -2556,10 +3863,105 @@ document.addEventListener('keydown', e => {
 window.addEventListener('DOMContentLoaded', () => {
   initSplitDividers();
   applySavedSplit(document);
+  document.querySelectorAll('.py-editor').forEach(ed => {
+    ed.dataset.original = ed.value;
+  });
   const h = location.hash.replace('#','');
   if (h === 'nav' || h === '') show(0);
   else show(parseInt(h, 10) || 0);
 });
+
+/* ── In-browser Python (Pyodide) playground ── */
+let pyodideReady = null;
+function loadPyodideScript() {
+  return new Promise((resolve, reject) => {
+    if (typeof loadPyodide === 'function') { resolve(); return; }
+    const existing = document.querySelector('script[data-pyodide]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Pyodide script failed to load')));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+    s.async = true;
+    s.dataset.pyodide = '1';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error(
+      'Could not load Pyodide. Prefer http://localhost over file://, and check your network.'
+    ));
+    document.head.appendChild(s);
+  });
+}
+async function ensurePyodide(statusEl) {
+  if (pyodideReady) return pyodideReady;
+  if (statusEl) statusEl.textContent = 'Loading Python (first time)...';
+  await loadPyodideScript();
+  if (typeof loadPyodide !== 'function') {
+    throw new Error('Pyodide failed to load. Use http://localhost (not file://).');
+  }
+  pyodideReady = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+  const py = await pyodideReady;
+  if (statusEl) statusEl.textContent = 'Python ready';
+  return py;
+}
+function resetPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (ed) {
+    if (ed.dataset.original == null) ed.dataset.original = ed.defaultValue;
+    ed.value = ed.dataset.original;
+  }
+  if (out) { out.hidden = true; out.textContent = ''; out.classList.remove('err'); }
+  if (status) status.textContent = '';
+}
+async function runPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (!ed || !out) return;
+  btn.disabled = true;
+  out.hidden = false;
+  out.classList.remove('err');
+  out.textContent = '';
+  try {
+    const py = await ensurePyodide(status);
+    if (status) status.textContent = 'Running...';
+    let stdout = [];
+    let stderr = [];
+    py.setStdout({
+      batched: (s) => { stdout.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    py.setStderr({
+      batched: (s) => { stderr.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    try {
+      await py.runPythonAsync(ed.value);
+      const text = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = text || '(ran successfully — no printed output)';
+      if (stderr.length) out.classList.add('err');
+      if (status) status.textContent = 'Done';
+    } catch (err) {
+      out.classList.add('err');
+      const printed = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = (printed ? printed + '\n' : '') + String(err);
+      if (status) status.textContent = 'Error';
+    }
+  } catch (err) {
+    out.classList.add('err');
+    out.textContent = String(err);
+    if (status) status.textContent = 'Failed to start Python';
+  } finally {
+    btn.disabled = false;
+  }
+}
 </script>
 </body>
 </html>

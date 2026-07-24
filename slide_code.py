@@ -141,7 +141,7 @@ def highlight_csharp_line(line: str) -> str:
     return "".join(out) if out else "&#160;"
 
 
-def vs_editor(text: str, lang: str = "python", compact: bool = False) -> str:
+def vs_editor(text: str, lang: str = "python", compact: bool = False, playground: bool = False) -> str:
     highlight = highlight_csharp_line if lang == "csharp" else highlight_python_line
     rows = []
     for num, line in enumerate(text.splitlines(), 1):
@@ -152,7 +152,28 @@ def vs_editor(text: str, lang: str = "python", compact: bool = False) -> str:
         rows.append('<tr><td class="gutter">1</td><td class="src">&#160;</td></tr>')
     body = "\n".join(rows)
     compact_cls = " vs-editor-compact" if compact else ""
-    return f'<div class="vs-editor{compact_cls}"><table class="vs-code"><tbody>\n{body}\n</tbody></table></div>'
+    highlighted = (
+        f'<div class="vs-editor{compact_cls}"><table class="vs-code"><tbody>\n{body}\n</tbody></table></div>'
+    )
+    if not playground or lang != "python":
+        return highlighted
+    # Editable + runnable panel (Pyodide wired in the HTML page)
+    src = html.escape(text)
+    return (
+        '<div class="code-playground">'
+        '<div class="code-toolbar">'
+        '<span class="code-toolbar-label">Code editor</span>'
+        '<button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button>'
+        '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
+        '<span class="py-status"></span>'
+        "</div>"
+        f'<textarea class="py-editor" spellcheck="false">{src}</textarea>'
+        '<pre class="py-output" hidden></pre>'
+        '<details class="py-highlight"><summary>Syntax-colored view</summary>'
+        f"{highlighted}"
+        "</details>"
+        "</div>"
+    )
 
 
 def code(text: str) -> str:
@@ -162,7 +183,7 @@ def code(text: str) -> str:
 
 
 def code_table(idx: int) -> str:
-    return vs_editor(_CODE_SNIPPETS[idx], lang="python")
+    return vs_editor(_CODE_SNIPPETS[idx], lang="python", playground=True)
 
 
 def split_learn(learn: str) -> tuple[str, str]:

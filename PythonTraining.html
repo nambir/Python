@@ -34,6 +34,43 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .panel-left { min-width: 0; }
 .panel-code { min-width: 0; position: sticky; top: 12px; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
+.panel-code .code-playground + .code-playground { margin-top: 14px; }
+
+.code-playground {
+  border: 1px solid #cfe0f5; border-radius: 6px; background: #fff; overflow: hidden;
+}
+.code-toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 6px 10px; background: #f0f7ff; border-bottom: 1px solid #cfe0f5;
+}
+.code-toolbar-label { font-size: 12px; font-weight: 700; color: #0066cc; margin-right: auto; }
+.btn-run-py, .btn-reset-py {
+  padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer;
+}
+.btn-run-py { background: #0066cc; color: #fff; }
+.btn-run-py:hover { background: #0052a3; }
+.btn-run-py:disabled { opacity: .6; cursor: wait; }
+.btn-reset-py { background: #fff; color: #555; border: 1px solid #ccc; }
+.btn-reset-py:hover { background: #f5f5f5; }
+.py-status { font-size: 11px; color: #666; }
+.py-editor {
+  display: block; width: 100%; min-height: 220px; max-height: calc(100vh - 260px);
+  padding: 10px 12px; border: none; resize: vertical;
+  font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
+  color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
+}
+.py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-output {
+  margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
+  background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
+  line-height: 1.45; white-space: pre-wrap; max-height: 180px; overflow: auto;
+}
+.py-output.err { color: #fecaca; }
+.py-highlight { border-top: 1px solid #e2e8f0; padding: 4px 10px 8px; background: #fafafa; }
+.py-highlight summary {
+  cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
+}
+.py-highlight .vs-editor { max-height: 40vh; }
 
 .interview-box { background: #e8f5e9; border-left: 3px solid #28a745; padding: 10px 12px; border-radius: 4px; margin-top: 8px; font-size: 12px; }
 .interview-box p { margin: 6px 0 0; color: #1b5e20; line-height: 1.5; }
@@ -432,27 +469,27 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   <div class="nav-grid">
     <div class="nav-section nav-section-1">
       <h3>Week 1 — Foundations</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(1)">1. What is Python?</a><ul class="nav-subs"><li><a onclick="goSlide(1)">Advantages vs C#</a></li><li><a onclick="goSlide(1)">Interpreted / bytecode</a></li><li><a onclick="goSlide(1)">Indentation</a></li><li><a onclick="goSlide(1)">Duck typing</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(2)">2. Setup &amp; Run Python on Windows</a><ul class="nav-subs"><li><a onclick="goSlide(2)">Install &amp; PATH</a></li><li><a onclick="goSlide(2)">pip / versions</a></li><li><a onclick="goSlide(2)">REPL vs script</a></li><li><a onclick="goSlide(2)">IDE (Cursor / VS Code)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(3)">3. Your Training Workspace</a><ul class="nav-subs"><li><a onclick="goSlide(3)">Slides → Projects → Python-Set2</a></li><li><a onclick="goSlide(3)">venv per project</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(4)">4. PEP Standards</a><ul class="nav-subs"><li><a onclick="goSlide(4)">PEP 8</a></li><li><a onclick="goSlide(4)">PEP 257 docstrings</a></li><li><a onclick="goSlide(4)">PEP 20 Zen</a></li><li><a onclick="goSlide(4)">pyproject.toml</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(5)">5. Python Datatypes</a><ul class="nav-subs"><li><a onclick="goSlide(5)">Primitive: int, str, float, bool</a></li><li><a onclick="goSlide(5)">List</a></li><li><a onclick="goSlide(5)">Tuple</a></li><li><a onclick="goSlide(5)">Dict</a></li><li><a onclick="goSlide(5)">Set / frozenset</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(6)">6. Typing</a><ul class="nav-subs"><li><a onclick="goSlide(6)">Type hints</a></li><li><a onclick="goSlide(6)">Optional / Union</a></li><li><a onclick="goSlide(6)">Protocol</a></li><li><a onclick="goSlide(6)">mypy</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(7)">7. Operators</a><ul class="nav-subs"><li><a onclick="goSlide(7)">Arithmetic</a></li><li><a onclick="goSlide(7)">Comparison / Relational</a></li><li><a onclick="goSlide(7)">Assignment</a></li><li><a onclick="goSlide(7)">Logical</a></li><li><a onclick="goSlide(7)">Bitwise</a></li><li><a onclick="goSlide(7)">Membership (in)</a></li><li><a onclick="goSlide(7)">Identity (is)</a></li><li><a onclick="goSlide(7)">Walrus (:=)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(8)">8. Conditional &amp; Flow Control</a><ul class="nav-subs"><li><a onclick="goSlide(8)">if / elif / else</a></li><li><a onclick="goSlide(8)">while</a></li><li><a onclick="goSlide(8)">for</a></li><li><a onclick="goSlide(8)">break / continue / pass</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(9)">9. Comprehensions</a><ul class="nav-subs"><li><a onclick="goSlide(9)">List</a></li><li><a onclick="goSlide(9)">Set</a></li><li><a onclick="goSlide(9)">Dictionary</a></li><li><a onclick="goSlide(9)">Generator</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(10)">10. Python Functions</a><ul class="nav-subs"><li><a onclick="goSlide(10)">Positional &amp; keyword args</a></li><li><a onclick="goSlide(10)">Recursion</a></li><li><a onclick="goSlide(10)">Anonymous (lambda)</a></li><li><a onclick="goSlide(10)">Local &amp; global scope</a></li><li><a onclick="goSlide(10)">Pure / higher-order functions</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(11)">11. Built-in Functions</a><ul class="nav-subs"><li><a onclick="goSlide(11)">map</a></li><li><a onclick="goSlide(11)">zip</a></li><li><a onclick="goSlide(11)">filter</a></li><li><a onclick="goSlide(11)">reduce</a></li><li><a onclick="goSlide(11)">enumerate</a></li><li><a onclick="goSlide(11)">type / id / range</a></li><li><a onclick="goSlide(11)">sorted / max / min</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#1" onclick="goSlide(1); return false;">1. What is Python?</a><ul class="nav-subs"><li><a href="#1" onclick="goSlide(1); return false;">Advantages vs C#</a></li><li><a href="#1" onclick="goSlide(1); return false;">Interpreted / bytecode</a></li><li><a href="#1" onclick="goSlide(1); return false;">Indentation</a></li><li><a href="#1" onclick="goSlide(1); return false;">Duck typing</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#2" onclick="goSlide(2); return false;">2. Setup &amp; Run Python on Windows</a><ul class="nav-subs"><li><a href="#2" onclick="goSlide(2); return false;">Install &amp; PATH</a></li><li><a href="#2" onclick="goSlide(2); return false;">pip / versions</a></li><li><a href="#2" onclick="goSlide(2); return false;">REPL vs script</a></li><li><a href="#2" onclick="goSlide(2); return false;">IDE (Cursor / VS Code)</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#3" onclick="goSlide(3); return false;">3. Your Training Workspace</a><ul class="nav-subs"><li><a href="#3" onclick="goSlide(3); return false;">Slides → Projects → Python-Set2</a></li><li><a href="#3" onclick="goSlide(3); return false;">venv per project</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#4" onclick="goSlide(4); return false;">4. PEP Standards</a><ul class="nav-subs"><li><a href="#4" onclick="goSlide(4); return false;">PEP 8</a></li><li><a href="#4" onclick="goSlide(4); return false;">PEP 257 docstrings</a></li><li><a href="#4" onclick="goSlide(4); return false;">PEP 20 Zen</a></li><li><a href="#4" onclick="goSlide(4); return false;">pyproject.toml</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#5" onclick="goSlide(5); return false;">5. Python Datatypes</a><ul class="nav-subs"><li><a href="#5" onclick="goSlide(5); return false;">Primitive: int, str, float, bool</a></li><li><a href="#5" onclick="goSlide(5); return false;">List</a></li><li><a href="#5" onclick="goSlide(5); return false;">Tuple</a></li><li><a href="#5" onclick="goSlide(5); return false;">Dict</a></li><li><a href="#5" onclick="goSlide(5); return false;">Set / frozenset</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#6" onclick="goSlide(6); return false;">6. Typing</a><ul class="nav-subs"><li><a href="#6" onclick="goSlide(6); return false;">Type hints</a></li><li><a href="#6" onclick="goSlide(6); return false;">Optional / Union</a></li><li><a href="#6" onclick="goSlide(6); return false;">Protocol</a></li><li><a href="#6" onclick="goSlide(6); return false;">mypy</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#7" onclick="goSlide(7); return false;">7. Operators</a><ul class="nav-subs"><li><a href="#7" onclick="goSlide(7); return false;">Arithmetic</a></li><li><a href="#7" onclick="goSlide(7); return false;">Comparison / Relational</a></li><li><a href="#7" onclick="goSlide(7); return false;">Assignment</a></li><li><a href="#7" onclick="goSlide(7); return false;">Logical</a></li><li><a href="#7" onclick="goSlide(7); return false;">Bitwise</a></li><li><a href="#7" onclick="goSlide(7); return false;">Membership (in)</a></li><li><a href="#7" onclick="goSlide(7); return false;">Identity (is)</a></li><li><a href="#7" onclick="goSlide(7); return false;">Walrus (:=)</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#8" onclick="goSlide(8); return false;">8. Conditional &amp; Flow Control</a><ul class="nav-subs"><li><a href="#8" onclick="goSlide(8); return false;">if / elif / else</a></li><li><a href="#8" onclick="goSlide(8); return false;">while</a></li><li><a href="#8" onclick="goSlide(8); return false;">for</a></li><li><a href="#8" onclick="goSlide(8); return false;">break / continue / pass</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#9" onclick="goSlide(9); return false;">9. Comprehensions</a><ul class="nav-subs"><li><a href="#9" onclick="goSlide(9); return false;">List</a></li><li><a href="#9" onclick="goSlide(9); return false;">Set</a></li><li><a href="#9" onclick="goSlide(9); return false;">Dictionary</a></li><li><a href="#9" onclick="goSlide(9); return false;">Generator</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#10" onclick="goSlide(10); return false;">10. Python Functions</a><ul class="nav-subs"><li><a href="#10" onclick="goSlide(10); return false;">Positional &amp; keyword args</a></li><li><a href="#10" onclick="goSlide(10); return false;">Recursion</a></li><li><a href="#10" onclick="goSlide(10); return false;">Anonymous (lambda)</a></li><li><a href="#10" onclick="goSlide(10); return false;">Local &amp; global scope</a></li><li><a href="#10" onclick="goSlide(10); return false;">Pure / higher-order functions</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#11" onclick="goSlide(11); return false;">11. Built-in Functions</a><ul class="nav-subs"><li><a href="#11" onclick="goSlide(11); return false;">map</a></li><li><a href="#11" onclick="goSlide(11); return false;">zip</a></li><li><a href="#11" onclick="goSlide(11); return false;">filter</a></li><li><a href="#11" onclick="goSlide(11); return false;">reduce</a></li><li><a href="#11" onclick="goSlide(11); return false;">enumerate</a></li><li><a href="#11" onclick="goSlide(11); return false;">type / id / range</a></li><li><a href="#11" onclick="goSlide(11); return false;">sorted / max / min</a></li></ul></div></div>
     </div>
     <div class="nav-section nav-section-2">
       <h3>Week 2 — Collections & OOP</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(12)">12. Python Collections</a><ul class="nav-subs"><li><a onclick="goSlide(12)">Counter</a></li><li><a onclick="goSlide(12)">OrderedDict</a></li><li><a onclick="goSlide(12)">defaultdict</a></li><li><a onclick="goSlide(12)">namedtuple</a></li><li><a onclick="goSlide(12)">deque</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(13)">13. Memory Management & Garbage Collection</a><ul class="nav-subs"><li><a onclick="goSlide(13)">Reference counting</a></li><li><a onclick="goSlide(13)">Generational GC</a></li><li><a onclick="goSlide(13)">weakref</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(14)">14. Pydantic</a><ul class="nav-subs"><li><a onclick="goSlide(14)">BaseModel</a></li><li><a onclick="goSlide(14)">Field / validators</a></li><li><a onclick="goSlide(14)">model_validate / dump</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(15)">15. OOP Concepts</a><ul class="nav-subs"><li><a onclick="goSlide(15)">Class</a></li><li><a onclick="goSlide(15)">Inheritance</a></li><li><a onclick="goSlide(15)">Encapsulation</a></li><li><a onclick="goSlide(15)">Polymorphism</a></li><li><a onclick="goSlide(15)">Abstract classes</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(16)">16. Descriptors</a><ul class="nav-subs"><li><a onclick="goSlide(16)">__get__ / __set__</a></li><li><a onclick="goSlide(16)">property</a></li><li><a onclick="goSlide(16)">Dunder / magic methods</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(17)">17. Generators &amp; Iterators</a><ul class="nav-subs"><li><a onclick="goSlide(17)">yield</a></li><li><a onclick="goSlide(17)">Generator expressions</a></li><li><a onclick="goSlide(17)">Lazy iteration</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#12" onclick="goSlide(12); return false;">12. Python Collections</a><ul class="nav-subs"><li><a href="#12" onclick="goSlide(12); return false;">Counter</a></li><li><a href="#12" onclick="goSlide(12); return false;">OrderedDict</a></li><li><a href="#12" onclick="goSlide(12); return false;">defaultdict</a></li><li><a href="#12" onclick="goSlide(12); return false;">namedtuple</a></li><li><a href="#12" onclick="goSlide(12); return false;">deque</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#13" onclick="goSlide(13); return false;">13. Memory Management & Garbage Collection</a><ul class="nav-subs"><li><a href="#13" onclick="goSlide(13); return false;">Reference counting</a></li><li><a href="#13" onclick="goSlide(13); return false;">Generational GC</a></li><li><a href="#13" onclick="goSlide(13); return false;">weakref</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#14" onclick="goSlide(14); return false;">14. Pydantic</a><ul class="nav-subs"><li><a href="#14" onclick="goSlide(14); return false;">BaseModel</a></li><li><a href="#14" onclick="goSlide(14); return false;">Field / validators</a></li><li><a href="#14" onclick="goSlide(14); return false;">model_validate / dump</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#15" onclick="goSlide(15); return false;">15. OOP Concepts</a><ul class="nav-subs"><li><a href="#15" onclick="goSlide(15); return false;">Class</a></li><li><a href="#15" onclick="goSlide(15); return false;">Inheritance</a></li><li><a href="#15" onclick="goSlide(15); return false;">Encapsulation</a></li><li><a href="#15" onclick="goSlide(15); return false;">Polymorphism</a></li><li><a href="#15" onclick="goSlide(15); return false;">Abstract classes</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#16" onclick="goSlide(16); return false;">16. Descriptors</a><ul class="nav-subs"><li><a href="#16" onclick="goSlide(16); return false;">__get__ / __set__</a></li><li><a href="#16" onclick="goSlide(16); return false;">property</a></li><li><a href="#16" onclick="goSlide(16); return false;">Dunder / magic methods</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#17" onclick="goSlide(17); return false;">17. Generators &amp; Iterators</a><ul class="nav-subs"><li><a href="#17" onclick="goSlide(17); return false;">yield</a></li><li><a href="#17" onclick="goSlide(17); return false;">Generator expressions</a></li><li><a href="#17" onclick="goSlide(17); return false;">Lazy iteration</a></li></ul></div></div>
     </div>
     <div class="nav-section nav-section-3">
       <h3>Week 3 — Advanced Core</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(18)">18. Decorators</a><ul class="nav-subs"><li><a onclick="goSlide(18)">@decorator syntax</a></li><li><a onclick="goSlide(18)">functools.wraps</a></li><li><a onclick="goSlide(18)">Common patterns</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(19)">19. Exception Handling</a><ul class="nav-subs"><li><a onclick="goSlide(19)">try / except / else / finally</a></li><li><a onclick="goSlide(19)">raise / custom exceptions</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(20)">20. Threading &amp; GIL</a><ul class="nav-subs"><li><a onclick="goSlide(20)">Threading</a></li><li><a onclick="goSlide(20)">Multiprocessing</a></li><li><a onclick="goSlide(20)">GIL</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(21)">21. Async / Await</a><ul class="nav-subs"><li><a onclick="goSlide(21)">async / await</a></li><li><a onclick="goSlide(21)">asyncio.gather</a></li><li><a onclick="goSlide(21)">Event loop</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(22)">22. Logging</a><ul class="nav-subs"><li><a onclick="goSlide(22)">Levels (DEBUG→CRITICAL)</a></li><li><a onclick="goSlide(22)">Handlers / formatters</a></li><li><a onclick="goSlide(22)">RotatingFileHandler</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(23)">23. Unit Testing</a><ul class="nav-subs"><li><a onclick="goSlide(23)">unittest / pytest</a></li><li><a onclick="goSlide(23)">assert</a></li><li><a onclick="goSlide(23)">mock / patch</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(24)">24. Regular Expressions</a><ul class="nav-subs"><li><a onclick="goSlide(24)">re.search / match / findall</a></li><li><a onclick="goSlide(24)">Groups</a></li><li><a onclick="goSlide(24)">Raw strings</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(25)">25. File Operations</a><ul class="nav-subs"><li><a onclick="goSlide(25)">open / with</a></li><li><a onclick="goSlide(25)">pathlib</a></li><li><a onclick="goSlide(25)">json / csv</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(26)">26. Context Manager</a><ul class="nav-subs"><li><a onclick="goSlide(26)">with protocol</a></li><li><a onclick="goSlide(26)">@contextmanager</a></li><li><a onclick="goSlide(26)">__enter__ / __exit__</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(27)">27. Virtual Environment</a><ul class="nav-subs"><li><a onclick="goSlide(27)">python -m venv</a></li><li><a onclick="goSlide(27)">activate</a></li><li><a onclick="goSlide(27)">requirements.txt</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#18" onclick="goSlide(18); return false;">18. Decorators</a><ul class="nav-subs"><li><a href="#18" onclick="goSlide(18); return false;">@decorator syntax</a></li><li><a href="#18" onclick="goSlide(18); return false;">functools.wraps</a></li><li><a href="#18" onclick="goSlide(18); return false;">Common patterns</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#19" onclick="goSlide(19); return false;">19. Exception Handling</a><ul class="nav-subs"><li><a href="#19" onclick="goSlide(19); return false;">try / except / else / finally</a></li><li><a href="#19" onclick="goSlide(19); return false;">raise / custom exceptions</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#20" onclick="goSlide(20); return false;">20. Threading &amp; GIL</a><ul class="nav-subs"><li><a href="#20" onclick="goSlide(20); return false;">Threading</a></li><li><a href="#20" onclick="goSlide(20); return false;">Multiprocessing</a></li><li><a href="#20" onclick="goSlide(20); return false;">GIL</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#21" onclick="goSlide(21); return false;">21. Async / Await</a><ul class="nav-subs"><li><a href="#21" onclick="goSlide(21); return false;">async / await</a></li><li><a href="#21" onclick="goSlide(21); return false;">asyncio.gather</a></li><li><a href="#21" onclick="goSlide(21); return false;">Event loop</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#22" onclick="goSlide(22); return false;">22. Logging</a><ul class="nav-subs"><li><a href="#22" onclick="goSlide(22); return false;">Levels (DEBUG→CRITICAL)</a></li><li><a href="#22" onclick="goSlide(22); return false;">Handlers / formatters</a></li><li><a href="#22" onclick="goSlide(22); return false;">RotatingFileHandler</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#23" onclick="goSlide(23); return false;">23. Unit Testing</a><ul class="nav-subs"><li><a href="#23" onclick="goSlide(23); return false;">unittest / pytest</a></li><li><a href="#23" onclick="goSlide(23); return false;">assert</a></li><li><a href="#23" onclick="goSlide(23); return false;">mock / patch</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#24" onclick="goSlide(24); return false;">24. Regular Expressions</a><ul class="nav-subs"><li><a href="#24" onclick="goSlide(24); return false;">re.search / match / findall</a></li><li><a href="#24" onclick="goSlide(24); return false;">Groups</a></li><li><a href="#24" onclick="goSlide(24); return false;">Raw strings</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#25" onclick="goSlide(25); return false;">25. File Operations</a><ul class="nav-subs"><li><a href="#25" onclick="goSlide(25); return false;">open / with</a></li><li><a href="#25" onclick="goSlide(25); return false;">pathlib</a></li><li><a href="#25" onclick="goSlide(25); return false;">json / csv</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#26" onclick="goSlide(26); return false;">26. Context Manager</a><ul class="nav-subs"><li><a href="#26" onclick="goSlide(26); return false;">with protocol</a></li><li><a href="#26" onclick="goSlide(26); return false;">@contextmanager</a></li><li><a href="#26" onclick="goSlide(26); return false;">__enter__ / __exit__</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#27" onclick="goSlide(27); return false;">27. Virtual Environment</a><ul class="nav-subs"><li><a href="#27" onclick="goSlide(27); return false;">python -m venv</a></li><li><a href="#27" onclick="goSlide(27); return false;">activate</a></li><li><a href="#27" onclick="goSlide(27); return false;">requirements.txt</a></li></ul></div></div>
     </div>
     <div class="nav-section nav-section-4">
       <h3>Week 4 — Web Stack</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(28)">28. FastAPI with SQLAlchemy</a><ul class="nav-subs"><li><a onclick="goSlide(28)">Routes + Depends</a></li><li><a onclick="goSlide(28)">Pydantic schemas</a></li><li><a onclick="goSlide(28)">SQLAlchemy ORM</a></li><li><a onclick="goSlide(28)">Service layer</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#28" onclick="goSlide(28); return false;">28. FastAPI with SQLAlchemy</a><ul class="nav-subs"><li><a href="#28" onclick="goSlide(28); return false;">Routes + Depends</a></li><li><a href="#28" onclick="goSlide(28); return false;">Pydantic schemas</a></li><li><a href="#28" onclick="goSlide(28); return false;">SQLAlchemy ORM</a></li><li><a href="#28" onclick="goSlide(28); return false;">Service layer</a></li></ul></div></div>
     </div>
     <div class="nav-section nav-section-5">
       <h3>Real Projects (Python-Set2)</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(29)">29. Python-Set2 — Portfolio Overview</a><ul class="nav-subs"><li><a onclick="goSlide(29)">pythonBasics</a></li><li><a onclick="goSlide(29)">Google exercises</a></li><li><a onclick="goSlide(29)">Pandas</a></li><li><a onclick="goSlide(29)">Django / DRF</a></li><li><a onclick="goSlide(29)">Pipecat</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(30)">30. pythonBasics — Topic Modules</a><ul class="nav-subs"><li><a onclick="goSlide(30)">MyClass</a></li><li><a onclick="goSlide(30)">MyCollections</a></li><li><a onclick="goSlide(30)">MyLoops</a></li><li><a onclick="goSlide(30)">MyModules</a></li><li><a onclick="goSlide(30)">MyUnitTesting</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(31)">31. Google Exercises &amp; Pandas</a><ul class="nav-subs"><li><a onclick="goSlide(31)">babynames (regex)</a></li><li><a onclick="goSlide(31)">copyspecial (files)</a></li><li><a onclick="goSlide(31)">Titanic (pandas)</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(32)">32. Django &amp; Django REST</a><ul class="nav-subs"><li><a onclick="goSlide(32)">MVT / templates</a></li><li><a onclick="goSlide(32)">Auth / JWT</a></li><li><a onclick="goSlide(32)">Serializers / ViewSets</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(33)">33. Pipecat — Voice AI POCs</a><ul class="nav-subs"><li><a onclick="goSlide(33)">STT → LLM → TTS</a></li><li><a onclick="goSlide(33)">WebRTC</a></li><li><a onclick="goSlide(33)">Voice pipeline phases</a></li></ul></div><div class="nav-topic"><a class="nav-main" onclick="goSlide(34)">34. Real Project Structure &amp; Learning Path</a><ul class="nav-subs"><li><a onclick="goSlide(34)">routes / services / schemas</a></li><li><a onclick="goSlide(34)">tests at root</a></li><li><a onclick="goSlide(34)">App-per-domain</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#29" onclick="goSlide(29); return false;">29. Python-Set2 — Portfolio Overview</a><ul class="nav-subs"><li><a href="#29" onclick="goSlide(29); return false;">pythonBasics</a></li><li><a href="#29" onclick="goSlide(29); return false;">Google exercises</a></li><li><a href="#29" onclick="goSlide(29); return false;">Pandas</a></li><li><a href="#29" onclick="goSlide(29); return false;">Django / DRF</a></li><li><a href="#29" onclick="goSlide(29); return false;">Pipecat</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#30" onclick="goSlide(30); return false;">30. pythonBasics — Topic Modules</a><ul class="nav-subs"><li><a href="#30" onclick="goSlide(30); return false;">MyClass</a></li><li><a href="#30" onclick="goSlide(30); return false;">MyCollections</a></li><li><a href="#30" onclick="goSlide(30); return false;">MyLoops</a></li><li><a href="#30" onclick="goSlide(30); return false;">MyModules</a></li><li><a href="#30" onclick="goSlide(30); return false;">MyUnitTesting</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#31" onclick="goSlide(31); return false;">31. Google Exercises &amp; Pandas</a><ul class="nav-subs"><li><a href="#31" onclick="goSlide(31); return false;">babynames (regex)</a></li><li><a href="#31" onclick="goSlide(31); return false;">copyspecial (files)</a></li><li><a href="#31" onclick="goSlide(31); return false;">Titanic (pandas)</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#32" onclick="goSlide(32); return false;">32. Django &amp; Django REST</a><ul class="nav-subs"><li><a href="#32" onclick="goSlide(32); return false;">MVT / templates</a></li><li><a href="#32" onclick="goSlide(32); return false;">Auth / JWT</a></li><li><a href="#32" onclick="goSlide(32); return false;">Serializers / ViewSets</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#33" onclick="goSlide(33); return false;">33. Pipecat — Voice AI POCs</a><ul class="nav-subs"><li><a href="#33" onclick="goSlide(33); return false;">STT → LLM → TTS</a></li><li><a href="#33" onclick="goSlide(33); return false;">WebRTC</a></li><li><a href="#33" onclick="goSlide(33); return false;">Voice pipeline phases</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#34" onclick="goSlide(34); return false;">34. Real Project Structure &amp; Learning Path</a><ul class="nav-subs"><li><a href="#34" onclick="goSlide(34); return false;">routes / services / schemas</a></li><li><a href="#34" onclick="goSlide(34); return false;">tests at root</a></li><li><a href="#34" onclick="goSlide(34); return false;">App-per-domain</a></li></ul></div></div>
     </div>
     <div class="nav-section nav-section-6">
       <h3>Appendix</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" onclick="goSlide(35)">35. C# vs Python — Quick Reference</a><ul class="nav-subs"><li><a onclick="goSlide(35)">null → None</a></li><li><a onclick="goSlide(35)">using → with</a></li><li><a onclick="goSlide(35)">pass / NotImplementedError</a></li><li><a onclick="goSlide(35)">venv ≈ NuGet</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#35" onclick="goSlide(35); return false;">35. C# vs Python — Quick Reference</a><ul class="nav-subs"><li><a href="#35" onclick="goSlide(35); return false;">null → None</a></li><li><a href="#35" onclick="goSlide(35); return false;">using → with</a></li><li><a href="#35" onclick="goSlide(35); return false;">pass / NotImplementedError</a></li><li><a href="#35" onclick="goSlide(35); return false;">venv ≈ NuGet</a></li></ul></div></div>
     </div>
   </div>
 </div>
@@ -668,7 +705,46 @@ notify(SlackNotifier(), "Hi")</div><p class="step-result"><b>Remember:</b> “If
 <span class="run-cmd">python Projects/00_python_fundamentals.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── INTERPRETATION: how CPython runs this file ──
+# Step 1: You save this as .py (source code - human readable)
+# Step 2: CPython compiles it to bytecode (.pyc in __pycache__)
+# Step 3: The interpreter executes bytecode line by line
+# You only type:  python myfile.py
+
+# ── INDENTATION: blocks use spaces, not { } ──
+if score &gt;= 60:
+    print(&quot;Pass&quot;)       # 4 spaces = inside the if block
+    print(&quot;Good job&quot;)
+else:
+    print(&quot;Try again&quot;)  # 4 spaces = inside the else block
+
+# ── DYNAMIC TYPING: no type declaration ──
+x = 42          # x holds an int
+x = &quot;hello&quot;     # now x holds a str - same name, new type
+print(type(x))  # &lt;class &#x27;str&#x27;&gt;
+
+# ── DUCK TYPING: another function uses object without knowing class name ──
+# Class having .send() = normal. Duck typing = notify() only needs .send()
+# Email / SMS / Slack all work — no shared base class / interface
+class EmailNotifier:
+    def send(self, msg):
+        return f&quot;Email sent: {msg}&quot;
+
+class SmsNotifier:
+    def send(self, msg):
+        return f&quot;SMS sent: {msg}&quot;
+
+class SlackNotifier:
+    def send(self, msg):
+        return f&quot;Slack: {msg}&quot;
+
+def notify(channel, msg):
+    return channel.send(msg)   # no class name — behavior only
+
+print(notify(EmailNotifier(), &quot;Order #104 shipped&quot;))
+print(notify(SmsNotifier(), &quot;OTP 4821&quot;))
+print(notify(SlackNotifier(), &quot;Build done&quot;))
+# Same idea: anything with .write() can be passed to save(writer, text)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── INTERPRETATION: how CPython runs this file ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Step 1: You save this as .py (source code - human readable)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># Step 2: CPython compiles it to bytecode (.pyc in __pycache__)</span></td></tr>
@@ -709,7 +785,7 @@ notify(SlackNotifier(), "Hi")</div><p class="step-result"><b>Remember:</b> “If
 <tr><td class="gutter">38</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">notify</span><span class="t-op">(</span><span class="t-id">SmsNotifier</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;OTP 4821&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">39</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">notify</span><span class="t-op">(</span><span class="t-id">SlackNotifier</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Build done&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">40</td><td class="src"><span class="t-cm"># Same idea: anything with .write() can be passed to save(writer, text)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-2">
@@ -856,7 +932,14 @@ if __name__ == "__main__":
 <span class="run-cmd">python Projects/00_windows_setup.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── VERIFY INSTALLATION ──
+python --version     # Python 3.12.x  (interpreter version)
+pip --version        # pip 24.x       (package manager)
+
+# ── WINDOWS PY LAUNCHER (multiple Python versions) ──
+py -0p               # list all installed Pythons
+py -3.12 --version   # run specific version
+py -3.12 script.py   # run script with Python 3.12</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── VERIFY INSTALLATION ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">python</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># Python 3.12.x  (interpreter version)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">pip</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># pip 24.x       (package manager)</span></td></tr>
@@ -865,8 +948,31 @@ if __name__ == "__main__":
 <tr><td class="gutter">6</td><td class="src"><span class="t-id">py</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-num">0</span><span class="t-id">p</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># list all installed Pythons</span></td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-id">py</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-num">3.12</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># run specific version</span></td></tr>
 <tr><td class="gutter">8</td><td class="src"><span class="t-id">py</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-num">3.12</span><span class="t-op"> </span><span class="t-id">script</span><span class="t-op">.</span><span class="t-id">py</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># run script with Python 3.12</span></td></tr>
-</tbody></table></div>
-<div class="vs-editor"><table class="vs-code"><tbody>
+</tbody></table></div></details></div>
+<div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── 1. REPL (Read-Eval-Print Loop) ──
+# Type: python   then enter interactive mode
+&gt;&gt;&gt; 2 + 2
+4
+&gt;&gt;&gt; name = &quot;Python&quot;
+&gt;&gt;&gt; print(f&quot;Hello, {name}&quot;)
+Hello, Python
+&gt;&gt;&gt; exit()          # or Ctrl+Z Enter on Windows
+
+# ── 2. RUN A SCRIPT FILE ──
+python Projects/00_windows_setup.py
+python D:\Sangeetha\Python\Projects\02_getting_started.py
+
+# ── 3. ONE-LINER (-c flag) ──
+python -c &quot;print(&#x27;Hello from command line&#x27;)&quot;
+
+# ── 4. ENTRY-POINT GUARD (like C# Main) ──
+def main():
+    print(&quot;Starting application...&quot;)
+    print(&quot;Only runs when file executed directly&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()   # True when: python thisfile.py
+             # False when: import thisfile</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── 1. REPL (Read-Eval-Print Loop) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Type: python   then enter interactive mode</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op">&gt;</span><span class="t-op">&gt;</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
@@ -891,7 +997,7 @@ if __name__ == "__main__":
 <tr><td class="gutter">22</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">__name__</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;__main__&quot;</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">main</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># True when: python thisfile.py</span></td></tr>
 <tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># False when: import thisfile</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-3">
@@ -995,7 +1101,18 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div><h3>Step-by-s
 <span class="run-cmd">python Projects/01_datatypes.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TYPICAL WORKFLOW ──
+# 1. Read slide in PythonTraining.html
+# 2. Open matching file in Projects/
+# 3. Run and experiment:
+python Projects/02_getting_started.py
+
+# 4. Later: practice in Python-Set2/pythonBasics/
+cd Python-Set2/pythonBasics/MyClass
+python oops_inheritance_BankAccount.py
+
+# ── REGENERATE slides after edits ──
+# python build_training.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TYPICAL WORKFLOW ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># 1. Read slide in PythonTraining.html</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># 2. Open matching file in Projects/</span></td></tr>
@@ -1008,7 +1125,7 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div><h3>Step-by-s
 <tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">11</td><td class="src"><span class="t-cm"># ── REGENERATE slides after edits ──</span></td></tr>
 <tr><td class="gutter">12</td><td class="src"><span class="t-cm"># python build_training.py</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-4">
@@ -1111,7 +1228,28 @@ ruff check .
 <span class="run-cmd">python Projects/02_getting_started.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── PEP 8 style (examples) ──
+import os
+from pathlib import Path
+
+MAX_RETRIES = 3          # constants: UPPER_SNAKE
+
+def load_config(path: str) -&gt; dict:
+    &quot;&quot;&quot;Load JSON config from path (PEP 257 docstring).&quot;&quot;&quot;
+    ...
+
+class OrderService:      # classes: PascalCase
+    def process(self, order_id: int) -&gt; None:
+        user_name = &quot;anu&quot;  # variables: snake_case
+
+# ── Zen of Python ──
+import this   # PEP 20 — run in REPL once
+
+# ── pyproject.toml (PEP 518 / 621) ──
+# [project]
+# name = &quot;my-api&quot;
+# version = &quot;0.1.0&quot;
+# dependencies = [&quot;fastapi&gt;=0.100&quot;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── PEP 8 style (examples) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">os</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pathlib</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Path</span></td></tr>
@@ -1134,7 +1272,7 @@ ruff check .
 <tr><td class="gutter">20</td><td class="src"><span class="t-cm"># name = &quot;my-api&quot;</span></td></tr>
 <tr><td class="gutter">21</td><td class="src"><span class="t-cm"># version = &quot;0.1.0&quot;</span></td></tr>
 <tr><td class="gutter">22</td><td class="src"><span class="t-cm"># dependencies = [&quot;fastapi&gt;=0.100&quot;]</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-5">
@@ -1294,7 +1432,84 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
 <span class="run-cmd">python Projects/03_operators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import sys
+
+# ── STEP 1: Primitives ──
+age = 25              # int
+price = 99.5          # float
+name = &quot;Ravi&quot;         # str
+is_active = True      # bool
+
+# ── STEP 2: List — homogeneous OR heterogeneous ──
+scores = [90, 85, 88]                    # list of int
+vendors = [&quot;Google&quot;, &quot;Amazon&quot;, &quot;Azure&quot;]  # list of str
+# Heterogeneous = mixed types in one list (valid in Python):
+order = [101, &quot;SHIPPED&quot;, [&quot;Google&quot;, &quot;Amazon&quot;]]
+#          int   str        list of str
+print(order[0], order[1], order[2][0])   # 101 SHIPPED Google
+
+# ── STEP 3: List memory — over-allocation on append ──
+# CPython does NOT grow by +1 each time (that would be slow).
+# It allocates extra capacity; when full, reallocates a bigger array
+# and copies pointers (~1.125x growth).
+cart = []
+print(&quot;empty list bytes:&quot;, sys.getsizeof(cart))
+for i in range(8):
+    cart.append(i)
+    print(f&quot;len={len(cart)}  sizeof={sys.getsizeof(cart)}&quot;)
+# sizeof jumps in steps — capacity &gt; len until next realloc
+
+# ── STEP 4: Tuple — real scenarios ──
+lat_lng = (12.9716, 80.2212)     # GPS — fixed 2 numbers
+rgb = (255, 128, 0)              # color channels
+employee = (&quot;E102&quot;, &quot;Anu&quot;, 75000)  # id, name, salary record
+
+def fetch_user(user_id):
+    if user_id &lt; 0:
+        return False, None       # (ok, data) pattern
+    return True, {&quot;id&quot;: user_id, &quot;name&quot;: &quot;Anu&quot;}
+
+ok, user = fetch_user(10)        # unpack return tuple
+cache_key = (&quot;orders&quot;, 2026, 7)  # tuple as dict key
+grid = {cache_key: 42}
+
+# ── STEP 5: Why tuple is often faster / smaller than list ──
+# - Fixed length → no resize / capacity bookkeeping
+# - Slightly less memory (no over-allocation buffer)
+# - Immutable → safe as dict key; CPython can optimize more
+a_list = [1, 2, 3]
+a_tuple = (1, 2, 3)
+print(&quot;list bytes :&quot;, sys.getsizeof(a_list))
+print(&quot;tuple bytes:&quot;, sys.getsizeof(a_tuple))  # usually smaller
+
+# ── STEP 6: Set / frozenset / dict ──
+tags = {&quot;python&quot;, &quot;api&quot;, &quot;python&quot;}   # unique → {&#x27;python&#x27;,&#x27;api&#x27;}
+perms = frozenset({&quot;read&quot;, &quot;write&quot;}) # immutable set → OK as dict key
+phone = {&quot;Ravi&quot;: &quot;99999&quot;, &quot;Priya&quot;: &quot;88888&quot;}
+
+# ── WHY dict keys must be IMMUTABLE (hashable) ──
+# Dict finds a value using hash(key) → like a locker number.
+# If the key could change later, the locker number would change
+# and Python could NOT find the value again (data lost / wrong bucket).
+
+# OK — immutable keys (hash never changes):
+prices = {}
+prices[&quot;apple&quot;] = 40          # str
+prices[101] = &quot;SKU&quot;           # int
+prices[(12.97, 80.22)] = &quot;Chennai warehouse&quot;   # tuple GPS
+
+# FAIL — mutable keys (Python blocks this):
+# prices[[12.97, 80.22]] = &quot;warehouse&quot;   # TypeError: unhashable type: &#x27;list&#x27;
+# prices[{&quot;city&quot;: &quot;Chennai&quot;}] = &quot;x&quot;      # TypeError: unhashable type: &#x27;dict&#x27;
+# prices[{&quot;a&quot;, &quot;b&quot;}] = &quot;x&quot;               # TypeError: unhashable type: &#x27;set&#x27;
+
+# Imaginary danger if list WERE allowed as a key:
+# key = [1, 2]
+# data[key] = &quot;secret&quot;
+# key.append(3)          # key changed → hash would change
+# data[[1, 2]]           # could not find &quot;secret&quot; anymore!
+# That is why only immutable types are allowed as keys.
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── STEP 1: Primitives ──</span></td></tr>
@@ -1372,7 +1587,7 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
 <tr><td class="gutter">75</td><td class="src"><span class="t-cm"># key.append(3)          # key changed → hash would change</span></td></tr>
 <tr><td class="gutter">76</td><td class="src"><span class="t-cm"># data[[1, 2]]           # could not find &quot;secret&quot; anymore!</span></td></tr>
 <tr><td class="gutter">77</td><td class="src"><span class="t-cm"># That is why only immutable types are allowed as keys.</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-6">
@@ -1493,7 +1708,40 @@ print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input</th><th>Ou
 <span class="run-cmd">python Projects/04_flow_control.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from typing import Optional, Union, List, Dict, Tuple
+
+# ── BASIC TYPE HINTS ──
+def greet(name: str) -&gt; str:
+    return f&quot;Hello, {name}&quot;
+
+def add(a: int, b: int) -&gt; int:
+    return a + b
+
+# ── Optional: value OR None ──
+def find_user(user_id: int) -&gt; Optional[dict]:
+    if user_id &lt; 0:
+        return None
+    return {&quot;id&quot;: user_id, &quot;name&quot;: &quot;Alice&quot;}
+
+# ── Union: one of several types ──
+def process(items: Union[List[int], List[str]]) -&gt; int:
+    return len(items)
+
+# ── COLLECTION HINTS ──
+def get_scores() -&gt; Dict[str, int]:
+    return {&quot;alice&quot;: 95, &quot;bob&quot;: 88}
+
+def get_point() -&gt; Tuple[int, int]:
+    return (10, 20)
+
+# ── VARIABLE ANNOTATIONS ──
+count: int = 0
+names: List[str] = []
+
+# Type hints are NOT enforced at runtime!
+greet(42)        # runs fine - mypy would warn
+
+# Static check:  mypy mymodule.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">typing</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Optional</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Union</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">List</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Tuple</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── BASIC TYPE HINTS ──</span></td></tr>
@@ -1528,7 +1776,7 @@ print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input</th><th>Ou
 <tr><td class="gutter">32</td><td class="src"><span class="t-id">greet</span><span class="t-op">(</span><span class="t-num">42</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># runs fine - mypy would warn</span></td></tr>
 <tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">34</td><td class="src"><span class="t-cm"># Static check:  mypy mymodule.py</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-7">
@@ -1719,7 +1967,62 @@ if (n := len(data)) &gt; 0:
 <span class="run-cmd">python Projects/05_comprehensions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── ARITHMETIC ──
+17 / 5    # 3.4   true division (always float in Python 3)
+17 // 5   # 3     floor division (rounds down)
+17 % 5    # 2     modulo (remainder)
+2 ** 8    # 256   exponent (power)
+
+# ── COMPARISON (returns True/False) ──
+10 == 10  # True
+10 != 5   # True
+5 &gt; 3     # True
+5 &lt;= 5    # True
+
+# ── LOGICAL ──
+True and False   # False
+True or False    # True
+not True         # False
+
+# ── IDENTITY: is vs == ──
+a = [1, 2]
+b = a            # same object in memory
+c = [1, 2]       # different object, same value
+a is b           # True  - same object
+a == c           # True  - equal values
+a is c           # False - different objects
+x = None
+x is None        # True  - ALWAYS use is for None
+
+# ── MEMBERSHIP ──
+5 in [1, 2, 5]       # True
+&quot;py&quot; in &quot;Python&quot;     # True
+&quot;Java&quot; not in &quot;Python&quot;  # True
+
+# ── BITWISE (on binary representation) ──
+5 &amp; 3    # 1   AND:  101 &amp; 011 = 001
+5 | 3    # 7   OR:   101 | 011 = 111
+5 ^ 3    # 6   XOR:  101 ^ 011 = 110
+~5       # -6  NOT (invert bits)
+8 &lt;&lt; 1   # 16  left shift (multiply by 2)
+8 &gt;&gt; 1   # 4   right shift (divide by 2)
+
+# ── ASSIGNMENT OPERATORS ──
+n = 10
+n += 5     # 15  (same as n = n + 5)
+n -= 3     # 12
+n *= 2     # 24
+n //= 4    # 6
+n **= 2    # 36
+
+# ── WALRUS OPERATOR := (Python 3.8+) ──
+# assign AND use value in same expression
+data = [&quot;a&quot;, &quot;bb&quot;, &quot;ccc&quot;]
+if (n := len(data)) &gt; 2:
+    print(f&quot;Got {n} items&quot;)
+
+while (line := input(&quot;Name (empty to quit): &quot;)) != &quot;&quot;:
+    print(f&quot;Hello, {line}&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── ARITHMETIC ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-num">17</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 3.4   true division (always float in Python 3)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-num">17</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op">/</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 3     floor division (rounds down)</span></td></tr>
@@ -1776,7 +2079,7 @@ if (n := len(data)) &gt; 0:
 <tr><td class="gutter">54</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">55</td><td class="src"><span class="t-kw">while</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">line</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">input</span><span class="t-op">(</span><span class="t-str">&quot;Name (empty to quit): &quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">!</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">56</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">f</span><span class="t-str">&quot;Hello, {line}&quot;</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-8">
@@ -1925,7 +2228,62 @@ else:
 <span class="run-cmd">python Projects/06_functions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── IF / ELIF / ELSE ──
+score = 75
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 60:
+    grade = &quot;B&quot;
+else:
+    grade = &quot;C&quot;
+print(grade)  # B
+
+# ── FOR LOOP (like C# foreach) ──
+for i in range(3):          # 0, 1, 2
+    print(i)
+
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+for fruit in fruits:
+    print(fruit)
+
+for idx, val in enumerate([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]):
+    print(idx, val)         # 0 a, 1 b, 2 c
+
+# ── WHILE LOOP ──
+n = 0
+while n &lt; 5:
+    n += 1
+    if n == 3:
+        continue            # skip print for 3
+    print(n)                # 1, 2, 4, 5
+
+# ── BREAK: exit loop early ──
+for x in range(10):
+    if x == 5:
+        break
+    print(x)                # 0,1,2,3,4
+
+# ── PASS &amp; if True / if False ──
+def save_report():
+    pass                    # stub — block empty for now; add code later
+
+class ValidationError(Exception):
+    pass                    # empty exception class
+
+if False:
+    print(&quot;skipped&quot;)        # never runs — disable without deleting
+
+if True:
+    pass                    # placeholder — replace with real code
+
+# ── FOR-ELSE: else runs if NO break ──
+target = 5
+for x in [1, 2, 3]:
+    if x == target:
+        print(&quot;found&quot;)
+        break
+else:
+    print(&quot;not found&quot;)      # prints - no break happened</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── IF / ELIF / ELSE ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">score</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">75</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">score</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">90</span><span class="t-op">:</span></td></tr>
@@ -1982,7 +2340,7 @@ else:
 <tr><td class="gutter">54</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">break</span></td></tr>
 <tr><td class="gutter">55</td><td class="src"><span class="t-kw">else</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">56</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;not found&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># prints - no break happened</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-9">
@@ -2095,7 +2453,33 @@ next(gen)   # 1</div></li></ul>
 <span class="run-cmd">python Projects/07_builtins.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── LIST COMPREHENSION: [expr for item in iterable if condition] ──
+squares = [n * n for n in range(6)]           # [0,1,4,9,16,25]
+evens = [n for n in range(10) if n % 2 == 0]  # filter with if
+
+# Equivalent loop (more verbose):
+# squares = []
+# for n in range(6):
+#     squares.append(n * n)
+
+# ── SET COMPREHENSION: unique values ──
+unique = {c.lower() for c in &quot;Hello&quot;}         # {&#x27;h&#x27;,&#x27;e&#x27;,&#x27;l&#x27;,&#x27;o&#x27;}
+
+# ── DICT COMPREHENSION: key-value pairs ──
+word_len = {w: len(w) for w in [&quot;hi&quot;, &quot;hello&quot;]}  # {&#x27;hi&#x27;:2,&#x27;hello&#x27;:5}
+
+# ── NESTED comprehension ──
+matrix = [[i*j for j in range(3)] for i in range(3)]
+
+# ── GENERATOR EXPRESSION: lazy - ( ) not [ ] ──
+gen = (n * n for n in range(1_000_000))       # no list in memory
+print(next(gen))   # 0
+print(next(gen))   # 1
+print(next(gen))   # 4
+
+import sys
+print(sys.getsizeof(squares))  # ~120 bytes (full list)
+print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── LIST COMPREHENSION: [expr for item in iterable if condition] ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">squares</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">6</span><span class="t-op">)</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [0,1,4,9,16,25]</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">evens</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">%</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># filter with if</span></td></tr>
@@ -2123,7 +2507,7 @@ next(gen)   # 1</div></li></ul>
 <tr><td class="gutter">25</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">26</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">squares</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~120 bytes (full list)</span></td></tr>
 <tr><td class="gutter">27</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">gen</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~200 bytes (generator object)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-10">
@@ -2290,7 +2674,66 @@ times3(10)   # 30</div></li></ul>
 <span class="run-cmd">python Projects/08_oop.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BASIC FUNCTION ──
+def greet(name, greeting=&quot;Hello&quot;):
+    &quot;&quot;&quot;Return a greeting string. greeting has a default value.&quot;&quot;&quot;
+    return f&quot;{greeting}, {name}!&quot;
+
+print(greet(&quot;Alice&quot;))
+print(greet(&quot;Bob&quot;, &quot;Hi&quot;))
+
+# ── PURE FUNCTION (FP / GFG) — deterministic, no side effects ──
+def add(x, y):
+    return x + y          # same inputs → always same output
+
+# Impure — mutates global (harder to test / parallelize)
+_total = 0
+def add_impure(x):
+    global _total
+    _total += x
+    return _total
+
+# ── FIRST-CLASS + HIGHER-ORDER ──
+def apply_twice(fn, value):
+    return fn(fn(value))  # fn is a function argument
+
+print(apply_twice(lambda n: n + 1, 5))   # 7
+
+# ── *args / **kwargs ──
+def total(*args, **kwargs):
+    print(&quot;args:&quot;, args)             # tuple
+    print(&quot;kwargs:&quot;, kwargs)         # dict
+
+total(1, 2, 3, tax=0.1)
+
+# ── RECURSION (FP-style iteration) ──
+def factorial(n):
+    return 1 if n &lt;= 1 else n * factorial(n - 1)
+
+print(factorial(5))  # 120
+
+# ── LAMBDA ──
+double = lambda x: x * 2
+print(double(5))
+
+# ── LEGB + CLOSURE ──
+def make_multiplier(n):
+    def multiply(x):
+        return x * n
+    return multiply
+
+print(make_multiplier(3)(10))  # 30
+
+# ── MUTABLE DEFAULT TRAP (avoid!) ──
+def bad(lst=[]):       # DON&#x27;T - shared across calls
+    lst.append(1)
+    return lst
+
+def good(lst=None):
+    if lst is None:
+        lst = []
+    lst.append(1)
+    return lst</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BASIC FUNCTION ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">greet</span><span class="t-op">(</span><span class="t-id">name</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">greeting</span><span class="t-op">=</span><span class="t-str">&quot;Hello&quot;</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Return a greeting string. greeting has a default value.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
@@ -2351,7 +2794,7 @@ times3(10)   # 30</div></li></ul>
 <tr><td class="gutter">58</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">lst</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-op">]</span></td></tr>
 <tr><td class="gutter">59</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">lst</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">60</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">lst</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-11">
@@ -2485,7 +2928,47 @@ max([], default=0)           # 0 — empty safe</div></li></ul>
 <span class="run-cmd">python Projects/09_decorators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from functools import reduce
+
+nums = [1, 2, 3, 4, 5]
+
+# ── map: apply function to each item ──
+doubled = list(map(lambda x: x * 2, nums))     # [2,4,6,8,10]
+upper = list(map(str.upper, [&quot;a&quot;, &quot;b&quot;]))      # [&#x27;A&#x27;,&#x27;B&#x27;]
+
+# ── filter: keep items where function is True ──
+evens = list(filter(lambda x: x % 2 == 0, nums))  # [2,4]
+
+# ── reduce: fold to single value ──
+total = reduce(lambda a, b: a + b, nums)      # 15
+
+# ── zip: pair elements from iterables ──
+names = [&quot;Alice&quot;, &quot;Bob&quot;]
+scores = [95, 88]
+pairs = list(zip(names, scores))              # [(&#x27;Alice&#x27;,95),(&#x27;Bob&#x27;,88)]
+score_dict = dict(zip(names, scores))         # {&#x27;Alice&#x27;:95,&#x27;Bob&#x27;:88}
+
+# ── enumerate: index + value ──
+for i, v in enumerate([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]):
+    print(i, v)                               # 0 a, 1 b, 2 c
+
+# ── sorted: new sorted copy ──
+sorted_desc = sorted(nums, reverse=True)        # [5,4,3,2,1]
+by_len = sorted([&quot;hi&quot;, &quot;hello&quot;, &quot;hey&quot;], key=len)
+
+# ── type inspection ──
+print(type(42))              # &lt;class &#x27;int&#x27;&gt;
+print(isinstance(42, int))    # True
+print(isinstance(42, (int, float)))  # True
+
+# ── max / min ──
+prices = [120, 45, 89, 200]
+max(prices)                  # 200
+min(prices)                  # 45
+max(prices, key=lambda p: -p)  # smallest via custom key
+
+scores = {&quot;Anu&quot;: 90, &quot;Ravi&quot;: 85}
+max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">functools</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">reduce</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">nums</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">4</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op">]</span></td></tr>
@@ -2527,7 +3010,7 @@ max([], default=0)           # 0 — empty safe</div></li></ul>
 <tr><td class="gutter">39</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">40</td><td class="src"><span class="t-id">scores</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;Anu&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">90</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;Ravi&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">85</span><span class="t-op">}</span></td></tr>
 <tr><td class="gutter">41</td><td class="src"><span class="t-bi">max</span><span class="t-op">(</span><span class="t-id">scores</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">=</span><span class="t-id">scores</span><span class="t-op">.</span><span class="t-id">get</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># &quot;Anu&quot;</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-12">
@@ -2667,7 +3150,38 @@ class CaseInsensitiveDict(UserDict):
 <span class="run-cmd">python Projects/10_descriptors.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from collections import Counter, defaultdict, deque, namedtuple, ChainMap
+
+# ── Counter: count occurrences ──
+word_counts = Counter(&quot;hello world&quot;)
+print(word_counts)            # Counter({&#x27;l&#x27;:3,&#x27;o&#x27;:2,&#x27;h&#x27;:1,...})
+print(word_counts.most_common(2))  # top 2
+
+# ── defaultdict: auto-create missing keys ──
+groups = defaultdict(list)    # missing key → empty list
+groups[&quot;fruit&quot;].append(&quot;apple&quot;)
+groups[&quot;fruit&quot;].append(&quot;banana&quot;)
+groups[&quot;veg&quot;].append(&quot;carrot&quot;)
+print(dict(groups))           # {&#x27;fruit&#x27;:[&#x27;apple&#x27;,&#x27;banana&#x27;],&#x27;veg&#x27;:[&#x27;carrot&#x27;]}
+
+# ── deque: fast double-ended queue ──
+dq = deque([1, 2, 3])
+dq.append(4)                  # add right  → [1,2,3,4]
+dq.appendleft(0)              # add left   → [0,1,2,3,4]
+print(dq.popleft())           # remove left → 0
+
+# ── namedtuple: tuple with named fields ──
+Point = namedtuple(&quot;Point&quot;, [&quot;x&quot;, &quot;y&quot;])
+p = Point(10, 20)
+print(p.x, p.y)               # 10 20
+print(p[0], p[1])             # index still works
+
+# ── ChainMap: search multiple dicts ──
+defaults = {&quot;color&quot;: &quot;red&quot;, &quot;size&quot;: &quot;M&quot;}
+user_prefs = {&quot;color&quot;: &quot;blue&quot;}
+combined = ChainMap(user_prefs, defaults)
+print(combined[&quot;color&quot;])      # blue (user_prefs first)
+print(combined[&quot;size&quot;])       # M    (falls through to defaults)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Counter</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">defaultdict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ChainMap</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── Counter: count occurrences ──</span></td></tr>
@@ -2700,7 +3214,7 @@ class CaseInsensitiveDict(UserDict):
 <tr><td class="gutter">30</td><td class="src"><span class="t-id">combined</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ChainMap</span><span class="t-op">(</span><span class="t-id">user_prefs</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">defaults</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">31</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">combined</span><span class="t-op">[</span><span class="t-str">&quot;color&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># blue (user_prefs first)</span></td></tr>
 <tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">combined</span><span class="t-op">[</span><span class="t-str">&quot;size&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># M    (falls through to defaults)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-13">
@@ -2805,7 +3319,38 @@ def export_orders(path):
 <span class="run-cmd">python Projects/11_generators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import sys
+import gc
+
+# ── Reference counting ──
+a = [1, 2, 3]
+print(sys.getrefcount(a))   # approximate count (+ interpreter overhead)
+
+b = a
+print(sys.getrefcount(a))   # higher — two names reference same list
+
+del b                       # removes name b, not necessarily the list yet
+
+# ── Circular reference (GC handles this) ──
+class Node:
+    def __init__(self):
+        self.ref = None
+
+x = Node()
+y = Node()
+x.ref = y
+y.ref = x   # cycle — refcount never hits 0 alone
+del x, y
+gc.collect()  # breaks cycle and reclaims
+
+# ── Weak references (avoid keeping objects alive) ──
+import weakref
+
+obj = {&quot;key&quot;: &quot;value&quot;}
+ref = weakref.ref(obj)
+print(ref())        # dict still alive
+del obj
+print(ref())        # None — object collected</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">gc</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -2838,7 +3383,7 @@ def export_orders(path):
 <tr><td class="gutter">30</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># dict still alive</span></td></tr>
 <tr><td class="gutter">31</td><td class="src"><span class="t-kw">del</span><span class="t-op"> </span><span class="t-id">obj</span></td></tr>
 <tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># None — object collected</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-14">
@@ -2942,7 +3487,31 @@ user = UserCreate.model_validate(body)
 <span class="run-cmd">python Projects/12_typing.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from pydantic import BaseModel, Field, field_validator
+
+class CreateUser(BaseModel):
+    email: str
+    age: int = Field(ge=18, le=120)
+    tags: list[str] = []
+
+    @field_validator(&quot;email&quot;)
+    @classmethod
+    def email_must_have_at(cls, v: str) -&gt; str:
+        if &quot;@&quot; not in v:
+            raise ValueError(&quot;invalid email&quot;)
+        return v.lower()
+
+# ── Parse / validate ──
+payload = {&quot;email&quot;: &quot;Anu@Example.COM&quot;, &quot;age&quot;: &quot;25&quot;}  # age str OK
+user = CreateUser.model_validate(payload)
+print(user.model_dump())
+# {&#x27;email&#x27;: &#x27;anu@example.com&#x27;, &#x27;age&#x27;: 25, &#x27;tags&#x27;: []}
+
+# ── Invalid data raises ValidationError ──
+try:
+    CreateUser.model_validate({&quot;email&quot;: &quot;bad&quot;, &quot;age&quot;: 10})
+except Exception as e:
+    print(type(e).__name__, e)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pydantic</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">BaseModel</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">field_validator</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">(</span><span class="t-id">BaseModel</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -2968,7 +3537,7 @@ user = UserCreate.model_validate(body)
 <tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">.</span><span class="t-id">model_validate</span><span class="t-op">(</span><span class="t-op">{</span><span class="t-str">&quot;email&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;bad&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;age&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">10</span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">24</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">Exception</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">type</span><span class="t-op">(</span><span class="t-id">e</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-id">__name__</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-15">
@@ -3120,7 +3689,53 @@ class Circle(Shape):
 <span class="run-cmd">python Projects/13_file_operations.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BASE CLASS ──
+class Animal:
+    def __init__(self, name):
+        self.name = name          # instance attribute
+
+    def speak(self):
+        raise NotImplementedError(&quot;Subclass must implement&quot;)
+
+    def __str__(self):
+        return f&quot;Animal({self.name})&quot;   # user-friendly
+
+    def __repr__(self):
+        return f&quot;Animal(name={self.name!r})&quot;  # developer debug
+
+# ── INHERITANCE: override parent method ──
+class Dog(Animal):
+    def speak(self):
+        return f&quot;{self.name} says Woof!&quot;
+
+class Cat(Animal):
+    def speak(self):
+        return f&quot;{self.name} says Meow!&quot;
+
+# ── POLYMORPHISM: same call, different behavior ──
+pets = [Dog(&quot;Rex&quot;), Cat(&quot;Luna&quot;)]
+for pet in pets:
+    print(pet.speak())
+
+# ── ENCAPSULATION: _protected convention + @property ──
+class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance   # _ = &quot;protected&quot; by convention
+
+    @property
+    def balance(self):
+        return self._balance      # getter
+
+    def deposit(self, amount):
+        if amount &gt; 0:
+            self._balance += amount
+
+acct = BankAccount(1000)
+acct.deposit(500)
+print(acct.balance)               # 1500
+
+# ── MRO: Method Resolution Order ──
+print(Dog.__mro__)                # search order for methods</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BASE CLASS ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Animal</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -3168,7 +3783,7 @@ class Circle(Shape):
 <tr><td class="gutter">45</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">46</td><td class="src"><span class="t-cm"># ── MRO: Method Resolution Order ──</span></td></tr>
 <tr><td class="gutter">47</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">Dog</span><span class="t-op">.</span><span class="t-id">__mro__</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># search order for methods</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-16">
@@ -3292,7 +3907,46 @@ p.price = 99
 <span class="run-cmd">python Projects/14_exceptions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── @property: most common descriptor pattern ──
+class Celsius:
+    def __init__(self):
+        self._temp = 0.0          # private storage
+
+    @property                     # getter - called on read
+    def temp(self):
+        return self._temp
+
+    @temp.setter                  # setter - called on assignment
+    def temp(self, value):
+        if value &lt; -273.15:
+            raise ValueError(&quot;Below absolute zero!&quot;)
+        self._temp = value
+
+    @temp.deleter                 # deleter - called on del
+    def temp(self):
+        del self._temp
+
+c = Celsius()
+c.temp = 25                       # calls setter
+print(c.temp)                     # calls getter → 25
+
+# c.temp = -300                   # ValueError
+
+# ── READ-ONLY property (no setter) ──
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @property
+    def area(self):               # computed, read-only
+        return 3.14159 * self._radius ** 2
+
+circle = Circle(5)
+print(circle.area)                # 78.54...</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── @property: most common descriptor pattern ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Celsius</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -3333,7 +3987,7 @@ p.price = 99
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">39</td><td class="src"><span class="t-id">circle</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Circle</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">40</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">circle</span><span class="t-op">.</span><span class="t-id">area</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 78.54...</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-17">
@@ -3459,7 +4113,69 @@ list(islice(range(100), 5))</div></li></ul>
 <span class="run-cmd">python Projects/15_regex.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BAD: whole file in memory (can MemoryError on huge files) ──
+def csv_reader_naive(file_name):
+    with open(file_name, encoding=&quot;utf-8&quot;) as f:
+        return f.read().split(&quot;\n&quot;)   # list of ALL lines
+
+# ── GOOD: generator function — yield one row at a time (Real Python) ──
+def csv_reader(file_name):
+    with open(file_name, encoding=&quot;utf-8&quot;) as f:
+        for row in f:
+            yield row                 # pause; resume on next()
+
+# Same idea as a generator expression:
+# csv_gen = (row for row in open(file_name, encoding=&quot;utf-8&quot;))
+
+# ── yield vs return ──
+# return → ends function, gives ONE value
+# yield  → returns a generator object; each yield produces one item
+
+def countdown(n):
+    while n &gt; 0:
+        yield n
+        n -= 1
+
+for i in countdown(3):
+    print(i)              # 3, 2, 1
+
+# ── Infinite sequence (only possible with generators) ──
+def infinite_sequence():
+    num = 0
+    while True:
+        yield num
+        num += 1
+
+gen = infinite_sequence()
+print(next(gen), next(gen), next(gen))   # 0 1 2  — stop manually!
+
+# ── Pipeline: chain generators (process stream without giant lists) ──
+def nums():
+    for n in range(1, 6):
+        yield n
+
+def square(seq):
+    for n in seq:
+        yield n * n
+
+print(list(square(nums())))   # [1, 4, 9, 16, 25]
+
+# ── Iterator protocol: __iter__ + __next__ ──
+class CountUp:
+    def __init__(self, max_n):
+        self.n = 0
+        self.max_n = max_n
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if self.n &gt;= self.max_n:
+            raise StopIteration
+        self.n += 1
+        return self.n
+
+import itertools
+list(itertools.chain([1, 2], [3, 4]))
+list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BAD: whole file in memory (can MemoryError on huge files) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">csv_reader_naive</span><span class="t-op">(</span><span class="t-id">file_name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-id">file_name</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">encoding</span><span class="t-op">=</span><span class="t-str">&quot;utf-8&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">:</span></td></tr>
@@ -3523,7 +4239,7 @@ list(islice(range(100), 5))</div></li></ul>
 <tr><td class="gutter">61</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">itertools</span></td></tr>
 <tr><td class="gutter">62</td><td class="src"><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">itertools</span><span class="t-op">.</span><span class="t-id">chain</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">3</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">4</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">63</td><td class="src"><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">itertools</span><span class="t-op">.</span><span class="t-id">islice</span><span class="t-op">(</span><span class="t-id">countdown</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">)</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-18">
@@ -3652,7 +4368,48 @@ greet.__doc__    # Say hello</div></li></ul>
 <span class="run-cmd">python Projects/16_collections.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from functools import wraps
+import time
+
+# ── DECORATOR = function that wraps another function ──
+def timer(fn):
+    @wraps(fn)                    # preserve fn.__name__ and __doc__
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = fn(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f&quot;{fn.__name__}: {elapsed:.3f}s&quot;)
+        return result
+    return wrapper
+
+def log(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        print(f&quot;Calling {fn.__name__} with {args} {kwargs}&quot;)
+        return fn(*args, **kwargs)
+    return wrapper
+
+# ── @syntax: @timer above def = slow_work = timer(slow_work) ──
+@timer
+@log                       # stacked: log wraps first, timer outer
+def slow_work():
+    return sum(range(500_000))
+
+slow_work()
+
+# ── DECORATOR WITH ARGUMENTS (extra level) ──
+def repeat(n):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            for _ in range(n):
+                fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@repeat(3)
+def say_hi():
+    print(&quot;Hi!&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">functools</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">wraps</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -3695,7 +4452,7 @@ greet.__doc__    # Say hello</div></li></ul>
 <tr><td class="gutter">40</td><td class="src"><span class="t-op">@</span><span class="t-id">repeat</span><span class="t-op">(</span><span class="t-num">3</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">41</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">say_hi</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;Hi!&quot;</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-19">
@@ -3813,7 +4570,47 @@ except FileNotFoundError:
 <span class="run-cmd">pytest Projects/test_17_unit_testing.py -v</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TRY / EXCEPT / ELSE / FINALLY ──
+try:
+    result = int(&quot;42&quot;)          # works
+    print(&quot;Converted:&quot;, result)
+except ValueError as e:
+    print(f&quot;Bad input: {e}&quot;)    # runs only on ValueError
+else:
+    print(&quot;No error occurred&quot;)  # runs if no exception
+finally:
+    print(&quot;Always runs&quot;)        # cleanup - always executes
+
+# ── MULTIPLE EXCEPT CLAUSES ──
+try:
+    value = int(&quot;abc&quot;)
+except ValueError:
+    print(&quot;Not a valid integer&quot;)
+except TypeError:
+    print(&quot;Wrong type&quot;)
+
+# ── CUSTOM EXCEPTION ──
+class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when input fails business validation.&quot;&quot;&quot;
+    pass
+
+def set_age(age: int) -&gt; int:
+    if age &lt; 0:
+        raise ValidationError(f&quot;Age cannot be negative: {age}&quot;)
+    if age &gt; 150:
+        raise ValidationError(f&quot;Age unrealistic: {age}&quot;)
+    return age
+
+try:
+    set_age(-5)
+except ValidationError as e:
+    print(&quot;Validation failed:&quot;, e)
+
+# ── RE-RAISE: preserve original traceback ──
+try:
+    set_age(-1)
+except ValidationError:
+    raise                     # re-raise same exception</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TRY / EXCEPT / ELSE / FINALLY ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">result</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">(</span><span class="t-str">&quot;42&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># works</span></td></tr>
@@ -3855,7 +4652,7 @@ except FileNotFoundError:
 <tr><td class="gutter">39</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">set_age</span><span class="t-op">(</span><span class="t-op">-</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">40</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">ValidationError</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">41</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># re-raise same exception</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-20">
@@ -3984,7 +4781,43 @@ with ProcessPoolExecutor() as pool:
 <span class="run-cmd">python Projects/18_threading.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import threading
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+import time
+
+# ── GIL: only one thread runs Python bytecode at a time ──
+# Good for I/O-bound (network, disk) | Bad for CPU-bound (math)
+
+counter = 0
+lock = threading.Lock()
+
+def unsafe_increment():
+    global counter
+    counter += 1              # race condition without lock
+
+def safe_increment():
+    global counter
+    with lock:                # only one thread at a time
+        counter += 1
+
+# ── THREADS: lightweight, shared memory ──
+threads = [threading.Thread(target=safe_increment) for _ in range(100)]
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()                  # wait for all to finish
+print(&quot;Counter:&quot;, counter)    # 100
+
+# ── ThreadPoolExecutor: pool for I/O tasks ──
+def fetch(url_id):
+  time.sleep(0.1)               # simulate network I/O
+  return f&quot;data-{url_id}&quot;
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    results = list(pool.map(fetch, range(8)))
+print(results)
+
+# CPU-bound heavy math → use ProcessPoolExecutor instead</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">threading</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">concurrent</span><span class="t-op">.</span><span class="t-id">futures</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ProcessPoolExecutor</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
@@ -4022,7 +4855,7 @@ with ProcessPoolExecutor() as pool:
 <tr><td class="gutter">35</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">results</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">36</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">37</td><td class="src"><span class="t-cm"># CPU-bound heavy math → use ProcessPoolExecutor instead</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-21">
@@ -4162,7 +4995,43 @@ async def main():
 <span class="run-cmd">python Projects/19_context_managers.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import asyncio
+import time
+
+# ── COROUTINE: async def defines a coroutine function ──
+async def fetch_data(n):
+    await asyncio.sleep(0.5)    # non-blocking wait (simulates I/O)
+    return f&quot;result-{n}&quot;
+
+# ── SEQUENTIAL: one after another (~1.5 sec) ──
+async def sequential():
+    r1 = await fetch_data(1)
+    r2 = await fetch_data(2)
+    r3 = await fetch_data(3)
+    return [r1, r2, r3]
+
+# ── CONCURRENT: asyncio.gather runs together (~0.5 sec) ──
+async def concurrent():
+    results = await asyncio.gather(
+        fetch_data(1),
+        fetch_data(2),
+        fetch_data(3),
+    )
+    return results
+
+async def main():
+    start = time.time()
+    results = await concurrent()
+    print(&quot;Results:&quot;, results)
+    print(f&quot;Time: {time.time()-start:.2f}s&quot;)  # ~0.5s not 1.5s
+
+# Start the event loop
+asyncio.run(main())
+
+# Rules:
+# - await only inside async def
+# - asyncio.run() starts the event loop
+# - Use async for I/O (HTTP, DB), not CPU-heavy math</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">asyncio</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -4200,7 +5069,7 @@ async def main():
 <tr><td class="gutter">35</td><td class="src"><span class="t-cm"># - await only inside async def</span></td></tr>
 <tr><td class="gutter">36</td><td class="src"><span class="t-cm"># - asyncio.run() starts the event loop</span></td></tr>
 <tr><td class="gutter">37</td><td class="src"><span class="t-cm"># - Use async for I/O (HTTP, DB), not CPU-heavy math</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-22">
@@ -4306,7 +5175,35 @@ def pay(order_id):
 <span class="run-cmd">python Projects/20_async.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import logging
+from logging.handlers import RotatingFileHandler
+
+# ── Basic setup ──
+logging.basicConfig(
+    level=logging.INFO,
+    format=&quot;%(asctime)s [%(levelname)s] %(name)s: %(message)s&quot;,
+)
+log = logging.getLogger(__name__)
+
+log.debug(&quot;won&#x27;t show at INFO level&quot;)
+log.info(&quot;Server started&quot;)
+log.warning(&quot;Disk 85% full&quot;)
+log.error(&quot;Payment gateway timeout&quot;, exc_info=False)
+
+# ── Module logger (preferred) ──
+logger = logging.getLogger(&quot;orders.service&quot;)
+
+def charge(order_id: int) -&gt; None:
+    logger.info(&quot;Charging order %s&quot;, order_id)
+    try:
+        ...
+    except TimeoutError:
+        logger.exception(&quot;Charge failed for %s&quot;, order_id)  # includes traceback
+
+# ── File + rotation ──
+handler = RotatingFileHandler(&quot;app.log&quot;, maxBytes=1_000_000, backupCount=3)
+handler.setFormatter(logging.Formatter(&quot;%(levelname)s %(message)s&quot;))
+logger.addHandler(handler)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">logging</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">handlers</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">RotatingFileHandler</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -4336,7 +5233,7 @@ def pay(order_id):
 <tr><td class="gutter">27</td><td class="src"><span class="t-id">handler</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">RotatingFileHandler</span><span class="t-op">(</span><span class="t-str">&quot;app.log&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">maxBytes</span><span class="t-op">=</span><span class="t-num">1_000_000</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">backupCount</span><span class="t-op">=</span><span class="t-num">3</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">28</td><td class="src"><span class="t-id">handler</span><span class="t-op">.</span><span class="t-id">setFormatter</span><span class="t-op">(</span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">Formatter</span><span class="t-op">(</span><span class="t-str">&quot;%(levelname)s %(message)s&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">29</td><td class="src"><span class="t-id">logger</span><span class="t-op">.</span><span class="t-id">addHandler</span><span class="t-op">(</span><span class="t-id">handler</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-23">
@@ -4467,7 +5364,52 @@ def test_divide():
 <a class="file-link" href="Projects/21_venv_guide.md">21_venv_guide.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── PYTEST STYLE (recommended) ──
+def add(a, b):
+    return a + b
+
+def divide(a, b):
+    if b == 0:
+        raise ValueError(&quot;Cannot divide by zero&quot;)
+    return a / b
+
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+    assert add(0, 0) == 0
+
+def test_divide():
+    assert divide(10, 2) == 5
+
+def test_divide_by_zero():
+    import pytest
+    with pytest.raises(ValueError):
+        divide(10, 0)
+
+# Run: pytest test_file.py -v
+
+# ── UNITTEST STYLE (built-in) ──
+import unittest
+from unittest.mock import patch, MagicMock
+
+class TestMath(unittest.TestCase):
+    def setUp(self):
+        self.n = 10           # runs before EACH test
+
+    def tearDown(self):
+        pass                  # runs after EACH test
+
+    def test_double(self):
+        self.assertEqual(self.n * 2, 20)
+
+    def test_is_positive(self):
+        self.assertTrue(self.n &gt; 0)
+
+# ── MOCK: isolate from external dependencies ──
+@patch(&quot;builtins.print&quot;)
+def test_mock_print(mock_print):
+    print(&quot;hello&quot;)
+    mock_print.assert_called_once_with(&quot;hello&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── PYTEST STYLE (recommended) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">add</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-id">b</span></td></tr>
@@ -4514,7 +5456,7 @@ def test_divide():
 <tr><td class="gutter">44</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">test_mock_print</span><span class="t-op">(</span><span class="t-id">mock_print</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">45</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;hello&quot;</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">46</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">mock_print</span><span class="t-op">.</span><span class="t-id">assert_called_once_with</span><span class="t-op">(</span><span class="t-str">&quot;hello&quot;</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-24">
@@ -4634,7 +5576,40 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import re
+
+text = &quot;Order 123 placed on 2026-06-16. Contact: alice@example.com&quot;
+
+# ── COMMON PATTERNS ──
+# \d  = digit        \w  = word char    \s  = whitespace
+# \D  = non-digit    \W  = non-word     \S  = non-space
+# +    = one or more  *    = zero or more  ?  = optional
+# []   = character class   () = capture group
+
+# ── search: first match anywhere ──
+m = re.search(r&quot;\d+&quot;, text)
+print(m.group())              # &#x27;123&#x27;
+
+# ── findall: all matches as list ──
+print(re.findall(r&quot;\d+&quot;, text))   # [&#x27;123&#x27;,&#x27;2026&#x27;,&#x27;06&#x27;,&#x27;16&#x27;]
+
+# ── match: only at START of string ──
+print(re.match(r&quot;Order&quot;, text))    # match object
+print(re.match(r&quot;123&quot;, text))      # None - not at start
+
+# ── GROUPS: capture parts in parentheses ──
+m = re.search(r&quot;(\d{4})-(\d{2})-(\d{2})&quot;, &quot;2026-06-16&quot;)
+print(m.group(0))   # full match: 2026-06-16
+print(m.group(1))   # 2026 (year)
+print(m.group(2))   # 06   (month)
+print(m.group(3))   # 16   (day)
+
+# ── sub: replace matches ──
+print(re.sub(r&quot;\d+&quot;, &quot;X&quot;, text))  # mask all numbers
+
+# ── EMAIL extraction ──
+emails = re.findall(r&quot;[\w.+-]+@[\w-]+\.[\w.-]+&quot;, text)
+print(emails)  # [&#x27;alice@example.com&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">re</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">text</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;Order 123 placed on 2026-06-16. Contact: alice@example.com&quot;</span></td></tr>
@@ -4669,7 +5644,7 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
 <tr><td class="gutter">32</td><td class="src"><span class="t-cm"># ── EMAIL extraction ──</span></td></tr>
 <tr><td class="gutter">33</td><td class="src"><span class="t-id">emails</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">re</span><span class="t-op">.</span><span class="t-id">findall</span><span class="t-op">(</span><span class="t-id">r</span><span class="t-str">&quot;[\w.+-]+@[\w-]+\.[\w.-]+&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">text</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">34</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">emails</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [&#x27;alice@example.com&#x27;]</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-25">
@@ -4788,7 +5763,38 @@ for p in root.glob("*.csv"):
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TEXT FILE: write then read ──
+with open(&quot;data.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;Line 1\n&quot;)
+    f.write(&quot;Line 2\n&quot;)
+# file auto-closed here (even if error)
+
+with open(&quot;data.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    content = f.read()          # entire file as string
+    print(content)
+
+with open(&quot;data.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f:              # line by line (memory efficient)
+        print(line.strip())
+
+# ── JSON: Python dict ↔ JSON string ──
+import json
+data = {&quot;name&quot;: &quot;Alice&quot;, &quot;score&quot;: 95, &quot;active&quot;: True}
+json_str = json.dumps(data, indent=2)    # dict → string
+parsed = json.loads(&#x27;{&quot;a&quot;: 1, &quot;b&quot;: 2}&#x27;)  # string → dict
+
+with open(&quot;data.json&quot;, &quot;w&quot;) as f:
+    json.dump(data, f)          # dict → file
+
+with open(&quot;data.json&quot;, &quot;r&quot;) as f:
+    loaded = json.load(f)       # file → dict
+
+# ── pathlib: modern path handling ──
+from pathlib import Path
+root = Path(&quot;Python-Set2&quot;)
+csv_file = root / &quot;pandas&quot; / &quot;titanic.csv&quot;
+print(csv_file.exists())
+print(list(Path(&quot;Projects&quot;).glob(&quot;*.py&quot;)))  # all .py files</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TEXT FILE: write then read ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-str">&quot;data.txt&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;w&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">encoding</span><span class="t-op">=</span><span class="t-str">&quot;utf-8&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">.</span><span class="t-id">write</span><span class="t-op">(</span><span class="t-str">&quot;Line 1\n&quot;</span><span class="t-op">)</span></td></tr>
@@ -4821,7 +5827,7 @@ for p in root.glob("*.csv"):
 <tr><td class="gutter">30</td><td class="src"><span class="t-id">csv_file</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">root</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-str">&quot;pandas&quot;</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-str">&quot;titanic.csv&quot;</span></td></tr>
 <tr><td class="gutter">31</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">csv_file</span><span class="t-op">.</span><span class="t-id">exists</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">Path</span><span class="t-op">(</span><span class="t-str">&quot;Projects&quot;</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-id">glob</span><span class="t-op">(</span><span class="t-str">&quot;*.py&quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># all .py files</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-26">
@@ -4941,7 +5947,46 @@ with ManagedResource() as r:
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from contextlib import contextmanager
+import time
+
+# ── BUILT-IN: with open() auto-closes file ──
+with open(&quot;temp.txt&quot;, &quot;w&quot;) as f:
+    f.write(&quot;Hello&quot;)
+# f closed here automatically
+
+# ── @contextmanager: generator-based ──
+@contextmanager
+def tag(name):
+    print(f&quot;&lt;{name}&gt;&quot;)        # setup (before yield)
+    yield                     # body of with block runs here
+    print(f&quot;&lt;/{name}&gt;&quot;)       # teardown (after yield)
+
+with tag(&quot;h1&quot;):
+    print(&quot;Hello World&quot;)
+# prints: &lt;h1&gt; Hello World &lt;/h1&gt;
+
+@contextmanager
+def timer(label):
+    start = time.time()
+    yield
+    print(f&quot;{label}: {time.time()-start:.3f}s&quot;)
+
+with timer(&quot;calculation&quot;):
+    sum(range(1_000_000))
+
+# ── CLASS-BASED context manager ──
+class Managed:
+    def __enter__(self):
+        print(&quot;  setup&quot;)
+        return self             # value assigned to &#x27;as&#x27; variable
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(&quot;  teardown&quot;)
+        return False            # False = don&#x27;t suppress exceptions
+
+with Managed() as m:
+    print(&quot;  working&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">contextlib</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">contextmanager</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -4982,7 +6027,7 @@ with ManagedResource() as r:
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">39</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">Managed</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">40</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;  working&quot;</span><span class="t-op">)</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-27">
@@ -5098,7 +6143,36 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── CREATE virtual environment ──
+# python -m venv .venv
+# Creates: .venv/Scripts/python.exe  (Windows)
+#          .venv/Lib/site-packages/  (isolated packages)
+
+# ── ACTIVATE (Windows PowerShell) ──
+# .venv\Scripts\activate
+# Prompt shows (.venv) prefix
+
+# ── ACTIVATE (Mac/Linux) ──
+# source .venv/bin/activate
+
+# ── INSTALL packages inside venv ──
+# pip install requests pandas pytest django
+
+# ── SAVE exact versions to file ──
+# pip freeze &gt; requirements.txt
+# Example requirements.txt:
+# pytest==8.0.0
+# requests==2.31.0
+
+# ── INSTALL from requirements (reproducible) ──
+# pip install -r requirements.txt
+
+# ── DEACTIVATE when done ──
+# deactivate
+
+# ── CHECK which Python is active ──
+import sys
+print(sys.executable)   # shows path to current Python</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── CREATE virtual environment ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># python -m venv .venv</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># Creates: .venv/Scripts/python.exe  (Windows)</span></td></tr>
@@ -5129,7 +6203,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 <tr><td class="gutter">28</td><td class="src"><span class="t-cm"># ── CHECK which Python is active ──</span></td></tr>
 <tr><td class="gutter">29</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">30</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">executable</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># shows path to current Python</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-28">
@@ -5221,7 +6295,50 @@ def create_employee(
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── Stack overview (simplified) ──
+# pip install fastapi uvicorn sqlalchemy pydantic
+
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, Session, declarative_base
+
+DATABASE_URL = &quot;sqlite:///./app.db&quot;
+engine = create_engine(DATABASE_URL, connect_args={&quot;check_same_thread&quot;: False})
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class UserORM(Base):
+    __tablename__ = &quot;users&quot;
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True)
+
+class UserCreate(BaseModel):
+    email: str
+
+class UserRead(BaseModel):
+    id: int
+    email: str
+    model_config = {&quot;from_attributes&quot;: True}  # ORM → schema
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app = FastAPI()
+
+@app.post(&quot;/users&quot;, response_model=UserRead)
+def create_user(body: UserCreate, db: Session = Depends(get_db)):
+    row = UserORM(email=body.email)
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+# Run: uvicorn main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── Stack overview (simplified) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># pip install fastapi uvicorn sqlalchemy pydantic</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -5266,7 +6383,7 @@ def create_employee(
 <tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">row</span></td></tr>
 <tr><td class="gutter">43</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">44</td><td class="src"><span class="t-cm"># Run: uvicorn main:app --reload</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-29">
@@ -5558,14 +6675,19 @@ print(summary)
 <a class="file-link" href="Projects/31_pep_standards.md">31_pep_standards.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># google-python-exercises/babynames/ — regex practice
+# pandas/ — data analysis
+import pandas as pd
+df = pd.read_csv(&quot;Python-Set2/pandas/titanic.csv&quot;)
+df.head()           # first 5 rows
+df.groupby(&quot;Sex&quot;)[&quot;Age&quot;].mean()   # group and aggregate</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># google-python-exercises/babynames/ — regex practice</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># pandas/ — data analysis</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">pandas</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">pd</span></td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-id">df</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">pd</span><span class="t-op">.</span><span class="t-id">read_csv</span><span class="t-op">(</span><span class="t-str">&quot;Python-Set2/pandas/titanic.csv&quot;</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-id">df</span><span class="t-op">.</span><span class="t-id">head</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># first 5 rows</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-id">df</span><span class="t-op">.</span><span class="t-id">groupby</span><span class="t-op">(</span><span class="t-str">&quot;Sex&quot;</span><span class="t-op">)</span><span class="t-op">[</span><span class="t-str">&quot;Age&quot;</span><span class="t-op">]</span><span class="t-op">.</span><span class="t-id">mean</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># group and aggregate</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-32">
@@ -5665,7 +6787,15 @@ class RoomViewSet(viewsets.ModelViewSet):
 <span class="run-cmd">python Projects/32_memory_gc.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Django — run development server
+# cd Python-Set2/djangobasics/meeting_planner
+# python manage.py runserver
+
+# DRF — serializer example pattern:
+# class DrinkSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Drink
+#         fields = [&#x27;id&#x27;, &#x27;name&#x27;, &#x27;price&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Django — run development server</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># cd Python-Set2/djangobasics/meeting_planner</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># python manage.py runserver</span></td></tr>
@@ -5675,7 +6805,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 <tr><td class="gutter">7</td><td class="src"><span class="t-cm">#     class Meta:</span></td></tr>
 <tr><td class="gutter">8</td><td class="src"><span class="t-cm">#         model = Drink</span></td></tr>
 <tr><td class="gutter">9</td><td class="src"><span class="t-cm">#         fields = [&#x27;id&#x27;, &#x27;name&#x27;, &#x27;price&#x27;]</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-33">
@@ -5773,14 +6903,19 @@ class RoomViewSet(viewsets.ModelViewSet):
 <span class="run-cmd">python Projects/33_logging.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Voice AI pipeline (conceptual):
+# Audio In → STT (speech-to-text) → LLM (brain) → TTS (text-to-speech) → Audio Out
+#
+# Run voice-bouncer POC:
+# cd Python-Set2/Pipecat-Project/POC/voice-bouncer
+# python step1_greeting.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Voice AI pipeline (conceptual):</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Audio In → STT (speech-to-text) → LLM (brain) → TTS (text-to-speech) → Audio Out</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm">#</span></td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-cm"># Run voice-bouncer POC:</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-cm"># cd Python-Set2/Pipecat-Project/POC/voice-bouncer</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-cm"># python step1_greeting.py</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-34">
@@ -5874,7 +7009,15 @@ tests/              # at repo root
 <span class="run-cmd">python Projects/34_pydantic_demo.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Production API layout (FastAPI example):
+# my-api/
+#   app/main.py          ← entry point
+#   app/api/routes/      ← HTTP handlers (thin)
+#   app/services/        ← business logic
+#   app/schemas/         ← Pydantic DTOs
+#   tests/               ← pytest
+#
+# Run: uvicorn app.main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Production API layout (FastAPI example):</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># my-api/</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm">#   app/main.py          ← entry point</span></td></tr>
@@ -5884,7 +7027,7 @@ tests/              # at repo root
 <tr><td class="gutter">7</td><td class="src"><span class="t-cm">#   tests/               ← pytest</span></td></tr>
 <tr><td class="gutter">8</td><td class="src"><span class="t-cm">#</span></td></tr>
 <tr><td class="gutter">9</td><td class="src"><span class="t-cm"># Run: uvicorn app.main:app --reload</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div><div class="slide" id="slide-35">
@@ -6028,7 +7171,32 @@ def save_report():
 <a class="file-link" href="Projects/35_fastapi_sqlalchemy.md">35_fastapi_sqlalchemy.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="vs-editor"><table class="vs-code"><tbody>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── C# vs Python side-by-side ──
+# C#:  int x = 5;              Python: x = 5
+# C#:  Console.WriteLine(x);   Python: print(x)
+# C#:  foreach (var i in list)  Python: for i in list:
+# C#:  try { } catch (Ex e)    Python: try: except Ex as e:
+# C#:  null                     Python: None  (use: x is None)
+# C#:  $&quot;Hello {name}&quot;          Python: f&quot;Hello {name}&quot;
+# C#:  dotnet add package       Python: pip install package
+# C#:  async Task&lt;string&gt;       Python: async def fn() -&gt; str
+
+# ── pass / stub equivalents ──
+# C# empty stub:
+#   void SaveReport() { }
+# Python:
+def save_report():
+    pass   # intentionally empty for now
+
+# C# not implemented yet:
+#   throw new NotImplementedException();
+# Python:
+def save_report_v2():
+    raise NotImplementedError(&quot;Implement later&quot;)
+
+# C#:  this.Name = name;        Python: self.name = name
+# C#:  using (var f = ...)       Python: with open(...) as f:
+# C#:  static void Main()        Python: if __name__ == &quot;__main__&quot;:</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── C# vs Python side-by-side ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># C#:  int x = 5;              Python: x = 5</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># C#:  Console.WriteLine(x);   Python: print(x)</span></td></tr>
@@ -6055,7 +7223,7 @@ def save_report():
 <tr><td class="gutter">24</td><td class="src"><span class="t-cm"># C#:  this.Name = name;        Python: self.name = name</span></td></tr>
 <tr><td class="gutter">25</td><td class="src"><span class="t-cm"># C#:  using (var f = ...)       Python: with open(...) as f:</span></td></tr>
 <tr><td class="gutter">26</td><td class="src"><span class="t-cm"># C#:  static void Main()        Python: if __name__ == &quot;__main__&quot;:</span></td></tr>
-</tbody></table></div></div>
+</tbody></table></div></details></div></div>
   </div>
 </div>
 </div>
@@ -6880,6 +8048,8 @@ function initCsharpFloatWindows() {
   });
 }
 document.addEventListener('keydown', function(e) {
+  const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+  if (tag === 'textarea' || tag === 'input' || (e.target && e.target.isContentEditable)) return;
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
   if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
@@ -6887,10 +8057,111 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeAllCsharpWins();
 });
 document.addEventListener('DOMContentLoaded', () => {
-  initAudioPlayers();
-  initCsharpFloatWindows();
-  showSlide(0);
+  try { initAudioPlayers(); } catch (err) { console.warn('audio init', err); }
+  try { initCsharpFloatWindows(); } catch (err) { console.warn('csharp init', err); }
+  try {
+    document.querySelectorAll('.py-editor').forEach(ed => {
+      ed.dataset.original = ed.value;
+    });
+  } catch (err) { console.warn('editor init', err); }
+  const h = (location.hash || '').replace('#', '');
+  const start = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
+  showSlide(start);
 });
+
+/* ── In-browser Python (Pyodide) playground ── */
+let pyodideReady = null;
+function loadPyodideScript() {
+  return new Promise((resolve, reject) => {
+    if (typeof loadPyodide === 'function') { resolve(); return; }
+    const existing = document.querySelector('script[data-pyodide]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Pyodide script failed to load')));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+    s.async = true;
+    s.dataset.pyodide = '1';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error(
+      'Could not load Pyodide from the internet. Open via http://localhost (not file://), or check your network.'
+    ));
+    document.head.appendChild(s);
+  });
+}
+async function ensurePyodide(statusEl) {
+  if (pyodideReady) return pyodideReady;
+  if (statusEl) statusEl.textContent = 'Loading Python (first time)…';
+  await loadPyodideScript();
+  if (typeof loadPyodide !== 'function') {
+    throw new Error('Pyodide failed to load. Use http://localhost (not file://) and check your network.');
+  }
+  pyodideReady = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+  const py = await pyodideReady;
+  if (statusEl) statusEl.textContent = 'Python ready';
+  return py;
+}
+function resetPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (ed) {
+    if (ed.dataset.original == null) ed.dataset.original = ed.defaultValue;
+    ed.value = ed.dataset.original;
+  }
+  if (out) { out.hidden = true; out.textContent = ''; out.classList.remove('err'); }
+  if (status) status.textContent = '';
+}
+async function runPlayground(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
+  const status = box.querySelector('.py-status');
+  if (!ed || !out) return;
+  btn.disabled = true;
+  out.hidden = false;
+  out.classList.remove('err');
+  out.textContent = '';
+  try {
+    const py = await ensurePyodide(status);
+    if (status) status.textContent = 'Running…';
+    let stdout = [];
+    let stderr = [];
+    // Pyodide "batched" omits the trailing newline that print() writes — add it back
+    // so the black output box matches a normal Python terminal.
+    py.setStdout({
+      batched: (s) => { stdout.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    py.setStderr({
+      batched: (s) => { stderr.push(s.endsWith('\n') ? s : (s + '\n')); },
+      isatty: false,
+    });
+    try {
+      await py.runPythonAsync(ed.value);
+      const text = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = text || '(ran successfully — no printed output)';
+      if (stderr.length) out.classList.add('err');
+      if (status) status.textContent = 'Done';
+    } catch (err) {
+      out.classList.add('err');
+      const printed = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
+      out.textContent = (printed ? printed + '\n' : '') + String(err);
+      if (status) status.textContent = 'Error';
+    }
+  } catch (err) {
+    out.classList.add('err');
+    out.textContent = String(err);
+    if (status) status.textContent = 'Failed to start Python';
+  } finally {
+    btn.disabled = false;
+  }
+}
 </script>
 </body>
 </html>
