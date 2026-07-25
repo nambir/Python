@@ -42,7 +42,16 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
                '    # Your implementation here\n'
                '    pass',
   'expected_output': 'Expected Output: Handle type conversions, boolean logic, and string '
-                     'formatting.'},
+                     'formatting.',
+  'my_answer': 'def calculate_patient_bill(room_charge_per_day: float, days_stayed: int, \n'
+               '                          has_insurance: bool, patient_name: str) -> dict:\n'
+               '    Amount= room_charge_per_day* days_stayed;\n'
+               '    if has_insurance:\n'
+               '        Amount= Amount*0.80;\n'
+               '    return { "patient_name" : patient_name ,"Amount": Amount }\n'
+               '\n'
+               'print(calculate_patient_bill(100, 5, True, "John"))\n'
+               'print(calculate_patient_bill(100, 5, False, "John"))'},
  {'id': 'Q1.2',
   'section': '1. Python Datatypes & Built-in Functions',
   'kind': 'reasoning',

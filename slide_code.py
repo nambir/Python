@@ -167,9 +167,11 @@ def vs_editor(text: str, lang: str = "python", compact: bool = False, playground
         '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
         '<span class="py-status"></span>'
         "</div>"
+        '<div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div>'
         f'<textarea class="py-editor" spellcheck="false">{src}</textarea>'
         '<pre class="py-output" hidden></pre>'
-        '<details class="py-highlight"><summary>Syntax-colored view</summary>'
+        '<details class="py-highlight" open><summary>Syntax-colored view</summary>'
+        '<div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div>'
         f"{highlighted}"
         "</details>"
         "</div>"

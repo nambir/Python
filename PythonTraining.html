@@ -26,13 +26,13 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .slide-body { display: flex; flex-direction: column; gap: 0; }
 .main-split {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 28px;
+  grid-template-columns: minmax(180px, var(--split-left, 48%)) 12px minmax(240px, 1fr);
+  gap: 0;
   align-items: start;
 }
 .main-split.no-code { grid-template-columns: 1fr; max-width: 900px; }
-.panel-left { min-width: 0; }
-.panel-code { min-width: 0; position: sticky; top: 12px; }
+.panel-left { min-width: 0; padding-right: 8px; }
+.panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
 .panel-code .code-playground + .code-playground { margin-top: 14px; }
 
@@ -54,12 +54,27 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .btn-reset-py:hover { background: #f5f5f5; }
 .py-status { font-size: 11px; color: #666; }
 .py-editor {
-  display: block; width: 100%; min-height: 220px; max-height: calc(100vh - 260px);
-  padding: 10px 12px; border: none; resize: vertical;
+  display: block; width: 100%; min-height: 140px; max-height: none;
+  padding: 10px 12px; border: none; resize: both;
   font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
   color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
 }
 .py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-resize-top {
+  height: 10px; cursor: ns-resize; flex-shrink: 0;
+  background: linear-gradient(to bottom, #dbeafe, #f1f5f9);
+  border-top: 1px solid #cbd5e1; border-bottom: 1px solid #e2e8f0;
+  position: relative; touch-action: none; user-select: none;
+}
+.py-resize-top::after {
+  content: ""; position: absolute; left: 50%; top: 3px; transform: translateX(-50%);
+  width: 36px; height: 3px; border-radius: 2px; background: #94a3b8;
+}
+.py-resize-top:hover, .py-resize-top.dragging {
+  background: linear-gradient(to bottom, #bfdbfe, #e2e8f0);
+}
+.py-resize-top:hover::after, .py-resize-top.dragging::after { background: #0066cc; }
+body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .py-output {
   margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
   background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
@@ -70,7 +85,30 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .py-highlight summary {
   cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
 }
-.py-highlight .vs-editor { max-height: 40vh; }
+.py-highlight .vs-editor { max-height: none; border: none; resize: vertical; overflow: auto; min-height: 120px; }
+.split-divider {
+  width: 12px; cursor: col-resize; align-self: stretch; min-height: 240px;
+  position: relative; touch-action: none; user-select: none;
+  background: transparent; z-index: 5;
+}
+.split-divider::before {
+  content: ""; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px;
+  background: #c5d8ef; border-radius: 1px; transition: background .15s, width .15s, left .15s;
+}
+.split-divider::after {
+  content: "⋮"; position: absolute; left: 50%; top: 48px; transform: translateX(-50%);
+  font-size: 14px; line-height: 1; color: #6b8fb8; background: #fff;
+  padding: 4px 0; pointer-events: none;
+}
+.split-divider:hover::before,
+.split-divider.dragging::before {
+  background: #0066cc; width: 3px; left: 4.5px;
+}
+.split-divider:hover::after,
+.split-divider.dragging::after { color: #0066cc; }
+body.split-dragging { cursor: col-resize; user-select: none; }
+body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: none; }
+.main-split.no-code .split-divider { display: none; }
 
 .interview-box { background: #e8f5e9; border-left: 3px solid #28a745; padding: 10px 12px; border-radius: 4px; margin-top: 8px; font-size: 12px; }
 .interview-box p { margin: 6px 0 0; color: #1b5e20; line-height: 1.5; }
@@ -362,6 +400,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
+  .main-split { grid-template-columns: 1fr !important; }
+  .split-divider { display: none; }
   .nav-section { grid-column: 1 / -1; }
   .nav-section-1 .nav-links,
   .nav-section-3 .nav-links,
@@ -705,7 +745,8 @@ notify(SlackNotifier(), "Hi")</div><p class="step-result"><b>Remember:</b> “If
 <span class="run-cmd">python Projects/00_python_fundamentals.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── INTERPRETATION: how CPython runs this file ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── INTERPRETATION: how CPython runs this file ──
 # Step 1: You save this as .py (source code - human readable)
 # Step 2: CPython compiles it to bytecode (.pyc in __pycache__)
 # Step 3: The interpreter executes bytecode line by line
@@ -744,7 +785,7 @@ def notify(channel, msg):
 print(notify(EmailNotifier(), &quot;Order #104 shipped&quot;))
 print(notify(SmsNotifier(), &quot;OTP 4821&quot;))
 print(notify(SlackNotifier(), &quot;Build done&quot;))
-# Same idea: anything with .write() can be passed to save(writer, text)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# Same idea: anything with .write() can be passed to save(writer, text)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── INTERPRETATION: how CPython runs this file ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Step 1: You save this as .py (source code - human readable)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># Step 2: CPython compiles it to bytecode (.pyc in __pycache__)</span></td></tr>
@@ -932,14 +973,15 @@ if __name__ == "__main__":
 <span class="run-cmd">python Projects/00_windows_setup.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── VERIFY INSTALLATION ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── VERIFY INSTALLATION ──
 python --version     # Python 3.12.x  (interpreter version)
 pip --version        # pip 24.x       (package manager)
 
 # ── WINDOWS PY LAUNCHER (multiple Python versions) ──
 py -0p               # list all installed Pythons
 py -3.12 --version   # run specific version
-py -3.12 script.py   # run script with Python 3.12</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+py -3.12 script.py   # run script with Python 3.12</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── VERIFY INSTALLATION ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">python</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># Python 3.12.x  (interpreter version)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">pip</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># pip 24.x       (package manager)</span></td></tr>
@@ -949,7 +991,7 @@ py -3.12 script.py   # run script with Python 3.12</textarea><pre class="py-outp
 <tr><td class="gutter">7</td><td class="src"><span class="t-id">py</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-num">3.12</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">version</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># run specific version</span></td></tr>
 <tr><td class="gutter">8</td><td class="src"><span class="t-id">py</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-num">3.12</span><span class="t-op"> </span><span class="t-id">script</span><span class="t-op">.</span><span class="t-id">py</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># run script with Python 3.12</span></td></tr>
 </tbody></table></div></details></div>
-<div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── 1. REPL (Read-Eval-Print Loop) ──
+<div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── 1. REPL (Read-Eval-Print Loop) ──
 # Type: python   then enter interactive mode
 &gt;&gt;&gt; 2 + 2
 4
@@ -972,7 +1014,7 @@ def main():
 
 if __name__ == &quot;__main__&quot;:
     main()   # True when: python thisfile.py
-             # False when: import thisfile</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+             # False when: import thisfile</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── 1. REPL (Read-Eval-Print Loop) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Type: python   then enter interactive mode</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op">&gt;</span><span class="t-op">&gt;</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
@@ -1101,7 +1143,8 @@ python Python-Set2/pythonBasics/MyCollections/mylist.py</div></div><h3>Step-by-s
 <span class="run-cmd">python Projects/01_datatypes.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TYPICAL WORKFLOW ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── TYPICAL WORKFLOW ──
 # 1. Read slide in PythonTraining.html
 # 2. Open matching file in Projects/
 # 3. Run and experiment:
@@ -1112,7 +1155,7 @@ cd Python-Set2/pythonBasics/MyClass
 python oops_inheritance_BankAccount.py
 
 # ── REGENERATE slides after edits ──
-# python build_training.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# python build_training.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TYPICAL WORKFLOW ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># 1. Read slide in PythonTraining.html</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># 2. Open matching file in Projects/</span></td></tr>
@@ -1228,7 +1271,8 @@ ruff check .
 <span class="run-cmd">python Projects/02_getting_started.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── PEP 8 style (examples) ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── PEP 8 style (examples) ──
 import os
 from pathlib import Path
 
@@ -1249,7 +1293,7 @@ import this   # PEP 20 — run in REPL once
 # [project]
 # name = &quot;my-api&quot;
 # version = &quot;0.1.0&quot;
-# dependencies = [&quot;fastapi&gt;=0.100&quot;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# dependencies = [&quot;fastapi&gt;=0.100&quot;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── PEP 8 style (examples) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">os</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pathlib</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Path</span></td></tr>
@@ -1432,7 +1476,8 @@ grid[frozenset({"read", "write"})] = "ok"  # frozenset — hash fixed</div><p cl
 <span class="run-cmd">python Projects/03_operators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import sys
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import sys
 
 # ── STEP 1: Primitives ──
 age = 25              # int
@@ -1509,7 +1554,7 @@ prices[(12.97, 80.22)] = &quot;Chennai warehouse&quot;   # tuple GPS
 # key.append(3)          # key changed → hash would change
 # data[[1, 2]]           # could not find &quot;secret&quot; anymore!
 # That is why only immutable types are allowed as keys.
-</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── STEP 1: Primitives ──</span></td></tr>
@@ -1708,7 +1753,8 @@ print(result)</div><table class="data-tbl"><tr><th>Case</th><th>Input</th><th>Ou
 <span class="run-cmd">python Projects/04_flow_control.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from typing import Optional, Union, List, Dict, Tuple
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from typing import Optional, Union, List, Dict, Tuple
 
 # ── BASIC TYPE HINTS ──
 def greet(name: str) -&gt; str:
@@ -1741,7 +1787,7 @@ names: List[str] = []
 # Type hints are NOT enforced at runtime!
 greet(42)        # runs fine - mypy would warn
 
-# Static check:  mypy mymodule.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# Static check:  mypy mymodule.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">typing</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Optional</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Union</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">List</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Tuple</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── BASIC TYPE HINTS ──</span></td></tr>
@@ -1967,7 +2013,8 @@ if (n := len(data)) &gt; 0:
 <span class="run-cmd">python Projects/05_comprehensions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── ARITHMETIC ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── ARITHMETIC ──
 17 / 5    # 3.4   true division (always float in Python 3)
 17 // 5   # 3     floor division (rounds down)
 17 % 5    # 2     modulo (remainder)
@@ -2022,7 +2069,7 @@ if (n := len(data)) &gt; 2:
     print(f&quot;Got {n} items&quot;)
 
 while (line := input(&quot;Name (empty to quit): &quot;)) != &quot;&quot;:
-    print(f&quot;Hello, {line}&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    print(f&quot;Hello, {line}&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── ARITHMETIC ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-num">17</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 3.4   true division (always float in Python 3)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-num">17</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op">/</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 3     floor division (rounds down)</span></td></tr>
@@ -2228,7 +2275,8 @@ else:
 <span class="run-cmd">python Projects/06_functions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── IF / ELIF / ELSE ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── IF / ELIF / ELSE ──
 score = 75
 if score &gt;= 90:
     grade = &quot;A&quot;
@@ -2283,7 +2331,7 @@ for x in [1, 2, 3]:
         print(&quot;found&quot;)
         break
 else:
-    print(&quot;not found&quot;)      # prints - no break happened</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    print(&quot;not found&quot;)      # prints - no break happened</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── IF / ELIF / ELSE ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">score</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">75</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">score</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">90</span><span class="t-op">:</span></td></tr>
@@ -2482,7 +2530,8 @@ print(list(squares_gen(3)))  # [0, 1, 4]  — built only when consumed</div><p c
 <span class="run-cmd">python Projects/07_builtins.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── LIST COMPREHENSION: [expr for item in iterable if condition] ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── LIST COMPREHENSION: [expr for item in iterable if condition] ──
 squares = [n * n for n in range(6)]           # [0,1,4,9,16,25]
 evens = [n for n in range(10) if n % 2 == 0]  # filter with if
 
@@ -2525,7 +2574,7 @@ print(list(squares_gen(3)))       # [0, 1, 4] — same result, lazy build
 
 import sys
 print(sys.getsizeof(squares))  # ~120 bytes (full list)
-print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── LIST COMPREHENSION: [expr for item in iterable if condition] ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">squares</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">6</span><span class="t-op">)</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [0,1,4,9,16,25]</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">evens</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">%</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># filter with if</span></td></tr>
@@ -2737,7 +2786,8 @@ times3(10)   # 30</div></li></ul>
 <span class="run-cmd">python Projects/08_oop.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BASIC FUNCTION ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── BASIC FUNCTION ──
 def greet(name, greeting=&quot;Hello&quot;):
     &quot;&quot;&quot;Return a greeting string. greeting has a default value.&quot;&quot;&quot;
     return f&quot;{greeting}, {name}!&quot;
@@ -2796,7 +2846,7 @@ def good(lst=None):
     if lst is None:
         lst = []
     lst.append(1)
-    return lst</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    return lst</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BASIC FUNCTION ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">greet</span><span class="t-op">(</span><span class="t-id">name</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">greeting</span><span class="t-op">=</span><span class="t-str">&quot;Hello&quot;</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Return a greeting string. greeting has a default value.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
@@ -2991,7 +3041,8 @@ max([], default=0)           # 0 — empty safe</div></li></ul>
 <span class="run-cmd">python Projects/09_decorators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from functools import reduce
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from functools import reduce
 
 nums = [1, 2, 3, 4, 5]
 
@@ -3031,7 +3082,7 @@ min(prices)                  # 45
 max(prices, key=lambda p: -p)  # smallest via custom key
 
 scores = {&quot;Anu&quot;: 90, &quot;Ravi&quot;: 85}
-max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">functools</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">reduce</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">nums</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">4</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">5</span><span class="t-op">]</span></td></tr>
@@ -3213,7 +3264,8 @@ class CaseInsensitiveDict(UserDict):
 <span class="run-cmd">python Projects/10_descriptors.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from collections import Counter, defaultdict, deque, namedtuple, ChainMap
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from collections import Counter, defaultdict, deque, namedtuple, ChainMap
 
 # ── Counter: count occurrences ──
 word_counts = Counter(&quot;hello world&quot;)
@@ -3244,7 +3296,7 @@ defaults = {&quot;color&quot;: &quot;red&quot;, &quot;size&quot;: &quot;M&quot;}
 user_prefs = {&quot;color&quot;: &quot;blue&quot;}
 combined = ChainMap(user_prefs, defaults)
 print(combined[&quot;color&quot;])      # blue (user_prefs first)
-print(combined[&quot;size&quot;])       # M    (falls through to defaults)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(combined[&quot;size&quot;])       # M    (falls through to defaults)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Counter</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">defaultdict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ChainMap</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── Counter: count occurrences ──</span></td></tr>
@@ -3382,7 +3434,8 @@ def export_orders(path):
 <span class="run-cmd">python Projects/11_generators.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import sys
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import sys
 import gc
 
 # ── Reference counting ──
@@ -3413,7 +3466,7 @@ obj = {&quot;key&quot;: &quot;value&quot;}
 ref = weakref.ref(obj)
 print(ref())        # dict still alive
 del obj
-print(ref())        # None — object collected</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(ref())        # None — object collected</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">gc</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -3550,7 +3603,8 @@ user = UserCreate.model_validate(body)
 <span class="run-cmd">python Projects/12_typing.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from pydantic import BaseModel, Field, field_validator
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from pydantic import BaseModel, Field, field_validator
 
 class CreateUser(BaseModel):
     email: str
@@ -3574,7 +3628,7 @@ print(user.model_dump())
 try:
     CreateUser.model_validate({&quot;email&quot;: &quot;bad&quot;, &quot;age&quot;: 10})
 except Exception as e:
-    print(type(e).__name__, e)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    print(type(e).__name__, e)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">pydantic</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">BaseModel</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">field_validator</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">CreateUser</span><span class="t-op">(</span><span class="t-id">BaseModel</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -3752,7 +3806,8 @@ class Circle(Shape):
 <span class="run-cmd">python Projects/13_file_operations.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BASE CLASS ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── BASE CLASS ──
 class Animal:
     def __init__(self, name):
         self.name = name          # instance attribute
@@ -3798,7 +3853,7 @@ acct.deposit(500)
 print(acct.balance)               # 1500
 
 # ── MRO: Method Resolution Order ──
-print(Dog.__mro__)                # search order for methods</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(Dog.__mro__)                # search order for methods</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BASE CLASS ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Animal</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -3970,7 +4025,8 @@ p.price = 99
 <span class="run-cmd">python Projects/14_exceptions.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── @property: most common descriptor pattern ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── @property: most common descriptor pattern ──
 class Celsius:
     def __init__(self):
         self._temp = 0.0          # private storage
@@ -4009,7 +4065,7 @@ class Circle:
         return 3.14159 * self._radius ** 2
 
 circle = Circle(5)
-print(circle.area)                # 78.54...</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(circle.area)                # 78.54...</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── @property: most common descriptor pattern ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Celsius</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -4184,7 +4240,8 @@ list(islice(range(100), 5))</div></li></ul>
 <span class="run-cmd">python Projects/15_regex.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── BAD: whole file in memory (can MemoryError on huge files) ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── BAD: whole file in memory (can MemoryError on huge files) ──
 def csv_reader_naive(file_name):
     with open(file_name, encoding=&quot;utf-8&quot;) as f:
         return f.read().split(&quot;\n&quot;)   # list of ALL lines
@@ -4246,7 +4303,7 @@ class CountUp:
 
 import itertools
 list(itertools.chain([1, 2], [3, 4]))
-list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── BAD: whole file in memory (can MemoryError on huge files) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">csv_reader_naive</span><span class="t-op">(</span><span class="t-id">file_name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-id">file_name</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">encoding</span><span class="t-op">=</span><span class="t-str">&quot;utf-8&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">:</span></td></tr>
@@ -4439,7 +4496,8 @@ greet.__doc__    # Say hello</div></li></ul>
 <span class="run-cmd">python Projects/16_collections.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from functools import wraps
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from functools import wraps
 import time
 
 # ── DECORATOR = function that wraps another function ──
@@ -4480,7 +4538,7 @@ def repeat(n):
 
 @repeat(3)
 def say_hi():
-    print(&quot;Hi!&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    print(&quot;Hi!&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">functools</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">wraps</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -4641,7 +4699,8 @@ except FileNotFoundError:
 <span class="run-cmd">pytest Projects/test_17_unit_testing.py -v</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TRY / EXCEPT / ELSE / FINALLY ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── TRY / EXCEPT / ELSE / FINALLY ──
 try:
     result = int(&quot;42&quot;)          # works
     print(&quot;Converted:&quot;, result)
@@ -4681,7 +4740,7 @@ except ValidationError as e:
 try:
     set_age(-1)
 except ValidationError:
-    raise                     # re-raise same exception</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    raise                     # re-raise same exception</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TRY / EXCEPT / ELSE / FINALLY ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">result</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">(</span><span class="t-str">&quot;42&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># works</span></td></tr>
@@ -4852,7 +4911,8 @@ with ProcessPoolExecutor() as pool:
 <span class="run-cmd">python Projects/18_threading.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import threading
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import threading
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import time
 
@@ -4888,7 +4948,7 @@ with ThreadPoolExecutor(max_workers=4) as pool:
     results = list(pool.map(fetch, range(8)))
 print(results)
 
-# CPU-bound heavy math → use ProcessPoolExecutor instead</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# CPU-bound heavy math → use ProcessPoolExecutor instead</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">threading</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">concurrent</span><span class="t-op">.</span><span class="t-id">futures</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ProcessPoolExecutor</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
@@ -5066,7 +5126,8 @@ async def main():
 <span class="run-cmd">python Projects/19_context_managers.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import asyncio
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import asyncio
 import time
 
 # ── COROUTINE: async def defines a coroutine function ──
@@ -5102,7 +5163,7 @@ asyncio.run(main())
 # Rules:
 # - await only inside async def
 # - asyncio.run() starts the event loop
-# - Use async for I/O (HTTP, DB), not CPU-heavy math</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# - Use async for I/O (HTTP, DB), not CPU-heavy math</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">asyncio</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -5246,7 +5307,8 @@ def pay(order_id):
 <span class="run-cmd">python Projects/20_async.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import logging
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import logging
 from logging.handlers import RotatingFileHandler
 
 # ── Basic setup ──
@@ -5274,7 +5336,7 @@ def charge(order_id: int) -&gt; None:
 # ── File + rotation ──
 handler = RotatingFileHandler(&quot;app.log&quot;, maxBytes=1_000_000, backupCount=3)
 handler.setFormatter(logging.Formatter(&quot;%(levelname)s %(message)s&quot;))
-logger.addHandler(handler)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+logger.addHandler(handler)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">logging</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">logging</span><span class="t-op">.</span><span class="t-id">handlers</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">RotatingFileHandler</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -5435,7 +5497,8 @@ def test_divide():
 <a class="file-link" href="Projects/21_venv_guide.md">21_venv_guide.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── PYTEST STYLE (recommended) ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── PYTEST STYLE (recommended) ──
 def add(a, b):
     return a + b
 
@@ -5480,7 +5543,7 @@ class TestMath(unittest.TestCase):
 @patch(&quot;builtins.print&quot;)
 def test_mock_print(mock_print):
     print(&quot;hello&quot;)
-    mock_print.assert_called_once_with(&quot;hello&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    mock_print.assert_called_once_with(&quot;hello&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── PYTEST STYLE (recommended) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">add</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-id">b</span></td></tr>
@@ -5647,7 +5710,8 @@ re.findall(r"(?&lt;=\$)\d+", "$50 and $100")
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">import re
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import re
 
 text = &quot;Order 123 placed on 2026-06-16. Contact: alice@example.com&quot;
 
@@ -5680,7 +5744,7 @@ print(re.sub(r&quot;\d+&quot;, &quot;X&quot;, text))  # mask all numbers
 
 # ── EMAIL extraction ──
 emails = re.findall(r&quot;[\w.+-]+@[\w-]+\.[\w.-]+&quot;, text)
-print(emails)  # [&#x27;alice@example.com&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(emails)  # [&#x27;alice@example.com&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">re</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">text</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;Order 123 placed on 2026-06-16. Contact: alice@example.com&quot;</span></td></tr>
@@ -5834,7 +5898,8 @@ for p in root.glob("*.csv"):
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── TEXT FILE: write then read ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── TEXT FILE: write then read ──
 with open(&quot;data.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
     f.write(&quot;Line 1\n&quot;)
     f.write(&quot;Line 2\n&quot;)
@@ -5865,7 +5930,7 @@ from pathlib import Path
 root = Path(&quot;Python-Set2&quot;)
 csv_file = root / &quot;pandas&quot; / &quot;titanic.csv&quot;
 print(csv_file.exists())
-print(list(Path(&quot;Projects&quot;).glob(&quot;*.py&quot;)))  # all .py files</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(list(Path(&quot;Projects&quot;).glob(&quot;*.py&quot;)))  # all .py files</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── TEXT FILE: write then read ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-str">&quot;data.txt&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;w&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">encoding</span><span class="t-op">=</span><span class="t-str">&quot;utf-8&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">.</span><span class="t-id">write</span><span class="t-op">(</span><span class="t-str">&quot;Line 1\n&quot;</span><span class="t-op">)</span></td></tr>
@@ -6018,7 +6083,8 @@ with ManagedResource() as r:
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false">from contextlib import contextmanager
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">from contextlib import contextmanager
 import time
 
 # ── BUILT-IN: with open() auto-closes file ──
@@ -6057,7 +6123,7 @@ class Managed:
         return False            # False = don&#x27;t suppress exceptions
 
 with Managed() as m:
-    print(&quot;  working&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+    print(&quot;  working&quot;)</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">contextlib</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">contextmanager</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -6214,7 +6280,8 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── CREATE virtual environment ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── CREATE virtual environment ──
 # python -m venv .venv
 # Creates: .venv/Scripts/python.exe  (Windows)
 #          .venv/Lib/site-packages/  (isolated packages)
@@ -6243,7 +6310,7 @@ python -m venv .venv</div><p class="step-result"><b>pyenv</b> picks the Python v
 
 # ── CHECK which Python is active ──
 import sys
-print(sys.executable)   # shows path to current Python</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+print(sys.executable)   # shows path to current Python</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── CREATE virtual environment ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># python -m venv .venv</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># Creates: .venv/Scripts/python.exe  (Windows)</span></td></tr>
@@ -6366,7 +6433,8 @@ def create_employee(
 <a class="file-link" href="Projects/README.md">README.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── Stack overview (simplified) ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── Stack overview (simplified) ──
 # pip install fastapi uvicorn sqlalchemy pydantic
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -6409,7 +6477,7 @@ def create_user(body: UserCreate, db: Session = Depends(get_db)):
     db.refresh(row)
     return row
 
-# Run: uvicorn main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# Run: uvicorn main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── Stack overview (simplified) ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># pip install fastapi uvicorn sqlalchemy pydantic</span></td></tr>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
@@ -6549,6 +6617,7 @@ python google-python-exercises/babynames/babynames.py
       </div>
     </div>
     
+    
   </div>
 </div>
 </div><div class="slide" id="slide-30">
@@ -6637,6 +6706,7 @@ python MyUnitTesting/calculator_unittest.py      # ↔ slide 23 tests</div></div
 <a class="file-link" href="Projects/28_csharp_vs_python.md">28_csharp_vs_python.md</a>
       </div>
     </div>
+    
     
   </div>
 </div>
@@ -6746,12 +6816,13 @@ print(summary)
 <a class="file-link" href="Projects/31_pep_standards.md">31_pep_standards.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># google-python-exercises/babynames/ — regex practice
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># google-python-exercises/babynames/ — regex practice
 # pandas/ — data analysis
 import pandas as pd
 df = pd.read_csv(&quot;Python-Set2/pandas/titanic.csv&quot;)
 df.head()           # first 5 rows
-df.groupby(&quot;Sex&quot;)[&quot;Age&quot;].mean()   # group and aggregate</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+df.groupby(&quot;Sex&quot;)[&quot;Age&quot;].mean()   # group and aggregate</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># google-python-exercises/babynames/ — regex practice</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># pandas/ — data analysis</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">pandas</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">pd</span></td></tr>
@@ -6858,7 +6929,8 @@ class RoomViewSet(viewsets.ModelViewSet):
 <span class="run-cmd">python Projects/32_memory_gc.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Django — run development server
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># Django — run development server
 # cd Python-Set2/djangobasics/meeting_planner
 # python manage.py runserver
 
@@ -6866,7 +6938,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 # class DrinkSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Drink
-#         fields = [&#x27;id&#x27;, &#x27;name&#x27;, &#x27;price&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+#         fields = [&#x27;id&#x27;, &#x27;name&#x27;, &#x27;price&#x27;]</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Django — run development server</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># cd Python-Set2/djangobasics/meeting_planner</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># python manage.py runserver</span></td></tr>
@@ -6974,12 +7046,13 @@ class RoomViewSet(viewsets.ModelViewSet):
 <span class="run-cmd">python Projects/33_logging.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Voice AI pipeline (conceptual):
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># Voice AI pipeline (conceptual):
 # Audio In → STT (speech-to-text) → LLM (brain) → TTS (text-to-speech) → Audio Out
 #
 # Run voice-bouncer POC:
 # cd Python-Set2/Pipecat-Project/POC/voice-bouncer
-# python step1_greeting.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# python step1_greeting.py</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Voice AI pipeline (conceptual):</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># Audio In → STT (speech-to-text) → LLM (brain) → TTS (text-to-speech) → Audio Out</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm">#</span></td></tr>
@@ -7080,7 +7153,8 @@ tests/              # at repo root
 <span class="run-cmd">python Projects/34_pydantic_demo.py</span>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># Production API layout (FastAPI example):
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># Production API layout (FastAPI example):
 # my-api/
 #   app/main.py          ← entry point
 #   app/api/routes/      ← HTTP handlers (thin)
@@ -7088,7 +7162,7 @@ tests/              # at repo root
 #   app/schemas/         ← Pydantic DTOs
 #   tests/               ← pytest
 #
-# Run: uvicorn app.main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# Run: uvicorn app.main:app --reload</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Production API layout (FastAPI example):</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># my-api/</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm">#   app/main.py          ← entry point</span></td></tr>
@@ -7242,7 +7316,8 @@ def save_report():
 <a class="file-link" href="Projects/35_fastapi_sqlalchemy.md">35_fastapi_sqlalchemy.md</a>
       </div>
     </div>
-    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><textarea class="py-editor" spellcheck="false"># ── C# vs Python side-by-side ──
+    <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+    <div class="panel-code"><div class="code-playground"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># ── C# vs Python side-by-side ──
 # C#:  int x = 5;              Python: x = 5
 # C#:  Console.WriteLine(x);   Python: print(x)
 # C#:  foreach (var i in list)  Python: for i in list:
@@ -7267,7 +7342,7 @@ def save_report_v2():
 
 # C#:  this.Name = name;        Python: self.name = name
 # C#:  using (var f = ...)       Python: with open(...) as f:
-# C#:  static void Main()        Python: if __name__ == &quot;__main__&quot;:</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
+# C#:  static void Main()        Python: if __name__ == &quot;__main__&quot;:</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># ── C# vs Python side-by-side ──</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-cm"># C#:  int x = 5;              Python: x = 5</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># C#:  Console.WriteLine(x);   Python: print(x)</span></td></tr>
@@ -8053,6 +8128,7 @@ function initAudioPlayers() {
 function showSlide(n) {
   if (!slideOrder.includes(n)) return;
   pauseAllExcept(null);
+  endSplitDrag();
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + n);
   if (el) {
@@ -8062,6 +8138,7 @@ function showSlide(n) {
     const info = document.getElementById('slideInfo');
     if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
     updateTimeUI(n);
+    applySavedSplit(el);
   }
 }
 function goSlide(n) { showSlide(n); }
@@ -8073,6 +8150,55 @@ function prevSlide() {
   const idx = slideOrder.indexOf(current);
   if (idx > 0) showSlide(slideOrder[idx - 1]);
 }
+const SPLIT_KEY = 'pythonTrainingSplitLeft';
+let splitDragging = null;
+function getSavedSplit() {
+  const v = parseFloat(localStorage.getItem(SPLIT_KEY) || '');
+  return (Number.isFinite(v) && v >= 20 && v <= 75) ? v : 48;
+}
+function applySplitTo(split, pct) {
+  if (!split || split.classList.contains('no-code')) return;
+  split.style.setProperty('--split-left', pct + '%');
+}
+function applySavedSplit(root) {
+  const pct = getSavedSplit();
+  (root || document).querySelectorAll('.main-split:not(.no-code)').forEach(s => applySplitTo(s, pct));
+}
+function initSplitDividers() {
+  document.querySelectorAll('.split-divider').forEach(div => {
+    if (div.dataset.splitReady) return;
+    div.dataset.splitReady = '1';
+    div.title = 'Drag to resize panels';
+    div.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      const split = div.closest('.main-split');
+      if (!split || split.classList.contains('no-code')) return;
+      const rect = split.getBoundingClientRect();
+      splitDragging = { split, div, left: rect.left, width: rect.width };
+      div.classList.add('dragging');
+      document.body.classList.add('split-dragging');
+      try { div.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+  });
+}
+document.addEventListener('pointermove', e => {
+  if (!splitDragging) return;
+  const { split, left, width } = splitDragging;
+  if (width < 80) return;
+  let pct = ((e.clientX - left) / width) * 100;
+  pct = Math.max(20, Math.min(75, pct));
+  applySplitTo(split, pct);
+  localStorage.setItem(SPLIT_KEY, String(Math.round(pct * 10) / 10));
+});
+function endSplitDrag() {
+  if (!splitDragging) return;
+  splitDragging.div.classList.remove('dragging');
+  document.body.classList.remove('split-dragging');
+  splitDragging = null;
+}
+document.addEventListener('pointerup', endSplitDrag);
+document.addEventListener('pointercancel', endSplitDrag);
 let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
 
 function bringCsharpWinToFront(win) {
@@ -8162,6 +8288,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.py-editor').forEach(ed => {
       ed.dataset.original = ed.value;
     });
+    initPyEditorTopResize();
+    initSplitDividers();
+    applySavedSplit(document);
   } catch (err) { console.warn('editor init', err); }
   const h = (location.hash || '').replace('#', '');
   const start = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
@@ -8170,6 +8299,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── In-browser Python (Pyodide) playground ── */
 let pyodideReady = null;
+let pyHeightDrag = null;
+function initPyEditorTopResize() {
+  document.querySelectorAll('.py-resize-top').forEach(handle => {
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      const target = handle.nextElementSibling;
+      if (!target) return;
+      const isEditor = target.classList && target.classList.contains('py-editor');
+      const isVs = target.classList && target.classList.contains('vs-editor');
+      if (!isEditor && !isVs) return;
+      e.preventDefault();
+      handle.classList.add('dragging');
+      document.body.classList.add('py-height-dragging');
+      handle.setPointerCapture(e.pointerId);
+      pyHeightDrag = {
+        handle,
+        target,
+        startY: e.clientY,
+        startH: target.getBoundingClientRect().height,
+      };
+    });
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!pyHeightDrag) return;
+    const next = Math.max(100, pyHeightDrag.startH + (pyHeightDrag.startY - e.clientY));
+    pyHeightDrag.target.style.height = next + 'px';
+    pyHeightDrag.target.style.maxHeight = 'none';
+  });
+  window.addEventListener('pointerup', () => {
+    if (!pyHeightDrag) return;
+    pyHeightDrag.handle.classList.remove('dragging');
+    document.body.classList.remove('py-height-dragging');
+    pyHeightDrag = null;
+  });
+}
 function loadPyodideScript() {
   return new Promise((resolve, reject) => {
     if (typeof loadPyodide === 'function') { resolve(); return; }

@@ -64,12 +64,27 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .btn-reset-py:hover { background: #f5f5f5; }
 .py-status { font-size: 11px; color: #666; }
 .py-editor {
-  display: block; width: 100%; min-height: 180px; max-height: calc(100vh - 280px);
-  padding: 10px 12px; border: none; resize: vertical;
+  display: block; width: 100%; min-height: 140px; max-height: none;
+  padding: 10px 12px; border: none; resize: both;
   font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
   color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
 }
 .py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-resize-top {
+  height: 10px; cursor: ns-resize; flex-shrink: 0;
+  background: linear-gradient(to bottom, #dbeafe, #f1f5f9);
+  border-top: 1px solid #cbd5e1; border-bottom: 1px solid #e2e8f0;
+  position: relative; touch-action: none; user-select: none;
+}
+.py-resize-top::after {
+  content: ""; position: absolute; left: 50%; top: 3px; transform: translateX(-50%);
+  width: 36px; height: 3px; border-radius: 2px; background: #94a3b8;
+}
+.py-resize-top:hover, .py-resize-top.dragging {
+  background: linear-gradient(to bottom, #bfdbfe, #e2e8f0);
+}
+.py-resize-top:hover::after, .py-resize-top.dragging::after { background: #0066cc; }
+body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .py-output {
   margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
   background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
@@ -80,7 +95,7 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .py-highlight summary {
   cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
 }
-.py-highlight .vs-editor { max-height: 40vh; border: none; }
+.py-highlight .vs-editor { max-height: none; border: none; resize: vertical; overflow: auto; min-height: 120px; }
 .panel-code.expanded .py-editor { max-height: calc(100vh - 220px); }
 .panel-code.expanded .code-playground table.vs-code td.src {
   white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;
@@ -183,6 +198,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .q-doc .vs-editor { max-height: none; margin: 6px 0 10px; }
 .q-doc .expected { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0 12px; font-size: 12px; }
 .solution-label { font-size: 15px; color: #0066cc; margin: 4px 0 6px; font-weight: 700; }
+.myanswer-label { font-size: 15px; color: #0a7a3e; margin: 12px 0 6px; font-weight: 700; }
 .algo-box {
   background: #f0f7ff; border-left: 3px solid #0066cc; padding: 10px 12px;
   border-radius: 4px; margin: 0 0 12px; font-size: 12px;
@@ -355,6 +371,7 @@ document.addEventListener('keydown', e => {{
 }});
 window.addEventListener('DOMContentLoaded', () => {{
   initSplitDividers();
+  initPyEditorTopResize();
   applySavedSplit(document);
   document.querySelectorAll('.py-editor').forEach(ed => {{
     ed.dataset.original = ed.value;
@@ -369,6 +386,42 @@ window.addEventListener('DOMContentLoaded', () => {{
 PLAYGROUND_JS = r"""
 /* ── In-browser Python (Pyodide) playground ── */
 let pyodideReady = null;
+let pyHeightDrag = null;
+function initPyEditorTopResize() {
+  document.querySelectorAll('.py-resize-top').forEach(handle => {
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      const target = handle.nextElementSibling;
+      if (!target) return;
+      const isEditor = target.classList && target.classList.contains('py-editor');
+      const isVs = target.classList && target.classList.contains('vs-editor');
+      if (!isEditor && !isVs) return;
+      e.preventDefault();
+      handle.classList.add('dragging');
+      document.body.classList.add('py-height-dragging');
+      handle.setPointerCapture(e.pointerId);
+      pyHeightDrag = {
+        handle,
+        target,
+        startY: e.clientY,
+        startH: target.getBoundingClientRect().height,
+      };
+    });
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!pyHeightDrag) return;
+    // Drag up = taller; drag down = shorter
+    const next = Math.max(100, pyHeightDrag.startH + (pyHeightDrag.startY - e.clientY));
+    pyHeightDrag.target.style.height = next + 'px';
+    pyHeightDrag.target.style.maxHeight = 'none';
+  });
+  window.addEventListener('pointerup', () => {
+    if (!pyHeightDrag) return;
+    pyHeightDrag.handle.classList.remove('dragging');
+    document.body.classList.remove('py-height-dragging');
+    pyHeightDrag = null;
+  });
+}
 function loadPyodideScript() {
   return new Promise((resolve, reject) => {
     if (typeof loadPyodide === 'function') { resolve(); return; }
@@ -590,6 +643,14 @@ def question_slide(num: int, q: dict) -> str:
         body_parts.append("</div>")
         code_panel = "".join(body_parts)
 
+    my_answer = (q.get("my_answer") or "").strip()
+    my_answer_block = ""
+    if my_answer:
+        my_answer_block = (
+            '<div class="myanswer-label">MyAnswer</div>'
+            + review_vs_editor(my_answer)
+        )
+
     # Left keeps teaching notes; for reasoning-only, also show full doc question
     question_heading = "Learning notes"
     question_body = ""
@@ -614,6 +675,7 @@ def question_slide(num: int, q: dict) -> str:
       <h3>Deeper understanding</h3>
       <div class="keyword-box">{deep}</div>
       {"".join(interview)}
+      {my_answer_block}
       {practice}
 """
 

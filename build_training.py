@@ -38,13 +38,13 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .slide-body { display: flex; flex-direction: column; gap: 0; }
 .main-split {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 28px;
+  grid-template-columns: minmax(180px, var(--split-left, 48%)) 12px minmax(240px, 1fr);
+  gap: 0;
   align-items: start;
 }
 .main-split.no-code { grid-template-columns: 1fr; max-width: 900px; }
-.panel-left { min-width: 0; }
-.panel-code { min-width: 0; position: sticky; top: 12px; }
+.panel-left { min-width: 0; padding-right: 8px; }
+.panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
 .panel-code .code-playground + .code-playground { margin-top: 14px; }
 
@@ -66,12 +66,27 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .btn-reset-py:hover { background: #f5f5f5; }
 .py-status { font-size: 11px; color: #666; }
 .py-editor {
-  display: block; width: 100%; min-height: 220px; max-height: calc(100vh - 260px);
-  padding: 10px 12px; border: none; resize: vertical;
+  display: block; width: 100%; min-height: 140px; max-height: none;
+  padding: 10px 12px; border: none; resize: both;
   font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55;
   color: #000; background: #fff; tab-size: 4; white-space: pre; overflow: auto;
 }
 .py-editor:focus { outline: 2px solid #b3d1ff; outline-offset: -2px; }
+.py-resize-top {
+  height: 10px; cursor: ns-resize; flex-shrink: 0;
+  background: linear-gradient(to bottom, #dbeafe, #f1f5f9);
+  border-top: 1px solid #cbd5e1; border-bottom: 1px solid #e2e8f0;
+  position: relative; touch-action: none; user-select: none;
+}
+.py-resize-top::after {
+  content: ""; position: absolute; left: 50%; top: 3px; transform: translateX(-50%);
+  width: 36px; height: 3px; border-radius: 2px; background: #94a3b8;
+}
+.py-resize-top:hover, .py-resize-top.dragging {
+  background: linear-gradient(to bottom, #bfdbfe, #e2e8f0);
+}
+.py-resize-top:hover::after, .py-resize-top.dragging::after { background: #0066cc; }
+body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .py-output {
   margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
   background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
@@ -82,7 +97,30 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .py-highlight summary {
   cursor: pointer; font-size: 11px; color: #0066cc; font-weight: 600; padding: 4px 0;
 }
-.py-highlight .vs-editor { max-height: 40vh; }
+.py-highlight .vs-editor { max-height: none; border: none; resize: vertical; overflow: auto; min-height: 120px; }
+.split-divider {
+  width: 12px; cursor: col-resize; align-self: stretch; min-height: 240px;
+  position: relative; touch-action: none; user-select: none;
+  background: transparent; z-index: 5;
+}
+.split-divider::before {
+  content: ""; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px;
+  background: #c5d8ef; border-radius: 1px; transition: background .15s, width .15s, left .15s;
+}
+.split-divider::after {
+  content: "⋮"; position: absolute; left: 50%; top: 48px; transform: translateX(-50%);
+  font-size: 14px; line-height: 1; color: #6b8fb8; background: #fff;
+  padding: 4px 0; pointer-events: none;
+}
+.split-divider:hover::before,
+.split-divider.dragging::before {
+  background: #0066cc; width: 3px; left: 4.5px;
+}
+.split-divider:hover::after,
+.split-divider.dragging::after { color: #0066cc; }
+body.split-dragging { cursor: col-resize; user-select: none; }
+body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: none; }
+.main-split.no-code .split-divider { display: none; }
 
 .interview-box { background: #e8f5e9; border-left: 3px solid #28a745; padding: 10px 12px; border-radius: 4px; margin-top: 8px; font-size: 12px; }
 .interview-box p { margin: 6px 0 0; color: #1b5e20; line-height: 1.5; }
@@ -374,6 +412,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 @media (max-width: 900px) {
   .slide { padding: 16px 16px 56px; }
   .main-split, .nav-grid { grid-template-columns: 1fr; }
+  .main-split { grid-template-columns: 1fr !important; }
+  .split-divider { display: none; }
   .nav-section { grid-column: 1 / -1; }
   .nav-section-1 .nav-links,
   .nav-section-3 .nav-links,
@@ -586,6 +626,7 @@ function initAudioPlayers() {
 function showSlide(n) {
   if (!slideOrder.includes(n)) return;
   pauseAllExcept(null);
+  endSplitDrag();
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + n);
   if (el) {
@@ -595,6 +636,7 @@ function showSlide(n) {
     const info = document.getElementById('slideInfo');
     if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
     updateTimeUI(n);
+    applySavedSplit(el);
   }
 }
 function goSlide(n) { showSlide(n); }
@@ -606,6 +648,55 @@ function prevSlide() {
   const idx = slideOrder.indexOf(current);
   if (idx > 0) showSlide(slideOrder[idx - 1]);
 }
+const SPLIT_KEY = 'pythonTrainingSplitLeft';
+let splitDragging = null;
+function getSavedSplit() {
+  const v = parseFloat(localStorage.getItem(SPLIT_KEY) || '');
+  return (Number.isFinite(v) && v >= 20 && v <= 75) ? v : 48;
+}
+function applySplitTo(split, pct) {
+  if (!split || split.classList.contains('no-code')) return;
+  split.style.setProperty('--split-left', pct + '%');
+}
+function applySavedSplit(root) {
+  const pct = getSavedSplit();
+  (root || document).querySelectorAll('.main-split:not(.no-code)').forEach(s => applySplitTo(s, pct));
+}
+function initSplitDividers() {
+  document.querySelectorAll('.split-divider').forEach(div => {
+    if (div.dataset.splitReady) return;
+    div.dataset.splitReady = '1';
+    div.title = 'Drag to resize panels';
+    div.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      const split = div.closest('.main-split');
+      if (!split || split.classList.contains('no-code')) return;
+      const rect = split.getBoundingClientRect();
+      splitDragging = { split, div, left: rect.left, width: rect.width };
+      div.classList.add('dragging');
+      document.body.classList.add('split-dragging');
+      try { div.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+  });
+}
+document.addEventListener('pointermove', e => {
+  if (!splitDragging) return;
+  const { split, left, width } = splitDragging;
+  if (width < 80) return;
+  let pct = ((e.clientX - left) / width) * 100;
+  pct = Math.max(20, Math.min(75, pct));
+  applySplitTo(split, pct);
+  localStorage.setItem(SPLIT_KEY, String(Math.round(pct * 10) / 10));
+});
+function endSplitDrag() {
+  if (!splitDragging) return;
+  splitDragging.div.classList.remove('dragging');
+  document.body.classList.remove('split-dragging');
+  splitDragging = null;
+}
+document.addEventListener('pointerup', endSplitDrag);
+document.addEventListener('pointercancel', endSplitDrag);
 let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
 
 function bringCsharpWinToFront(win) {
@@ -695,6 +786,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.py-editor').forEach(ed => {
       ed.dataset.original = ed.value;
     });
+    initPyEditorTopResize();
+    initSplitDividers();
+    applySavedSplit(document);
   } catch (err) { console.warn('editor init', err); }
   const h = (location.hash || '').replace('#', '');
   const start = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
@@ -703,6 +797,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── In-browser Python (Pyodide) playground ── */
 let pyodideReady = null;
+let pyHeightDrag = null;
+function initPyEditorTopResize() {
+  document.querySelectorAll('.py-resize-top').forEach(handle => {
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      const target = handle.nextElementSibling;
+      if (!target) return;
+      const isEditor = target.classList && target.classList.contains('py-editor');
+      const isVs = target.classList && target.classList.contains('vs-editor');
+      if (!isEditor && !isVs) return;
+      e.preventDefault();
+      handle.classList.add('dragging');
+      document.body.classList.add('py-height-dragging');
+      handle.setPointerCapture(e.pointerId);
+      pyHeightDrag = {
+        handle,
+        target,
+        startY: e.clientY,
+        startH: target.getBoundingClientRect().height,
+      };
+    });
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!pyHeightDrag) return;
+    const next = Math.max(100, pyHeightDrag.startH + (pyHeightDrag.startY - e.clientY));
+    pyHeightDrag.target.style.height = next + 'px';
+    pyHeightDrag.target.style.maxHeight = 'none';
+  });
+  window.addEventListener('pointerup', () => {
+    if (!pyHeightDrag) return;
+    pyHeightDrag.handle.classList.remove('dragging');
+    document.body.classList.remove('py-height-dragging');
+    pyHeightDrag = null;
+  });
+}
 function loadPyodideScript() {
   return new Promise((resolve, reject) => {
     if (typeof loadPyodide === 'function') { resolve(); return; }
@@ -1144,6 +1273,12 @@ def slide(n, title, learn, practice):
     has_code = bool(codes_html.strip())
     split_cls = "main-split" if has_code else "main-split no-code"
     code_panel = f'<div class="panel-code">{codes_html}</div>' if has_code else ""
+    divider = (
+        '<div class="split-divider" role="separator" aria-orientation="vertical" '
+        'aria-label="Resize panels"></div>'
+        if has_code
+        else ""
+    )
     return f'''<div class="slide" id="slide-{n}">
 {slide_hdr(n, title)}
 <div class="slide-body">
@@ -1157,6 +1292,7 @@ def slide(n, title, learn, practice):
         {project_refs(n)}
       </div>
     </div>
+    {divider}
     {code_panel}
   </div>
 </div>
