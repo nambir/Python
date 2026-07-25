@@ -1708,14 +1708,32 @@ print(next(gen))   # 0
 print(next(gen))   # 1
 print(next(gen))   # 4
 
+# ── yield means GENERATOR FUNCTION ──
+# WITHOUT yield: normal function → builds full list, then returns
+def squares_list(n):
+    out = []
+    for i in range(n):
+        out.append(i * i)
+    return out                    # all values ready at once
+
+# WITH yield: generator function → one value at a time
+def squares_gen(n):
+    for i in range(n):
+        yield i * i               # pause; resume when caller asks again
+
+print(squares_list(3))            # [0, 1, 4]
+print(list(squares_gen(3)))       # [0, 1, 4] — same result, lazy build
+# list(...) is a built-in function (not a keyword) — consumes the generator into a list
+
 import sys
 print(sys.getsizeof(squares))  # ~120 bytes (full list)
 print(sys.getsizeof(gen))      # ~200 bytes (generator object)''') + '''
-<div class="callout">Prefer comprehensions over manual loops when building collections — they are faster and more Pythonic.</div>
+<div class="callout">If the function body uses <b>yield</b> → it is a <b>GENERATOR</b> function. Same loop with <code>return</code> of a list loads everything into RAM; with <code>yield</code> you get one item when asked. A generator <i>expression</i> <code>(...)</code> is the short form (no <code>yield</code> keyword). <b>Hint:</b> <code>list(...)</code> is a Python <b>built-in function</b> (not a keyword).</div>
 ''', '''
 <ul class="checklist">
   <li>Build a dict comprehension from a list of tuples</li>
   <li>Compare memory: list vs generator with sys.getsizeof</li>
+  <li>Rewrite a list-returning function to use <code>yield</code> and compare</li>
   <li>Filter a list of names starting with "A"</li>
 </ul>
 '''),
@@ -1769,8 +1787,8 @@ def factorial(n):
 print(factorial(5))  # 120
 
 # ── LAMBDA ──
-double = lambda x: x * 2
-print(double(5))
+multiply_by_two = lambda x: x * 2
+print(multiply_by_two(5))
 
 # ── LEGB + CLOSURE ──
 def make_multiplier(n):

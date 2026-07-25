@@ -2401,26 +2401,54 @@ for g, tax in zip(gross, taxes):
     if g > 0:
         net.append(g - tax)
 
-# Same result — indented comprehension idea as a loop above;
-# one-liner form:
+# Same result — one list comprehension:
 net = [g - tax for g, tax in zip(gross, taxes) if g > 0]
 
-# Huge file → generator (lazy, saves RAM)
-def parse_lines(f):
+# --- Huge file + generator (why?) ---
+# Huge file  = millions of lines (too big to load all at once into a list).
+# Generator  = give me ONE parsed line at a time (yield), not a giant list.
+# Lazy      = work happens only when you ask for the next line → less RAM.
+
+# WITHOUT yield — builds a FULL list in memory (risky for huge files):
+def parse_lines_list(f):
+    results = []
     for line in f:
-        yield parse(line)</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — List comprehension</b><br>Build a new list in one expression — replaces loop + <code>append</code>.<div class="step-pre">squares = [x * x for x in range(5)]
+        results.append(parse(line))
+    return results              # everything ready at once
+
+# WITH yield — same loop, but one value at a time (safe):
+def parse_lines(f):              # f = open text file
+    for line in f:               # read one line from disk
+        yield parse(line)        # hand back ONE result; pause; wait for next ask
+
+# Use the generator like:
+# for row in parse_lines(open('huge.csv')):
+#     process(row)              # only one row lives in memory at a time</div><p class="step-result"><b>Rule:</b> if the function body uses <b>yield</b> → it is a <b>GENERATOR</b> function.</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — List comprehension</b><br>Build a new list in one expression — replaces loop + <code>append</code>.<div class="step-pre">squares = [x * x for x in range(5)]
 # [0, 1, 4, 9, 16]
 
 evens = [x for x in range(10) if x % 2 == 0]
 # [0, 2, 4, 6, 8]</div><p class="step-result"><b>Read it:</b> "give me x*x for each x in range(5)"</p></li><li><b>Step 2 — Set comprehension</b><br>Same syntax with curly braces — automatically removes duplicates.<div class="step-pre">words = ["hi", "bye", "hi"]
 unique = {w.upper() for w in words}
 # {"HI", "BYE"}</div></li><li><b>Step 3 — Dictionary comprehension</b><br>Build a dict from key-value expressions.<div class="step-pre">nums = [1, 2, 3]
-sq_map = {n: n * n for n in nums}
+sq_map_dict = {n: n * n for n in nums}
 # {1: 1, 2: 4, 3: 9}
 
-filtered = {k: v for k, v in sq_map.items() if v &gt; 1}</div></li><li><b>Step 4 — Generator expression</b><br>Parentheses instead of brackets — lazy, yields one item at a time, saves memory.<table class="data-tbl"><tr><th>Feature</th><th>List comp</th><th>Generator</th></tr><tr><td>Syntax</td><td><code>[...]</code></td><td><code>(...)</code></td></tr><tr><td>Memory</td><td>All at once</td><td>One item at a time</td></tr><tr><td>Reusable?</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td class="cell-no"><span class="yn-no"></span>Exhausted after one pass</td></tr></table><div class="step-pre">gen = (x * x for x in range(1_000_000))
+filtered = {k: v for k, v in sq_map_dict.items() if v &gt; 1}</div></li><li><b>Step 4 — Generator expression</b><br>Parentheses instead of brackets — lazy, yields one item at a time, saves memory.<table class="data-tbl"><tr><th>Feature</th><th>List comp</th><th>Generator</th></tr><tr><td>Syntax</td><td><code>[...]</code></td><td><code>(...)</code></td></tr><tr><td>Memory</td><td>All at once</td><td>One item at a time</td></tr><tr><td>Reusable?</td><td class="cell-yes"><span class="yn-yes"></span>Yes</td><td class="cell-no"><span class="yn-no"></span>Exhausted after one pass</td></tr></table><div class="step-pre">gen = (x * x for x in range(1_000_000))
 next(gen)   # 0
-next(gen)   # 1</div></li></ul>
+next(gen)   # 1</div></li><li><b>Step 5 — yield means generator function</b><br><b>Yes:</b> if a function uses <b>yield</b>, it is a <b>GENERATOR</b> function. Calling it returns a generator object (lazy). Same job with <code>return</code> of a list builds everything at once.<div class="step-pre"># WITHOUT yield — normal function, full list in RAM
+def squares_list(n):
+    out = []
+    for i in range(n):
+        out.append(i * i)
+    return out
+
+# WITH yield — generator function, one value at a time
+def squares_gen(n):
+    for i in range(n):
+        yield i * i          # pause here; resume on next ask
+
+print(squares_list(3))       # [0, 1, 4]  — all ready now
+print(list(squares_gen(3)))  # [0, 1, 4]  — built only when consumed</div><p class="step-result"><b>Hint:</b> <code>list(...)</code> is a Python <b>built-in function</b> (not a keyword). It consumes the generator and builds a normal list so you can see all values.</p><p class="step-result"><b>Also:</b> <code>(x*x for x in ...)</code> is a generator <i>expression</i> (no <code>yield</code> keyword, same lazy idea).</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>[...]</b> list comprehension = build full list in memory now.<br><b>(...)</b> generator expression = produce one item at a time, lazy.<br><b>Use generator when:</b> large data — saves memory.</div>
 <div class="keyword-box"><b>Comprehension filter</b> — trailing <code>if</code> keeps matching items only.<br><b>Example:</b> <code>[x for x in nums if x % 2 == 0]</code></div>
@@ -2437,14 +2465,15 @@ next(gen)   # 1</div></li></ul>
 <tr><td>Complex nested logic hard to read</td><td><b>plain for loop</b></td><td>Readability over cleverness</td></tr>
 </table>
 
-<div class="callout">Prefer comprehensions over manual loops when building collections — they are faster and more Pythonic.</div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why use a comprehension over a for loop?</p><p class="qa-a"><b>A:</b> Shorter and often clearer for simple transforms. <code>[n*n for n in range(10) if n%2==0]</code> is easier to read than a 4-line loop with append.</p><p class="qa-q"><b>Q:</b> List comprehension vs generator expression?</p><p class="qa-a"><b>A:</b> List builds everything in memory. Generator yields one value at a time — better for large data or pipelines.</p><p class="qa-q"><b>Q:</b> Can comprehensions have nested loops?</p><p class="qa-a"><b>A:</b> Yes: <code>[(x, y) for x in range(3) for y in range(2)]</code> — same order as nested for loops.</p><p class="qa-q"><b>Q:</b> When should you NOT use a comprehension?</p><p class="qa-a"><b>A:</b> When logic is complex, has side effects, or needs multiple statements — use a regular for loop for readability.</p></div>
+<div class="callout">If the function body uses <b>yield</b> → it is a <b>GENERATOR</b> function. Same loop with <code>return</code> of a list loads everything into RAM; with <code>yield</code> you get one item when asked. A generator <i>expression</i> <code>(...)</code> is the short form (no <code>yield</code> keyword). <b>Hint:</b> <code>list(...)</code> is a Python <b>built-in function</b> (not a keyword).</div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why use a comprehension over a for loop?</p><p class="qa-a"><b>A:</b> Shorter and often clearer for simple transforms. <code>[n*n for n in range(10) if n%2==0]</code> is easier to read than a 4-line loop with append.</p><p class="qa-q"><b>Q:</b> List comprehension vs generator expression?</p><p class="qa-a"><b>A:</b> List builds everything in memory. Generator yields one value at a time — better for large data or pipelines.</p><p class="qa-q"><b>Q:</b> Does the word yield mean generator?</p><p class="qa-a"><b>A:</b> Yes — <code>yield</code> inside a function makes it a generator function. Without <code>yield</code>, a normal <code>return</code> ends after one result (or a full list).</p><p class="qa-q"><b>Q:</b> Can comprehensions have nested loops?</p><p class="qa-a"><b>A:</b> Yes: <code>[(x, y) for x in range(3) for y in range(2)]</code> — same order as nested for loops.</p><p class="qa-q"><b>Q:</b> When should you NOT use a comprehension?</p><p class="qa-a"><b>A:</b> When logic is complex, has side effects, or needs multiple statements — use a regular for loop for readability.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
 <ul class="checklist">
   <li>Build a dict comprehension from a list of tuples</li>
   <li>Compare memory: list vs generator with sys.getsizeof</li>
+  <li>Rewrite a list-returning function to use <code>yield</code> and compare</li>
   <li>Filter a list of names starting with "A"</li>
 </ul>
 
@@ -2477,6 +2506,23 @@ print(next(gen))   # 0
 print(next(gen))   # 1
 print(next(gen))   # 4
 
+# ── yield means GENERATOR FUNCTION ──
+# WITHOUT yield: normal function → builds full list, then returns
+def squares_list(n):
+    out = []
+    for i in range(n):
+        out.append(i * i)
+    return out                    # all values ready at once
+
+# WITH yield: generator function → one value at a time
+def squares_gen(n):
+    for i in range(n):
+        yield i * i               # pause; resume when caller asks again
+
+print(squares_list(3))            # [0, 1, 4]
+print(list(squares_gen(3)))       # [0, 1, 4] — same result, lazy build
+# list(...) is a built-in function (not a keyword) — consumes the generator into a list
+
 import sys
 print(sys.getsizeof(squares))  # ~120 bytes (full list)
 print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre class="py-output" hidden></pre><details class="py-highlight"><summary>Syntax-colored view</summary><div class="vs-editor"><table class="vs-code"><tbody>
@@ -2504,9 +2550,26 @@ print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre cl
 <tr><td class="gutter">22</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">next</span><span class="t-op">(</span><span class="t-id">gen</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 1</span></td></tr>
 <tr><td class="gutter">23</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">next</span><span class="t-op">(</span><span class="t-id">gen</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 4</span></td></tr>
 <tr><td class="gutter">24</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">25</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
-<tr><td class="gutter">26</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">squares</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~120 bytes (full list)</span></td></tr>
-<tr><td class="gutter">27</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">gen</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~200 bytes (generator object)</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-cm"># ── yield means GENERATOR FUNCTION ──</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-cm"># WITHOUT yield: normal function → builds full list, then returns</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">squares_list</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">out</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">out</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">out</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># all values ready at once</span></td></tr>
+<tr><td class="gutter">32</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">33</td><td class="src"><span class="t-cm"># WITH yield: generator function → one value at a time</span></td></tr>
+<tr><td class="gutter">34</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">squares_gen</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">35</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">yield</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># pause; resume when caller asks again</span></td></tr>
+<tr><td class="gutter">37</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">38</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">squares_list</span><span class="t-op">(</span><span class="t-num">3</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [0, 1, 4]</span></td></tr>
+<tr><td class="gutter">39</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">squares_gen</span><span class="t-op">(</span><span class="t-num">3</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [0, 1, 4] — same result, lazy build</span></td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-cm"># list(...) is a built-in function (not a keyword) — consumes the generator into a list</span></td></tr>
+<tr><td class="gutter">41</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">42</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">sys</span></td></tr>
+<tr><td class="gutter">43</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">squares</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~120 bytes (full list)</span></td></tr>
+<tr><td class="gutter">44</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">sys</span><span class="t-op">.</span><span class="t-id">getsizeof</span><span class="t-op">(</span><span class="t-id">gen</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ~200 bytes (generator object)</span></td></tr>
 </tbody></table></div></details></div></div>
   </div>
 </div>
@@ -2602,8 +2665,8 @@ factorial(5)   # 120</div><p class="step-result"><b>Warning:</b> deep recursion 
 def apply_twice(fn, v): # higher-order
     return fn(fn(v))
 
-apply_twice(lambda n: n + 1, 5)  # 7</div></li><li><b>Step 4 — Lambda</b><br>Anonymous one-expression function — good for short callbacks.<div class="step-pre">double = lambda x: x * 2
-double(5)   # 10
+apply_twice(lambda n: n + 1, 5)  # 7</div></li><li><b>Step 4 — Lambda</b><br>Anonymous one-expression function — good for short callbacks.<div class="step-pre">multiply_by_two = lambda x: x * 2
+multiply_by_two(5)   # 10
 
 sorted(pairs, key=lambda p: p[1])</div></li><li><b>Step 5 — LEGB scope</b><br>Python looks up names in order: Local → Enclosing → Global → Builtin.<div class="step-pre">x = "global"
 
@@ -2713,8 +2776,8 @@ def factorial(n):
 print(factorial(5))  # 120
 
 # ── LAMBDA ──
-double = lambda x: x * 2
-print(double(5))
+multiply_by_two = lambda x: x * 2
+print(multiply_by_two(5))
 
 # ── LEGB + CLOSURE ──
 def make_multiplier(n):
@@ -2773,8 +2836,8 @@ def good(lst=None):
 <tr><td class="gutter">37</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">factorial</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 120</span></td></tr>
 <tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">39</td><td class="src"><span class="t-cm"># ── LAMBDA ──</span></td></tr>
-<tr><td class="gutter">40</td><td class="src"><span class="t-id">double</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
-<tr><td class="gutter">41</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">double</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-id">multiply_by_two</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">multiply_by_two</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">42</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">43</td><td class="src"><span class="t-cm"># ── LEGB + CLOSURE ──</span></td></tr>
 <tr><td class="gutter">44</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">make_multiplier</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
@@ -4055,13 +4118,21 @@ def export(path, out):
             transformed = transform(row)
             dest.write(",".join(transformed) + "\n")
 
-# Bad: data = open(path).read().split()  → MemoryError on huge files</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + generator expressions</b><br><code>return</code> ends the function with one value. <code>yield</code> produces a generator object and pauses between values.<div class="step-pre">def csv_reader(path):
-    with open(path, encoding="utf-8") as f:
-        for row in f:
-            yield row
+# Bad: data = open(path).read().split()  → MemoryError on huge files</div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + same function compared</b><br><code>return</code> ends with one result (or a full list). <code>yield</code> marks a <b>generator function</b> — it pauses and can produce many values over time.<div class="step-pre"># WITHOUT yield — returns a complete list
+def parse_lines_list(f):
+    results = []
+    for line in f:
+        results.append(line.strip())
+    return results
 
-# Generator expression (same idea, shorter):
-rows = (line for line in open(path, encoding="utf-8"))</div></li><li><b>Step 3 — Infinite sequences & pipelines</b><br>Only generators can model infinite sequences safely (memory is finite). You can also chain generators into a pipeline without building giant intermediate lists.<div class="step-pre">def infinite_sequence():
+# WITH yield — generator: one line when asked
+def parse_lines(f):
+    for line in f:
+        yield line.strip()
+
+# Caller looks the same:
+# for row in parse_lines(open("data.csv")):
+#     print(row)</div><p class="step-result">Generator expression (short form, no yield keyword): <code>(line for line in open(path))</code></p></li><li><b>Step 3 — Infinite sequences & pipelines</b><br>Only generators can model infinite sequences safely (memory is finite). You can also chain generators into a pipeline without building giant intermediate lists.<div class="step-pre">def infinite_sequence():
     n = 0
     while True:
         yield n
@@ -7622,15 +7693,43 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-id">Select</span><span class="t-op">(</span><span class="t-id">u</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">u</span><span class="t-op">.</span><span class="t-id">Name</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-id">ToList</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
 </tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Comprehensions ≈ LINQ <code>Where</code> + <code>Select</code>. Generator <code>( )</code> ≈ deferred LINQ without <code>ToList()</code>.</p></div></div><div class="csharp-float-win" id="csharp-win-lambda-expr" role="dialog" aria-labelledby="csharp-win-title-lambda-expr"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-lambda-expr">C# Comparison — lambda vs =></h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('lambda-expr')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python lambda — one expression only:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
-<tr><td class="gutter">1</td><td class="src"><span class="t-id">double</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-bi">sorted</span><span class="t-op">(</span><span class="t-id">items</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">=</span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">[</span><span class="t-str">&quot;amount&quot;</span><span class="t-op">]</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm"># 1) Store lambda in a variable, then call it</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">multiply_by_two</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">multiply_by_two</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 10  ← how it is used</span></td></tr>
+<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm"># Same as:</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-cm"># def multiply_by_two(x):</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-cm">#     return x * 2</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm"># 2) Separate example — pass lambda directly (no name needed)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-id">items</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;name&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;pen&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;amount&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">30</span><span class="t-op">}</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;name&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;book&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;amount&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">10</span><span class="t-op">}</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;name&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;bag&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;amount&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-num">50</span><span class="t-op">}</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-cm"># key= tells sorted HOW to order each item:</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-cm">#   r              → one dict from items</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-cm">#   r[&quot;amount&quot;]    → use that number as the sort key</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-cm"># sorted calls the lambda for each item → 30, 10, 50 → sorts by those</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-bi">sorted</span><span class="t-op">(</span><span class="t-id">items</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">=</span><span class="t-kw">lambda</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">[</span><span class="t-str">&quot;amount&quot;</span><span class="t-op">]</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-cm"># → book(10), pen(30), bag(50)</span></td></tr>
+<tr><td class="gutter">21</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-cm"># Same without lambda:</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-cm"># def get_amount(r):</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-cm">#     return r[&quot;amount&quot;]</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-cm"># sorted(items, key=get_amount)</span></td></tr>
 </tbody></table></div><p>C# lambda / expression-bodied members:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
-<tr><td class="gutter">1</td><td class="src"><span class="t-bi">Func</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">double</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-id">items</span><span class="t-op">.</span><span class="t-id">OrderBy</span><span class="t-op">(</span><span class="t-id">r</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">.</span><span class="t-id">Amount</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-cm">// Statement lambda:</span></td></tr>
-<tr><td class="gutter">5</td><td class="src"><span class="t-bi">Action</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">log</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>lambda</code> is limited to one expression. Use <code>def</code> for multi-line logic.</p></div></div><div class="csharp-float-win" id="csharp-win-mutable-default" role="dialog" aria-labelledby="csharp-win-title-mutable-default"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-mutable-default">C# Comparison — Mutable Default Trap</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('mutable-default')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python trap — default list created once:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// 1) Store lambda in a variable, then call it</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-bi">Func</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">multiplyByTwo</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">x</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">multiplyByTwo</span><span class="t-op">(</span><span class="t-num">5</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// 10  ← how it is used</span></td></tr>
+<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm">// 2) Separate example — pass lambda directly to OrderBy</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-cm">// r =&gt; r.Amount  = for each item r, sort by its Amount property</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-id">items</span><span class="t-op">.</span><span class="t-id">OrderBy</span><span class="t-op">(</span><span class="t-id">r</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">r</span><span class="t-op">.</span><span class="t-id">Amount</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm">// Statement lambda:</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-bi">Action</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">log</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>multiply_by_two(5)</code> / <code>multiplyByTwo(5)</code> <b>calls</b> the stored lambda — same idea as a normal function. For sorting: <code>key=lambda r: r["amount"]</code> means <b>for each item <code>r</code>, use <code>r["amount"]</code> as the sort value</b> (same as a named <code>get_amount</code> function). Python <code>lambda</code> is limited to one expression; use <code>def</code> for multi-line logic.</p></div></div><div class="csharp-float-win" id="csharp-win-mutable-default" role="dialog" aria-labelledby="csharp-win-title-mutable-default"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-mutable-default">C# Comparison — Mutable Default Trap</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('mutable-default')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python trap — default list created once:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm"># BUG — same list every call:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">add_item</span><span class="t-op">(</span><span class="t-id">x</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">items</span><span class="t-op">=</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">items</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-id">x</span><span class="t-op">)</span></td></tr>

@@ -1,6 +1,10 @@
 import sys
 
 
+
+
+
+
 def Add(x, y):
     print(f"Answer is={x + y}")
     print(name)
@@ -35,3 +39,16 @@ print("tuple bytes:", sys.getsizeof(a_tuple))  # usually smaller
 #     print("inside main function")
 #     Add(1, 2)
 
+sq=[n+10 for n in range(1,2)]
+print(sq)
+
+set1={n%2 for n in range(1,10)}
+print(set1)
+
+items = [
+    {"name": "pen",  "amount": 30},
+    {"name": "book", "amount": 10},
+    {"name": "bag",  "amount": 50},
+]
+Sorteditems=sorted(items, key=lambda r: r["amount"])
+print(Sorteditems)

@@ -233,16 +233,21 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 3 — Dictionary comprehension",
-                "body": "Build a dict from key-value expressions.<div class=\"step-pre\">nums = [1, 2, 3]\nsq_map = {n: n * n for n in nums}\n# {1: 1, 2: 4, 3: 9}\n\nfiltered = {k: v for k, v in sq_map.items() if v &gt; 1}</div>",
+                "body": "Build a dict from key-value expressions.<div class=\"step-pre\">nums = [1, 2, 3]\nsq_map_dict = {n: n * n for n in nums}\n# {1: 1, 2: 4, 3: 9}\n\nfiltered = {k: v for k, v in sq_map_dict.items() if v &gt; 1}</div>",
             },
             {
                 "title": "Step 4 — Generator expression",
                 "body": "Parentheses instead of brackets — lazy, yields one item at a time, saves memory.<table class=\"data-tbl\"><tr><th>Feature</th><th>List comp</th><th>Generator</th></tr><tr><td>Syntax</td><td><code>[...]</code></td><td><code>(...)</code></td></tr><tr><td>Memory</td><td>All at once</td><td>One item at a time</td></tr><tr><td>Reusable?</td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Yes</td><td class=\"cell-no\"><span class=\"yn-no\"></span>Exhausted after one pass</td></tr></table><div class=\"step-pre\">gen = (x * x for x in range(1_000_000))\nnext(gen)   # 0\nnext(gen)   # 1</div>",
             },
+            {
+                "title": "Step 5 — yield means generator function",
+                "body": "<b>Yes:</b> if a function uses <b>yield</b>, it is a <b>GENERATOR</b> function. Calling it returns a generator object (lazy). Same job with <code>return</code> of a list builds everything at once.<div class=\"step-pre\"># WITHOUT yield — normal function, full list in RAM\ndef squares_list(n):\n    out = []\n    for i in range(n):\n        out.append(i * i)\n    return out\n\n# WITH yield — generator function, one value at a time\ndef squares_gen(n):\n    for i in range(n):\n        yield i * i          # pause here; resume on next ask\n\nprint(squares_list(3))       # [0, 1, 4]  — all ready now\nprint(list(squares_gen(3)))  # [0, 1, 4]  — built only when consumed</div><p class=\"step-result\"><b>Hint:</b> <code>list(...)</code> is a Python <b>built-in function</b> (not a keyword). It consumes the generator and builds a normal list so you can see all values.</p><p class=\"step-result\"><b>Also:</b> <code>(x*x for x in ...)</code> is a generator <i>expression</i> (no <code>yield</code> keyword, same lazy idea).</p>",
+            },
         ],
         "interview_qa": [
             {"q": "Why use a comprehension over a for loop?", "a": "Shorter and often clearer for simple transforms. <code>[n*n for n in range(10) if n%2==0]</code> is easier to read than a 4-line loop with append."},
             {"q": "List comprehension vs generator expression?", "a": "List builds everything in memory. Generator yields one value at a time — better for large data or pipelines."},
+            {"q": "Does the word yield mean generator?", "a": "Yes — <code>yield</code> inside a function makes it a generator function. Without <code>yield</code>, a normal <code>return</code> ends after one result (or a full list)."},
             {"q": "Can comprehensions have nested loops?", "a": "Yes: <code>[(x, y) for x in range(3) for y in range(2)]</code> — same order as nested for loops."},
             {"q": "When should you NOT use a comprehension?", "a": "When logic is complex, has side effects, or needs multiple statements — use a regular for loop for readability."},
         ],
@@ -267,7 +272,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 4 — Lambda",
-                "body": "Anonymous one-expression function — good for short callbacks.<div class=\"step-pre\">double = lambda x: x * 2\ndouble(5)   # 10\n\nsorted(pairs, key=lambda p: p[1])</div>",
+                "body": "Anonymous one-expression function — good for short callbacks.<div class=\"step-pre\">multiply_by_two = lambda x: x * 2\nmultiply_by_two(5)   # 10\n\nsorted(pairs, key=lambda p: p[1])</div>",
             },
             {
                 "title": "Step 5 — LEGB scope",
@@ -399,8 +404,8 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "From <a href=\"https://realpython.com/introduction-to-python-generators/\" target=\"_blank\" rel=\"noopener\">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.",
             },
             {
-                "title": "Step 2 — yield vs return + generator expressions",
-                "body": "<code>return</code> ends the function with one value. <code>yield</code> produces a generator object and pauses between values.<div class=\"step-pre\">def csv_reader(path):\n    with open(path, encoding=\"utf-8\") as f:\n        for row in f:\n            yield row\n\n# Generator expression (same idea, shorter):\nrows = (line for line in open(path, encoding=\"utf-8\"))</div>",
+                "title": "Step 2 — yield vs return + same function compared",
+                "body": "<code>return</code> ends with one result (or a full list). <code>yield</code> marks a <b>generator function</b> — it pauses and can produce many values over time.<div class=\"step-pre\"># WITHOUT yield — returns a complete list\ndef parse_lines_list(f):\n    results = []\n    for line in f:\n        results.append(line.strip())\n    return results\n\n# WITH yield — generator: one line when asked\ndef parse_lines(f):\n    for line in f:\n        yield line.strip()\n\n# Caller looks the same:\n# for row in parse_lines(open(\"data.csv\")):\n#     print(row)</div><p class=\"step-result\">Generator expression (short form, no yield keyword): <code>(line for line in open(path))</code></p>",
             },
             {
                 "title": "Step 3 — Infinite sequences & pipelines",

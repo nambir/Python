@@ -528,16 +528,51 @@ def _lambda_body() -> str:
     return (
         _py_cs(
             "Python lambda — one expression only:",
-            """double = lambda x: x * 2
-sorted(items, key=lambda r: r[\"amount\"])""",
+            """# 1) Store lambda in a variable, then call it
+multiply_by_two = lambda x: x * 2
+print(multiply_by_two(5))    # 10  ← how it is used
+
+# Same as:
+# def multiply_by_two(x):
+#     return x * 2
+
+# 2) Separate example — pass lambda directly (no name needed)
+items = [
+    {"name": "pen",  "amount": 30},
+    {"name": "book", "amount": 10},
+    {"name": "bag",  "amount": 50},
+]
+# key= tells sorted HOW to order each item:
+#   r              → one dict from items
+#   r["amount"]    → use that number as the sort key
+# sorted calls the lambda for each item → 30, 10, 50 → sorts by those
+sorted(items, key=lambda r: r["amount"])
+# → book(10), pen(30), bag(50)
+
+# Same without lambda:
+# def get_amount(r):
+#     return r["amount"]
+# sorted(items, key=get_amount)""",
             "C# lambda / expression-bodied members:",
-            """Func<int, int> double = x => x * 2;
+            """// 1) Store lambda in a variable, then call it
+Func<int, int> multiplyByTwo = x => x * 2;
+Console.WriteLine(multiplyByTwo(5));  // 10  ← how it is used
+
+// 2) Separate example — pass lambda directly to OrderBy
+// r => r.Amount  = for each item r, sort by its Amount property
 items.OrderBy(r => r.Amount);
 
 // Statement lambda:
 Action<int> log = n => Console.WriteLine(n);""",
         )
-        + _note("Python <code>lambda</code> is limited to one expression. Use <code>def</code> for multi-line logic.")
+        + _note(
+            "<code>multiply_by_two(5)</code> / <code>multiplyByTwo(5)</code> "
+            "<b>calls</b> the stored lambda — same idea as a normal function. "
+            "For sorting: <code>key=lambda r: r[\"amount\"]</code> means "
+            "<b>for each item <code>r</code>, use <code>r[\"amount\"]</code> as the sort value</b> "
+            "(same as a named <code>get_amount</code> function). "
+            "Python <code>lambda</code> is limited to one expression; use <code>def</code> for multi-line logic."
+        )
     )
 
 
