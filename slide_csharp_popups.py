@@ -19,6 +19,26 @@ def _note(text: str) -> str:
     return f'<p class="csharp-pop-note"><b>Bottom line:</b> {text}</p>'
 
 
+def _diff_first(py_html: str, cs_html: str, label: str = "Key difference") -> str:
+    """Compact side-by-side difference shown at the top of a popup."""
+    return (
+        f'<div class="csharp-diff">'
+        f'<div class="csharp-diff-label">{label}</div>'
+        f'<div class="csharp-diff-grid">'
+        f'<div class="csharp-diff-col">'
+        f'<div class="csharp-diff-lang">Python</div>'
+        f'<div class="csharp-diff-code">{py_html}</div>'
+        f"</div>"
+        f'<div class="csharp-diff-vs" aria-hidden="true">vs</div>'
+        f'<div class="csharp-diff-col">'
+        f'<div class="csharp-diff-lang">C#</div>'
+        f'<div class="csharp-diff-code">{cs_html}</div>'
+        f"</div>"
+        f"</div>"
+        f"</div>"
+    )
+
+
 def _py_cs(title_py: str, py: str, title_cs: str, cs: str) -> str:
     return (
         f"<p>{title_py}</p>"
@@ -525,8 +545,17 @@ var names = users
 
 
 def _lambda_body() -> str:
+    diff = _diff_first(
+        'sorted(items, key=<mark class="csharp-diff-mark">lambda</mark> r: r["amount"])',
+        'items.OrderBy(r <mark class="csharp-diff-mark">=&gt;</mark> r.Amount);',
+        "Key difference — anonymous function syntax",
+    )
     return (
-        _py_cs(
+        diff
+        + '<p class="csharp-diff-hint">'
+        "Python uses the keyword <b>lambda</b>. C# uses the operator <b>=&gt;</b> "
+        '(read “goes to”). Same idea: a short anonymous function.</p>'
+        + _py_cs(
             "Python lambda — one expression only:",
             """# 1) Store lambda in a variable, then call it
 multiply_by_two = lambda x: x * 2

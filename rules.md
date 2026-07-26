@@ -1,4 +1,16 @@
-# Python Training Deck — Authoring Rules
+# Python Training & Review — Authoring Rules
+
+Use these rules when creating or updating:
+
+- **Training** slides → `PythonTraining.html` (beginner steps, code, interview Q&A)
+- **Review** questions → `PythonReview.html` (kid-friendly model answers, MyAnswer, deep dives)
+- **Cross-updates** — when Review teaches something new, mirror it on the related Training topic
+
+Goal: **every explanation should be understandable by a beginner**, with matching examples; regenerate HTML from sources (never hand-edit generated files).
+
+---
+
+## Training deck
 
 Use these rules when creating or updating slides in `PythonTraining.html`.
 Goal: **every slide should be explainable by a beginner**, step by step, with matching code and interview Q&A.
@@ -227,3 +239,109 @@ Do **not** introduce "hashable" in step 1 — build up to it in step 6 as "keys 
 - Use one giant interview paragraph — use Q&A.
 - Add jargon without a beginner sentence first.
 - Commit secrets (`.env`, API keys) in `Projects/` or slides.
+
+---
+
+## 13. Python Review deck (kid-friendly + MyAnswer)
+
+Use these rules when updating `PythonReview.html` / practice questions.
+
+### File map
+
+| File | Purpose |
+|------|---------|
+| `python_review_content.py` | Question bank (prompt, stub, deep dive, `my_answer`, interview Q&A) |
+| `python_review_kid_answers.py` | **Kid-friendly HTML** for every question’s **Model answer / approach** |
+| `python_review_algorithms.py` | Algorithm steps for coding solutions |
+| `PythonReview/*.py` | Official solution scripts |
+| `build_python_review.py` | Generator — layout, CSS, playground, split divider |
+| `PythonReview.html` | **Generated — do not edit by hand** |
+
+Regenerate:
+
+```powershell
+python D:\Sangeetha\Python\build_python_review.py
+```
+
+### Left panel order (Review slides)
+
+1. Learning notes / question + learning intent  
+2. **Model answer / approach** (kid-friendly)  
+3. **Base concepts you need** — explanation + `# INPUT` / `# OUTPUT` (`python_review_concept_examples.py`)  
+4. Deeper understanding  
+5. Interview Q&A  
+6. MyAnswer (if any)  
+7. Practice link  
+
+### Base concepts you need
+
+- Lives in `python_review_concept_examples.py` (`CONCEPT_EXAMPLES`).
+- Each concept shows: short explanation + `# INPUT` / `# OUTPUT` mini example.
+- Rendered below Model answer / approach on every Review slide.
+
+### Model answer / approach (required style)
+
+- Source of truth: `python_review_kid_answers.py` → `KID_ANSWERS[id]` (applied in the builder).
+- Rendered in a **white** `.model-answer` box (green left border).
+- Writing style:
+  - Simple analogy first (waiting-room seats, filing cabinet, traffic light).
+  - Short paragraphs / newlines — one idea per `<p>`.
+  - **Bold** important words; `code` for APIs.
+  - For new tools/syntax (`deque`, `Decimal`, `:=`, `*args`, `get` vs `[]`, generators): add a tiny **example** (`<div class="step-pre">`) + a small **comparison table** when helpful.
+  - Parenthetical meanings: bold **inside** parens, e.g. `deque (<b>double-ended queue</b>)`.
+- Do **not** leave only jargon (“over-allocated contiguous arrays…”) in the model answer.
+
+### MyAnswer (learner code)
+
+- Store in `python_review_content.py` as `'my_answer': '...'` (one attempt) or `'my_answer': ['...', '...']` (MyAnswer 1, MyAnswer 2, …).
+- Appears on the **left**, below Interview Q&A, as a runnable playground.
+- Keep the learner’s code mostly as they wrote it (format lightly if needed).
+- Official solution stays on the **right**.
+
+### Deeper understanding
+
+- Use **tables** for memory / performance / when-to-use comparisons (same spirit as Q1.2 / Q1.4).
+- Correct inaccurate claims (e.g. Python `int` is **not** fixed 4 bytes — ~28 for `12345` on 64-bit CPython).
+
+---
+
+## 14. Cross-update: Review ↔ Training (required)
+
+When a Review explanation introduces or clarifies a concept, **also update the matching Training slide** if that topic already exists (or clearly belongs there).
+
+| Review idea | Typical Training home |
+|-------------|------------------------|
+| int/str memory, list growth, list vs ArrayList, deque | Slide **Python Datatypes** (`build_training.py` CONTENT + callouts) |
+| `is` vs `==` | Operators / identity section |
+| `*args` / `**kwargs`, mutable default | Functions slide |
+| `yield` / generators | Comprehensions + Generators slides |
+| Walrus `:=` | Flow / beginner steps (`training_beginner.py`) |
+| C# Comparison popups | `slide_csharp_popups.py` → rebuild training |
+
+Checklist when changing a Review Q:
+
+1. Update kid model answer (`python_review_kid_answers.py`) and/or deep dive (`python_review_content.py`).
+2. If the learner provided code → set `my_answer`.
+3. Mirror the teaching (callout / table / mini example) on the related **Training** slide.
+4. Run **both** generators when both decks changed:
+
+```powershell
+python D:\Sangeetha\Python\build_python_review.py
+python D:\Sangeetha\Python\build_training.py
+```
+
+5. Spot-check in browser (`http://127.0.0.1:8765/...` preferred over `file://` for playground).
+
+---
+
+## 15. Serve locally
+
+```powershell
+cd D:\Sangeetha\Python
+python -m http.server 8765 --bind 127.0.0.1
+```
+
+- Training: `http://127.0.0.1:8765/PythonTraining.html`
+- Review: `http://127.0.0.1:8765/PythonReview.html`
+
+If port 8765 fails (“Connection was reset”), kill stale listeners and restart the server.

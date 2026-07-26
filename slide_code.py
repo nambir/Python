@@ -178,6 +178,19 @@ def vs_editor(text: str, lang: str = "python", compact: bool = False, playground
     )
 
 
+_STEP_PRE_RE = re.compile(r'<div class="step-pre">(.*?)</div>', re.DOTALL)
+
+
+def highlight_step_pres(html_text: str, lang: str = "python") -> str:
+    """Replace plain <div class="step-pre">...</div> blocks with VS-colored editors."""
+
+    def _repl(match: re.Match[str]) -> str:
+        code_text = html.unescape(match.group(1)).rstrip("\n")
+        return vs_editor(code_text + "\n" if code_text else "", lang=lang, compact=True)
+
+    return _STEP_PRE_RE.sub(_repl, html_text)
+
+
 def code(text: str) -> str:
     idx = len(_CODE_SNIPPETS)
     _CODE_SNIPPETS.append(text)

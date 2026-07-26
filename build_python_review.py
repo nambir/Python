@@ -8,7 +8,11 @@ from pathlib import Path
 
 from python_review_content import DOCX_LEVEL, DOCX_NAME, DOCX_TITLE, QUESTIONS
 from python_review_algorithms import ALGORITHMS
-from slide_code import vs_editor
+from python_review_kid_answers import apply_kid_answers
+from python_review_concept_examples import lookup_concept
+from slide_code import vs_editor, highlight_step_pres
+
+apply_kid_answers(QUESTIONS)
 
 OUTPUT = Path(__file__).parent / "PythonReview.html"
 CODE_DIR = Path(__file__).parent / "PythonReview"
@@ -165,7 +169,56 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 .callout { background: #f0f7ff; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
 .tip { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
 .challenge { background: #e8f5e9; border-left: 3px solid #28a745; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.model-answer {
+  background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #28a745;
+  padding: 12px 14px; border-radius: 4px; margin: 8px 0; font-size: 13px; color: #1a1a2e;
+  line-height: 1.55;
+}
+.model-answer p { margin: 0 0 10px; }
+.model-answer p:last-child { margin-bottom: 0; }
+.model-answer b { color: #0f172a; font-weight: 700; }
+.model-answer code {
+  background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 12px;
+}
+.model-answer .step-pre {
+  font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px;
+  background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 10px; border-radius: 4px;
+  margin: 8px 0 10px; white-space: pre-wrap; line-height: 1.45; color: #1a1a2e;
+}
+.model-answer .vs-editor,
+.concept-box .vs-editor,
+.keyword-box .vs-editor {
+  max-height: none;
+  margin: 8px 0 10px;
+  overflow-x: auto;
+}
+.model-answer table.vs-code,
+.concept-box table.vs-code,
+.keyword-box table.vs-code {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.model-answer table.vs-code td.gutter,
+.concept-box table.vs-code td.gutter,
+.keyword-box table.vs-code td.gutter {
+  width: 36px; min-width: 36px; font-size: 11px;
+}
+.model-answer .data-tbl { margin: 8px 0 10px; font-size: 12px; }
+.concept-box {
+  background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #0066cc;
+  padding: 10px 12px; border-radius: 4px; margin: 8px 0 12px;
+}
+.concept-item { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1px dashed #e2e8f0; }
+.concept-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.concept-name { font-size: 13px; font-weight: 700; color: #0066cc; margin: 0 0 4px; }
+.concept-explain { font-size: 12px; color: #334155; margin: 0 0 6px; line-height: 1.45; }
+.concept-box .step-pre {
+  font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px;
+  background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 10px; border-radius: 4px;
+  margin: 0; white-space: pre-wrap; line-height: 1.45; color: #1a1a2e;
+}
 .keyword-box { background: #f8fafc; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #1a1a2e; }
+.keyword-box .vs-editor { margin: 6px 0; }
 
 .data-tbl { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 12px; }
 .data-tbl th { background: #0066cc; color: #fff; text-align: left; padding: 6px 8px; font-weight: 600; }
@@ -355,12 +408,19 @@ function show(n) {{
   if (info) {{
     info.textContent = n === 0 ? 'Navigation' : ('Slide ' + n + ' of ' + total);
   }}
-  location.hash = n === 0 ? 'nav' : String(n);
+  const hash = n === 0 ? 'nav' : String(n);
+  if (location.hash.replace('#', '') !== hash) location.hash = hash;
+  try {{ localStorage.setItem('pythonReviewSlide', String(n)); }} catch (_) {{}}
   applySavedSplit(el);
 }}
 function nextSlide() {{ show(Math.min(current + 1, total)); }}
 function prevSlide() {{ show(Math.max(current - 1, 0)); }}
 function goSlide(n) {{ show(n); }}
+window.addEventListener('hashchange', () => {{
+  const h = (location.hash || '').replace('#', '');
+  const n = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
+  if (n !== current) show(n);
+}});
 document.addEventListener('keydown', e => {{
   const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
   if (tag === 'textarea' || tag === 'input' || (e.target && e.target.isContentEditable)) return;
@@ -377,8 +437,16 @@ window.addEventListener('DOMContentLoaded', () => {{
     ed.dataset.original = ed.value;
   }});
   const h = location.hash.replace('#','');
-  if (h === 'nav' || h === '') show(0);
-  else show(parseInt(h, 10) || 0);
+  let start = 0;
+  if (h === 'nav') start = 0;
+  else if (h !== '') start = parseInt(h, 10) || 0;
+  else {{
+    try {{
+      const saved = parseInt(localStorage.getItem('pythonReviewSlide') || '', 10);
+      if (Number.isFinite(saved) && saved >= 0 && saved <= total) start = saved;
+    }} catch (_) {{}}
+  }}
+  show(start);
 }});
 """
 
@@ -546,8 +614,21 @@ def load_code(code_file: str | None) -> str:
 def concepts_list(concepts: list[str]) -> str:
     if not concepts:
         return ""
-    items = "".join(f"<li>{esc(c)}</li>" for c in concepts)
-    return f"<h3>Base concepts you need</h3><ul>{items}</ul>"
+    cards = []
+    for name in concepts:
+        syntax, explain = lookup_concept(name)
+        code_block = vs_editor(syntax.rstrip("\n") + "\n", lang="python", compact=True)
+        cards.append(
+            '<div class="concept-item">'
+            f'<div class="concept-name">{esc(name)}</div>'
+            f'<p class="concept-explain">{esc(explain)}</p>'
+            f"{code_block}"
+            "</div>"
+        )
+    return (
+        "<h3>Base concepts you need</h3>"
+        f'<div class="concept-box">{"".join(cards)}</div>'
+    )
 
 
 def review_vs_editor(text: str) -> str:
@@ -616,7 +697,7 @@ def question_slide(num: int, q: dict) -> str:
         interview.append(f'<p class="qa-a"><b>A:</b> {esc(item["a"])}</p>')
     interview.append("</div>")
 
-    deep = q.get("topic_deepdive") or ""
+    deep = highlight_step_pres(q.get("topic_deepdive") or "")
     practice = ""
     if code_file:
         practice = (
@@ -643,13 +724,19 @@ def question_slide(num: int, q: dict) -> str:
         body_parts.append("</div>")
         code_panel = "".join(body_parts)
 
-    my_answer = (q.get("my_answer") or "").strip()
+    raw_my = q.get("my_answer") or q.get("my_answers") or []
+    if isinstance(raw_my, str):
+        my_answers = [raw_my.strip()] if raw_my.strip() else []
+    else:
+        my_answers = [a.strip() for a in raw_my if (a or "").strip()]
     my_answer_block = ""
-    if my_answer:
-        my_answer_block = (
-            '<div class="myanswer-label">MyAnswer</div>'
-            + review_vs_editor(my_answer)
-        )
+    if my_answers:
+        parts = []
+        numbered = len(my_answers) > 1 or isinstance(q.get("my_answer"), list)
+        for i, code in enumerate(my_answers, 1):
+            label = f"MyAnswer {i}" if numbered else "MyAnswer"
+            parts.append(f'<div class="myanswer-label">{label}</div>' + review_vs_editor(code))
+        my_answer_block = "".join(parts)
 
     # Left keeps teaching notes; for reasoning-only, also show full doc question
     question_heading = "Learning notes"
@@ -666,12 +753,18 @@ def question_slide(num: int, q: dict) -> str:
             + f'<div class="callout"><b>Learning intent:</b> {esc(q["learn_intent"])}</div>'
         )
 
+    answer_raw = q.get("answer") or ""
+    if "<" in answer_raw and ("</p>" in answer_raw or "</b>" in answer_raw or "<br" in answer_raw):
+        answer_block = f'<div class="model-answer">{highlight_step_pres(answer_raw)}</div>'
+    else:
+        answer_block = f'<div class="challenge">{esc(answer_raw)}</div>'
+
     left = f"""
       <h3>{question_heading}</h3>
       {question_body}
-      {concepts_list(q.get("base_concepts", []))}
       <h3>Model answer / approach</h3>
-      <div class="challenge">{esc(q["answer"])}</div>
+      {answer_block}
+      {concepts_list(q.get("base_concepts", []))}
       <h3>Deeper understanding</h3>
       <div class="keyword-box">{deep}</div>
       {"".join(interview)}

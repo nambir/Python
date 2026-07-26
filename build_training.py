@@ -497,6 +497,38 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .csharp-pop-tbl td { vertical-align: top; }
 .csharp-pop-tbl td:first-child { white-space: normal; }
 .csharp-pop-note { margin-top: 10px; color: #555; font-size: 11px; }
+.csharp-diff {
+  margin: 0 0 12px; padding: 10px 12px; border: 1px solid #ddd6fe; border-radius: 8px;
+  background: linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%);
+}
+.csharp-diff-label {
+  font-size: 11px; font-weight: 700; color: #5b21b6; letter-spacing: .3px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.csharp-diff-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: stretch;
+}
+.csharp-diff-col {
+  background: #fff; border: 1px solid #e9d5ff; border-radius: 6px; padding: 8px 10px; min-width: 0;
+}
+.csharp-diff-lang { font-size: 11px; font-weight: 700; color: #0066cc; margin-bottom: 4px; }
+.csharp-diff-code {
+  font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px; line-height: 1.45;
+  color: #1a1a2e; word-break: break-word;
+}
+.csharp-diff-vs {
+  align-self: center; font-size: 11px; font-weight: 800; color: #7c3aed;
+  padding: 4px 2px; writing-mode: horizontal-tb;
+}
+.csharp-diff-mark {
+  background: #fecaca; color: #991b1b; border: 1px solid #f87171;
+  border-radius: 3px; padding: 0 3px; font-weight: 700;
+}
+.csharp-diff-hint { margin: 0 0 12px; font-size: 12px; color: #334155; line-height: 1.45; }
+@media (max-width: 700px) {
+  .csharp-diff-grid { grid-template-columns: 1fr; }
+  .csharp-diff-vs { text-align: center; }
+}
 """
 
 JS = """
@@ -637,6 +669,11 @@ function showSlide(n) {
     if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
     updateTimeUI(n);
     applySavedSplit(el);
+    const hash = n === 0 ? 'nav' : String(n);
+    if (location.hash.replace('#', '') !== hash) {
+      location.hash = hash;
+    }
+    try { localStorage.setItem('pythonTrainingSlide', String(n)); } catch (_) {}
   }
 }
 function goSlide(n) { showSlide(n); }
@@ -648,6 +685,11 @@ function prevSlide() {
   const idx = slideOrder.indexOf(current);
   if (idx > 0) showSlide(slideOrder[idx - 1]);
 }
+window.addEventListener('hashchange', () => {
+  const h = (location.hash || '').replace('#', '');
+  const n = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
+  if (n !== current) showSlide(n);
+});
 const SPLIT_KEY = 'pythonTrainingSplitLeft';
 let splitDragging = null;
 function getSavedSplit() {
@@ -791,7 +833,15 @@ document.addEventListener('DOMContentLoaded', () => {
     applySavedSplit(document);
   } catch (err) { console.warn('editor init', err); }
   const h = (location.hash || '').replace('#', '');
-  const start = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
+  let start = 0;
+  if (h === 'nav') start = 0;
+  else if (h !== '') start = parseInt(h, 10) || 0;
+  else {
+    try {
+      const saved = parseInt(localStorage.getItem('pythonTrainingSlide') || '', 10);
+      if (Number.isFinite(saved) && slideOrder.includes(saved)) start = saved;
+    } catch (_) {}
+  }
   showSlide(start);
 });
 
@@ -1544,6 +1594,15 @@ price = 99.5          # float
 name = "Ravi"         # str
 is_active = True      # bool
 
+# ── STEP 1b: int / str memory — Python has NO fixed 4-byte int ──
+# C# int = fixed 4 bytes. Python int is a whole OBJECT (~28 bytes)
+# and grows for huge values. Strings = base overhead + ~1 byte/char (ASCII).
+print(sys.getsizeof(12345))      # ~28  (whole int object)
+print(sys.getsizeof(10**100))    # larger — int grows with digits
+print(sys.getsizeof(""))         # ~41-49 (empty str base)
+print(sys.getsizeof("A"))        # ~42  (+1 byte per ASCII char)
+print(sys.getsizeof("P12345"))   # ~47  (base + 6 chars)
+
 # ── STEP 2: List — homogeneous OR heterogeneous ──
 scores = [90, 85, 88]                    # list of int
 vendors = ["Google", "Amazon", "Azure"]  # list of str
@@ -1616,7 +1675,87 @@ prices[(12.97, 80.22)] = "Chennai warehouse"   # tuple GPS
 ''') + '''
 <div class="callout"><b>Why immutable keys only?</b> A dict uses <code>hash(key)</code> to place and find the value quickly (like a locker number). Mutable objects (<code>list</code>, <code>dict</code>, <code>set</code>) can change after you store them — then the hash would no longer match and the value would be lost or unreachable. Immutable keys (<code>str</code>, <code>int</code>, <code>tuple</code>, <code>frozenset</code>) never change, so the locker number stays valid.</div>
 <div class="callout"><b>List memory rule:</b> Creating <code>[]</code> reserves a small buffer. Each <code>append</code> fills slots; when capacity is full, Python allocates a <b>larger</b> array and copies references — that is why <code>sys.getsizeof</code> jumps, not +1 every time.</div>
+<div class="callout"><b>int / str sizes (vs C#):</b> C# <code>int</code> is a fixed <b>4 bytes</b>; a Python <code>int</code> is a whole object — ~<b>28 bytes</b> for <code>12345</code>, growing for huge values like <code>10**100</code> (built-in BigInteger). A Python <code>str</code> is ~<b>41–49 bytes</b> empty + ~1 byte per ASCII char (<code>"P12345"</code> ≈ 47); C# strings use UTF-16 (~2 bytes/char). So <code>"P12345"</code> costs more than <code>12345</code> mainly because it stores characters.</div>
+<h3>List vs Java ArrayList — patient queue</h3>
+<p>A Python <b>list</b> is a <b>dynamic array</b> of references — same idea as Java <code>ArrayList</code>. Contiguous slots → fast index access.</p>
+<table class="data-tbl">
+<tr><th>Operation</th><th>Python List</th><th>Java ArrayList</th></tr>
+<tr><td>Access by index</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>Insert at end (<code>append</code>)</td><td>O(1) amortized</td><td>O(1) amortized</td></tr>
+<tr><td>Insert at beginning</td><td>O(n)</td><td>O(n)</td></tr>
+</table>
+<table class="data-tbl">
+<tr><th>Hospital queue action</th><th>Code</th><th>What happens</th><th>Cost</th></tr>
+<tr><td>Add at <b>end</b></td><td><code>patients.append(new_patient)</code></td><td>Fill next free slot — no shifting</td><td>O(1) amortized</td></tr>
+<tr><td>Add at <b>beginning</b></td><td><code>patients.insert(0, new_patient)</code></td><td>Shift every existing record right</td><td>O(n) — slow for 10,000 patients</td></tr>
+</table>
+<table class="data-tbl">
+<tr><th>When to use</th><th>Prefer</th></tr>
+<tr><td>Adding records to the end of a queue</td><td><code>list.append(...)</code> — fast</td></tr>
+<tr><td>Large FIFO triage (add end / take front)</td><td><code>collections.deque</code> — avoid <code>insert(0)</code> / <code>pop(0)</code></td></tr>
+<tr><td>Comparing to Java</td><td>Python list ≈ <code>ArrayList</code> (same cost profile)</td></tr>
+</table>
+<p>Yes — Python has a deque (<b>double-ended queue</b>) in the <code>collections</code> module. It is <b>not</b> a built-in like <code>list</code>, but it is in the standard library.</p>
+<div class="step-pre">from collections import deque
+
+triage = deque()
+triage.append("Patient A")   # add at the end — fast
+triage.append("Patient B")
+next_up = triage.popleft()   # take from the front — also fast</div>
+<table class="data-tbl">
+<tr><th></th><th><code>list</code></th><th><code>deque</code></th></tr>
+<tr><td>Add/remove at <b>end</b></td><td>Fast</td><td>Fast</td></tr>
+<tr><td>Add/remove at <b>front</b></td><td>Slow (<code>insert(0)</code> / <code>pop(0)</code>)</td><td>Fast (<code>appendleft</code> / <code>popleft</code>)</td></tr>
+<tr><td>Best for</td><td>General lists, random index access</td><td>Queues (first-in, first-out)</td></tr>
+</table>
+<div class="tip"><b>Conclusion:</b> Use <code>append()</code> for end-of-queue adds. Avoid inserting at the beginning of a large list. For a real waiting-room queue, use <code>collections.deque</code> — fast at both ends, like two doors on a line.</div>
 <div class="tip"><b>Tuple vs list:</b> Use <b>tuple</b> for fixed records (GPS, return pairs, cache keys). Use <b>list</b> when size changes (cart, rows, logs). Tuple is typically leaner/faster for fixed data because it never resizes.</div>
+<div class="callout"><b>One-item tuple:</b> the <b>comma</b> makes the tuple, not the parentheses.
+An API that walks a sequence of readings fails on a scalar float and succeeds on <code>(98.6,)</code>.
+Type hints like <code>readings: tuple</code> do <b>not</b> change run-time output — same crash / same result.
+<div class="step-pre"># 1) No type hints
+def average_temps(readings):
+    return sum(readings) / len(readings)
+
+# 2) With type hints — SAME run-time behavior
+def average_temps(readings: tuple) -> float:
+    return sum(readings) / len(readings)
+
+average_temps(98.6)      # FAIL  → TypeError (even with hints!)
+average_temps((98.6,))   # SUCCEED → 98.6
+average_temps((98.6, 99.1))  # SUCCEED → 98.85
+
+print(type((98.6)))      # float
+print(type((98.6,)))     # tuple</div>
+<table class="data-tbl">
+<tr><th></th><th>No hints</th><th>With <code>: tuple</code></th></tr>
+<tr><td>Run-time output</td><td>Same</td><td>Same</td></tr>
+<tr><td>Extra value</td><td>—</td><td>mypy/pyright can warn early</td></tr>
+</table>
+<b>Example — average one patient's temperature readings:</b>
+<div class="step-pre"># INPUT
+patient_temps = (98.6, 99.1, 98.9)
+result = round(average_temps(patient_temps), 2)
+print(result)
+
+# OUTPUT
+98.87</div>
+</div>
+<div class="callout"><b>dict get vs []:</b>
+<table class="data-tbl">
+<tr><th></th><th><code>d[key]</code></th><th><code>d.get(key)</code></th></tr>
+<tr><td>Missing key</td><td><b>KeyError</b></td><td><b>None</b> / default</td></tr>
+<tr><td>Use for</td><td>Required fields</td><td>Optional fields</td></tr>
+</table>
+<div class="step-pre">patient = {"blood_type": "A+"}
+print(patient["blood_type"])           # required
+print(patient.get("nickname", "N/A"))  # optional</div>
+</div>
+<div class="callout"><b>Decimal for money:</b> <code>float</code> can be slightly wrong; <code>Decimal</code> is for exact cents.
+<div class="step-pre">from decimal import Decimal
+print(0.1 + 0.2)
+print(Decimal("0.1") + Decimal("0.2"))</div>
+</div>
 ''', '''
 <ul class="checklist">
   <li>Build a heterogeneous list like <code>[101, "SHIPPED", ["Google", "Amazon"]]</code></li>
@@ -1743,6 +1882,15 @@ if (n := len(data)) > 2:
 while (line := input("Name (empty to quit): ")) != "":
     print(f"Hello, {line}")''') + '''
 <div class="challenge"><b>Interview trap:</b> <code>is</code> checks identity (same object in memory). Use <code>==</code> for value comparison. Use <code>is None</code>, never <code>== None</code>.</div>
+<table class="data-tbl">
+<tr><th></th><th><code>==</code></th><th><code>is</code></th></tr>
+<tr><td>Means</td><td>Equal <b>values</b></td><td>Same <b>object</b> in memory</td></tr>
+<tr><td>Use for</td><td>IDs, names, numbers, strings</td><td><code>None</code> (and rare singletons)</td></tr>
+</table>
+<div class="step-pre">a = [1, 2]; b = [1, 2]; c = a
+print(a == b)  # True
+print(a is b)  # False
+print(a is c)  # True</div>
 ''', '''
 <ul class="checklist">
   <li>Predict results before running each operator</li>
@@ -1946,6 +2094,13 @@ def good(lst=None):
     return lst''') + '''
 <div class="callout"><b>FP vs OOP (GFG):</b> OOP bundles mutable state in objects. FP prefers pure functions + immutable data — easier to test and safer for concurrency. Python mixes both: use FP tools (<code>map</code>/<code>filter</code>/comprehensions/generators) where they clarify data transforms.</div>
 <div class="tip"><b>Mutable default trap:</b> never use <code>def f(lst=[])</code> — use <code>def f(lst=None)</code> and create inside.</div>
+<div class="callout"><b>*args / **kwargs:</b> <code>*args</code> = extra positional (<b>tuple</b>); <code>**kwargs</code> = extra named options (<b>dict</b>).
+<div class="step-pre">def book(patient_id, doctor_id, *details, **options):
+    return patient_id, doctor_id, details, options
+
+print(book("P1", "D9", "Room 2", urgent=True))
+# ('P1', 'D9', ('Room 2',), {'urgent': True})</div>
+</div>
 ''', '''
 <ul class="checklist">
   <li>Write one pure and one impure function — explain the difference</li>
@@ -1961,7 +2116,8 @@ def good(lst=None):
 <tr><th>Function</th><th>Purpose</th></tr>
 <tr><td>map(fn, iter)</td><td>Apply fn to each item</td></tr>
 <tr><td>filter(fn, iter)</td><td>Keep items where fn is True</td></tr>
-<tr><td>zip(a, b)</td><td>Pair elements</td></tr>
+<tr><td>zip(a, b)</td><td>Pair elements from two (or more) iterables</td></tr>
+<tr><td>zip(*rows)</td><td>Unpack a list of rows into columns</td></tr>
 <tr><td>enumerate(iter)</td><td>Index + value pairs</td></tr>
 <tr><td>sorted(iter)</td><td>Return sorted copy</td></tr>
 <tr><td>max(iter) / min(iter)</td><td>Largest / smallest item</td></tr>
@@ -1985,6 +2141,13 @@ names = ["Alice", "Bob"]
 scores = [95, 88]
 pairs = list(zip(names, scores))              # [('Alice',95),('Bob',88)]
 score_dict = dict(zip(names, scores))         # {'Alice':95,'Bob':88}
+
+# ── zip(*rows): unpack rows → columns ──
+# * opens the list so zip gets each row as its own argument
+readings = [(120, 80, 98.6), (115, 75, 99.1)]
+# zip(*readings)  ==  zip((120,80,98.6), (115,75,99.1))
+sys_list, dia_list, temps = zip(*readings)
+# sys_list → (120, 115)   dia_list → (80, 75)   temps → (98.6, 99.1)
 
 # ── enumerate: index + value ──
 for i, v in enumerate(["a", "b", "c"]):
@@ -2011,6 +2174,7 @@ max(scores, key=scores.get)  # "Anu"''') + '''
 <ul class="checklist">
   <li>Use map/filter vs list comprehension — compare readability</li>
   <li>Zip two lists into dict</li>
+  <li>Use zip(*rows) to turn a list of rows into columns</li>
   <li>Sort a list of tuples by second element</li>
 </ul>
 '''),

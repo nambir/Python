@@ -1,9 +1,19 @@
-def calculate_patient_bill(room_charge_per_day: float, days_stayed: int, 
-                          has_insurance: bool, patient_name: str) -> dict:
-    Amount= room_charge_per_day* days_stayed;
-    if has_insurance:
-        Amount= Amount*0.80;
-    return { "patient_name" : patient_name ,"Amount": Amount }
+def process_vital_signs(readings: list) -> tuple:
+    """
+    Process vital signs readings and return statistics
+    Input: [(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')]
+    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)
+    """
+    systolic_list = []
+    diastolic_list = []
+    temp_list = []
+    date_list = []
+    systolic_list, diastolic_list, temp_list, date_list = zip(*readings)
+    avg_systolic = sum(systolic_list) / len(systolic_list)
+    avg_diastolic = sum(diastolic_list) / len(diastolic_list)
+    max_temp = max(temp_list)
+    date_range = (min(date_list), max(date_list))
+    return avg_systolic, avg_diastolic, max_temp, date_range
 
-print(calculate_patient_bill(100, 5, True, "John"))
-print(calculate_patient_bill(100, 5, False, "John"))
+result = process_vital_signs([(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')])
+print(result)

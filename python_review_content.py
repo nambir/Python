@@ -59,25 +59,113 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
   'question': 'In a healthcare database, patient IDs are sometimes stored as integers (12345) and '
               'sometimes as strings ("P12345"). Explain the memory allocation differences between '
               'these two approaches and when you would use each in a hospital management system.',
-  'answer': 'An int has a compact numeric payload while a string owns character storage plus '
-            'object metadata, so a numeric key is normally cheaper. Use an internal numeric '
-            'database key for joins and a prefixed, opaque string identifier at public boundaries; '
-            'never rely on either representation as authorization.',
+  'answer': 'In 64-bit CPython, sys.getsizeof(12345) is typically 28 bytes, while '
+            'sys.getsizeof("P12345") is typically 47 bytes (exact sizes depend on the Python '
+            'version and build). Both are objects with metadata, but a string additionally stores '
+            'its characters, length, and hash-related data. Unlike C# int (fixed 4 bytes) or '
+            'long (fixed 8 bytes), a Python int has no fixed size — it grows with the number of '
+            'digits. Strings also have no fixed size in either language: they grow with length '
+            '(Python ~49-byte empty-string base + ~1 byte/char for ASCII; C# string is UTF-16, '
+            'typically 2 bytes per char plus object overhead). Use an internal numeric database '
+            'key for joins and indexes, and a separate prefixed string identifier at public '
+            'boundaries; never rely on either representation as authorization.',
   'learn_intent': 'Distinguish an internal database identity from an externally visible patient '
-                  'identifier.',
+                  'identifier, and contrast Python/C# int and string memory models.',
   'base_concepts': ['int objects',
                     'str objects',
                     'object memory',
+                    'unlimited Python int',
+                    'fixed-size C# int',
+                    'string growth / UTF-16',
                     'primary keys',
                     'opaque identifiers'],
-  'topic_deepdive': '<p>Integers store numeric values compactly; strings also need character '
-                    'storage and metadata.</p><p>A public identifier such as P12345 can be '
-                    'meaningful to humans, but it must not become an authorization secret.</p>',
+  'topic_deepdive': '<h3>Q1.2 — Memory Allocation Differences</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Integer ID (<code>12345</code>)</th>'
+                    '<th>String ID (<code>"P12345"</code>)</th></tr>'
+                    '<tr><td>Stored as a numeric value.</td>'
+                    '<td>Stored as a sequence of characters.</td></tr>'
+                    '<tr><td>Uses <b>less memory</b>. C# <code>int</code> is a fixed '
+                    '<b>4 bytes</b>; a Python <code>int</code> is a small object '
+                    '(~<b>28 bytes</b> for <code>12345</code>) but still cheaper than the '
+                    'string.</td>'
+                    '<td>Uses <b>more memory</b> — object overhead plus per-character storage '
+                    '(Python ~1 byte/char for ASCII; C# UTF-16 ~2 bytes/char). '
+                    '~<b>47 bytes</b> for <code>"P12345"</code>.</td></tr>'
+                    '<tr><td>Numeric comparisons and database indexes are generally compact and '
+                    'efficient.</td><td>Comparison may examine multiple characters; indexes are '
+                    'usually larger.</td></tr>'
+                    '<tr><td>Suitable for numeric internal IDs and auto-increment keys.</td>'
+                    '<td>Suitable when IDs contain letters, prefixes, or leading zeros.</td></tr>'
+                    '<tr><td><b>Example:</b> <code>12345</code></td>'
+                    '<td><b>Examples:</b> <code>P12345</code>, <code>CHN000123</code>, '
+                    '<code>ER0456</code></td></tr>'
+                    '</table>'
+                    '<p><b>Important correction:</b> a Python <code>int</code> is not a fixed '
+                    '4-byte value like C# <code>int</code>. Python integers are objects and grow '
+                    'as needed. The approximate sizes above include the whole Python object and '
+                    'can vary by Python version and build.</p>'
+                    '<h3>When to Use Each in a Hospital Management System</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Use Integer IDs when</th><th>Use String IDs when</th></tr>'
+                    '<tr><td>Patient IDs contain numbers only.</td>'
+                    '<td>IDs include letters or meaningful prefixes.</td></tr>'
+                    '<tr><td>You need compact internal primary keys, joins, and indexes.</td>'
+                    '<td>Hospitals or departments use different visible formats.</td></tr>'
+                    '<tr><td>The database generates auto-increment IDs.</td>'
+                    '<td>Leading zeros must be preserved.</td></tr>'
+                    '<tr><td><b>Example:</b> <code>12345</code></td>'
+                    '<td><b>Examples:</b> <code>P12345</code>, <code>CHN000123</code>, '
+                    '<code>ER0456</code></td></tr>'
+                    '</table>'
+                    '<p><b>Recommended design:</b> keep both—an internal numeric database key for '
+                    'efficient relationships and a separate public string ID for labels, '
+                    'barcodes, and communication. A public ID is not a security control; access '
+                    'must still be authorized.</p>'
+                    '<p><b>Python and C# size reminder:</b> C# <code>int</code> is fixed at '
+                    '4 bytes and <code>long</code> at 8 bytes. Python <code>int</code> grows with '
+                    'its value. Strings have no fixed size in either language: Python '
+                    '<code>str</code> uses object overhead plus flexible-width character storage; '
+                    'C# <code>string</code> uses object overhead plus UTF-16 character storage.</p>'
+                    '<h3>Measured Python sizes (64-bit CPython)</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Value</th><th>Size</th><th>Note</th></tr>'
+                    '<tr><td><code>12345</code> (int)</td><td><b>28 bytes</b></td>'
+                    '<td>whole int object — not 4 bytes like C#</td></tr>'
+                    '<tr><td><code>0</code> (int)</td><td>28 bytes</td>'
+                    '<td>small ints share the same base size</td></tr>'
+                    '<tr><td><code>10**100</code> (huge int)</td><td>larger</td>'
+                    '<td>grows with the number of digits</td></tr>'
+                    '<tr><td><code>""</code> (empty str)</td><td>~<b>41–49 bytes</b></td>'
+                    '<td>string object base overhead</td></tr>'
+                    '<tr><td><code>"A"</code> (1 char)</td><td>~42 bytes</td>'
+                    '<td>base + ~1 byte per ASCII char</td></tr>'
+                    '<tr><td><code>"P12345"</code> (6 chars)</td><td><b>47 bytes</b></td>'
+                    '<td>base + 6 characters</td></tr>'
+                    '</table>'
+                    '<p><b>Rule of thumb:</b> Python <code>int</code> ≈ 28 bytes for normal '
+                    'numbers; Python <code>str</code> ≈ empty-string base plus ~1 byte per ASCII '
+                    'character. <code>"P12345"</code> (47) costs more than <code>12345</code> '
+                    '(28) mainly because it stores 6 characters plus overhead.</p>'
+                    '<div class="step-pre">import sys\n'
+                    'print(sys.getsizeof(12345))      # typically 28 (whole int object)\n'
+                    'print(sys.getsizeof(""))         # empty str base ~41–49\n'
+                    'print(sys.getsizeof("A"))        # ~+1 byte for ASCII\n'
+                    'print(sys.getsizeof("P12345"))   # typically 47\n'
+                    'print(sys.getsizeof(10**100))    # still int — larger object</div>',
   'interview_qa': [{'q': 'Should a public patient ID be a database primary key?',
                     'a': 'Usually no; an internal surrogate key decouples storage from public '
                          'formatting.'},
                    {'q': 'Does a string ID make data secure?',
-                    'a': 'No. Access control must be enforced independently.'}],
+                    'a': 'No. Access control must be enforced independently.'},
+                   {'q': 'Does Python int have a fixed size like C# int?',
+                    'a': 'No. C# int is fixed 4 bytes; Python int grows with the value '
+                         '(BigInteger-style). sys.getsizeof reports the whole object, not a '
+                         'raw 4-byte payload.'},
+                   {'q': 'Does a string have a fixed size in Python or C#?',
+                    'a': 'No. Both grow with length. Python str adds character bytes to an object '
+                         'base (~41–49 empty); C# string uses UTF-16 (~2 bytes per character) plus '
+                         'object overhead.'}],
   'subsection': 'Primitive Datatypes',
   'prompt_full': 'In a healthcare database, patient IDs are sometimes stored as integers (12345) '
                  'and sometimes as strings ("P12345"). Explain the memory allocation differences '
@@ -104,6 +192,28 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
                    {'q': 'What should happen after removing the final medication?',
                     'a': 'Delete the empty time bucket to keep the representation clean.'}],
   'code_file': 'Q1_3_medication_schedule.py',
+  'my_answer': 'def manage_medication_schedule(patient_medications: list) -> dict:\n'
+               '    print(patient_medications)\n'
+               '    result = {}\n'
+               '\n'
+               '    for medication in patient_medications:\n'
+               '        time = medication[1]\n'
+               '        if time not in result:\n'
+               '            result[time] = []\n'
+               '        result[time].append(medication[0])\n'
+               '\n'
+               '    print(result["8:00"])\n'
+               '\n'
+               '    return result\n'
+               '\n'
+               '\n'
+               'result = manage_medication_schedule([\n'
+               '    ("Aspirin", "8:00"),\n'
+               '    ("Insulin", "8:00"),\n'
+               '    ("Aspirin", "20:00"),\n'
+               '])\n'
+               '\n'
+               'print(result)',
   'subsection': 'List Operations',
   'prompt_full': "You're managing a patient's medication schedule. Create a system to track daily "
                  'medications:',
@@ -129,20 +239,94 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
   'question': 'What is the underlying data structure of Python lists? How does this affect '
               "performance when you're inserting patient records at the beginning vs. end of a "
               "large patient queue? Compare with Java's ArrayList.",
-  'answer': 'Lists are over-allocated contiguous arrays of object references. append is amortized '
-            'O(1), whereas insert(0, value) shifts n references and is O(n); Java ArrayList has '
-            'the same broad behavior. Use collections.deque for FIFO triage queues.',
+  'answer': '<p>Think of a Python <b>list</b> like a <b>row of seats</b> in a waiting room.</p>'
+            '<p>Each seat holds one <b>patient card</b>.</p>'
+            '<p><b>Adding at the END</b> (<code>append</code>) is easy — '
+            'they sit in the next empty seat.<br>'
+            'That is usually very fast (<b>amortized O(1)</b>).</p>'
+            '<p><b>Adding at the FRONT</b> (<code>insert(0, …)</code>) is hard — '
+            'everyone already seated must stand up and move one seat back to make room.<br>'
+            'With <b>10,000</b> people, that is a lot of moving (<b>O(n)</b>).</p>'
+            '<p><b>Java ArrayList</b> works the same way: both are <b>dynamic arrays</b> '
+            '(a row of seats that can grow).</p>'
+            '<p>For a real hospital queue (first come, first served), use '
+            '<code>collections.deque</code> instead — '
+            'it is built for <b>fast add/remove at both ends</b>, like two doors on a line.</p>',
   'learn_intent': 'Choose a queue structure by operation cost rather than by familiarity.',
   'base_concepts': ['dynamic arrays', 'amortized complexity', 'O(n) shifts', 'deque', 'ArrayList'],
-  'topic_deepdive': '<p>Python lists are dynamic arrays of references. Appending is amortized '
-                    'O(1), but a front insert shifts every existing reference.</p><p>Java '
-                    'ArrayList has the same broad cost profile; a deque is the better FIFO triage '
-                    'queue.</p>',
+  'topic_deepdive': '<h3>Q1.4 — Underlying Data Structure</h3>'
+                    '<p>A Python <b>list</b> is a <b>dynamic array</b> (resizable array of object '
+                    'references). Java <code>ArrayList</code> is also a dynamic array. Both store '
+                    'elements in contiguous memory, so access by index is fast.</p>'
+                    '<h3>Performance Comparison</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Operation</th><th>Python List</th><th>Java ArrayList</th></tr>'
+                    '<tr><td>Access by index</td><td>O(1)</td><td>O(1)</td></tr>'
+                    '<tr><td>Insert at end (<code>append</code>)</td>'
+                    '<td>O(1) amortized</td><td>O(1) amortized</td></tr>'
+                    '<tr><td>Insert at beginning</td><td>O(n)</td><td>O(n)</td></tr>'
+                    '</table>'
+                    '<h3>Patient Queue Example (10,000 records)</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Insert at the End</th><th>Insert at the Beginning</th></tr>'
+                    '<tr><td><code>patients.append(new_patient)</code></td>'
+                    '<td><code>patients.insert(0, new_patient)</code></td></tr>'
+                    '<tr><td>New patient goes into the next free slot.</td>'
+                    '<td>Every existing record must shift one position to the right.</td></tr>'
+                    '<tr><td>Usually very fast — no shifting of existing records.</td>'
+                    '<td>Slow on a large queue (about 10,000 moves).</td></tr>'
+                    '<tr><td><b>Time:</b> O(1) amortized</td>'
+                    '<td><b>Time:</b> O(n)</td></tr>'
+                    '</table>'
+                    '<h3>When to Use Each in a Hospital Management System</h3>'
+                    '<table class="data-tbl">'
+                    '<tr><th>Prefer this</th><th>When / Why</th></tr>'
+                    '<tr><td><code>list.append(...)</code></td>'
+                    '<td>Adding new patient records to the <b>end</b> of a queue — fast.</td></tr>'
+                    '<tr><td>Avoid <code>list.insert(0, ...)</code> / <code>pop(0)</code></td>'
+                    '<td>Large queues — shifting all records is expensive.</td></tr>'
+                    '<tr><td><code>collections.deque</code></td>'
+                    '<td>True FIFO triage queue (fast add/remove at both ends).</td></tr>'
+                    '<tr><td>Python list ≈ Java ArrayList</td>'
+                    '<td>Same cost profile: fast index and end insert; slow front insert.</td></tr>'
+                    '</table>'
+                    '<p><b>Yes — Python has <code>deque</code></b> '
+                    '(<b>double-ended queue</b>) in the '
+                    '<code>collections</code> module (standard library, not a built-in like '
+                    '<code>list</code>).</p>'
+                    '<table class="data-tbl">'
+                    '<tr><th></th><th><code>list</code></th><th><code>deque</code></th></tr>'
+                    '<tr><td>Add/remove at <b>end</b></td><td>Fast</td><td>Fast</td></tr>'
+                    '<tr><td>Add/remove at <b>front</b></td>'
+                    '<td>Slow (<code>insert(0)</code> / <code>pop(0)</code>)</td>'
+                    '<td>Fast (<code>appendleft</code> / <code>popleft</code>)</td></tr>'
+                    '<tr><td>Best for</td><td>General lists, random index access</td>'
+                    '<td>Queues (first-in, first-out)</td></tr>'
+                    '</table>'
+                    '<p><b>Conclusion:</b> Python lists are dynamic arrays like Java '
+                    '<code>ArrayList</code>. Use <code>append()</code> for end-of-queue adds; '
+                    'avoid inserting at the beginning of a large list. For a real waiting-room '
+                    'queue, prefer <code>collections.deque</code>.</p>'
+                    '<div class="step-pre">patients = []  # dynamic array of references\n'
+                    'patients.append(new_patient)       # end — O(1) amortized\n'
+                    'patients.insert(0, new_patient)    # front — O(n), shifts everyone\n'
+                    '\n'
+                    'from collections import deque\n'
+                    'triage = deque()\n'
+                    'triage.append("Patient A")         # add at the end — fast\n'
+                    'triage.append("Patient B")\n'
+                    'next_up = triage.popleft()         # take from the front — also fast</div>',
   'interview_qa': [{'q': 'Why is append only amortized O(1)?',
                     'a': 'Occasional resize copies are expensive, but spread across many cheap '
                          'appends.'},
                    {'q': 'Which operation makes list a poor queue?',
-                    'a': 'Repeated pop(0) or insert(0, item).'}],
+                    'a': 'Repeated pop(0) or insert(0, item).'},
+                   {'q': 'How does Python list compare to Java ArrayList?',
+                    'a': 'Same underlying idea: dynamic arrays. Fast index access and end insert; '
+                         'slow insert at the beginning because elements must shift.'},
+                   {'q': 'Does Python have a deque type?',
+                    'a': 'Yes. collections.deque (standard library) — fast add/remove at both '
+                         'ends; use it for FIFO queues instead of list.'}],
   'subsection': 'List Operations',
   'prompt_full': 'What is the underlying data structure of Python lists? How does this affect '
                  "performance when you're inserting patient records at the beginning vs. end of a "
@@ -178,7 +362,48 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
                '    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)\n'
                '    """\n'
                '    pass',
-  'expected_output': ''},
+  'expected_output': '',
+  'my_answer': [
+      'def process_vital_signs(readings: list) -> tuple:\n'
+      '    """\n'
+      '    Process vital signs readings and return statistics\n'
+      "    Input: [(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')]\n"
+      '    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)\n'
+      '    """\n'
+      '    systolic_list = []\n'
+      '    diastolic_list = []\n'
+      '    temp_list = []\n'
+      '    date_list = []\n'
+      '    for reading in readings:\n'
+      '        systolic, diastolic, temp, date = reading\n'
+      '        systolic_list.append(systolic)\n'
+      '        diastolic_list.append(diastolic)\n'
+      '        temp_list.append(temp)\n'
+      '        date_list.append(date)\n'
+      '    avg_systolic = sum(systolic_list) / len(systolic_list)\n'
+      '    avg_diastolic = sum(diastolic_list) / len(diastolic_list)\n'
+      '    max_temp = max(temp_list)\n'
+      '    date_range = (min(date_list), max(date_list))\n'
+      '    return avg_systolic, avg_diastolic, max_temp, date_range\n'
+      '\n'
+      "result = process_vital_signs([(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')])\n"
+      'print(result)',
+      'def process_vital_signs(readings: list) -> tuple:\n'
+      '    """\n'
+      '    Process vital signs readings and return statistics\n'
+      "    Input: [(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')]\n"
+      '    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)\n'
+      '    """\n'
+      '    systolic_list, diastolic_list, temp_list, date_list = zip(*readings)\n'
+      '    avg_systolic = sum(systolic_list) / len(systolic_list)\n'
+      '    avg_diastolic = sum(diastolic_list) / len(diastolic_list)\n'
+      '    max_temp = max(temp_list)\n'
+      '    date_range = (min(date_list), max(date_list))\n'
+      '    return avg_systolic, avg_diastolic, max_temp, date_range\n'
+      '\n'
+      "result = process_vital_signs([(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')])\n"
+      'print(result)'
+  ]},
  {'id': 'Q1.6',
   'section': '1. Python Datatypes & Built-in Functions',
   'kind': 'reasoning',
@@ -216,8 +441,15 @@ QUESTIONS: list[dict] = [{'id': 'Q1.1',
   'learn_intent': 'Select immutable tuples or mutable lists based on coordinate lifecycle.',
   'base_concepts': ['immutability', 'memory overhead', 'iteration', 'hashability', 'mutation'],
   'topic_deepdive': '<p>Tuples have a fixed size and no spare capacity, so they typically need '
-                    'less memory than lists.</p><p>Use tuples for captured imaging coordinates and '
-                    'lists when a working algorithm must edit or append points.</p>',
+                    'less memory than lists. On 64-bit CPython an (x, y, z) tuple is about 64 '
+                    'bytes versus about 88 bytes for the equivalent list, so 1,000 imaging points '
+                    'cost roughly 71 KB as tuples and 87 KB as lists.</p>'
+                    '<p>Access speed is effectively the same because both support direct O(1) '
+                    'indexing; the small tuple advantage comes from better cache locality, not a '
+                    'different algorithm.</p>'
+                    '<p>Use tuples for captured imaging coordinates, especially when a coordinate '
+                    'must act as a dict key or set member, and lists when a working algorithm '
+                    'must edit or append points.</p>',
   'interview_qa': [{'q': 'Can a coordinate tuple be a dict key?',
                     'a': 'Yes, if every coordinate component is hashable.'},
                    {'q': 'Why are lists larger?',
