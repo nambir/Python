@@ -1,19 +1,39 @@
-def process_vital_signs(readings: list) -> tuple:
+"""    Check for drug interactions before prescribing new medication    
+    interaction_db = {
+        'aspirin': {'warfarin', 'heparin'},
+        'warfarin': {'aspirin', 'vitamin_k'},
+        ...
+    }    
+    Return: {
+        'safe': bool,
+        'interactions': set of conflicting drugs,
+        'recommendations': list
+    }
     """
-    Process vital signs readings and return statistics
-    Input: [(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')]
-    Output: Tuple of (avg_systolic, avg_diastolic, max_temp, date_range)
-    """
-    systolic_list = []
-    diastolic_list = []
-    temp_list = []
-    date_list = []
-    systolic_list, diastolic_list, temp_list, date_list = zip(*readings)
-    avg_systolic = sum(systolic_list) / len(systolic_list)
-    avg_diastolic = sum(diastolic_list) / len(diastolic_list)
-    max_temp = max(temp_list)
-    date_range = (min(date_list), max(date_list))
-    return avg_systolic, avg_diastolic, max_temp, date_range
+def check_drug_interactions(
+    current_medications: set[str],
+    new_medication: str,
+    interaction_db: dict[str, set[str]],
+) -> dict:
 
-result = process_vital_signs([(120, 80, 98.6, '2024-01-15'), (115, 75, 99.1, '2024-01-16')])
+    # Step 2: look up interaction partners for the new medication
+    conflictingMedicinesForNewMedicine = interaction_db.get(new_medication, set())
+    # Step 3: find overlap between current meds and partners
+    print(conflictingMedicinesForNewMedicine)
+    print(current_medications)
+    if conflictingMedicinesForNewMedicine.intersection(current_medications):
+        conflictStatus = True
+    else:
+        conflictStatus = False
+    return {
+        "safe": False if conflictStatus else True ,
+        "interactions": conflictingMedicinesForNewMedicine.intersection(current_medications) if conflictStatus else set(),
+        "recommendations": ["Consult a clinician before prescribing."] if conflictStatus else ["No listed interaction; still verify clinically."]
+    }
+
+existingMedications = {"warfarin"}
+newMedication = "aspirin"
+interactionDB = {"aspirin": {"warfarin"}}
+
+result = check_drug_interactions(existingMedications, newMedication, interactionDB)
 print(result)
