@@ -262,8 +262,17 @@ CONCEPT_EXAMPLES: dict[str, tuple[str, str]] = {
         'Parentheses group parts of an expression so that part runs first. Use them whenever precedence might confuse readers (dose formulas, score weights).',
     ),
     'filter': (
-        '# INPUT\ntemps = [36.5, 38.2, 37.0, 39.1]\nfever = list(filter(lambda t: t >= 38.0, temps))\nprint(fever)\n\n# OUTPUT\n[38.2, 39.1]',
-        'filter keeps only items that pass a test function. Convert to list (or loop) to see results; a list comprehension is often clearer for beginners.',
+        '# INPUT\n'
+        'def is_even(n):\n'
+        '    return n % 2 == 0\n'
+        '\n'
+        'nums = [1, 2, 3, 4, 5]\n'
+        'evens = list(filter(is_even, nums))\n'
+        'print(evens)\n'
+        '\n'
+        '# OUTPUT\n'
+        '[2, 4]',
+        'filter keeps only items that pass your test function. True means keep; False means skip.',
     ),
     'fixed-size C# int': (
         '# INPUT\nbig = 2 ** 100\nprint(big)\nprint(type(big).__name__)\n\n# OUTPUT\n1267650600228229401496703205376\nint',

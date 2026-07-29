@@ -75,6 +75,9 @@ if (n := len(data)) &gt; 0:
 """,
     11: """
 <h3>Python keywords — deeper look</h3>
+<div class="keyword-box"><b>filter()</b> = keep only items that pass your test. "
+        "Think of a <b>bouncer</b>: True means keep, False means skip. "
+        "Use a small <code>def</code> for the test — easier than <code>None</code> or <code>strip</code>.</div>
 <div class="keyword-box"><b>sorted()</b> = returns <b>new</b> sorted list; original unchanged.<br><b>.sort()</b> = sorts list <b>in place</b>; returns <code>None</code>.<br><b>Trap:</b> <code>x = lst.sort()</code> makes <code>x</code> None.</div>
 <div class="keyword-box"><b>enumerate()</b> = gives <code>(index, value)</code> pairs — avoid manual <code>range(len())</code>.<br><b>zip()</b> = pair items from two sequences together.</div>
 <div class="keyword-box"><b>isinstance()</b> = type check that respects inheritance — prefer over <code>type(x) == int</code>.</div>
