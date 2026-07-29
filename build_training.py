@@ -2960,16 +2960,37 @@ print(register("Bob"))    # ["Bob"]  ← correct</div></div>
 <tr><td>sorted(iter)</td><td>Return sorted copy</td></tr>
 <tr><td>max(iter) / min(iter)</td><td>Largest / smallest item</td></tr>
 </table>
-''' + code('''from functools import reduce
+''' + code('''# ── filter: keep items that pass a test (run this first) ──
+def is_even(n):
+    return n % 2 == 0   # True for 2, 4, 6...
+
+nums = [1, 2, 3, 4, 5, 6]
+evens = list(filter(is_even, nums))
+print("evens:", evens)
+
+def has_fever(temp):
+    return temp > 100
+
+temps = [98.6, 99.1, 101.2, 100.5]
+fever = list(filter(has_fever, temps))
+print("fever:", fever)
+
+
+# ── sorted() vs .sort() — trap: .sort() returns None ──
+names = ["zion", "amala"]
+print(sorted(names))
+print(names)
+print(names.sort())
+print(names)
+
+
+from functools import reduce
 
 nums = [1, 2, 3, 4, 5]
 
 # ── map: apply function to each item ──
 doubled = list(map(lambda x: x * 2, nums))     # [2,4,6,8,10]
 upper = list(map(str.upper, ["a", "b"]))      # ['A','B']
-
-# ── filter: keep items where function is True ──
-evens = list(filter(lambda x: x % 2 == 0, nums))  # [2,4]
 
 # ── reduce: fold to single value ──
 total = reduce(lambda a, b: a + b, nums)      # 15
