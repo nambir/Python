@@ -225,12 +225,12 @@ GLOSSARY: dict[int, str] = {
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Counter</td><td>Dict subclass counting hashable items.</td><td><code>Counter("hello")</code></td></tr>
-<tr><td>defaultdict</td><td>Dict with factory for missing keys — no KeyError.</td><td><code>defaultdict(list)</code></td></tr>
-<tr><td>deque</td><td>Double-ended queue — fast append/pop both ends.</td><td><code>deque.appendleft(0)</code></td></tr>
-<tr><td>namedtuple</td><td>Tuple with named fields — lightweight record. __CSHARP_NAMEDTUPLE_BTN__</td><td><code>Point(10, 20).x</code></td></tr>
-<tr><td>ChainMap</td><td>Search multiple dicts as one — first match wins.</td><td>config layering</td></tr>
-<tr><td>OrderedDict</td><td>Dict remembering insertion order (built-in since 3.7).</td><td>legacy code</td></tr>
+<tr><td>Counter</td><td><b>Counter</b> = dict subclass counting hashable items — one-line frequency tally. __CSHARP_COUNTER_BTN__</td><td><code>Counter("hello")</code></td></tr>
+<tr><td>defaultdict</td><td><b>defaultdict</b> = dict with factory for missing keys — no <code>KeyError</code>. __CSHARP_DEFAULTDICT_BTN__</td><td><code>defaultdict(list)</code></td></tr>
+<tr><td>deque</td><td><b>deque</b> = double-ended queue — fast append/pop at <b>both</b> ends. __CSHARP_DEQUE_BTN__</td><td><code>deque.appendleft(0)</code></td></tr>
+<tr><td>namedtuple</td><td><b>namedtuple</b> = tuple with named fields — lightweight record. __CSHARP_NAMEDTUPLE_BTN__</td><td><code>Point(10, 20).x</code></td></tr>
+<tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. __CSHARP_CHAINMAP_BTN__</td><td><code>ChainMap(user, app_defaults)</code></td></tr>
+<tr><td>OrderedDict</td><td><b>OrderedDict</b> = dict remembering insertion order (<b>regular dict since 3.7</b>). __CSHARP_ORDEREDDICT_BTN__</td><td>legacy code</td></tr>
 </table>""",
     23: """
 <h3>Key terms explained</h3>
@@ -458,4 +458,9 @@ GLOSSARY_CSHARP_BTNS: dict[str, str] = {
     "__CSHARP_VENV_BTN__": "venv-nuget",
     "__CSHARP_PROPERTY_BTN__": "property-csharp",
     "__CSHARP_NAMEDTUPLE_BTN__": "namedtuple-record",
+    "__CSHARP_COUNTER_BTN__": "counter-linq",
+    "__CSHARP_DEFAULTDICT_BTN__": "defaultdict-dict",
+    "__CSHARP_DEQUE_BTN__": "deque-linkedlist",
+    "__CSHARP_CHAINMAP_BTN__": "chainmap-config",
+    "__CSHARP_ORDEREDDICT_BTN__": "ordereddict-dict",
 }

@@ -884,7 +884,135 @@ print(p.x, p.y)""",
 var p = new Point(10, 20);
 Console.WriteLine(p.X);""",
         )
-        + _note("namedtuple ≈ small immutable record. For APIs, prefer a Pydantic model or dataclass in modern Python.")
+        + _note("<code>namedtuple</code> ≈ small immutable record. For APIs, prefer a Pydantic model or dataclass in modern Python.")
+    )
+
+
+def _counter_body() -> str:
+    return (
+        _py_cs(
+            "Python <code>Counter</code> — count occurrences in one line:",
+            """from collections import Counter
+statuses = [\"open\", \"open\", \"closed\", \"open\"]
+pie = Counter(statuses)
+print(pie)  # Counter({'open': 3, 'closed': 1})""",
+            "C# — <code>GroupBy</code> + <code>ToDictionary</code> (LINQ):",
+            """var statuses = new[] { \"open\", \"open\", \"closed\", \"open\" };
+var counts = statuses
+    .GroupBy(s => s)
+    .ToDictionary(g => g.Key, g => g.Count());
+foreach (var kv in counts)
+    Console.WriteLine($\"{kv.Key}: {kv.Value}\");
+// open: 3
+// closed: 1""",
+        )
+        + _note(
+            "<code>Counter</code> is a dict subclass with extra helpers "
+            "(<code>.most_common()</code>, add/subtract). "
+            "C# has no built-in Counter — use LINQ <code>GroupBy</code> "
+            "or a <code>Dictionary&lt;T, int&gt;</code> loop."
+        )
+    )
+
+
+def _defaultdict_body() -> str:
+    return (
+        _py_cs(
+            "Python <code>defaultdict(list)</code> — missing key auto-creates empty list:",
+            """from collections import defaultdict
+by_assignee = defaultdict(list)
+by_assignee[\"Ravi\"].append(101)  # no KeyError check
+print(dict(by_assignee))""",
+            "C# — check key first, or use <code>GetOrAdd</code> pattern:",
+            """var byAssignee = new Dictionary<string, List<int>>();
+if (!byAssignee.ContainsKey(\"Ravi\"))
+    byAssignee[\"Ravi\"] = new List<int>();
+byAssignee[\"Ravi\"].Add(101);
+Console.WriteLine(string.Join(\", \",
+    byAssignee.Select(kv => $\"{kv.Key}: [{string.Join(\", \", kv.Value)}]\")));
+// Ravi: [101]""",
+        )
+        + _note(
+            "<code>defaultdict</code> runs a factory on first access — handy but can surprise you "
+            "if you only meant to check membership with <code>in</code>. "
+            "C# always requires explicit initialization."
+        )
+    )
+
+
+def _deque_body() -> str:
+    return (
+        _py_cs(
+            "Python <code>deque</code> — fast append/pop at both ends:",
+            """from collections import deque
+chat = deque(maxlen=100)
+chat.append(\"new\")       # right end
+chat.appendleft(\"old\")   # left end
+print(list(chat))""",
+            "C# <code>LinkedList&lt;T&gt;</code> — double-ended; or <code>Queue</code> / <code>Stack</code> for one end:",
+            """var chat = new LinkedList<string>();
+chat.AddLast(\"new\");     // append
+chat.AddFirst(\"old\");    // prepend
+foreach (var msg in chat)
+    Console.WriteLine(msg);
+// old
+// new""",
+        )
+        + _note(
+            "<code>deque</code> with <code>maxlen</code> auto-drops oldest items — like a rolling buffer. "
+            "C# has no built-in maxlen deque; track size manually or use a circular buffer."
+        )
+    )
+
+
+def _chainmap_body() -> str:
+    return (
+        _py_cs(
+            "Python <code>ChainMap</code> — layered lookup; first dict wins:",
+            """from collections import ChainMap
+app_defaults = {\"color\": \"red\", \"size\": \"M\"}
+user = {\"color\": \"blue\"}
+settings = ChainMap(user, app_defaults)
+print(settings[\"color\"])   # blue — in user
+print(settings[\"size\"])    # M — falls to app_defaults""",
+            "C# — merge layers manually, or use <code>IConfiguration</code> in ASP.NET Core:",
+            """// Simple manual ChainMap-style lookup:
+string Get(Dictionary<string,string> user,
+           Dictionary<string,string> appDefaults,
+           string key) =>
+    user.TryGetValue(key, out var v) ? v : appDefaults[key];
+
+// ASP.NET Core: appsettings.json + env vars + CLI
+// are layered automatically via IConfiguration""",
+        )
+        + _note(
+            "<code>ChainMap</code> does not merge dicts — it searches in order. "
+            "C# <code>IConfiguration</code> is the closest real-world match for config layering."
+        )
+    )
+
+
+def _ordereddict_body() -> str:
+    return (
+        _py_cs(
+            "Python <code>OrderedDict</code> — dict that remembers insertion order:",
+            """from collections import OrderedDict
+d = OrderedDict()
+d[\"b\"] = 2
+d[\"a\"] = 1
+print(list(d.keys()))  # ['b', 'a']""",
+            "C# <code>Dictionary&lt;K,V&gt;</code> — insertion order guaranteed since .NET Core 3+ / .NET 5+:",
+            """var d = new Dictionary<string, int>();
+d[\"b\"] = 2;
+d[\"a\"] = 1;
+foreach (var key in d.Keys)
+    Console.WriteLine(key);  // b, then a""",
+        )
+        + _note(
+            "Regular Python <code>dict</code> is ordered since 3.7 — "
+            "<code>OrderedDict</code> is mostly for legacy code or extra methods like "
+            "<code>.move_to_end()</code>. Modern C# <code>Dictionary</code> is ordered too."
+        )
     )
 
 
@@ -916,6 +1044,11 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "venv-nuget": ("C# Comparison — venv + pip vs NuGet", _venv_nuget_body),
     "property-csharp": ("C# Comparison — @property vs C# Property", _property_body),
     "namedtuple-record": ("C# Comparison — namedtuple vs record", _namedtuple_body),
+    "counter-linq": ("C# Comparison — Counter vs GroupBy", _counter_body),
+    "defaultdict-dict": ("C# Comparison — defaultdict vs Dictionary", _defaultdict_body),
+    "deque-linkedlist": ("C# Comparison — deque vs LinkedList", _deque_body),
+    "chainmap-config": ("C# Comparison — ChainMap vs config layers", _chainmap_body),
+    "ordereddict-dict": ("C# Comparison — OrderedDict vs Dictionary", _ordereddict_body),
 }
 
 

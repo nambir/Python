@@ -579,50 +579,58 @@ REAL_LIFE: dict[int, str] = {
         "<b>Support dashboard:</b> Count statuses, group by assignee, chat buffer, light record — "
         "each collection with <b>input → output</b>."
         "<p><b>1) <code>Counter</code> — status pie chart</b><br>"
-        "Count how many tickets are open vs closed in one line.</p>"
+        "Pass a list of statuses to <code>Counter</code> — it tallies how many times each value "
+        "appears (like counting colored chips for a pie chart). Use <code>print</code> to see the result.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
         "from collections import Counter\n"
         'statuses = ["open", "open", "closed", "open"]\n'
         "pie = Counter(statuses)\n"
+        "print(pie)\n"
         "\n"
         "# OUTPUT\n"
-        "pie → Counter({'open': 3, 'closed': 1})"
+        "Counter({'open': 3, 'closed': 1})"
         "</div>"
         "<p><b>2) <code>defaultdict(list)</code> — group by assignee</b><br>"
-        "Append ticket ids per person without checking if the key exists first.</p>"
+        "Append ticket ids per person — if the key is missing, "
+        "<code>defaultdict(list)</code> auto-creates an empty list (no <code>KeyError</code>, "
+        "no manual <code>if key not in dict</code>). "
+        "See <b>Common mistakes</b> below for without vs with comparison and the <b>one trap</b>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
         "from collections import defaultdict\n"
         "by_assignee = defaultdict(list)\n"
-        'by_assignee["Ravi"].append(101)\n'
+        'by_assignee["Ravi"].append(101)   # first touch → creates []\n'
         'by_assignee["Anu"].append(102)\n'
+        "print(dict(by_assignee))\n"
         "\n"
         "# OUTPUT\n"
-        "by_assignee → {'Ravi': [101], 'Anu': [102]}"
+        "{'Ravi': [101], 'Anu': [102]}"
         "</div>"
         "<p><b>3) <code>deque(maxlen=…)</code> — rolling chat buffer</b><br>"
-        "Keep only the last 100 messages; oldest drop off automatically.</p>"
+        "Keep only the last 100 messages; when full, the oldest message is dropped automatically.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
         "from collections import deque\n"
         "chat = deque(maxlen=100)\n"
         'chat.append("hi")\n'
         'chat.append("ticket #42")\n'
+        "print(list(chat))\n"
         "\n"
         "# OUTPUT\n"
-        "chat → deque(['hi', 'ticket #42'], maxlen=100)"
+        "['hi', 'ticket #42']"
         "</div>"
         "<p><b>4) <code>namedtuple</code> — light ticket record</b><br>"
-        "Fixed fields like a mini struct — faster than a full class for read-only rows.</p>"
+        "Fixed fields like a mini struct — access with <code>t.id</code> and <code>t.status</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
         "from collections import namedtuple\n"
         'Ticket = namedtuple("Ticket", "id status")\n'
         't = Ticket(101, "open")\n'
+        "print(t)\n"
         "\n"
         "# OUTPUT\n"
-        "t → Ticket(id=101, status='open')"
+        "Ticket(id=101, status='open')"
         "</div>"
         "<table class=\"data-tbl\">"
         "<tr><th>Tool</th><th>Job</th><th>Output here</th></tr>"

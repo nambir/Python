@@ -568,15 +568,80 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 2 — OrderedDict",
-                "body": "Dict that remembers insertion order. In Python 3.7+ regular dicts also preserve order — OrderedDict adds extra methods.<div class=\"step-pre\">from collections import OrderedDict\n\nod = OrderedDict()\nod[\"a\"] = 1\nod[\"b\"] = 2\nlist(od.keys())   # [\"a\", \"b\"]\nod.move_to_end(\"a\")</div>",
+                "body": "Dict that remembers insertion order. In Python 3.7+ regular dicts also preserve order — OrderedDict adds extra methods.<div class=\"step-pre\">from collections import OrderedDict\n\nod = OrderedDict()\nod[\"a\"] = 1\nod[\"b\"] = 2\nprint(list(od.keys()))   # ['a', 'b']\nod.move_to_end(\"a\")\nprint(list(od.keys()))   # ['b', 'a']</div>",
             },
             {
                 "title": "Step 3 — defaultdict",
-                "body": "Auto-creates a default value for missing keys — great for grouping.<div class=\"step-pre\">from collections import defaultdict\n\ngroups = defaultdict(list)\nfor name, dept in [(\"Anu\", \"IT\"), (\"Ravi\", \"HR\"), (\"Priya\", \"IT\")]:\n    groups[dept].append(name)\n# {\"IT\": [\"Anu\", \"Priya\"], \"HR\": [\"Ravi\"]}</div>",
+                "body": (
+                    "Auto-creates a default value for missing keys — great for grouping tickets by assignee."
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">Plain dict — set value</span>'
+                    '<div class="step-pre">by_assignee = {}\n'
+                    'by_assignee["Ravi"].append(101)\n'
+                    '# KeyError: "Ravi" — key does not exist yet\n\n'
+                    '# Manual fix every time:\n'
+                    'if "Ravi" not in by_assignee:\n'
+                    '    by_assignee["Ravi"] = []\n'
+                    'by_assignee["Ravi"].append(101)</div></div>'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">&#10004; defaultdict(list)</span>'
+                    '<div class="step-pre">from collections import defaultdict\n'
+                    'by_assignee = defaultdict(list)\n'
+                    'by_assignee["Ravi"].append(101)   # OK\n'
+                    'by_assignee["Anu"].append(102)   # OK\n'
+                    'print(dict(by_assignee))\n'
+                    "# {'Ravi': [101], 'Anu': [102]}</div></div></div>"
+                    '<p class="step-result"><b>One trap — read this slowly:</b><br>'
+                    'You might write <code>if myDict["ghost"]:</code> meaning '
+                    '&ldquo;only run if ghost already has tickets.&rdquo;<br>'
+                    '<b>But Python checks the condition first.</b> To evaluate '
+                    '<code>myDict["ghost"]</code>, it must <b>look up</b> that key — and '
+                    '<code>defaultdict</code> creates <code>"ghost": []</code> on lookup.<br>'
+                    'The empty list is falsy, so the <code>if</code> body is skipped — '
+                    'but the unwanted key is already in the dict.</p>'
+                    '<div class="step-pre">from collections import defaultdict\n'
+                    'myDict = defaultdict(list)\n'
+                    'print(dict(myDict))           # {}\n\n'
+                    'if myDict["ghost"]:          # lookup runs FIRST → creates []\n'
+                    '    print("has tickets") # never runs — [] is falsy\n\n'
+                    'print(dict(myDict))           # {\'ghost\': []}  unwanted key!\n\n'
+                    '# Safe — check membership without creating:\n'
+                    'if "ghost" in myDict:\n'
+                    '    print(myDict["ghost"])</div>'
+                    '<div class="step-pre">from collections import defaultdict\n\n'
+                    'groups = defaultdict(list)\n'
+                    'for name, dept in [("Anu", "IT"), ("Ravi", "HR"), ("Priya", "IT")]:\n'
+                    '    groups[dept].append(name)\n'
+                    'print(dict(groups))\n'
+                    '# {"IT": ["Anu", "Priya"], "HR": ["Ravi"]}</div>'
+                ),
             },
             {
                 "title": "Step 4 — ChainMap",
-                "body": "Treats multiple dicts as one — searches in order, first match wins.<div class=\"step-pre\">from collections import ChainMap\n\ndefaults = {\"color\": \"red\", \"size\": \"M\"}\nuser = {\"color\": \"blue\"}\nsettings = ChainMap(user, defaults)\nsettings[\"color\"]   # blue (user wins)\nsettings[\"size\"]    # M (from defaults)</div>",
+                "body": (
+                    "Layers multiple dicts — like <b>defaults + user overrides</b>. "
+                    "<code>ChainMap(user, app_defaults)</code> checks <code>user</code> first; "
+                    "if the key is missing, it falls through to <code>app_defaults</code>. "
+                    "It does <b>not</b> copy or merge the dicts — it searches in order."
+                    '<div class="step-pre">'
+                    "# INPUT\n"
+                    "from collections import ChainMap\n\n"
+                    'app_defaults = {"color": "red", "size": "M"}   # factory / app defaults\n'
+                    'user = {"color": "blue"}                       # user override\n'
+                    'print("app_defaults:", app_defaults)\n'
+                    "print(\"user:\", user)\n\n"
+                    "settings = ChainMap(user, app_defaults)  # user first, then app_defaults\n\n"
+                    'print(settings["color"])   # blue — in user\n'
+                    'print(settings["size"])    # M — not in user → app_defaults\n\n'
+                    "# OUTPUT\n"
+                    "# app_defaults: {'color': 'red', 'size': 'M'}\n"
+                    "# user: {'color': 'blue'}\n"
+                    "# blue\n"
+                    "# M"
+                    "</div>"
+                    '<p class="step-result"><b>Lookup order:</b> '
+                    '<code>ChainMap(A, B, C)</code> → try <code>A</code>, then <code>B</code>, then <code>C</code>. '
+                    '<b>First match wins.</b> Real apps: CLI args → env vars → config file defaults.</p>'
+                ),
             },
             {
                 "title": "Step 5 — namedtuple",

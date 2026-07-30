@@ -513,10 +513,14 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .csharp-float-close:hover { background: #ddd6fe; }
 .csharp-float-body {
-  padding: 14px 16px 16px; font-size: 12px; line-height: 1.5; color: #1a1a2e;
+  padding: 14px 16px 16px; font-size: 12px; font-weight: 400; line-height: 1.5; color: #1a1a2e;
   overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0;
 }
-.csharp-float-body p { margin-bottom: 8px; }
+.csharp-float-body p { margin-bottom: 8px; font-weight: 400; }
+.csharp-float-body b { font-weight: 600; }
+.csharp-float-body code { font-weight: 400; font-size: 11px; }
+.csharp-pop-note { margin-top: 10px; color: #555; font-size: 11px; font-weight: 400; }
+.csharp-pop-note b { font-weight: 600; }
 .csharp-float-body .vs-editor { margin: 6px 0 10px; max-height: none; overflow: visible; }
 .csharp-float-body .vs-editor-compact { max-height: none; }
 .csharp-float-body .vs-editor table.vs-code { font-size: 12px; width: 100%; table-layout: fixed; }
@@ -524,7 +528,6 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .csharp-pop-tbl { margin-top: 6px; font-size: 11px; }
 .csharp-pop-tbl td { vertical-align: top; }
 .csharp-pop-tbl td:first-child { white-space: normal; }
-.csharp-pop-note { margin-top: 10px; color: #555; font-size: 11px; }
 .csharp-diff {
   margin: 0 0 12px; padding: 10px 12px; border: 1px solid #ddd6fe; border-radius: 8px;
   background: linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%);
@@ -3181,12 +3184,14 @@ p = Point(10, 20)
 print(p.x, p.y)               # 10 20
 print(p[0], p[1])             # index still works
 
-# ── ChainMap: search multiple dicts ──
-defaults = {"color": "red", "size": "M"}
-user_prefs = {"color": "blue"}
-combined = ChainMap(user_prefs, defaults)
-print(combined["color"])      # blue (user_prefs first)
-print(combined["size"])       # M    (falls through to defaults)''') + '''
+# ── ChainMap: layered lookup (first dict wins) ──
+app_defaults = {"color": "red", "size": "M"}
+user = {"color": "blue"}
+print("app_defaults:", app_defaults)
+print("user:", user)
+settings = ChainMap(user, app_defaults)   # user first, then app_defaults
+print(settings["color"])              # blue — found in user
+print(settings["size"])               # M — falls through to app_defaults''') + '''
 
 
 <h3>Common mistakes</h3>
@@ -3201,22 +3206,40 @@ words = ["a", "b", "a", "c", "a"]
 counts = Counter(words)
 print(counts)         # Counter({'a':3,'b':1,'c':1})
 print(counts.most_common(2))  # top 2</div></div></div><span class="mistake-note">&#128161; <code>Counter</code> handles missing keys automatically and provides <code>.most_common(n)</code>, arithmetic operators, and subtraction.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; using <code>list</code> as a queue (O(n) <code>popleft</code>)</span><span class="mistake-desc">Removing from the front of a list (<code>list.pop(0)</code>) shifts all elements &mdash; O(n). <code>deque</code> does it in O(1).</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">queue = [1, 2, 3, 4, 5]
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; grouping with plain <code>dict</code> instead of <code>defaultdict(list)</code></span><span class="mistake-desc">When you <code>.append()</code> to a missing key, a normal dict raises <code>KeyError</code>. You must create the empty list yourself first — easy to forget.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Plain dict — set value</span><div class="step-pre">by_assignee = {}
+by_assignee["Ravi"].append(101)
+# KeyError: 'Ravi' — key does not exist yet
+
+# Manual fix (verbose):
+if "Ravi" not in by_assignee:
+    by_assignee["Ravi"] = []
+by_assignee["Ravi"].append(101)</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; With defaultdict</span><div class="step-pre">from collections import defaultdict
+by_assignee = defaultdict(list)
+by_assignee["Ravi"].append(101)   # OK
+by_assignee["Anu"].append(102)   # OK
+print(dict(by_assignee))
+# {'Ravi': [101], 'Anu': [102]}</div></div></div><span class="mistake-note">&#128161; <code>defaultdict(list)</code> calls <code>list()</code> the first time you touch a missing key — you get <code>[]</code> automatically, then <code>.append()</code> works.</span></div>
+<div class="mistake-box"><span class="mistake-title">&#9888; One trap &mdash; <code>if myDict["key"]:</code> can create a key by accident</span><span class="mistake-desc">You might think <code>if myDict["ghost"]:</code> means &ldquo;skip if ghost has no tickets.&rdquo; <b>Python evaluates the condition first</b> — looking up <code>myDict["ghost"]</code> creates <code>"ghost": []</code>. The empty list is falsy (if body skipped), but the key is already in the dict.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Looks safe — adds key anyway</span><div class="step-pre">from collections import defaultdict
+myDict = defaultdict(list)
+print(dict(myDict))           # {}
+
+if myDict["ghost"]:          # Step 1: lookup → creates "ghost": []
+    print("tickets")    # Step 2: [] is falsy → skipped
+
+print(dict(myDict))           # {"ghost": []}  surprise!</div></div><div class="mc-col mc-good"><span class="mc-lbl">Safe check first</span><div class="step-pre">from collections import defaultdict
+myDict = defaultdict(list)
+
+if "ghost" in myDict:        # only asks — never creates
+    print(myDict["ghost"])
+
+myDict["Ravi"].append(101)   # OK — you mean to use this key
+print(dict(myDict))          # {"Ravi": [101]}</div></div></div><span class="mistake-note">&#128161; <b>Rule:</b> <code>"key" in myDict</code> = peek (safe). <code>myDict["key"]</code> = touch (creates missing key). Use <code>myDict[key].append(...)</code> only when you want that group.</span></div>
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; using <code>list</code> as a queue (O(n) <code>popleft</code>)</span><span class="mistake-desc">Removing from the front of a list (<code>list.pop(0)</code>) shifts all elements &mdash; O(n). <code>deque</code> does it in O(1).</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">queue = [1, 2, 3, 4, 5]
 queue.pop(0)   # O(n) — shifts every element
 queue.pop(0)   # slow for large queues</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">from collections import deque
 queue = deque([1, 2, 3, 4, 5])
 queue.popleft()   # O(1) — fast!
 queue.appendleft(0)  # O(1) prepend</div></div></div><span class="mistake-note">&#128161; Use <code>deque</code> whenever you need efficient adds/removes from <b>both ends</b>. Use <code>list</code> for random access by index.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; <code>defaultdict</code> creates missing keys on access</span><span class="mistake-desc">Accessing a missing key in a <code>defaultdict</code> creates it. This can pollute the dict if you check membership accidentally.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">from collections import defaultdict
-d = defaultdict(list)
-if d["missing_key"]:   # creates key with [] !
-    pass
-print(d)   # defaultdict with extra key</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">from collections import defaultdict
-d = defaultdict(list)
-# Use .get() or check without subscript:
-if "missing_key" in d:  # safe check
-    pass
-d["real_key"].append(1)   # intended use</div></div></div><span class="mistake-note">&#128161; Only access a <code>defaultdict</code> by subscript when you <em>intend</em> to create or use the key. Use <code>in</code> or <code>.get()</code> for membership checks.</span></div>
 <h3>Before &rarr; After (Pythonic)</h3>
 <div class="before-after">
   <div class="ba-col ba-bad"><div class="ba-label">&#10060; Manual grouping</div><div class="step-pre">records = [("A",1),("B",2),("A",3)]
@@ -3260,7 +3283,7 @@ for k, v in records:
       <div class="quiz-reveal">namedtuple has named fields (<code>p.x</code>, <code>p.y</code>) while regular tuples use only index access (<code>p[0]</code>).</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(user, defaults)['key']</code> — which dict is searched first?
+  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(user, app_defaults)['key']</code> — which dict is searched first?
     <details class="quiz-ans"><summary>Show answer</summary>
       <div class="quiz-reveal"><code>user</code> &mdash; ChainMap searches maps in order, so the first mapping takes priority.</div>
     </details>
