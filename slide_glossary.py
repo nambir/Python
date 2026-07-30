@@ -227,9 +227,9 @@ GLOSSARY: dict[int, str] = {
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>Counter</td><td><b>Counter</b> = dict subclass counting hashable items — one-line frequency tally. __CSHARP_COUNTER_BTN__</td><td><code>Counter("hello")</code></td></tr>
 <tr><td>defaultdict</td><td><b>defaultdict</b> = dict with factory for missing keys — no <code>KeyError</code>. __CSHARP_DEFAULTDICT_BTN__</td><td><code>defaultdict(list)</code></td></tr>
-<tr><td>deque</td><td><b>deque</b> = double-ended queue — fast append/pop at <b>both</b> ends. __CSHARP_DEQUE_BTN__</td><td><code>deque.appendleft(0)</code></td></tr>
+<tr><td>deque</td><td><b>deque</b> = double-ended queue — fast append/pop at both ends. <code>maxlen</code> optional. __CSHARP_DEQUE_BTN__</td><td><code>deque()</code> / <code>deque(maxlen=2)</code></td></tr>
 <tr><td>namedtuple</td><td><b>namedtuple</b> = tuple with named fields — lightweight record. __CSHARP_NAMEDTUPLE_BTN__</td><td><code>Point(10, 20).x</code></td></tr>
-<tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. __CSHARP_CHAINMAP_BTN__</td><td><code>ChainMap(user, app_defaults)</code></td></tr>
+<tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. __CSHARP_CHAINMAP_BTN__</td><td><code>ChainMap(Dict1, Dict2)</code></td></tr>
 <tr><td>OrderedDict</td><td><b>OrderedDict</b> = dict remembering insertion order (<b>regular dict since 3.7</b>). __CSHARP_ORDEREDDICT_BTN__</td><td>legacy code</td></tr>
 </table>""",
     23: """

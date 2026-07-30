@@ -618,28 +618,30 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {
                 "title": "Step 4 — ChainMap",
                 "body": (
-                    "Layers multiple dicts — like <b>defaults + user overrides</b>. "
-                    "<code>ChainMap(user, app_defaults)</code> checks <code>user</code> first; "
-                    "if the key is missing, it falls through to <code>app_defaults</code>. "
+                    "Layers multiple dicts into one view. "
+                    "<code>ChainMap(Dict1, Dict2)</code> checks <code>Dict1</code> first; "
+                    "if the key is missing, it falls through to <code>Dict2</code>. "
                     "It does <b>not</b> copy or merge the dicts — it searches in order."
                     '<div class="step-pre">'
                     "# INPUT\n"
                     "from collections import ChainMap\n\n"
-                    'app_defaults = {"color": "red", "size": "M"}   # factory / app defaults\n'
-                    'user = {"color": "blue"}                       # user override\n'
-                    'print("app_defaults:", app_defaults)\n'
-                    "print(\"user:\", user)\n\n"
-                    "settings = ChainMap(user, app_defaults)  # user first, then app_defaults\n\n"
-                    'print(settings["color"])   # blue — in user\n'
-                    'print(settings["size"])    # M — not in user → app_defaults\n\n'
+                    'Dict1 = {"color": "blue"}                   # checked first\n'
+                    'Dict2 = {"color": "red", "size": "M"}       # fallback\n'
+                    'print("Dict1:", Dict1)\n'
+                    'print("Dict2:", Dict2)\n\n'
+                    "CombinedDict = ChainMap(Dict1, Dict2)  # Dict1 first, then Dict2\n\n"
+                    "print(CombinedDict)           # whole ChainMap\n"
+                    'print(CombinedDict["color"])  # blue — in Dict1\n'
+                    'print(CombinedDict["size"])   # M — not in Dict1 → Dict2\n\n'
                     "# OUTPUT\n"
-                    "# app_defaults: {'color': 'red', 'size': 'M'}\n"
-                    "# user: {'color': 'blue'}\n"
+                    "# Dict1: {'color': 'blue'}\n"
+                    "# Dict2: {'color': 'red', 'size': 'M'}\n"
+                    "# ChainMap({'color': 'blue'}, {'color': 'red', 'size': 'M'})\n"
                     "# blue\n"
                     "# M"
                     "</div>"
                     '<p class="step-result"><b>Lookup order:</b> '
-                    '<code>ChainMap(A, B, C)</code> → try <code>A</code>, then <code>B</code>, then <code>C</code>. '
+                    '<code>ChainMap(Dict1, Dict2)</code> → try <code>Dict1</code>, then <code>Dict2</code>. '
                     '<b>First match wins.</b> Real apps: CLI args → env vars → config file defaults.</p>'
                 ),
             },
@@ -649,7 +651,31 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 6 — deque",
-                "body": "Double-ended queue — fast append/pop from both ends.<div class=\"step-pre\">from collections import deque\n\nd = deque([1, 2, 3])\nd.appendleft(0)    # deque([0, 1, 2, 3])\nd.pop()            # 3\nd.popleft()        # 0</div>",
+                "body": (
+                    "Double-ended queue — fast append/pop at both ends. "
+                    "<code>maxlen</code> is <b>optional</b>."
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">1) deque() — no max</span>'
+                    '<div class="step-pre">'
+                    "from collections import deque\n\n"
+                    "d = deque([1, 2, 3])      # grows freely\n"
+                    "d.append(4)              # right → [1,2,3,4]\n"
+                    "d.appendleft(0)          # left  → [0,1,2,3,4]\n"
+                    "print(d.popleft())       # 0\n"
+                    "print(list(d))           # [1, 2, 3, 4]"
+                    "</div></div>"
+                    '<div class="mc-col mc-good"><span class="mc-lbl">2) deque(maxlen=…) — rolling</span>'
+                    '<div class="step-pre">'
+                    "from collections import deque\n\n"
+                    "d = deque(maxlen=2)      # keep last 2 only\n"
+                    'd.append("hi")\n'
+                    'd.append("ticket #42")\n'
+                    'd.append("bye")          # "hi" dropped\n'
+                    "print(list(d))           # ['ticket #42', 'bye']"
+                    "</div></div></div>"
+                    '<p class="step-result"><b>Rule:</b> <code>deque()</code> = unlimited. '
+                    '<code>deque(maxlen=n)</code> = keep last <code>n</code> only.</p>'
+                ),
             },
             {
                 "title": "Step 7 — UserDict, UserList & UserString",
@@ -660,7 +686,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "When use defaultdict vs normal dict?", "a": "When you would write <code>if key not in d: d[key] = []</code> every time — defaultdict creates the default for you."},
             {"q": "namedtuple vs dataclass?", "a": "namedtuple is immutable and lighter. dataclass is better when you need mutability, defaults, or methods."},
             {"q": "When use deque over list?", "a": "When you need fast <code>appendleft</code>/<code>popleft</code> — queues, BFS, sliding windows. List pop(0) is O(n)."},
-            {"q": "What is ChainMap for?", "a": "Layered config: defaults + user overrides + env vars. Lookup walks dicts left to right."},
+            {"q": "What is ChainMap for?", "a": "Layered lookup: <code>ChainMap(Dict1, Dict2)</code> checks Dict1 first, then Dict2. First match wins — no copy/merge."},
         ],
     },
     23: {

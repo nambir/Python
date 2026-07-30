@@ -548,14 +548,164 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   .csharp-diff-grid { grid-template-columns: 1fr; }
   .csharp-diff-vs { text-align: center; }
 }
+
+.nav-hero {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+  width: min(1400px, calc(100vw - 48px)); margin: 0 auto 8px; flex-wrap: wrap;
+}
+.nav-hero-main { flex: 1; min-width: 240px; text-align: center; }
+.nav-hero-main h1 { font-size: 34px; margin-bottom: 4px; }
+.nav-hero-main .sub { font-size: 16px; color: #0066cc; }
+.nav-hero-main .org { font-size: 13px; color: #666; margin: 6px 0 0; }
+.notes-panel {
+  width: min(320px, 100%); flex-shrink: 0; text-align: left;
+  background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+  border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+.notes-panel h2 {
+  font-size: 14px; color: #1e40af; margin: 0 0 6px; letter-spacing: .4px;
+  text-transform: uppercase;
+}
+.notes-panel p { font-size: 12px; color: #475569; margin: 0 0 10px; line-height: 1.4; }
+.notes-panel a.notes-link {
+  display: block; padding: 8px 10px; margin: 0 0 6px;
+  background: #fff; border: 1px solid #93c5fd; border-radius: 6px;
+  color: #0066cc; font-size: 13px; font-weight: 600; text-decoration: none;
+}
+.notes-panel a.notes-link:hover { background: #dbeafe; }
+.notes-panel a.notes-link span { display: block; font-size: 11px; font-weight: 400; color: #64748b; margin-top: 2px; }
+.notes-badge {
+  display: inline-block; font-size: 10px; font-weight: 700; color: #fff;
+  background: #2563eb; border-radius: 999px; padding: 2px 8px; margin-right: 6px;
+}
+
+.notes-slide .slide-title { border-bottom-color: #7c3aed; }
+.notes-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px;
+}
+@media (max-width: 900px) {
+  .nav-hero { justify-content: center; }
+  .nav-hero-main { text-align: center; width: 100%; }
+  .notes-panel { width: 100%; max-width: 420px; margin: 0 auto; }
+  .notes-grid { grid-template-columns: 1fr; }
+}
+
+.mm-card {
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; background: #fff;
+}
+.mm-card h3 { margin-top: 0; color: #5b21b6; }
+.mm-center {
+  text-align: center; margin: 8px auto 12px; max-width: 220px;
+  background: #ede9fe; border: 2px solid #7c3aed; border-radius: 12px;
+  padding: 10px 12px; font-weight: 700; color: #4c1d95; font-size: 13px;
+}
+.mm-branches {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.mm-branch {
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.4;
+  border: 1px solid #cbd5e1; background: #f8fafc;
+}
+.mm-branch b { display: block; color: #0066cc; margin-bottom: 3px; font-size: 12px; }
+.mm-branch.dict { border-color: #93c5fd; background: #eff6ff; }
+.mm-branch.dd { border-color: #86efac; background: #f0fdf4; }
+.mm-branch.key { border-color: #fcd34d; background: #fffbeb; }
+.mm-branch.cm { border-color: #c4b5fd; background: #f5f3ff; }
+
+.flow-box {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px;
+}
+.flow-q {
+  background: #fff7ed; border: 2px solid #f97316; border-radius: 8px;
+  padding: 10px 14px; text-align: center; font-weight: 600; color: #9a3412;
+  max-width: 300px; line-height: 1.35;
+  position: relative;
+}
+.flow-q::before {
+  content: "Decision"; display: block; font-size: 10px; font-weight: 700;
+  color: #c2410c; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px;
+}
+.flow-arrow { color: #64748b; font-weight: 700; font-size: 14px; }
+.flow-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; }
+.flow-ans {
+  border-radius: 8px; padding: 8px 10px; max-width: 200px; border: 1px solid #cbd5e1;
+  background: #f8fafc; text-align: left; line-height: 1.4;
+}
+.flow-ans b { display: block; margin-bottom: 2px; color: #0066cc; }
+.flow-ans.yes { border-color: #86efac; background: #f0fdf4; }
+.flow-ans.no { border-color: #fecaca; background: #fef2f2; }
+.flow-legend { margin-top: 10px; font-size: 11px; color: #64748b; text-align: center; }
+
+/* Design 3 — 2x2 decision matrix */
+.mx-wrap { display: grid; grid-template-columns: 72px 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 8px; margin-top: 8px; font-size: 12px; }
+.mx-corner { grid-column: 1; grid-row: 1; }
+.mx-colhead { text-align: center; font-weight: 700; color: #1e40af; font-size: 11px; padding: 6px; background: #eff6ff; border-radius: 6px; }
+.mx-rowhead {
+  writing-mode: horizontal-tb; font-weight: 700; color: #166534; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  background: #f0fdf4; border-radius: 6px; padding: 6px; line-height: 1.25;
+}
+.mx-cell {
+  border-radius: 8px; padding: 10px; border: 1px solid #cbd5e1; background: #f8fafc; line-height: 1.4;
+  min-height: 88px;
+}
+.mx-cell b { display: block; margin-bottom: 4px; font-size: 13px; }
+.mx-cell.a { border-color: #86efac; background: #f0fdf4; }
+.mx-cell.a b { color: #166534; }
+.mx-cell.b { border-color: #c4b5fd; background: #f5f3ff; }
+.mx-cell.b b { color: #5b21b6; }
+.mx-cell.c { border-color: #93c5fd; background: #eff6ff; }
+.mx-cell.c b { color: #1d4ed8; }
+.mx-cell.d { border-color: #fcd34d; background: #fffbeb; }
+.mx-cell.d b { color: #a16207; }
+.mx-axis { font-size: 10px; color: #64748b; text-align: center; margin-top: 8px; }
+
+/* Design 4 — horizontal path / metro */
+.path-track {
+  display: flex; align-items: stretch; gap: 0; margin-top: 10px; flex-wrap: wrap; justify-content: center;
+}
+.path-stop {
+  flex: 1 1 140px; max-width: 180px; min-width: 130px;
+  border-radius: 10px; padding: 10px; border: 2px solid #cbd5e1; background: #fff;
+  font-size: 12px; line-height: 1.4; position: relative;
+}
+.path-stop .num {
+  width: 24px; height: 24px; border-radius: 50%; background: #0066cc; color: #fff;
+  font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 8px;
+}
+.path-stop b { display: block; text-align: center; color: #0066cc; margin-bottom: 4px; }
+.path-connector {
+  display: flex; align-items: center; color: #94a3b8; font-weight: 700; font-size: 18px; padding: 0 2px;
+  align-self: center;
+}
+.path-stop.s1 { border-color: #93c5fd; }
+.path-stop.s2 { border-color: #86efac; }
+.path-stop.s2 .num { background: #16a34a; }
+.path-stop.s3 { border-color: #c4b5fd; }
+.path-stop.s3 .num { background: #7c3aed; }
+.path-stop.s4 { border-color: #fcd34d; }
+.path-stop.s4 .num { background: #ca8a04; }
+@media (max-width: 700px) {
+  .path-connector { display: none; }
+  .mx-wrap { grid-template-columns: 1fr 1fr; }
+  .mx-rowhead { writing-mode: horizontal-tb; }
+}
+
 </style>
 </head>
 <body>
 <div class="slide active" id="slide-0">
 <div class="nav-content">
-  <h1>Python Training 2026</h1>
-  <div class="sub">Batch 2 &middot; Week-by-week curriculum</div>
-  <div class="org">Click a topic below to jump to that slide</div>
+  <div class="nav-hero">
+    <div class="nav-hero-main">
+      <h1>Python Training 2026</h1>
+      <div class="sub">Batch 2 &middot; Week-by-week curriculum</div>
+      <div class="org">Click a topic below to jump to that slide</div>
+    </div>
+    <aside class="notes-panel" aria-label="Notes"><h2>Notes</h2><p>Quick mindmaps &amp; flowcharts for topics we cover — start here.</p><a class="notes-link" href="#100" onclick="goSlide(100); return false;"><span class="notes-badge">Notes</span>Mindmap<span>dict · defaultdict · key check · ChainMap</span></a></aside>
+  </div>
   <div class="audio-player" id="player-0" data-slide="0">
   <audio id="audio-0" preload="metadata" src="audio/slide-00.mp3"></audio>
   <div class="audio-controls">
@@ -4436,9 +4586,9 @@ max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" 
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>Counter</td><td><b>Counter</b> = dict subclass counting hashable items — one-line frequency tally. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('counter-linq')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>Counter("hello")</code></td></tr>
 <tr><td>defaultdict</td><td><b>defaultdict</b> = dict with factory for missing keys — no <code>KeyError</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('defaultdict-dict')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>defaultdict(list)</code></td></tr>
-<tr><td>deque</td><td><b>deque</b> = double-ended queue — fast append/pop at <b>both</b> ends. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('deque-linkedlist')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>deque.appendleft(0)</code></td></tr>
+<tr><td>deque</td><td><b>deque</b> = double-ended queue — fast append/pop at both ends. <code>maxlen</code> optional. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('deque-linkedlist')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>deque()</code> / <code>deque(maxlen=2)</code></td></tr>
 <tr><td>namedtuple</td><td><b>namedtuple</b> = tuple with named fields — lightweight record. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('namedtuple-record')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>Point(10, 20).x</code></td></tr>
-<tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('chainmap-config')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>ChainMap(user, app_defaults)</code></td></tr>
+<tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('chainmap-config')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>ChainMap(Dict1, Dict2)</code></td></tr>
 <tr><td>OrderedDict</td><td><b>OrderedDict</b> = dict remembering insertion order (<b>regular dict since 3.7</b>). <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('ordereddict-dict')" title="Open draggable C# comparison window">C# Comparison</button></td><td>legacy code</td></tr>
 </table><div class="real-life"><b>Real-life example:</b> <b>Support dashboard:</b> Count statuses, group by assignee, chat buffer, light record — each collection with <b>input → output</b>.<p><b>1) <code>Counter</code> — status pie chart</b><br>Pass a list of statuses to <code>Counter</code> — it tallies how many times each value appears (like counting colored chips for a pie chart). Use <code>print</code> to see the result.</p><div class="step-pre"># INPUT
 from collections import Counter
@@ -4455,22 +4605,31 @@ by_assignee["Anu"].append(102)
 print(dict(by_assignee))
 
 # OUTPUT
-{'Ravi': [101], 'Anu': [102]}</div><p><b>3) <code>deque(maxlen=…)</code> — rolling chat buffer</b><br>Keep only the last 100 messages; when full, the oldest message is dropped automatically.</p><div class="step-pre"># INPUT
+{'Ravi': [101], 'Anu': [102]}</div><p><b>3) <code>deque()</code> first — then optional <code>maxlen</code></b><br><code>maxlen</code> is <b>not required</b>. Use plain <code>deque()</code> for a normal queue. Add <code>maxlen</code> only when you want a rolling buffer that drops the oldest item.</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) deque() — no max</span><div class="step-pre"># INPUT
 from collections import deque
-chat = deque(maxlen=100)
+chat = deque()            # grows freely
 chat.append("hi")
 chat.append("ticket #42")
 print(list(chat))
 
 # OUTPUT
-['hi', 'ticket #42']</div><p><b>4) <code>namedtuple</code> — light ticket record</b><br>Fixed fields like a mini struct — access with <code>t.id</code> and <code>t.status</code>.</p><div class="step-pre"># INPUT
+['hi', 'ticket #42']</div></div><div class="mc-col mc-good"><span class="mc-lbl">2) deque(maxlen=…) — rolling</span><div class="step-pre"># INPUT
+from collections import deque
+chat = deque(maxlen=2)    # keep last 2 only
+chat.append("hi")
+chat.append("ticket #42")
+chat.append("bye")      # "hi" dropped
+print(list(chat))
+
+# OUTPUT
+['ticket #42', 'bye']</div></div></div><p class="step-result"><b>Rule:</b> <code>deque()</code> = unlimited. <code>deque(maxlen=n)</code> = keep last <code>n</code> items only.</p><p><b>4) <code>namedtuple</code> — light ticket record</b><br>Fixed fields like a mini struct — access with <code>t.id</code> and <code>t.status</code>.</p><div class="step-pre"># INPUT
 from collections import namedtuple
 Ticket = namedtuple("Ticket", "id status")
 t = Ticket(101, "open")
 print(t)
 
 # OUTPUT
-Ticket(id=101, status='open')</div><table class="data-tbl"><tr><th>Tool</th><th>Job</th><th>Output here</th></tr><tr><td><code>Counter</code></td><td>Count statuses</td><td><code>{'open': 3, 'closed': 1}</code></td></tr><tr><td><code>defaultdict</code></td><td>Group by assignee</td><td><code>{'Ravi': [101], 'Anu': [102]}</code></td></tr><tr><td><code>deque</code></td><td>Rolling chat buffer</td><td>Last 100 messages kept</td></tr><tr><td><code>namedtuple</code></td><td>Light record</td><td><code>Ticket(id=101, status='open')</code></td></tr></table></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Counter</b><br>Counts hashable elements — like a frequency table.<div class="step-pre">from collections import Counter
+Ticket(id=101, status='open')</div><table class="data-tbl"><tr><th>Tool</th><th>Job</th><th>Output here</th></tr><tr><td><code>Counter</code></td><td>Count statuses</td><td><code>{'open': 3, 'closed': 1}</code></td></tr><tr><td><code>defaultdict</code></td><td>Group by assignee</td><td><code>{'Ravi': [101], 'Anu': [102]}</code></td></tr><tr><td><code>deque</code></td><td>Fast both ends; optional maxlen buffer</td><td><code>deque()</code> or <code>deque(maxlen=2)</code></td></tr><tr><td><code>namedtuple</code></td><td>Light record</td><td><code>Ticket(id=101, status='open')</code></td></tr></table></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Counter</b><br>Counts hashable elements — like a frequency table.<div class="step-pre">from collections import Counter
 
 c = Counter("hello")
 # Counter({'l': 2, 'h': 1, 'e': 1, 'o': 1})
@@ -4511,34 +4670,43 @@ groups = defaultdict(list)
 for name, dept in [("Anu", "IT"), ("Ravi", "HR"), ("Priya", "IT")]:
     groups[dept].append(name)
 print(dict(groups))
-# {"IT": ["Anu", "Priya"], "HR": ["Ravi"]}</div></li><li><b>Step 4 — ChainMap</b><br>Layers multiple dicts — like <b>defaults + user overrides</b>. <code>ChainMap(user, app_defaults)</code> checks <code>user</code> first; if the key is missing, it falls through to <code>app_defaults</code>. It does <b>not</b> copy or merge the dicts — it searches in order.<div class="step-pre"># INPUT
+# {"IT": ["Anu", "Priya"], "HR": ["Ravi"]}</div></li><li><b>Step 4 — ChainMap</b><br>Layers multiple dicts into one view. <code>ChainMap(Dict1, Dict2)</code> checks <code>Dict1</code> first; if the key is missing, it falls through to <code>Dict2</code>. It does <b>not</b> copy or merge the dicts — it searches in order.<div class="step-pre"># INPUT
 from collections import ChainMap
 
-app_defaults = {"color": "red", "size": "M"}   # factory / app defaults
-user = {"color": "blue"}                       # user override
-print("app_defaults:", app_defaults)
-print("user:", user)
+Dict1 = {"color": "blue"}                   # checked first
+Dict2 = {"color": "red", "size": "M"}       # fallback
+print("Dict1:", Dict1)
+print("Dict2:", Dict2)
 
-settings = ChainMap(user, app_defaults)  # user first, then app_defaults
+CombinedDict = ChainMap(Dict1, Dict2)  # Dict1 first, then Dict2
 
-print(settings["color"])   # blue — in user
-print(settings["size"])    # M — not in user → app_defaults
+print(CombinedDict)           # whole ChainMap
+print(CombinedDict["color"])  # blue — in Dict1
+print(CombinedDict["size"])   # M — not in Dict1 → Dict2
 
 # OUTPUT
-# app_defaults: {'color': 'red', 'size': 'M'}
-# user: {'color': 'blue'}
+# Dict1: {'color': 'blue'}
+# Dict2: {'color': 'red', 'size': 'M'}
+# ChainMap({'color': 'blue'}, {'color': 'red', 'size': 'M'})
 # blue
-# M</div><p class="step-result"><b>Lookup order:</b> <code>ChainMap(A, B, C)</code> → try <code>A</code>, then <code>B</code>, then <code>C</code>. <b>First match wins.</b> Real apps: CLI args → env vars → config file defaults.</p></li><li><b>Step 5 — namedtuple</b><br>Lightweight tuple with named fields — readable and immutable.<div class="step-pre">from collections import namedtuple
+# M</div><p class="step-result"><b>Lookup order:</b> <code>ChainMap(Dict1, Dict2)</code> → try <code>Dict1</code>, then <code>Dict2</code>. <b>First match wins.</b> Real apps: CLI args → env vars → config file defaults.</p></li><li><b>Step 5 — namedtuple</b><br>Lightweight tuple with named fields — readable and immutable.<div class="step-pre">from collections import namedtuple
 
 Point = namedtuple("Point", ["x", "y"])
 p = Point(10, 20)
 p.x, p.y   # 10, 20
-p[0]       # 10 (still indexable)</div></li><li><b>Step 6 — deque</b><br>Double-ended queue — fast append/pop from both ends.<div class="step-pre">from collections import deque
+p[0]       # 10 (still indexable)</div></li><li><b>Step 6 — deque</b><br>Double-ended queue — fast append/pop at both ends. <code>maxlen</code> is <b>optional</b>.<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) deque() — no max</span><div class="step-pre">from collections import deque
 
-d = deque([1, 2, 3])
-d.appendleft(0)    # deque([0, 1, 2, 3])
-d.pop()            # 3
-d.popleft()        # 0</div></li><li><b>Step 7 — UserDict, UserList & UserString</b><br>Subclass-friendly wrappers — override methods without breaking built-in internals.<div class="step-pre">from collections import UserDict
+d = deque([1, 2, 3])      # grows freely
+d.append(4)              # right → [1,2,3,4]
+d.appendleft(0)          # left  → [0,1,2,3,4]
+print(d.popleft())       # 0
+print(list(d))           # [1, 2, 3, 4]</div></div><div class="mc-col mc-good"><span class="mc-lbl">2) deque(maxlen=…) — rolling</span><div class="step-pre">from collections import deque
+
+d = deque(maxlen=2)      # keep last 2 only
+d.append("hi")
+d.append("ticket #42")
+d.append("bye")          # "hi" dropped
+print(list(d))           # ['ticket #42', 'bye']</div></div></div><p class="step-result"><b>Rule:</b> <code>deque()</code> = unlimited. <code>deque(maxlen=n)</code> = keep last <code>n</code> only.</p></li><li><b>Step 7 — UserDict, UserList & UserString</b><br>Subclass-friendly wrappers — override methods without breaking built-in internals.<div class="step-pre">from collections import UserDict
 
 class CaseInsensitiveDict(UserDict):
     def __setitem__(self, key, value):
@@ -4659,9 +4827,9 @@ for k, v in records:
       <div class="quiz-reveal">namedtuple has named fields (<code>p.x</code>, <code>p.y</code>) while regular tuples use only index access (<code>p[0]</code>).</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(user, app_defaults)['key']</code> — which dict is searched first?
+  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(Dict1, Dict2)['key']</code> — which dict is searched first?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>user</code> &mdash; ChainMap searches maps in order, so the first mapping takes priority.</div>
+      <div class="quiz-reveal"><code>Dict1</code> &mdash; ChainMap searches maps in order, so the first mapping takes priority.</div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> <code>deque(maxlen=3)</code> — what happens when you append a 4th item?
@@ -4670,7 +4838,7 @@ for k, v in records:
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> When use defaultdict vs normal dict?</p><p class="qa-a"><b>A:</b> When you would write <code>if key not in d: d[key] = []</code> every time — defaultdict creates the default for you.</p><p class="qa-q"><b>Q:</b> namedtuple vs dataclass?</p><p class="qa-a"><b>A:</b> namedtuple is immutable and lighter. dataclass is better when you need mutability, defaults, or methods.</p><p class="qa-q"><b>Q:</b> When use deque over list?</p><p class="qa-a"><b>A:</b> When you need fast <code>appendleft</code>/<code>popleft</code> — queues, BFS, sliding windows. List pop(0) is O(n).</p><p class="qa-q"><b>Q:</b> What is ChainMap for?</p><p class="qa-a"><b>A:</b> Layered config: defaults + user overrides + env vars. Lookup walks dicts left to right.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> When use defaultdict vs normal dict?</p><p class="qa-a"><b>A:</b> When you would write <code>if key not in d: d[key] = []</code> every time — defaultdict creates the default for you.</p><p class="qa-q"><b>Q:</b> namedtuple vs dataclass?</p><p class="qa-a"><b>A:</b> namedtuple is immutable and lighter. dataclass is better when you need mutability, defaults, or methods.</p><p class="qa-q"><b>Q:</b> When use deque over list?</p><p class="qa-a"><b>A:</b> When you need fast <code>appendleft</code>/<code>popleft</code> — queues, BFS, sliding windows. List pop(0) is O(n).</p><p class="qa-q"><b>Q:</b> What is ChainMap for?</p><p class="qa-a"><b>A:</b> Layered lookup: <code>ChainMap(Dict1, Dict2)</code> checks Dict1 first, then Dict2. First match wins — no copy/merge.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -4701,11 +4869,18 @@ groups[&quot;fruit&quot;].append(&quot;banana&quot;)
 groups[&quot;veg&quot;].append(&quot;carrot&quot;)
 print(dict(groups))           # {&#x27;fruit&#x27;:[&#x27;apple&#x27;,&#x27;banana&#x27;],&#x27;veg&#x27;:[&#x27;carrot&#x27;]}
 
-# ── deque: fast double-ended queue ──
-dq = deque([1, 2, 3])
+# ── deque: fast double-ended queue (maxlen optional) ──
+dq = deque([1, 2, 3])         # no max — grows freely
 dq.append(4)                  # add right  → [1,2,3,4]
 dq.appendleft(0)              # add left   → [0,1,2,3,4]
 print(dq.popleft())           # remove left → 0
+
+# optional: rolling buffer — oldest drops when full
+buf = deque(maxlen=2)
+buf.append(&quot;hi&quot;)
+buf.append(&quot;ticket #42&quot;)
+buf.append(&quot;bye&quot;)             # &quot;hi&quot; dropped
+print(list(buf))              # [&#x27;ticket #42&#x27;, &#x27;bye&#x27;]
 
 # ── namedtuple: tuple with named fields ──
 Point = namedtuple(&quot;Point&quot;, [&quot;x&quot;, &quot;y&quot;])
@@ -4714,13 +4889,14 @@ print(p.x, p.y)               # 10 20
 print(p[0], p[1])             # index still works
 
 # ── ChainMap: layered lookup (first dict wins) ──
-app_defaults = {&quot;color&quot;: &quot;red&quot;, &quot;size&quot;: &quot;M&quot;}
-user = {&quot;color&quot;: &quot;blue&quot;}
-print(&quot;app_defaults:&quot;, app_defaults)
-print(&quot;user:&quot;, user)
-settings = ChainMap(user, app_defaults)   # user first, then app_defaults
-print(settings[&quot;color&quot;])              # blue — found in user
-print(settings[&quot;size&quot;])               # M — falls through to app_defaults</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
+Dict1 = {&quot;color&quot;: &quot;blue&quot;}                   # checked first
+Dict2 = {&quot;color&quot;: &quot;red&quot;, &quot;size&quot;: &quot;M&quot;}       # fallback
+print(&quot;Dict1:&quot;, Dict1)
+print(&quot;Dict2:&quot;, Dict2)
+CombinedDict = ChainMap(Dict1, Dict2)       # Dict1 first, then Dict2
+print(CombinedDict)                       # ChainMap({&#x27;color&#x27;: &#x27;blue&#x27;}, {&#x27;color&#x27;: &#x27;red&#x27;, &#x27;size&#x27;: &#x27;M&#x27;})
+print(CombinedDict[&quot;color&quot;])              # blue — found in Dict1
+print(CombinedDict[&quot;size&quot;])               # M — falls through to Dict2</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">Counter</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">defaultdict</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ChainMap</span></td></tr>
 <tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># ── Counter: count occurrences ──</span></td></tr>
@@ -4735,26 +4911,34 @@ print(settings[&quot;size&quot;])               # M — falls through to app_def
 <tr><td class="gutter">12</td><td class="src"><span class="t-id">groups</span><span class="t-op">[</span><span class="t-str">&quot;veg&quot;</span><span class="t-op">]</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;carrot&quot;</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">13</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">dict</span><span class="t-op">(</span><span class="t-id">groups</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># {&#x27;fruit&#x27;:[&#x27;apple&#x27;,&#x27;banana&#x27;],&#x27;veg&#x27;:[&#x27;carrot&#x27;]}</span></td></tr>
 <tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">15</td><td class="src"><span class="t-cm"># ── deque: fast double-ended queue ──</span></td></tr>
-<tr><td class="gutter">16</td><td class="src"><span class="t-id">dq</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">]</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-cm"># ── deque: fast double-ended queue (maxlen optional) ──</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-id">dq</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># no max — grows freely</span></td></tr>
 <tr><td class="gutter">17</td><td class="src"><span class="t-id">dq</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-num">4</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># add right  → [1,2,3,4]</span></td></tr>
 <tr><td class="gutter">18</td><td class="src"><span class="t-id">dq</span><span class="t-op">.</span><span class="t-id">appendleft</span><span class="t-op">(</span><span class="t-num">0</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># add left   → [0,1,2,3,4]</span></td></tr>
 <tr><td class="gutter">19</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">dq</span><span class="t-op">.</span><span class="t-id">popleft</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># remove left → 0</span></td></tr>
 <tr><td class="gutter">20</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">21</td><td class="src"><span class="t-cm"># ── namedtuple: tuple with named fields ──</span></td></tr>
-<tr><td class="gutter">22</td><td class="src"><span class="t-id">Point</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">(</span><span class="t-str">&quot;Point&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;x&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;y&quot;</span><span class="t-op">]</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">23</td><td class="src"><span class="t-id">p</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Point</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">20</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">24</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">x</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">y</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 10 20</span></td></tr>
-<tr><td class="gutter">25</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">[</span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># index still works</span></td></tr>
-<tr><td class="gutter">26</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">27</td><td class="src"><span class="t-cm"># ── ChainMap: layered lookup (first dict wins) ──</span></td></tr>
-<tr><td class="gutter">28</td><td class="src"><span class="t-id">app_defaults</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;red&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;size&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;M&quot;</span><span class="t-op">}</span></td></tr>
-<tr><td class="gutter">29</td><td class="src"><span class="t-id">user</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blue&quot;</span><span class="t-op">}</span></td></tr>
-<tr><td class="gutter">30</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;app_defaults:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">app_defaults</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">31</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;user:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">user</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">32</td><td class="src"><span class="t-id">settings</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ChainMap</span><span class="t-op">(</span><span class="t-id">user</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">app_defaults</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># user first, then app_defaults</span></td></tr>
-<tr><td class="gutter">33</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">settings</span><span class="t-op">[</span><span class="t-str">&quot;color&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># blue — found in user</span></td></tr>
-<tr><td class="gutter">34</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">settings</span><span class="t-op">[</span><span class="t-str">&quot;size&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># M — falls through to app_defaults</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-cm"># optional: rolling buffer — oldest drops when full</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-id">buf</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-id">maxlen</span><span class="t-op">=</span><span class="t-num">2</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-id">buf</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;hi&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-id">buf</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;ticket #42&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-id">buf</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;bye&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># &quot;hi&quot; dropped</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">buf</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [&#x27;ticket #42&#x27;, &#x27;bye&#x27;]</span></td></tr>
+<tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-cm"># ── namedtuple: tuple with named fields ──</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-id">Point</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">(</span><span class="t-str">&quot;Point&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-str">&quot;x&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;y&quot;</span><span class="t-op">]</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-id">p</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Point</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">20</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">x</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">.</span><span class="t-id">y</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 10 20</span></td></tr>
+<tr><td class="gutter">32</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">p</span><span class="t-op">[</span><span class="t-num">0</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">p</span><span class="t-op">[</span><span class="t-num">1</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># index still works</span></td></tr>
+<tr><td class="gutter">33</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">34</td><td class="src"><span class="t-cm"># ── ChainMap: layered lookup (first dict wins) ──</span></td></tr>
+<tr><td class="gutter">35</td><td class="src"><span class="t-id">Dict1</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blue&quot;</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># checked first</span></td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-id">Dict2</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;red&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;size&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;M&quot;</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># fallback</span></td></tr>
+<tr><td class="gutter">37</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;Dict1:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict1</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">38</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;Dict2:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict2</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">39</td><td class="src"><span class="t-id">CombinedDict</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ChainMap</span><span class="t-op">(</span><span class="t-id">Dict1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict2</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># Dict1 first, then Dict2</span></td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ChainMap({&#x27;color&#x27;: &#x27;blue&#x27;}, {&#x27;color&#x27;: &#x27;red&#x27;, &#x27;size&#x27;: &#x27;M&#x27;})</span></td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">[</span><span class="t-str">&quot;color&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># blue — found in Dict1</span></td></tr>
+<tr><td class="gutter">42</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">[</span><span class="t-str">&quot;size&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># M — falls through to Dict2</span></td></tr>
 </tbody></table></div></details></div></div>
   </div>
 </div>
@@ -10532,6 +10716,163 @@ def save_report_v2():
 </tbody></table></div></details></div></div>
   </div>
 </div>
+</div><div class="slide notes-slide" id="slide-100">
+<div class="slide-hdr">
+  <div class="slide-meta">Notes 1 of 1 &middot; Notes</div>
+  <div class="slide-title">Mindmap</div>
+  <div class="slide-sub">Flowchart &amp; path — choose the right mapping tool</div>
+</div>
+<div class="slide-body">
+  <div class="main-split no-code">
+    <div class="panel-left">
+      
+<p>Choose between a plain <code>dict</code>, <code>defaultdict</code>, a safe key check,
+or <code>ChainMap</code> using the two styles below.</p>
+
+<div class="notes-grid">
+  <div class="mm-card">
+    <h3>Flowchart — which tool?</h3>
+    <p>Answer each question top &rarr; bottom. Stop when you get a tool.</p>
+    <div class="flow-box">
+      <div class="flow-q">Do you need to<br>group / tally<br>missing keys?</div>
+      <div class="flow-arrow">&darr; Yes &nbsp;&nbsp;&nbsp; No &darr;</div>
+      <div class="flow-row">
+        <div class="flow-ans yes"><b>Yes &rarr; defaultdict</b>
+          Factory fills the gap:<br>
+          <code>defaultdict(list)</code><br>
+          or <code>defaultdict(int)</code>
+        </div>
+        <div class="flow-ans no"><b>No &rarr; next question</b>
+          Keep going &darr;
+        </div>
+      </div>
+      <div class="flow-q">Looking up across<br>several dict layers?</div>
+      <div class="flow-arrow">&darr; Yes &nbsp;&nbsp;&nbsp; No &darr;</div>
+      <div class="flow-row">
+        <div class="flow-ans yes"><b>Yes &rarr; ChainMap</b>
+          <code>ChainMap(Dict1, Dict2)</code><br>
+          First match wins.
+        </div>
+        <div class="flow-ans no"><b>No &rarr; plain dict</b>
+          Use <code>{}</code> / <code>dict()</code>.
+        </div>
+      </div>
+      <div class="flow-q">Only checking if a<br>key exists?</div>
+      <div class="flow-arrow">&darr;</div>
+      <div class="flow-row">
+        <div class="flow-ans yes"><b>Safe key check</b>
+          <code>"k" in d</code><br>
+          or <code>d.get("k")</code><br>
+          (does <b>not</b> create a key)
+        </div>
+        <div class="flow-ans no"><b>Trap on defaultdict</b>
+          Avoid <code>if myDict["k"]:</code><br>
+          — that <b>creates</b> the key.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mm-card">
+    <h3>Path — walk the stops</h3>
+    <p>Same decision, left &rarr; right. Exit at the first stop that fits.</p>
+    <div class="path-track" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div class="path-stop s1" style="max-width:none">
+        <div class="num">1</div>
+        <b>Grouping / counting in a loop?</b>
+        Yes &rarr; stop here: <code>defaultdict(list)</code> or <code>defaultdict(int)</code><br>
+        Example: <code>groups[dept].append(name)</code> — no manual <code>if k not in d</code>.<br>
+        No &rarr; go to stop 2
+      </div>
+      <div class="path-connector" style="justify-content:center">&darr;</div>
+      <div class="path-stop s2" style="max-width:none">
+        <div class="num">2</div>
+        <b>Layered config (overrides + defaults)?</b>
+        Yes &rarr; stop here: <code>ChainMap(Dict1, Dict2)</code><br>
+        Example: user settings first, then <code>app_defaults</code>. First match wins.<br>
+        No &rarr; go to stop 3
+      </div>
+      <div class="path-connector" style="justify-content:center">&darr;</div>
+      <div class="path-stop s3" style="max-width:none">
+        <div class="num">3</div>
+        <b>Only peek — do not create a key?</b>
+        Yes &rarr; stop here: <code>"k" in d</code> or <code>d.get("k")</code><br>
+        Especially important with <code>defaultdict</code> (subscript can auto-create).<br>
+        No &rarr; go to stop 4
+      </div>
+      <div class="path-connector" style="justify-content:center">&darr;</div>
+      <div class="path-stop s4" style="max-width:none">
+        <div class="num">4</div>
+        <b>Default home — plain dict</b>
+        Use <code>d = {}</code> and set keys yourself: <code>d["a"] = 1</code><br>
+        Best for simple records and JSON-like data.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Flowchart — defaultdict trap (detail)</h3>
+<div class="mm-card">
+  <p>When you already chose <code>defaultdict</code>, use this mini-flowchart before reading a key.</p>
+  <div class="flow-box">
+    <div class="flow-q">Do you intend to<br><b>create or grow</b><br>this key&apos;s group?</div>
+    <div class="flow-arrow">&darr; Yes &nbsp;&nbsp;&nbsp; No &darr;</div>
+    <div class="flow-row">
+      <div class="flow-ans yes"><b>Yes &rarr; use subscript</b>
+        <code>myDict["Ravi"].append(101)</code><br>
+        Creating the key is what you want.
+      </div>
+      <div class="flow-ans no"><b>No &rarr; peek safely</b>
+        <code>if "Ravi" in myDict:</code><br>
+        Never <code>if myDict["Ravi"]:</code> just to check.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Path — quick examples</h3>
+<div class="path-track">
+  <div class="path-stop s1">
+    <div class="num">A</div>
+    <b>plain dict</b>
+    <code>d = {"a": 1}</code><br>
+    You own every key.
+  </div>
+  <div class="path-connector">&rarr;</div>
+  <div class="path-stop s2">
+    <div class="num">B</div>
+    <b>defaultdict</b>
+    <code>groups[k].append(v)</code><br>
+    Auto empty list/int.
+  </div>
+  <div class="path-connector">&rarr;</div>
+  <div class="path-stop s3">
+    <div class="num">C</div>
+    <b>key check</b>
+    <code>"k" in d</code><br>
+    Peek, no create.
+  </div>
+  <div class="path-connector">&rarr;</div>
+  <div class="path-stop s4">
+    <div class="num">D</div>
+    <b>ChainMap</b>
+    <code>ChainMap(D1, D2)</code><br>
+    First match wins.
+  </div>
+</div>
+
+<h3>Cheat sheet</h3>
+<table class="data-tbl">
+<tr><th>Tool</th><th>When to choose</th><th>Avoid when</th></tr>
+<tr><td><code>dict</code></td><td>Simple key/value store you control</td><td>You keep writing <code>if k not in d: d[k]=[]</code></td></tr>
+<tr><td><code>defaultdict</code></td><td>Grouping, counters, auto empty list/int</td><td>You only want to <em>check</em> membership (use <code>in</code>)</td></tr>
+<tr><td><code>"k" in d</code> / <code>.get</code></td><td>Safe peek — no new key</td><td>You meant to create the group</td></tr>
+<tr><td><code>ChainMap</code></td><td>Layered config: overrides + defaults</td><td>You need one merged copy to mutate forever</td></tr>
+</table>
+
+    </div>
+  </div>
+</div>
 </div>
 <div class="csharp-float-win" id="csharp-win-hetero-list" role="dialog" aria-labelledby="csharp-win-title-hetero-list"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-hetero-list">C# Comparison — Heterogeneous Lists</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('hetero-list')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
 <p>In <b>Python</b>, one <code>list</code> can hold mixed types naturally:</p>
@@ -11178,33 +11519,45 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">5</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op">.</span><span class="t-id">Join</span><span class="t-op">(</span><span class="t-str">&quot;, &quot;</span><span class="t-op">,</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">byAssignee</span><span class="t-op">.</span><span class="t-id">Select</span><span class="t-op">(</span><span class="t-id">kv</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-op">$</span><span class="t-str">&quot;{kv.Key}: [{string.Join(&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;, kv.Value)}]&quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-cm">// Ravi: [101]</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>defaultdict</code> runs a factory on first access — handy but can surprise you if you only meant to check membership with <code>in</code>. C# always requires explicit initialization.</p></div></div><div class="csharp-float-win" id="csharp-win-deque-linkedlist" role="dialog" aria-labelledby="csharp-win-title-deque-linkedlist"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-deque-linkedlist">C# Comparison — deque vs LinkedList</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('deque-linkedlist')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>deque</code> — fast append/pop at both ends:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>defaultdict</code> runs a factory on first access — handy but can surprise you if you only meant to check membership with <code>in</code>. C# always requires explicit initialization.</p></div></div><div class="csharp-float-win" id="csharp-win-deque-linkedlist" role="dialog" aria-labelledby="csharp-win-title-deque-linkedlist"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-deque-linkedlist">C# Comparison — deque vs LinkedList</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('deque-linkedlist')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p><b>1) <code>deque()</code> — no max (normal queue)</b></p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">deque</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-id">chat</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-id">maxlen</span><span class="t-op">=</span><span class="t-num">100</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;new&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># right end</span></td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">appendleft</span><span class="t-op">(</span><span class="t-str">&quot;old&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># left end</span></td></tr>
-<tr><td class="gutter">5</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">chat</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
-</tbody></table></div><p>C# <code>LinkedList&lt;T&gt;</code> — double-ended; or <code>Queue</code> / <code>Stack</code> for one end:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">chat</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># grows freely</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;hi&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># right end</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">appendleft</span><span class="t-op">(</span><span class="t-str">&quot;old&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># left end</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">chat</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [&#x27;old&#x27;, &#x27;hi&#x27;]</span></td></tr>
+</tbody></table></div><p><b>2) <code>deque(maxlen=…)</code> — optional rolling buffer</b></p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">deque</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">chat</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">deque</span><span class="t-op">(</span><span class="t-id">maxlen</span><span class="t-op">=</span><span class="t-num">2</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># keep last 2 only</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;hi&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;ticket #42&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">append</span><span class="t-op">(</span><span class="t-str">&quot;bye&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># &quot;hi&quot; dropped automatically</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">chat</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># [&#x27;ticket #42&#x27;, &#x27;bye&#x27;]</span></td></tr>
+</tbody></table></div><p>C# <code>LinkedList&lt;T&gt;</code> — double-ended; or <code>Queue</code> / <code>Stack</code> for one end (no built-in <code>maxlen</code>):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">chat</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">LinkedList</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">AddLast</span><span class="t-op">(</span><span class="t-str">&quot;new&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// append</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">AddFirst</span><span class="t-op">(</span><span class="t-str">&quot;old&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// prepend</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">AddLast</span><span class="t-op">(</span><span class="t-str">&quot;hi&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// append</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">AddFirst</span><span class="t-op">(</span><span class="t-str">&quot;old&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// prepend</span></td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-kw">foreach</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">msg</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">chat</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">msg</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-cm">// old</span></td></tr>
-<tr><td class="gutter">7</td><td class="src"><span class="t-cm">// new</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>deque</code> with <code>maxlen</code> auto-drops oldest items — like a rolling buffer. C# has no built-in maxlen deque; track size manually or use a circular buffer.</p></div></div><div class="csharp-float-win" id="csharp-win-chainmap-config" role="dialog" aria-labelledby="csharp-win-title-chainmap-config"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-chainmap-config">C# Comparison — ChainMap vs config layers</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('chainmap-config')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>ChainMap</code> — layered lookup; first dict wins:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">7</td><td class="src"><span class="t-cm">// hi</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm">// No built-in maxlen — check Count yourself</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">Count</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">chat</span><span class="t-op">.</span><span class="t-id">RemoveFirst</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// drop oldest</span></td></tr>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>maxlen</code> is <b>optional</b>. <code>deque()</code> = unlimited. <code>deque(maxlen=n)</code> = keep last <code>n</code> items (oldest drops). C# has no built-in maxlen deque — track size manually.</p></div></div><div class="csharp-float-win" id="csharp-win-chainmap-config" role="dialog" aria-labelledby="csharp-win-title-chainmap-config"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-chainmap-config">C# Comparison — ChainMap vs config layers</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('chainmap-config')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>ChainMap</code> — layered lookup; first dict wins:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">ChainMap</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-id">app_defaults</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;red&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;size&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;M&quot;</span><span class="t-op">}</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-id">user</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blue&quot;</span><span class="t-op">}</span></td></tr>
-<tr><td class="gutter">4</td><td class="src"><span class="t-id">settings</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ChainMap</span><span class="t-op">(</span><span class="t-id">user</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">app_defaults</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">5</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">settings</span><span class="t-op">[</span><span class="t-str">&quot;color&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># blue — in user</span></td></tr>
-<tr><td class="gutter">6</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">settings</span><span class="t-op">[</span><span class="t-str">&quot;size&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># M — falls to app_defaults</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">Dict1</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blue&quot;</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># checked first</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">Dict2</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-str">&quot;color&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;red&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;size&quot;</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;M&quot;</span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># fallback</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-id">CombinedDict</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ChainMap</span><span class="t-op">(</span><span class="t-id">Dict1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Dict2</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ChainMap({&#x27;color&#x27;: &#x27;blue&#x27;}, {&#x27;color&#x27;: &#x27;red&#x27;, &#x27;size&#x27;: &#x27;M&#x27;})</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">[</span><span class="t-str">&quot;color&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># blue — in Dict1</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">CombinedDict</span><span class="t-op">[</span><span class="t-str">&quot;size&quot;</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># M — falls to Dict2</span></td></tr>
 </tbody></table></div><p>C# — merge layers manually, or use <code>IConfiguration</code> in ASP.NET Core:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-cm">// Simple manual ChainMap-style lookup:</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Get</span><span class="t-op">(</span><span class="t-bi">Dictionary</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">user</span><span class="t-op">,</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Dictionary</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">appDefaults</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Get</span><span class="t-op">(</span><span class="t-bi">Dictionary</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">dict1</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Dictionary</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">dict2</span><span class="t-op">,</span></td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
-<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">user</span><span class="t-op">.</span><span class="t-id">TryGetValue</span><span class="t-op">(</span><span class="t-id">key</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">out</span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">?</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">appDefaults</span><span class="t-op">[</span><span class="t-id">key</span><span class="t-op">]</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">dict1</span><span class="t-op">.</span><span class="t-id">TryGetValue</span><span class="t-op">(</span><span class="t-id">key</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">out</span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">?</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">dict2</span><span class="t-op">[</span><span class="t-id">key</span><span class="t-op">]</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-cm">// ASP.NET Core: appsettings.json + env vars + CLI</span></td></tr>
 <tr><td class="gutter">8</td><td class="src"><span class="t-cm">// are layered automatically via IConfiguration</span></td></tr>
@@ -11225,6 +11578,7 @@ They are <b>not</b> “any object that has the method.”</p>
 <div class="nav-bar">
   <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>
   <button class="btn-nav" onclick="goSlide(0)">&#9776; Navigation</button>
+  <button type="button" class="btn-nav" style="background:#7c3aed" onclick="goSlide(100)" title="Open Notes — Mindmap">&#128221; Notes</button>
   <button type="button" class="btn-audio-nav" onclick="togglePlay(current)" title="Play / pause current slide audio">&#128266; Audio</button>
   <span class="slide-info" id="slideInfo">Navigation</span>
   <button class="btn-next" onclick="nextSlide()">Next &rarr;</button>
@@ -11236,7 +11590,11 @@ let activeSlide = null;
 let seekDragging = false;
 const slideOrder = [0];
 for (let i = 1; i <= 35; i++) slideOrder.push(i);
+slideOrder.push(100);
+
 const totalTopics = 35;
+const notesTitles = {"100": "Mindmap"};
+const notesStart = 100;
 
 function fmtTime(sec) {
   if (!isFinite(sec) || sec < 0) sec = 0;
@@ -11274,12 +11632,12 @@ function updateTimeUI(n) {
 }
 
 function pauseAllExcept(keep) {
-  for (let i = 0; i <= 35; i++) {
-    if (i === keep) continue;
+  slideOrder.forEach(i => {
+    if (i === keep) return;
     const a = getAudio(i);
     if (a && !a.paused) a.pause();
     setPlayingUI(i, false);
-  }
+  });
   if (keep === null) activeSlide = null;
 }
 
@@ -11330,9 +11688,9 @@ function onSeekCommit(n, val) {
 }
 
 function initAudioPlayers() {
-  for (let i = 0; i <= 35; i++) {
+  slideOrder.forEach(i => {
     const audio = getAudio(i);
-    if (!audio) continue;
+    if (!audio) return;
     audio.addEventListener('timeupdate', () => {
       if (activeSlide === i) updateTimeUI(i);
     });
@@ -11351,7 +11709,7 @@ function initAudioPlayers() {
         player.appendChild(msg);
       }
     });
-  }
+  });
 }
 
 function showSlide(n) {
@@ -11365,7 +11723,11 @@ function showSlide(n) {
     current = n;
     el.scrollTop = 0;
     const info = document.getElementById('slideInfo');
-    if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
+    if (info) {
+      if (n === 0) info.textContent = 'Navigation';
+      else if (n >= notesStart) info.textContent = 'Notes · ' + (notesTitles[n] || n);
+      else info.textContent = 'Slide ' + n + ' of ' + totalTopics;
+    }
     updateTimeUI(n);
     applySavedSplit(el);
     const hash = n === 0 ? 'nav' : String(n);

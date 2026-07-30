@@ -11,6 +11,13 @@ from slide_diagrams import diagram_for
 from slide_real_life import real_life_for
 from slide_csharp_popups import render_csharp_popups
 from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, split_learn
+from notes_slides import (
+    NOTES_CONTENT,
+    NOTES_CSS,
+    NOTES_START,
+    notes_panel_html,
+    render_notes_slides,
+)
 
 OUTPUT = Path(__file__).parent / "PythonTraining.html"
 PROJECTS = Path(__file__).parent / "Projects"
@@ -560,6 +567,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   .csharp-diff-grid { grid-template-columns: 1fr; }
   .csharp-diff-vs { text-align: center; }
 }
+""" + NOTES_CSS + """
 """
 
 JS = """
@@ -568,7 +576,10 @@ let activeSlide = null;
 let seekDragging = false;
 const slideOrder = [0];
 for (let i = 1; i <= """ + str(TOTAL_SLIDES) + """; i++) slideOrder.push(i);
+""" + "".join(f"slideOrder.push({n});\n" for n, *_ in NOTES_CONTENT) + """
 const totalTopics = """ + str(TOTAL_SLIDES) + """;
+const notesTitles = """ + __import__("json").dumps({n: t for n, t, *_ in NOTES_CONTENT}) + """;
+const notesStart = """ + str(NOTES_START) + """;
 
 function fmtTime(sec) {
   if (!isFinite(sec) || sec < 0) sec = 0;
@@ -606,12 +617,12 @@ function updateTimeUI(n) {
 }
 
 function pauseAllExcept(keep) {
-  for (let i = 0; i <= """ + str(TOTAL_SLIDES) + """; i++) {
-    if (i === keep) continue;
+  slideOrder.forEach(i => {
+    if (i === keep) return;
     const a = getAudio(i);
     if (a && !a.paused) a.pause();
     setPlayingUI(i, false);
-  }
+  });
   if (keep === null) activeSlide = null;
 }
 
@@ -662,9 +673,9 @@ function onSeekCommit(n, val) {
 }
 
 function initAudioPlayers() {
-  for (let i = 0; i <= """ + str(TOTAL_SLIDES) + """; i++) {
+  slideOrder.forEach(i => {
     const audio = getAudio(i);
-    if (!audio) continue;
+    if (!audio) return;
     audio.addEventListener('timeupdate', () => {
       if (activeSlide === i) updateTimeUI(i);
     });
@@ -683,7 +694,7 @@ function initAudioPlayers() {
         player.appendChild(msg);
       }
     });
-  }
+  });
 }
 
 function showSlide(n) {
@@ -697,7 +708,11 @@ function showSlide(n) {
     current = n;
     el.scrollTop = 0;
     const info = document.getElementById('slideInfo');
-    if (info) info.textContent = n === 0 ? 'Navigation' : 'Slide ' + n + ' of ' + totalTopics;
+    if (info) {
+      if (n === 0) info.textContent = 'Navigation';
+      else if (n >= notesStart) info.textContent = 'Notes · ' + (notesTitles[n] || n);
+      else info.textContent = 'Slide ' + n + ' of ' + totalTopics;
+    }
     updateTimeUI(n);
     applySavedSplit(el);
     const hash = n === 0 ? 'nav' : String(n);
@@ -1006,10 +1021,11 @@ async function runPlayground(btn) {
 }
 """
 
-NAV_BAR = """
+NAV_BAR = f"""
 <div class="nav-bar">
   <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>
   <button class="btn-nav" onclick="goSlide(0)">&#9776; Navigation</button>
+  <button type="button" class="btn-nav" style="background:#7c3aed" onclick="goSlide({NOTES_START})" title="Open Notes — Mindmap">&#128221; Notes</button>
   <button type="button" class="btn-audio-nav" onclick="togglePlay(current)" title="Play / pause current slide audio">&#128266; Audio</button>
   <span class="slide-info" id="slideInfo">Navigation</span>
   <button class="btn-next" onclick="nextSlide()">Next &rarr;</button>
@@ -3172,11 +3188,18 @@ groups["fruit"].append("banana")
 groups["veg"].append("carrot")
 print(dict(groups))           # {'fruit':['apple','banana'],'veg':['carrot']}
 
-# ── deque: fast double-ended queue ──
-dq = deque([1, 2, 3])
+# ── deque: fast double-ended queue (maxlen optional) ──
+dq = deque([1, 2, 3])         # no max — grows freely
 dq.append(4)                  # add right  → [1,2,3,4]
 dq.appendleft(0)              # add left   → [0,1,2,3,4]
 print(dq.popleft())           # remove left → 0
+
+# optional: rolling buffer — oldest drops when full
+buf = deque(maxlen=2)
+buf.append("hi")
+buf.append("ticket #42")
+buf.append("bye")             # "hi" dropped
+print(list(buf))              # ['ticket #42', 'bye']
 
 # ── namedtuple: tuple with named fields ──
 Point = namedtuple("Point", ["x", "y"])
@@ -3185,13 +3208,14 @@ print(p.x, p.y)               # 10 20
 print(p[0], p[1])             # index still works
 
 # ── ChainMap: layered lookup (first dict wins) ──
-app_defaults = {"color": "red", "size": "M"}
-user = {"color": "blue"}
-print("app_defaults:", app_defaults)
-print("user:", user)
-settings = ChainMap(user, app_defaults)   # user first, then app_defaults
-print(settings["color"])              # blue — found in user
-print(settings["size"])               # M — falls through to app_defaults''') + '''
+Dict1 = {"color": "blue"}                   # checked first
+Dict2 = {"color": "red", "size": "M"}       # fallback
+print("Dict1:", Dict1)
+print("Dict2:", Dict2)
+CombinedDict = ChainMap(Dict1, Dict2)       # Dict1 first, then Dict2
+print(CombinedDict)                       # ChainMap({'color': 'blue'}, {'color': 'red', 'size': 'M'})
+print(CombinedDict["color"])              # blue — found in Dict1
+print(CombinedDict["size"])               # M — falls through to Dict2''') + '''
 
 
 <h3>Common mistakes</h3>
@@ -3283,9 +3307,9 @@ for k, v in records:
       <div class="quiz-reveal">namedtuple has named fields (<code>p.x</code>, <code>p.y</code>) while regular tuples use only index access (<code>p[0]</code>).</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(user, app_defaults)['key']</code> — which dict is searched first?
+  <div class="quiz-q"><b>Q6.</b> <code>ChainMap(Dict1, Dict2)['key']</code> — which dict is searched first?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>user</code> &mdash; ChainMap searches maps in order, so the first mapping takes priority.</div>
+      <div class="quiz-reveal"><code>Dict1</code> &mdash; ChainMap searches maps in order, so the first mapping takes priority.</div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> <code>deque(maxlen=3)</code> — what happens when you append a 4th item?
@@ -5984,9 +6008,14 @@ def build_nav():
     )
     return f'''<div class="slide active" id="slide-0">
 <div class="nav-content">
-  <h1>Python Training 2026</h1>
-  <div class="sub">Batch 2 &middot; Week-by-week curriculum</div>
-  <div class="org">Click a topic below to jump to that slide</div>
+  <div class="nav-hero">
+    <div class="nav-hero-main">
+      <h1>Python Training 2026</h1>
+      <div class="sub">Batch 2 &middot; Week-by-week curriculum</div>
+      <div class="org">Click a topic below to jump to that slide</div>
+    </div>
+    {notes_panel_html()}
+  </div>
   {audio_bar(0)}
   <div class="nav-grid">
 {sections}  </div>
@@ -5998,6 +6027,7 @@ def main():
     slides = [build_nav()]
     for num, title, learn, practice in CONTENT:
         slides.append(slide(num, title, learn, practice))
+    slides.extend(render_notes_slides())
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -6016,7 +6046,11 @@ def main():
 </html>"""
 
     OUTPUT.write_text(html, encoding="utf-8")
-    print(f"Generated {OUTPUT} ({len(html):,} bytes, {len(slides)} slides)")
+    notes_count = len(NOTES_CONTENT)
+    print(
+        f"Generated {OUTPUT} ({len(html):,} bytes, "
+        f"{TOTAL_SLIDES} curriculum + {notes_count} notes slides)"
+    )
 
 
 if __name__ == "__main__":

@@ -942,25 +942,49 @@ Console.WriteLine(string.Join(\", \",
 
 def _deque_body() -> str:
     return (
-        _py_cs(
-            "Python <code>deque</code> — fast append/pop at both ends:",
+        '<p><b>1) <code>deque()</code> — no max (normal queue)</b></p>'
+        + vs_editor(
             """from collections import deque
-chat = deque(maxlen=100)
-chat.append(\"new\")       # right end
-chat.appendleft(\"old\")   # left end
-print(list(chat))""",
-            "C# <code>LinkedList&lt;T&gt;</code> — double-ended; or <code>Queue</code> / <code>Stack</code> for one end:",
+chat = deque()                 # grows freely
+chat.append("hi")              # right end
+chat.appendleft("old")         # left end
+print(list(chat))              # ['old', 'hi']""",
+            lang="python",
+            compact=True,
+        )
+        + '<p><b>2) <code>deque(maxlen=…)</code> — optional rolling buffer</b></p>'
+        + vs_editor(
+            """from collections import deque
+chat = deque(maxlen=2)         # keep last 2 only
+chat.append("hi")
+chat.append("ticket #42")
+chat.append("bye")             # "hi" dropped automatically
+print(list(chat))              # ['ticket #42', 'bye']""",
+            lang="python",
+            compact=True,
+        )
+        + "<p>C# <code>LinkedList&lt;T&gt;</code> — double-ended; or <code>Queue</code> / <code>Stack</code> for one end "
+        "(no built-in <code>maxlen</code>):</p>"
+        + vs_editor(
             """var chat = new LinkedList<string>();
-chat.AddLast(\"new\");     // append
-chat.AddFirst(\"old\");    // prepend
+chat.AddLast("hi");       // append
+chat.AddFirst("old");     // prepend
 foreach (var msg in chat)
     Console.WriteLine(msg);
 // old
-// new""",
+// hi
+
+// No built-in maxlen — check Count yourself
+if (chat.Count > 2)
+    chat.RemoveFirst();   // drop oldest""",
+            lang="csharp",
+            compact=True,
         )
         + _note(
-            "<code>deque</code> with <code>maxlen</code> auto-drops oldest items — like a rolling buffer. "
-            "C# has no built-in maxlen deque; track size manually or use a circular buffer."
+            "<code>maxlen</code> is <b>optional</b>. "
+            "<code>deque()</code> = unlimited. "
+            "<code>deque(maxlen=n)</code> = keep last <code>n</code> items (oldest drops). "
+            "C# has no built-in maxlen deque — track size manually."
         )
     )
 
@@ -970,17 +994,18 @@ def _chainmap_body() -> str:
         _py_cs(
             "Python <code>ChainMap</code> — layered lookup; first dict wins:",
             """from collections import ChainMap
-app_defaults = {\"color\": \"red\", \"size\": \"M\"}
-user = {\"color\": \"blue\"}
-settings = ChainMap(user, app_defaults)
-print(settings[\"color\"])   # blue — in user
-print(settings[\"size\"])    # M — falls to app_defaults""",
+Dict1 = {\"color\": \"blue\"}              # checked first
+Dict2 = {\"color\": \"red\", \"size\": \"M\"}  # fallback
+CombinedDict = ChainMap(Dict1, Dict2)
+print(CombinedDict)            # ChainMap({'color': 'blue'}, {'color': 'red', 'size': 'M'})
+print(CombinedDict[\"color\"])   # blue — in Dict1
+print(CombinedDict[\"size\"])    # M — falls to Dict2""",
             "C# — merge layers manually, or use <code>IConfiguration</code> in ASP.NET Core:",
             """// Simple manual ChainMap-style lookup:
-string Get(Dictionary<string,string> user,
-           Dictionary<string,string> appDefaults,
+string Get(Dictionary<string,string> dict1,
+           Dictionary<string,string> dict2,
            string key) =>
-    user.TryGetValue(key, out var v) ? v : appDefaults[key];
+    dict1.TryGetValue(key, out var v) ? v : dict2[key];
 
 // ASP.NET Core: appsettings.json + env vars + CLI
 // are layered automatically via IConfiguration""",

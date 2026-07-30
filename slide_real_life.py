@@ -607,19 +607,37 @@ REAL_LIFE: dict[int, str] = {
         "# OUTPUT\n"
         "{'Ravi': [101], 'Anu': [102]}"
         "</div>"
-        "<p><b>3) <code>deque(maxlen=…)</code> — rolling chat buffer</b><br>"
-        "Keep only the last 100 messages; when full, the oldest message is dropped automatically.</p>"
+        "<p><b>3) <code>deque()</code> first — then optional <code>maxlen</code></b><br>"
+        "<code>maxlen</code> is <b>not required</b>. Use plain <code>deque()</code> for a normal queue. "
+        "Add <code>maxlen</code> only when you want a rolling buffer that drops the oldest item.</p>"
+        '<div class="mc-row">'
+        '<div class="mc-col mc-good"><span class="mc-lbl">1) deque() — no max</span>'
         '<div class="step-pre">'
         "# INPUT\n"
         "from collections import deque\n"
-        "chat = deque(maxlen=100)\n"
+        "chat = deque()            # grows freely\n"
         'chat.append("hi")\n'
         'chat.append("ticket #42")\n'
         "print(list(chat))\n"
         "\n"
         "# OUTPUT\n"
         "['hi', 'ticket #42']"
-        "</div>"
+        "</div></div>"
+        '<div class="mc-col mc-good"><span class="mc-lbl">2) deque(maxlen=…) — rolling</span>'
+        '<div class="step-pre">'
+        "# INPUT\n"
+        "from collections import deque\n"
+        "chat = deque(maxlen=2)    # keep last 2 only\n"
+        'chat.append("hi")\n'
+        'chat.append("ticket #42")\n'
+        'chat.append("bye")      # "hi" dropped\n'
+        "print(list(chat))\n"
+        "\n"
+        "# OUTPUT\n"
+        "['ticket #42', 'bye']"
+        "</div></div></div>"
+        '<p class="step-result"><b>Rule:</b> <code>deque()</code> = unlimited. '
+        '<code>deque(maxlen=n)</code> = keep last <code>n</code> items only.</p>'
         "<p><b>4) <code>namedtuple</code> — light ticket record</b><br>"
         "Fixed fields like a mini struct — access with <code>t.id</code> and <code>t.status</code>.</p>"
         '<div class="step-pre">'
@@ -638,8 +656,8 @@ REAL_LIFE: dict[int, str] = {
         "<td><code>{'open': 3, 'closed': 1}</code></td></tr>"
         "<tr><td><code>defaultdict</code></td><td>Group by assignee</td>"
         "<td><code>{'Ravi': [101], 'Anu': [102]}</code></td></tr>"
-        "<tr><td><code>deque</code></td><td>Rolling chat buffer</td>"
-        "<td>Last 100 messages kept</td></tr>"
+        "<tr><td><code>deque</code></td><td>Fast both ends; optional maxlen buffer</td>"
+        "<td><code>deque()</code> or <code>deque(maxlen=2)</code></td></tr>"
         "<tr><td><code>namedtuple</code></td><td>Light record</td>"
         "<td><code>Ticket(id=101, status='open')</code></td></tr>"
         "</table>"
