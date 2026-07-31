@@ -480,13 +480,13 @@ FLOWS: dict[int, tuple[str, str, list[FlowQ], str, str, list[str]]] = {
     ),
     13: (
         "Python is cleaning up memory",
-        "Throw away toys nobody is holding",
+        "Free objects that nothing holds anymore",
         [
             (
-                "Did the last name pointing at an object go away?",
+                "Did the last strong reference to this object go away?",
                 "Reference counting",
-                "When nobody holds it, Python frees it right away (in CPython).",
-                ["del x", "x = None"],
+                "Refcount hit 0 — no variable, dict slot, or attribute holds it. CPython frees it right away.",
+                ["del x", "x = None", "scope ends"],
                 "key",
             ),
             (
@@ -499,7 +499,7 @@ FLOWS: dict[int, tuple[str, str, list[FlowQ], str, str, list[str]]] = {
             (
                 "Do you want a soft link that does not keep the object alive?",
                 "Use weakref",
-                "A sticky note that says “look over there” without owning the toy.",
+                "A soft look: you can peek later, but you do not keep the object alive.",
                 ["weakref.ref(obj)"],
                 "cm",
             ),

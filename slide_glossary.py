@@ -141,7 +141,58 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Polymorphism</td><td>Same method call, different behavior per class.</td><td><code>pet.speak()</code></td></tr>
 <tr><td>Encapsulation</td><td>Hide internal state — <code>_prefix</code> convention, <code>@property</code>.</td><td><code>self._balance</code></td></tr>
 <tr><td>MRO</td><td>Method Resolution Order — which parent method runs first.</td><td><code>Dog.__mro__</code></td></tr>
-</table>""",
+</table>
+
+<h3 style="margin-top:16px">Same name: class vs function vs method</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 8px;line-height:1.45">
+  <code>Toy("ball")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>
+  (creates an object). If you later define a <b>function</b> with the same name, that name is
+  <b>shadowed</b> — Python keeps only the <b>last</b> binding. A <b>method</b> named <code>Toy</code>
+  inside the class does <b>not</b> replace the class.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">Class only — Toy("ball") creates an object</span>
+    <div class="step-pre">class Toy:
+    def __init__(self, name):
+        self.name = name
+
+a = Toy("ball")     # class call → new object
+print(a.name)       # ball</div>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">Function reuses name Toy — class is hidden</span>
+    <div class="step-pre">class Toy:
+    def __init__(self, name):
+        self.name = name
+
+def Toy(name):              # same name — shadows the class
+    return f"fn:{name}"
+
+a = Toy("ball")             # calls the FUNCTION
+print(a)                    # fn:ball  (not a Toy object)</div>
+  </div>
+</div>
+<div class="step-pre" style="margin-top:10px"># Method named Toy — OK; does NOT replace the class
+class Toy:
+    def __init__(self, name):
+        self.name = name
+
+    def Toy(self):                  # unusual name, but allowed
+        return "method Toy"
+
+a = Toy("ball")                     # still creates the object
+print(a.Toy())                      # method Toy
+
+# Best practice: PascalCase for classes only
+# use make_toy() for a helper — never shadow the class name</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th>Situation</th><th>What <code>Toy(...)</code> does</th></tr>
+<tr><td>Only the class exists</td><td>Creates a <b>Toy object</b></td></tr>
+<tr><td>A function later uses the name <code>Toy</code></td><td>Calls that <b>function</b> (class hidden)</td></tr>
+<tr><td>Method <code>def Toy(self)</code></td><td>Class still works; call method with <code>a.Toy()</code></td></tr>
+</table>
+""",
     18: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -379,15 +430,308 @@ GLOSSARY: dict[int, str] = {
 <tr><td>Linter</td><td>Automated style/error checker.</td><td>ruff, flake8</td></tr>
 </table>""",
     13: """
-<h3>Key terms explained</h3>
+<h3>Key terms explained __CSHARP_MEMORY_BTN__</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Reference counting</td><td>Track how many names point to an object.</td><td><code>sys.getrefcount</code></td></tr>
-<tr><td>Garbage collector</td><td>Breaks circular references refcount cannot free.</td><td><code>gc.collect()</code></td></tr>
-<tr><td>Generation (GC)</td><td>Young vs old object buckets for collection frequency.</td><td>gen 0, 1, 2</td></tr>
-<tr><td>weakref</td><td>Reference that does not keep object alive.</td><td><code>weakref.ref(obj)</code></td></tr>
-<tr><td>del</td><td>Remove a name binding from namespace.</td><td><code>del x</code></td></tr>
-</table>""",
+<tr><td>Reference counting</td><td>Count how many names point to a toy. When count is 0, free it now.</td><td><code>sys.getrefcount</code></td></tr>
+<tr><td>Garbage collector</td><td>Extra cleaner for circles (A→B→A) that refcount cannot free alone.</td><td><code>gc.collect()</code></td></tr>
+<tr><td>Generation (GC)</td><td>Young vs old buckets — young toys are checked more often (0, 1, 2).</td><td>gen 0, 1, 2</td></tr>
+<tr><td>weakref</td><td><b>Soft look</b> at an object. Does <b>not</b> keep it alive.
+  Later <code>soft_ref()</code> returns the object or <code>None</code> if it was freed. Good for caches.</td><td><code>weakref.ref(obj)</code></td></tr>
+<tr><td>del</td><td><b>Drop a name</b> (strong reference −1). If count hits 0 → free now.
+  Does not always free circles (A↔B) — then GC is needed.</td><td><code>del x</code></td></tr>
+<tr><td>gc.collect()</td><td><b>Run cyclic GC now</b> (usually automatic). Frees unreachable circles
+  that refcount alone cannot. Returns how many objects were collected.</td><td><code>gc.collect()</code></td></tr>
+</table>
+<p class="gloss-why" style="font-size:13px;color:#475569;margin:8px 0 0;line-height:1.45">
+  <b>Why so many words?</b> CPython uses <b>refcount + cyclic GC + weakref</b> together.
+  C# mostly says “the GC” (+ <code>WeakReference</code> / <code>using</code>). Open <b>C# Comparison</b> for a term-by-term map
+  and full detail on <code>weakref.ref</code>, <code>del</code>, and <code>gc.collect()</code>.
+</p>
+
+<h3 style="margin-top:16px">Strong name &amp; strong reference</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 10px;line-height:1.45">
+  A <b>strong reference</b> is any normal hold that adds <b>+1</b> to the object’s refcount
+  (keeps the toy alive). A <b>strong name</b> is the usual case: a variable like <code>a</code>
+  that points at the object. Other strong holds work the same way — dict slots, attributes, list items.
+  <code>del</code> (or rebinding) drops that hold (−1). When the count hits <b>0</b>, the object is freed <b>now</b>
+  (unless a circle keeps counts above 0).
+</p>
+<table class="data-tbl" style="margin-top:4px">
+<tr><th>#</th><th>Scenario</th><th>What is the strong hold?</th><th>What <code>del</code> does</th><th>Freed when?</th></tr>
+<tr>
+  <td>1</td>
+  <td><b>Dict</b></td>
+  <td>Value stored under a key — <code>d["ball"] = toy</code> is a strong hold on <code>toy</code>.</td>
+  <td><code>del d["ball"]</code> drops that slot (−1).</td>
+  <td>If that was the last strong hold → free <b>now</b> (refcount).</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><b>Attribute</b></td>
+  <td><code>box.item = toy</code> — the attribute is a strong hold on <code>toy</code>.</td>
+  <td><code>del box.item</code> (or <code>box.item = None</code>) drops it (−1).</td>
+  <td>Last strong hold gone → free <b>now</b>.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><b>Big object</b></td>
+  <td>A variable name holds a large value — <code>huge = load_report()</code>.</td>
+  <td><code>del huge</code> drops the name early so RAM can shrink sooner.</td>
+  <td>If nothing else points at it → free <b>now</b>. No <code>gc.collect()</code> needed.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><b>Circular ref</b></td>
+  <td><code>a.other = b</code> and <code>b.other = a</code> — each attribute is still a <b>strong</b> hold.</td>
+  <td><code>del a, b</code> drops the <i>names</i>, but A↔B attributes may still hold each other.</td>
+  <td>Refcount may stay &gt; 0 → need <b>cyclic GC</b> (<code>gc.collect()</code> or automatic).</td>
+</tr>
+</table>
+<div class="step-pre" style="margin-top:10px"># 1) Dict — strong hold in a slot
+d = {"ball": obj}
+del d["ball"]            # slot gone → obj freed if nothing else holds it
+
+# 2) Attribute — strong hold on a field
+box.item = obj
+del box.item             # attribute gone → same idea
+
+# 3) Big object — drop the name when finished
+huge = load_report()     # strong name holds a large value
+# ... use huge ...
+del huge                 # free early (if last strong hold)
+
+# 4) Circular ref — strong holds point at each other
+a.other = b; b.other = a
+del a, b                 # names gone, but circle may remain → gc.collect()</div>
+<p style="font-size:12px;color:#334155;margin:8px 0 0;line-height:1.45">
+  <b>Kid picture:</b> a strong hold = hugging the toy.
+  Dict key, attribute, and variable name are all hugs.
+  <code>del</code> = let go. Soft look (<code>weakref</code>) = peek without hugging.
+</p>
+
+<h4 style="margin:14px 0 6px;color:#1a1a2e">Strong reference vs weak reference</h4>
+<p style="font-size:13px;color:#475569;margin:0 0 8px;line-height:1.45">
+  <b>Hug</b> = strong reference (keeps the object alive).
+  <b>Peek</b> = weak reference (<code>weakref.ref</code> — look later, do <b>not</b> keep it alive by itself).
+  There is no special “peek with hug” API — hugging <b>is</b> a normal assignment like <code>b = a</code>.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">Strong ref — peek WITH hugging</span>
+    <div class="step-pre">a = Toy("ball")     # hug #1 (strong name)
+b = a               # hug #2 — refcount +1
+d["x"] = a          # hug #3 — also strong
+box.item = a        # hug #4 — also strong
+
+# each of these KEEPS the toy alive
+del a, b
+del d["x"]
+del box.item        # last hug gone → toy freed now</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>Effect:</b> adds <b>+1</b> to refcount. Object stays in memory while any strong hold remains.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">Weak ref — peek WITHOUT hugging</span>
+    <div class="step-pre">import weakref
+
+a = Toy("ball")              # only strong hug
+soft_ref = weakref.ref(a)    # peek — NO strong +1
+
+print(soft_ref())            # Toy ball — still alive (because of a)
+del a                        # last hug gone
+print(soft_ref())            # None — soft look could not save it</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>Effect:</b> does <b>not</b> keep the object alive. Later <code>soft_ref()</code> → object or <code>None</code>.
+    </p>
+  </div>
+</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th></th><th>Strong reference (hug)</th><th>Weak reference (peek)</th></tr>
+<tr>
+  <td><b>How you make it</b></td>
+  <td><code>b = a</code>, <code>d["k"] = a</code>, <code>box.item = a</code></td>
+  <td><code>soft_ref = weakref.ref(a)</code></td>
+</tr>
+<tr>
+  <td><b>Refcount</b></td>
+  <td><b>+1</b> (keeps object alive)</td>
+  <td><b>No</b> strong +1</td>
+</tr>
+<tr>
+  <td><b>Kid picture</b></td>
+  <td>Hug the toy</td>
+  <td>Peek / look without hugging</td>
+</tr>
+<tr>
+  <td><b>After last strong hold is gone</b></td>
+  <td>Object can be freed (refcount 0)</td>
+  <td><code>soft_ref()</code> returns <code>None</code></td>
+</tr>
+<tr>
+  <td><b>Typical use</b></td>
+  <td>Normal everyday variables, dicts, attributes</td>
+  <td>Caches / maps that must not pin memory forever</td>
+</tr>
+<tr>
+  <td><b>C# twin</b></td>
+  <td>Normal variable / field reference</td>
+  <td><code>WeakReference&lt;T&gt;</code></td>
+</tr>
+</table>
+
+<p style="font-size:13px;color:#475569;margin:12px 0 8px;line-height:1.45">
+  <b>Is <code>del</code> mandatory on every variable?</b> <b>No.</b>
+  When a function ends, local names disappear <b>automatically</b> — same idea as <code>del</code> for those names.
+  Do <b>not</b> sprinkle <code>del</code> through normal code. Use it when you need to remove a
+  <b>dict key</b> / <b>attribute</b>, or free a <b>big object early</b> inside a long function.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">del optional — normal everyday code</span>
+    <div class="step-pre">def load():
+    huge = load_report()   # strong name
+    return process(huge)
+# function ends → huge gone automatically
+# no del needed
+
+def greet(name):
+    msg = f"Hi {name}"
+    return msg
+# msg disappears when greet returns</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>Rule:</b> short functions / locals that go out of scope —
+      Python already drops the strong names. Skip <code>del</code>.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">del useful — when you really need it</span>
+    <div class="step-pre"># 1) Remove a dict key / attribute (real job)
+del d["temp"]
+del box.scratch
+
+# 2) Free a big object EARLY in a long function
+def overnight_batch(rows):
+    huge = load_all(rows)   # still inside the function
+    summary = summarize(huge)
+    del huge                # done with data — free RAM now
+    # ... more work that takes a long time ...
+    return summary</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>Rule:</b> still in the same scope, but finished with a large value —
+      or you must delete a key/attribute. Then <code>del</code> helps.
+    </p>
+  </div>
+</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th></th><th>del optional (usual)</th><th>del useful / needed</th></tr>
+<tr>
+  <td><b>When</b></td>
+  <td>Function ends; name falls out of scope</td>
+  <td>Remove key/attribute, or free early in a long function</td>
+</tr>
+<tr>
+  <td><b>Who drops the hold?</b></td>
+  <td>Python — automatically</td>
+  <td>You — with <code>del</code> (or rebind / set to <code>None</code>)</td>
+</tr>
+<tr>
+  <td><b>Everyday scripts / APIs?</b></td>
+  <td>Yes — this is the default</td>
+  <td>Only for keys, attributes, or big early cleanup</td>
+</tr>
+<tr>
+  <td><b>Interview line</b></td>
+  <td colspan="2"><code>del</code> is <b>optional</b>. Scope end drops strong names.
+  Use <code>del</code> for keys/attributes or to free a large object before a long function finishes.</td>
+</tr>
+</table>
+
+<h3 style="margin-top:16px">weakref · del · gc.collect — two stories compared</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 10px;line-height:1.45">
+  Same three tools. Different outcome depending on whether objects hold each other in a <b>circle</b>.
+</p>
+
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">A) No circle (simple case)</span>
+    <div class="step-pre">import gc, weakref
+
+class Toy:
+    def __init__(self, name):
+        self.name = name
+
+a = Toy("ball")
+soft_ref = weakref.ref(a)   # soft look
+print(soft_ref())           # Toy ball — still alive
+
+del a                    # drop the only strong name
+print(soft_ref())           # None — freed NOW by refcount
+
+n = gc.collect()         # almost nothing left for GC
+print(n)                 # often 0</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>What happened:</b> After <code>del a</code>, refcount hit 0 → object gone immediately.
+      <code>gc.collect()</code> was not needed to free it.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">B) Circle A ↔ B (hard case)</span>
+    <div class="step-pre">import gc, weakref
+
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.other = None
+
+a = Node("A")
+b = Node("B")
+a.other = b
+b.other = a              # circle A ↔ B
+
+soft_ref = weakref.ref(a)   # soft look
+print(soft_ref())           # Node A — still alive
+
+del a, b                 # drop strong names; circle may remain
+print(soft_ref())           # may still be Node A
+
+n = gc.collect()         # cyclic GC breaks the circle
+print(n, soft_ref())        # collected count; soft_ref() → None</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>What happened:</b> After <code>del</code>, objects still pointed at each other.
+      Refcount never hit 0 → need <code>gc.collect()</code> to free the circle.
+    </p>
+  </div>
+</div>
+
+<table class="data-tbl" style="margin-top:12px">
+<tr><th>Tool</th><th>Purpose (always)</th><th>A) No circle</th><th>B) Circle A ↔ B</th></tr>
+<tr>
+  <td><code>weakref.ref(x)</code></td>
+  <td>Soft look — does <b>not</b> keep object alive. Later <code>soft_ref()</code> → object or <code>None</code>.</td>
+  <td>Watch the toy without holding it.</td>
+  <td>Same — still only a soft look.</td>
+</tr>
+<tr>
+  <td><code>del …</code></td>
+  <td>Drop strong name(s). Refcount −1. If count hits 0 → free <b>now</b>.</td>
+  <td><code>del a</code> → count 0 → <code>soft_ref()</code> becomes <code>None</code> right away.</td>
+  <td><code>del a, b</code> → circle still holds them → may <b>not</b> free yet.</td>
+</tr>
+<tr>
+  <td><code>gc.collect()</code></td>
+  <td>Run cyclic GC <b>now</b> (usually automatic). Frees unreachable circles.</td>
+  <td>Usually collects <b>0</b> for this toy — already gone.</td>
+  <td><b>Needed</b> to free A↔B; then <code>soft_ref()</code> becomes <code>None</code>.</td>
+</tr>
+</table>
+<p style="font-size:13px;color:#334155;margin:10px 0 0;line-height:1.45">
+  <b>Kid takeaway:</b>
+  <code>weakref</code> = peek without hugging.
+  <code>del</code> = let go of the name.
+  <code>gc.collect()</code> = call the special cleaner when toys hold each other in a loop.
+</p>""",
     22: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -463,4 +807,5 @@ GLOSSARY_CSHARP_BTNS: dict[str, str] = {
     "__CSHARP_DEQUE_BTN__": "deque-linkedlist",
     "__CSHARP_CHAINMAP_BTN__": "chainmap-config",
     "__CSHARP_ORDEREDDICT_BTN__": "ordereddict-dict",
+    "__CSHARP_MEMORY_BTN__": "memory-gc",
 }

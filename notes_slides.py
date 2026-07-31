@@ -150,6 +150,8 @@ NOTES_CSS = """
 }
 .mm-step b { display: block; color: #2563eb; margin-bottom: 2px; font-size: 12px; }
 .cheat-tbl .cheat-mean { font-weight: 400; color: #64748b; font-size: 12px; }
+.cheat-tbl { width: auto !important; max-width: 100%; table-layout: auto; }
+.cheat-tbl th, .cheat-tbl td { white-space: nowrap; width: auto; }
 
 /* Section 1 — What is a Dictionary? */
 .dict-what {

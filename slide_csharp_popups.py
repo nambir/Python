@@ -1041,6 +1041,161 @@ foreach (var key in d.Keys)
     )
 
 
+def _memory_gc_body() -> str:
+    return f"""
+<p>
+  <b>Why does Python talk about so many memory words?</b>
+  CPython uses <b>more than one cleanup plan</b> at once.
+  C# mostly uses <b>one big garbage collector</b>, plus a few helpers.
+</p>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Term</th><th>Python (CPython)</th><th>C# (.NET)</th></tr>
+<tr>
+  <td><b>Reference counting</b></td>
+  <td>Each object keeps a count of how many names/boxes point to it.
+  When the count hits <b>0</b>, it is freed <b>right away</b>.
+  Check with <code>sys.getrefcount(x)</code> (count looks a bit high because of the call itself).</td>
+  <td><b>Not the main plan.</b> .NET does not free objects by a visible per-object refcount
+  in everyday code. The <b>CLR GC</b> finds unused objects later.</td>
+</tr>
+<tr>
+  <td><b>Garbage collector</b></td>
+  <td>Extra cleaner for <b>circles</b> (A→B→A) that refcount alone cannot free.
+  Call <code>gc.collect()</code> (usually automatic).</td>
+  <td>This <b>is</b> the main cleanup. Mark / sweep style GC runs in generations.
+  You rarely call <code>GC.Collect()</code> yourself.</td>
+</tr>
+<tr>
+  <td><b>Generation (GC)</b></td>
+  <td>Buckets for young vs older objects: gen <b>0, 1, 2</b>.
+  Young objects are checked more often.</td>
+  <td>Same idea: Gen <b>0, 1, 2</b>. Short-lived objects die in Gen 0 most of the time.</td>
+</tr>
+<tr>
+  <td><b>weakref</b></td>
+  <td>A soft pointer: you can look at the object, but you do <b>not</b> keep it alive.
+  Good for caches. <code>weakref.ref(obj)</code></td>
+  <td><code>WeakReference</code> / <code>WeakReference&lt;T&gt;</code> — same idea for caches
+  without pinning memory forever.</td>
+</tr>
+<tr>
+  <td><b>del</b></td>
+  <td>Removes a <b>name</b> from the namespace (<code>del x</code>).
+  If that was the last strong reference, refcount can free the object soon.</td>
+  <td>No everyday <code>del</code> for locals.
+  Use scope end, <code>using</code> / <code>IDisposable</code> for files/handles,
+  and let the GC reclaim managed memory.</td>
+</tr>
+</table>
+{_diff_first(
+    "refcount (fast) + cyclic GC (for circles) + weakref + del",
+    "mainly CLR GC + WeakReference + IDisposable / using",
+    "Why Python lists more tools",
+)}
+<p><b>Kid picture</b></p>
+<ul style="margin:6px 0 10px 18px;font-size:13px;line-height:1.45;color:#334155">
+  <li><b>Python:</b> sticky-note counter on each toy (refcount). When nobody holds it, throw it away now.
+  If two toys hold each other in a loop, a special cleaner (GC) comes later.</li>
+  <li><b>C#:</b> a janitor (GC) walks the room later and throws away toys nobody can reach.
+  You still close files yourself with <code>using</code>.</li>
+</ul>
+
+<h4 style="margin:14px 0 6px;color:#5b21b6">What does each line do? (full detail)</h4>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #ca8a04">
+  <b>1) <code>weakref.ref(a)</code> — soft look</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    Creates a <b>weak reference</b> to object <code>a</code> and stores that soft pointer in <code>soft_ref</code>.
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li><b>Does NOT</b> add +1 to the object’s strong refcount (unlike a normal name).</li>
+    <li>So by itself, it does <b>not</b> keep the object alive.</li>
+    <li>Later you can ask: <code>obj = soft_ref()</code>
+      — if the object still exists → you get it;
+      if it was already freed → you get <code>None</code>.</li>
+    <li><b>Why use it?</b> Caches / maps that should remember something <i>only while someone else still needs it</i>.</li>
+    <li><b>C# twin:</b> <code>WeakReference&lt;T&gt;</code> / <code>WeakReference</code>.</li>
+  </ul>
+</div>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #2563eb">
+  <b>2) <code>del a, b</code> — drop the names</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    <code>del</code> removes the <b>names</b> <code>a</code> and <code>b</code> from this scope.
+    It does <b>not</b> mean “erase the object’s memory this second” by itself.
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li>Each <code>del</code> drops one <b>strong</b> reference (refcount −1 for that binding).</li>
+    <li>If refcount hits <b>0</b> → CPython frees the object <b>immediately</b>.</li>
+    <li>In the sample, <code>a</code> and <code>b</code> still point to each other (<code>a.other = b</code>, <code>b.other = a</code>),
+      so after <code>del a, b</code> the objects may still have refcount ≥ 1 from the circle.
+      Refcount alone <b>cannot</b> free them.</li>
+    <li>Also: <code>del</code> works on names, list slots, dict keys (<code>del d["k"]</code>), attributes, etc.</li>
+    <li><b>C# twin:</b> no everyday <code>del</code> for locals — leave scope, or <code>using</code> for resources.</li>
+  </ul>
+</div>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #16a34a">
+  <b>3) <code>gc.collect()</code> — run the circle cleaner now</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    Asks Python’s <b>cyclic garbage collector</b> to run <b>right now</b>
+    (normally it runs automatically in the background).
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li>Finds groups of objects that only point to <b>each other</b> and are not reachable from your program.</li>
+    <li>Those circles are freed even though each object’s refcount was never 0.</li>
+    <li>Returns how many objects it collected (an int).</li>
+    <li>You usually <b>do not need</b> to call it in app code — useful for demos, tests, or hunting leaks.</li>
+    <li><b>C# twin:</b> <code>GC.Collect()</code> — also rare in production; prefer letting the runtime decide.</li>
+  </ul>
+</div>
+
+{_py_cs(
+    "Python — walk the three steps in order:",
+    """import gc, weakref
+
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.other = None
+
+a = Node("A")
+b = Node("B")
+a.other = b
+b.other = a              # circle A ↔ B
+
+soft_ref = weakref.ref(a)   # 1) soft look — no strong keep-alive by itself
+print(soft_ref())           # still alive → Node A (names a/b exist)
+
+del a, b                 # 2) drop strong names; circle may remain
+print(soft_ref())           # may still be Node, or None after GC
+
+n = gc.collect()         # 3) force cyclic GC now
+print(n, soft_ref())        # collected count; soft_ref() often None now""",
+    "C# — WeakReference + using (no del / rare GC.Collect):",
+    """using System;
+using System.IO;
+
+var softRef = new WeakReference<string>("hello");
+if (softRef.TryGetTarget(out var text))
+    Console.WriteLine(text);  // soft look
+
+using (var reader = File.OpenText("data.txt"))
+{
+    Console.WriteLine(reader.ReadLine());
+}  // Dispose closes the file — do not rely on GC for handles
+
+// GC.Collect();  // possible, but avoid in normal apps""",
+)}
+{_note(
+    "<code>weakref.ref</code> = soft peek (no keep-alive). "
+    "<code>del</code> = drop a strong name (may free if refcount hits 0). "
+    "<code>gc.collect()</code> = run cyclic GC now (for unreachable circles). "
+    "Python lists many tools because it mixes refcount + cyclic GC; C# mostly uses one GC + WeakReference + using."
+)}
+"""
+
+
 _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "hetero-list": ("C# Comparison — Heterogeneous Lists", _hetero_list_body),
     "tuple-record": ("C# Comparison — Tuple vs ValueTuple", _tuple_body),
@@ -1074,6 +1229,7 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "deque-linkedlist": ("C# Comparison — deque vs LinkedList", _deque_body),
     "chainmap-config": ("C# Comparison — ChainMap vs config layers", _chainmap_body),
     "ordereddict-dict": ("C# Comparison — OrderedDict vs Dictionary", _ordereddict_body),
+    "memory-gc": ("C# Comparison — Memory: refcount, GC, weakref, del", _memory_gc_body),
 }
 
 

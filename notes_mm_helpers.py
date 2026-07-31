@@ -57,9 +57,9 @@ def trap(text: str) -> str:
 
 
 def cheat(rows: list[tuple[str, str, str]]) -> str:
-    """Two columns: Thing + meaning together, then Code / tip."""
+    """Two columns: Thing + meaning on one line, then Code / tip."""
     body = "".join(
-        f'<tr><td><b>{a}</b><br><span class="cheat-mean">{b}</span></td>'
+        f'<tr><td><b>{a}</b> <span class="cheat-mean">— {b}</span></td>'
         f"<td>{c}</td></tr>"
         for a, b, c in rows
     )

@@ -677,6 +677,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .mm-step b { display: block; color: #2563eb; margin-bottom: 2px; font-size: 12px; }
 .cheat-tbl .cheat-mean { font-weight: 400; color: #64748b; font-size: 12px; }
+.cheat-tbl { width: auto !important; max-width: 100%; table-layout: auto; }
+.cheat-tbl th, .cheat-tbl td { white-space: nowrap; width: auto; }
 
 /* Section 1 — What is a Dictionary? */
 .dict-what {
@@ -2468,16 +2470,16 @@ print(tags)              # {'python', 'code'}
 "python" in tags         # True — fast membership</div></li><li><b>Step 6 — Frozenset: immutable set</b><br>Frozenset is like a set but cannot change after creation. It can be a dictionary key.<div class="step-pre">perms = frozenset({"read", "write"})
 # perms.add("admin")     # AttributeError — cannot change
 
-cache = {}
-cache[frozenset({1, 2})] = "combo"   # OK as dict key</div></li><li><b>Step 7 — What is a dictionary?</b><br>A dictionary stores key : value pairs.<div class="step-pre">student = {"name": "Ravi", "age": 15}
+store = {}
+store[frozenset({1, 2})] = "combo"   # OK as dict key</div></li><li><b>Step 7 — What is a dictionary?</b><br>A dictionary stores key : value pairs.<div class="step-pre">student = {"name": "Ravi", "age": 15}
 student["name"]          # Ravi</div></li><li><b>Step 8 — What is a dictionary key?</b><br>A key finds a value quickly — like a phone book.<div class="step-pre">phone_book = {"Ravi": "99999", "Priya": "88888"}</div><p class="step-result"><b>Key → Value:</b> <code>Ravi → 99999</code></p></li><li><b>Step 9 — Why keys must be immutable (the locker rule)</b><br>A dictionary finds values using <code>hash(key)</code> — like assigning a <b>locker number</b>. That number must stay the same forever after you store the value.<div class="callout"><b>If the key could change</b> (mutable), the locker number would change too — Python could not find your value again. So only <b>immutable</b> types are allowed as keys.</div><table class="data-tbl"><tr><th>Allowed keys</th><th>Blocked keys</th></tr><tr><td><code>int</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code>, <code>bool</code>, <code>float</code></td><td><code>list</code>, <code>dict</code>, <code>set</code></td></tr></table></li><li><b>Step 10 — Example: list key fails (and why)</b><br><div class="step-pre">prices = {}
 prices[(12.97, 80.22)] = "Chennai"   # tuple OK
 prices[[12.97, 80.22]] = "Chennai"   # list → TypeError</div><p class="step-result"><b>Output:</b> <code>TypeError: unhashable type: 'list'</code></p><p><b>Thought experiment:</b> if a list key were allowed:</p><div class="step-pre">key = [1, 2]
 data[key] = "secret"
 key.append(3)      # key changed → hash would change
-# data[[1, 2]] would no longer find "secret"</div><p class="step-result">Python blocks this problem by refusing mutable keys up front.</p></li><li><b>Step 11 — dict and set also fail as keys</b><br><div class="callout"><b>Name tip:</b> <code>cache</code> is only a <b>variable name</b> (we chose it because this dict acts like a cache). It is not a special Python keyword.</div><div class="callout"><b>{} tip:</b> <code>cache = {}</code> creates an empty <b>dictionary</b>, not a set. Empty set is <code>set()</code>. A non-empty set looks like <code>{"a", "b"}</code> (values only). A dict looks like <code>{"id": 1}</code> (key: value).</div><div class="step-pre">cache = {}                 # empty DICT (not set!)
-cache[{"id": 1}] = "data"  # TypeError: unhashable type: 'dict'
-cache[{"a", "b"}] = "x"    # TypeError: unhashable type: 'set'
+# data[[1, 2]] would no longer find "secret"</div><p class="step-result">Python blocks this problem by refusing mutable keys up front.</p></li><li><b>Step 11 — dict and set also fail as keys</b><br><div class="callout"><b>{} tip:</b> <code>store = {}</code> creates an empty <b>dictionary</b>, not a set. Empty set is <code>set()</code>. A non-empty set looks like <code>{"a", "b"}</code> (values only). A dict looks like <code>{"id": 1}</code> (key: value).</div><div class="step-pre">store = {}                 # empty DICT (not set!)
+store[{"id": 1}] = "data"  # TypeError: unhashable type: 'dict'
+store[{"a", "b"}] = "x"    # TypeError: unhashable type: 'set'
 
 # Compare:
 empty_dict = {}            # dict
@@ -6021,11 +6023,11 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
   <div class="fc">
-    <div class="fc-start">Python is cleaning up memory<small>Throw away toys nobody is holding</small></div>
+    <div class="fc-start">Python is cleaning up memory<small>Free objects that nothing holds anymore</small></div>
     <div class="fc-arrow"></div>
     
       <div class="fc-node">
-        <div class="fc-q-box">Did the last name pointing at an object go away?</div>
+        <div class="fc-q-box">Did the last strong reference to this object go away?</div>
         <div class="fc-branch">
           <div class="fc-spacer"></div>
           <div class="fc-mid"><div class="fc-arrow tall"></div><span class="fc-arrow-lbl">NO</span></div>
@@ -6034,8 +6036,8 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
             <div class="fc-h right"></div>
             <div class="fc-use key">
               <b>Reference counting</b>
-              <span class="fc-desc">When nobody holds it, Python frees it right away (in CPython).</span>
-              <code>del x</code><code>x = None</code>
+              <span class="fc-desc">Refcount hit 0 — no variable, dict slot, or attribute holds it. CPython frees it right away.</span>
+              <code>del x</code><code>x = None</code><code>scope ends</code>
             </div>
           </div>
         </div>
@@ -6066,7 +6068,7 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
             <div class="fc-h right"></div>
             <div class="fc-use cm">
               <b>Use weakref</b>
-              <span class="fc-desc">A sticky note that says “look over there” without owning the toy.</span>
+              <span class="fc-desc">A soft look: you can peek later, but you do not keep the object alive.</span>
               <code>weakref.ref(obj)</code>
             </div>
           </div>
@@ -6101,15 +6103,308 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
   
 </div>
 
-<h3>Key terms explained</h3>
+<h3>Key terms explained <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('memory-gc')" title="Open draggable C# comparison window">C# Comparison</button></h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Reference counting</td><td>Track how many names point to an object.</td><td><code>sys.getrefcount</code></td></tr>
-<tr><td>Garbage collector</td><td>Breaks circular references refcount cannot free.</td><td><code>gc.collect()</code></td></tr>
-<tr><td>Generation (GC)</td><td>Young vs old object buckets for collection frequency.</td><td>gen 0, 1, 2</td></tr>
-<tr><td>weakref</td><td>Reference that does not keep object alive.</td><td><code>weakref.ref(obj)</code></td></tr>
-<tr><td>del</td><td>Remove a name binding from namespace.</td><td><code>del x</code></td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>Overnight batch:</b> Global cache grows forever — fix with cleanup / weakref / <code>with</code> — each pattern with <b>input → output</b>.<p><b>1) Problem — cache never clears</b><br>Storing every parsed JSON in a global dict makes RAM climb all night.</p><div class="step-pre"># INPUT
+<tr><td>Reference counting</td><td>Count how many names point to a toy. When count is 0, free it now.</td><td><code>sys.getrefcount</code></td></tr>
+<tr><td>Garbage collector</td><td>Extra cleaner for circles (A→B→A) that refcount cannot free alone.</td><td><code>gc.collect()</code></td></tr>
+<tr><td>Generation (GC)</td><td>Young vs old buckets — young toys are checked more often (0, 1, 2).</td><td>gen 0, 1, 2</td></tr>
+<tr><td>weakref</td><td><b>Soft look</b> at an object. Does <b>not</b> keep it alive.
+  Later <code>soft_ref()</code> returns the object or <code>None</code> if it was freed. Good for caches.</td><td><code>weakref.ref(obj)</code></td></tr>
+<tr><td>del</td><td><b>Drop a name</b> (strong reference −1). If count hits 0 → free now.
+  Does not always free circles (A↔B) — then GC is needed.</td><td><code>del x</code></td></tr>
+<tr><td>gc.collect()</td><td><b>Run cyclic GC now</b> (usually automatic). Frees unreachable circles
+  that refcount alone cannot. Returns how many objects were collected.</td><td><code>gc.collect()</code></td></tr>
+</table>
+<p class="gloss-why" style="font-size:13px;color:#475569;margin:8px 0 0;line-height:1.45">
+  <b>Why so many words?</b> CPython uses <b>refcount + cyclic GC + weakref</b> together.
+  C# mostly says “the GC” (+ <code>WeakReference</code> / <code>using</code>). Open <b>C# Comparison</b> for a term-by-term map
+  and full detail on <code>weakref.ref</code>, <code>del</code>, and <code>gc.collect()</code>.
+</p>
+
+<h3 style="margin-top:16px">Strong name &amp; strong reference</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 10px;line-height:1.45">
+  A <b>strong reference</b> is any normal hold that adds <b>+1</b> to the object’s refcount
+  (keeps the toy alive). A <b>strong name</b> is the usual case: a variable like <code>a</code>
+  that points at the object. Other strong holds work the same way — dict slots, attributes, list items.
+  <code>del</code> (or rebinding) drops that hold (−1). When the count hits <b>0</b>, the object is freed <b>now</b>
+  (unless a circle keeps counts above 0).
+</p>
+<table class="data-tbl" style="margin-top:4px">
+<tr><th>#</th><th>Scenario</th><th>What is the strong hold?</th><th>What <code>del</code> does</th><th>Freed when?</th></tr>
+<tr>
+  <td>1</td>
+  <td><b>Dict</b></td>
+  <td>Value stored under a key — <code>d["ball"] = toy</code> is a strong hold on <code>toy</code>.</td>
+  <td><code>del d["ball"]</code> drops that slot (−1).</td>
+  <td>If that was the last strong hold → free <b>now</b> (refcount).</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><b>Attribute</b></td>
+  <td><code>box.item = toy</code> — the attribute is a strong hold on <code>toy</code>.</td>
+  <td><code>del box.item</code> (or <code>box.item = None</code>) drops it (−1).</td>
+  <td>Last strong hold gone → free <b>now</b>.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><b>Big object</b></td>
+  <td>A variable name holds a large value — <code>huge = load_report()</code>.</td>
+  <td><code>del huge</code> drops the name early so RAM can shrink sooner.</td>
+  <td>If nothing else points at it → free <b>now</b>. No <code>gc.collect()</code> needed.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><b>Circular ref</b></td>
+  <td><code>a.other = b</code> and <code>b.other = a</code> — each attribute is still a <b>strong</b> hold.</td>
+  <td><code>del a, b</code> drops the <i>names</i>, but A↔B attributes may still hold each other.</td>
+  <td>Refcount may stay &gt; 0 → need <b>cyclic GC</b> (<code>gc.collect()</code> or automatic).</td>
+</tr>
+</table>
+<div class="step-pre" style="margin-top:10px"># 1) Dict — strong hold in a slot
+d = {"ball": obj}
+del d["ball"]            # slot gone → obj freed if nothing else holds it
+
+# 2) Attribute — strong hold on a field
+box.item = obj
+del box.item             # attribute gone → same idea
+
+# 3) Big object — drop the name when finished
+huge = load_report()     # strong name holds a large value
+# ... use huge ...
+del huge                 # free early (if last strong hold)
+
+# 4) Circular ref — strong holds point at each other
+a.other = b; b.other = a
+del a, b                 # names gone, but circle may remain → gc.collect()</div>
+<p style="font-size:12px;color:#334155;margin:8px 0 0;line-height:1.45">
+  <b>Kid picture:</b> a strong hold = hugging the toy.
+  Dict key, attribute, and variable name are all hugs.
+  <code>del</code> = let go. Soft look (<code>weakref</code>) = peek without hugging.
+</p>
+
+<h4 style="margin:14px 0 6px;color:#1a1a2e">Strong reference vs weak reference</h4>
+<p style="font-size:13px;color:#475569;margin:0 0 8px;line-height:1.45">
+  <b>Hug</b> = strong reference (keeps the object alive).
+  <b>Peek</b> = weak reference (<code>weakref.ref</code> — look later, do <b>not</b> keep it alive by itself).
+  There is no special “peek with hug” API — hugging <b>is</b> a normal assignment like <code>b = a</code>.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">Strong ref — peek WITH hugging</span>
+    <div class="step-pre">a = Toy("ball")     # hug #1 (strong name)
+b = a               # hug #2 — refcount +1
+d["x"] = a          # hug #3 — also strong
+box.item = a        # hug #4 — also strong
+
+# each of these KEEPS the toy alive
+del a, b
+del d["x"]
+del box.item        # last hug gone → toy freed now</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>Effect:</b> adds <b>+1</b> to refcount. Object stays in memory while any strong hold remains.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">Weak ref — peek WITHOUT hugging</span>
+    <div class="step-pre">import weakref
+
+a = Toy("ball")              # only strong hug
+soft_ref = weakref.ref(a)    # peek — NO strong +1
+
+print(soft_ref())            # Toy ball — still alive (because of a)
+del a                        # last hug gone
+print(soft_ref())            # None — soft look could not save it</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>Effect:</b> does <b>not</b> keep the object alive. Later <code>soft_ref()</code> → object or <code>None</code>.
+    </p>
+  </div>
+</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th></th><th>Strong reference (hug)</th><th>Weak reference (peek)</th></tr>
+<tr>
+  <td><b>How you make it</b></td>
+  <td><code>b = a</code>, <code>d["k"] = a</code>, <code>box.item = a</code></td>
+  <td><code>soft_ref = weakref.ref(a)</code></td>
+</tr>
+<tr>
+  <td><b>Refcount</b></td>
+  <td><b>+1</b> (keeps object alive)</td>
+  <td><b>No</b> strong +1</td>
+</tr>
+<tr>
+  <td><b>Kid picture</b></td>
+  <td>Hug the toy</td>
+  <td>Peek / look without hugging</td>
+</tr>
+<tr>
+  <td><b>After last strong hold is gone</b></td>
+  <td>Object can be freed (refcount 0)</td>
+  <td><code>soft_ref()</code> returns <code>None</code></td>
+</tr>
+<tr>
+  <td><b>Typical use</b></td>
+  <td>Normal everyday variables, dicts, attributes</td>
+  <td>Caches / maps that must not pin memory forever</td>
+</tr>
+<tr>
+  <td><b>C# twin</b></td>
+  <td>Normal variable / field reference</td>
+  <td><code>WeakReference&lt;T&gt;</code></td>
+</tr>
+</table>
+
+<p style="font-size:13px;color:#475569;margin:12px 0 8px;line-height:1.45">
+  <b>Is <code>del</code> mandatory on every variable?</b> <b>No.</b>
+  When a function ends, local names disappear <b>automatically</b> — same idea as <code>del</code> for those names.
+  Do <b>not</b> sprinkle <code>del</code> through normal code. Use it when you need to remove a
+  <b>dict key</b> / <b>attribute</b>, or free a <b>big object early</b> inside a long function.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">del optional — normal everyday code</span>
+    <div class="step-pre">def load():
+    huge = load_report()   # strong name
+    return process(huge)
+# function ends → huge gone automatically
+# no del needed
+
+def greet(name):
+    msg = f"Hi {name}"
+    return msg
+# msg disappears when greet returns</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>Rule:</b> short functions / locals that go out of scope —
+      Python already drops the strong names. Skip <code>del</code>.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">del useful — when you really need it</span>
+    <div class="step-pre"># 1) Remove a dict key / attribute (real job)
+del d["temp"]
+del box.scratch
+
+# 2) Free a big object EARLY in a long function
+def overnight_batch(rows):
+    huge = load_all(rows)   # still inside the function
+    summary = summarize(huge)
+    del huge                # done with data — free RAM now
+    # ... more work that takes a long time ...
+    return summary</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>Rule:</b> still in the same scope, but finished with a large value —
+      or you must delete a key/attribute. Then <code>del</code> helps.
+    </p>
+  </div>
+</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th></th><th>del optional (usual)</th><th>del useful / needed</th></tr>
+<tr>
+  <td><b>When</b></td>
+  <td>Function ends; name falls out of scope</td>
+  <td>Remove key/attribute, or free early in a long function</td>
+</tr>
+<tr>
+  <td><b>Who drops the hold?</b></td>
+  <td>Python — automatically</td>
+  <td>You — with <code>del</code> (or rebind / set to <code>None</code>)</td>
+</tr>
+<tr>
+  <td><b>Everyday scripts / APIs?</b></td>
+  <td>Yes — this is the default</td>
+  <td>Only for keys, attributes, or big early cleanup</td>
+</tr>
+<tr>
+  <td><b>Interview line</b></td>
+  <td colspan="2"><code>del</code> is <b>optional</b>. Scope end drops strong names.
+  Use <code>del</code> for keys/attributes or to free a large object before a long function finishes.</td>
+</tr>
+</table>
+
+<h3 style="margin-top:16px">weakref · del · gc.collect — two stories compared</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 10px;line-height:1.45">
+  Same three tools. Different outcome depending on whether objects hold each other in a <b>circle</b>.
+</p>
+
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">A) No circle (simple case)</span>
+    <div class="step-pre">import gc, weakref
+
+class Toy:
+    def __init__(self, name):
+        self.name = name
+
+a = Toy("ball")
+soft_ref = weakref.ref(a)   # soft look
+print(soft_ref())           # Toy ball — still alive
+
+del a                    # drop the only strong name
+print(soft_ref())           # None — freed NOW by refcount
+
+n = gc.collect()         # almost nothing left for GC
+print(n)                 # often 0</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#166534">
+      <b>What happened:</b> After <code>del a</code>, refcount hit 0 → object gone immediately.
+      <code>gc.collect()</code> was not needed to free it.
+    </p>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">B) Circle A ↔ B (hard case)</span>
+    <div class="step-pre">import gc, weakref
+
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.other = None
+
+a = Node("A")
+b = Node("B")
+a.other = b
+b.other = a              # circle A ↔ B
+
+soft_ref = weakref.ref(a)   # soft look
+print(soft_ref())           # Node A — still alive
+
+del a, b                 # drop strong names; circle may remain
+print(soft_ref())           # may still be Node A
+
+n = gc.collect()         # cyclic GC breaks the circle
+print(n, soft_ref())        # collected count; soft_ref() → None</div>
+    <p style="font-size:12px;line-height:1.4;margin:8px 0 0;color:#991b1b">
+      <b>What happened:</b> After <code>del</code>, objects still pointed at each other.
+      Refcount never hit 0 → need <code>gc.collect()</code> to free the circle.
+    </p>
+  </div>
+</div>
+
+<table class="data-tbl" style="margin-top:12px">
+<tr><th>Tool</th><th>Purpose (always)</th><th>A) No circle</th><th>B) Circle A ↔ B</th></tr>
+<tr>
+  <td><code>weakref.ref(x)</code></td>
+  <td>Soft look — does <b>not</b> keep object alive. Later <code>soft_ref()</code> → object or <code>None</code>.</td>
+  <td>Watch the toy without holding it.</td>
+  <td>Same — still only a soft look.</td>
+</tr>
+<tr>
+  <td><code>del …</code></td>
+  <td>Drop strong name(s). Refcount −1. If count hits 0 → free <b>now</b>.</td>
+  <td><code>del a</code> → count 0 → <code>soft_ref()</code> becomes <code>None</code> right away.</td>
+  <td><code>del a, b</code> → circle still holds them → may <b>not</b> free yet.</td>
+</tr>
+<tr>
+  <td><code>gc.collect()</code></td>
+  <td>Run cyclic GC <b>now</b> (usually automatic). Frees unreachable circles.</td>
+  <td>Usually collects <b>0</b> for this toy — already gone.</td>
+  <td><b>Needed</b> to free A↔B; then <code>soft_ref()</code> becomes <code>None</code>.</td>
+</tr>
+</table>
+<p style="font-size:13px;color:#334155;margin:10px 0 0;line-height:1.45">
+  <b>Kid takeaway:</b>
+  <code>weakref</code> = peek without hugging.
+  <code>del</code> = let go of the name.
+  <code>gc.collect()</code> = call the special cleaner when toys hold each other in a loop.
+</p><div class="real-life"><b>Real-life example:</b> <b>Overnight batch:</b> Global cache grows forever — fix with cleanup / weakref / <code>with</code> — each pattern with <b>input → output</b>.<p><b>1) Problem — cache never clears</b><br>Storing every parsed JSON in a global dict makes RAM climb all night.</p><div class="step-pre"># INPUT
 cache = {}
 
 def process(order_id, huge_json):
@@ -6773,7 +7068,58 @@ except Exception as e:
 <tr><td>Polymorphism</td><td>Same method call, different behavior per class.</td><td><code>pet.speak()</code></td></tr>
 <tr><td>Encapsulation</td><td>Hide internal state — <code>_prefix</code> convention, <code>@property</code>.</td><td><code>self._balance</code></td></tr>
 <tr><td>MRO</td><td>Method Resolution Order — which parent method runs first.</td><td><code>Dog.__mro__</code></td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>Bank / wallet domain:</b> Inheritance + polymorphism at month-end — each OOP idea with <b>input → output</b>.<p><b>1) Base <code>Account</code></b><br>Shared balance and deposit/withdraw; default <code>month_end</code> does nothing.</p><div class="step-pre"># INPUT
+</table>
+
+<h3 style="margin-top:16px">Same name: class vs function vs method</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 8px;line-height:1.45">
+  <code>Toy("ball")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>
+  (creates an object). If you later define a <b>function</b> with the same name, that name is
+  <b>shadowed</b> — Python keeps only the <b>last</b> binding. A <b>method</b> named <code>Toy</code>
+  inside the class does <b>not</b> replace the class.
+</p>
+<div class="mc-row">
+  <div class="mc-col mc-good">
+    <span class="mc-lbl">Class only — Toy("ball") creates an object</span>
+    <div class="step-pre">class Toy:
+    def __init__(self, name):
+        self.name = name
+
+a = Toy("ball")     # class call → new object
+print(a.name)       # ball</div>
+  </div>
+  <div class="mc-col mc-bad">
+    <span class="mc-lbl">Function reuses name Toy — class is hidden</span>
+    <div class="step-pre">class Toy:
+    def __init__(self, name):
+        self.name = name
+
+def Toy(name):              # same name — shadows the class
+    return f"fn:{name}"
+
+a = Toy("ball")             # calls the FUNCTION
+print(a)                    # fn:ball  (not a Toy object)</div>
+  </div>
+</div>
+<div class="step-pre" style="margin-top:10px"># Method named Toy — OK; does NOT replace the class
+class Toy:
+    def __init__(self, name):
+        self.name = name
+
+    def Toy(self):                  # unusual name, but allowed
+        return "method Toy"
+
+a = Toy("ball")                     # still creates the object
+print(a.Toy())                      # method Toy
+
+# Best practice: PascalCase for classes only
+# use make_toy() for a helper — never shadow the class name</div>
+<table class="data-tbl" style="margin-top:10px">
+<tr><th>Situation</th><th>What <code>Toy(...)</code> does</th></tr>
+<tr><td>Only the class exists</td><td>Creates a <b>Toy object</b></td></tr>
+<tr><td>A function later uses the name <code>Toy</code></td><td>Calls that <b>function</b> (class hidden)</td></tr>
+<tr><td>Method <code>def Toy(self)</code></td><td>Class still works; call method with <code>a.Toy()</code></td></tr>
+</table>
+<div class="real-life"><b>Real-life example:</b> <b>Bank / wallet domain:</b> Inheritance + polymorphism at month-end — each OOP idea with <b>input → output</b>.<p><b>1) Base <code>Account</code></b><br>Shared balance and deposit/withdraw; default <code>month_end</code> does nothing.</p><div class="step-pre"># INPUT
 class Account:
     def __init__(self, balance):
         self.balance = balance
@@ -6809,7 +7155,26 @@ balances → [100, 208.0]  (base unchanged, savings +4%)</div></div><h3>Step-by-
         return f"{self.name} says woof!"
 
 my_dog = Dog("Rex")
-my_dog.bark()</div><p class="step-result"><b>Output:</b> <code>Rex says woof!</code></p></li><li><b>Step 2 — Inheritance: single, multiple & MRO</b><br>A child class inherits from one or more parents. MRO (Method Resolution Order) defines lookup order.<div class="step-pre">class Animal:
+my_dog.bark()</div><p class="step-result"><b>Output:</b> <code>Rex says woof!</code></p></li><li><b>Step 2 — Same name: class vs function vs method</b><br><code>Toy("ball")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>. If a <b>function</b> later uses the same name, the class is <b>shadowed</b> (Python keeps the last binding). A <b>method</b> named <code>Toy</code> does <b>not</b> replace the class.<div class="step-pre">class Toy:
+    def __init__(self, name):
+        self.name = name
+
+a = Toy("ball")     # class → object
+print(a.name)       # ball
+
+def Toy(name):      # same name — hides the class
+    return f"fn:{name}"
+
+a = Toy("ball")     # now calls the FUNCTION
+print(a)            # fn:ball</div><div class="step-pre"># Method named Toy — OK; class still works
+class Toy:
+    def __init__(self, name):
+        self.name = name
+    def Toy(self):
+        return "method Toy"
+
+a = Toy("ball")     # still creates object
+print(a.Toy())      # method Toy</div><p class="step-result"><b>Best practice:</b> PascalCase for classes only. Use <code>make_toy()</code> for a helper — never reuse the class name for a function.</p></li><li><b>Step 3 — Inheritance: single, multiple & MRO</b><br>A child class inherits from one or more parents. MRO (Method Resolution Order) defines lookup order.<div class="step-pre">class Animal:
     def speak(self): return "..."
 
 class Dog(Animal):
@@ -6820,16 +7185,16 @@ class Cat(Animal):
 
 class Pet(Dog, Cat): pass
 
-Pet.__mro__   # lookup order</div></li><li><b>Step 3 — Encapsulation & _ convention</b><br>Python has no true private fields. A single leading underscore signals "internal use" by convention.<div class="step-pre">class BankAccount:
+Pet.__mro__   # lookup order</div></li><li><b>Step 4 — Encapsulation & _ convention</b><br>Python has no true private fields. A single leading underscore signals "internal use" by convention.<div class="step-pre">class BankAccount:
     def __init__(self, balance):
         self._balance = balance   # convention: don't touch
 
     def deposit(self, amount):
-        self._balance += amount</div><p class="step-result"><b>Note:</b> <code>__name</code> triggers name mangling — stronger but not security.</p></li><li><b>Step 4 — Polymorphism & overriding</b><br>Different classes share the same interface. Child methods override parent methods.<div class="step-pre">def announce(animal):
+        self._balance += amount</div><p class="step-result"><b>Note:</b> <code>__name</code> triggers name mangling — stronger but not security.</p></li><li><b>Step 5 — Polymorphism & overriding</b><br>Different classes share the same interface. Child methods override parent methods.<div class="step-pre">def announce(animal):
     print(animal.speak())
 
 announce(Dog())   # woof
-announce(Cat())   # meow</div></li><li><b>Step 5 — Abstract classes (abc)</b><br>Force subclasses to implement required methods using <code>abc.ABC</code> and <code>@abstractmethod</code>.<div class="step-pre">from abc import ABC, abstractmethod
+announce(Cat())   # meow</div></li><li><b>Step 6 — Abstract classes (abc)</b><br>Force subclasses to implement required methods using <code>abc.ABC</code> and <code>@abstractmethod</code>.<div class="step-pre">from abc import ABC, abstractmethod
 
 class Shape(ABC):
     @abstractmethod
@@ -6837,7 +7202,7 @@ class Shape(ABC):
 
 class Circle(Shape):
     def __init__(self, r): self.r = r
-    def area(self): return 3.14 * self.r ** 2</div></li><li><b>Step 6 — Dunder methods</b><br>Double-underscore methods customize built-in behavior.<table class="data-tbl"><tr><th>Method</th><th>Triggered by</th></tr><tr><td><code>__str__</code></td><td><code>print(obj)</code>, <code>str(obj)</code></td></tr><tr><td><code>__repr__</code></td><td><code>repr(obj)</code>, debugger</td></tr><tr><td><code>__eq__</code></td><td><code>obj == other</code></td></tr><tr><td><code>__len__</code></td><td><code>len(obj)</code></td></tr></table></li></ul>
+    def area(self): return 3.14 * self.r ** 2</div></li><li><b>Step 7 — Dunder methods</b><br>Double-underscore methods customize built-in behavior.<table class="data-tbl"><tr><th>Method</th><th>Triggered by</th></tr><tr><td><code>__str__</code></td><td><code>print(obj)</code>, <code>str(obj)</code></td></tr><tr><td><code>__repr__</code></td><td><code>repr(obj)</code>, debugger</td></tr><tr><td><code>__eq__</code></td><td><code>obj == other</code></td></tr><tr><td><code>__len__</code></td><td><code>len(obj)</code></td></tr></table></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>self</b> = the current object instance — like C# <code>this</code>, but you must write it explicitly as the first parameter.<br><b>Example:</b> <code>def __init__(self, name): self.name = name</code></div>
 <div class="keyword-box"><b>__init__</b> = constructor — runs when object is created. Not a type name — initializes <code>self</code>.</div>
@@ -6970,7 +7335,7 @@ print(c2.items)   # []  ← correct</div></div>
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is self in Python?</p><p class="qa-a"><b>A:</b> The current instance. You must pass it as the first parameter of instance methods. <code>self.name</code> stores data on the object — like <code>this</code> in C#.</p><p class="qa-q"><b>Q:</b> __str__ vs __repr__?</p><p class="qa-a"><b>A:</b> <code>__str__</code> is for end users (readable). <code>__repr__</code> is for developers — ideally valid code to recreate the object.</p><p class="qa-q"><b>Q:</b> What is MRO?</p><p class="qa-a"><b>A:</b> Method Resolution Order — the sequence Python searches base classes. Check with <code>ClassName.__mro__</code> or <code>help(ClassName)</code>.</p><p class="qa-q"><b>Q:</b> How does Python handle encapsulation?</p><p class="qa-a"><b>A:</b> By convention: <code>_attr</code> means internal. <code>__attr</code> name-mangles to <code>_ClassName__attr</code>. Not true access control — trust and documentation.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is self in Python?</p><p class="qa-a"><b>A:</b> The current instance. You must pass it as the first parameter of instance methods. <code>self.name</code> stores data on the object — like <code>this</code> in C#.</p><p class="qa-q"><b>Q:</b> What if a function has the same name as a class?</p><p class="qa-a"><b>A:</b> Python keeps the <b>last</b> binding of that name. A function named <code>Toy</code> after <code>class Toy</code> shadows the class — <code>Toy("ball")</code> then calls the function, not the constructor. A method <code>def Toy(self)</code> does not replace the class. Best practice: never reuse the class name for a function.</p><p class="qa-q"><b>Q:</b> __str__ vs __repr__?</p><p class="qa-a"><b>A:</b> <code>__str__</code> is for end users (readable). <code>__repr__</code> is for developers — ideally valid code to recreate the object.</p><p class="qa-q"><b>Q:</b> What is MRO?</p><p class="qa-a"><b>A:</b> Method Resolution Order — the sequence Python searches base classes. Check with <code>ClassName.__mro__</code> or <code>help(ClassName)</code>.</p><p class="qa-q"><b>Q:</b> How does Python handle encapsulation?</p><p class="qa-a"><b>A:</b> By convention: <code>_attr</code> means internal. <code>__attr</code> name-mangles to <code>_ClassName__attr</code>. Not true access control — trust and documentation.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -13270,7 +13635,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">age<span class="arrow">&rarr;</span>25</span><span class="kv">price<span class="arrow">&rarr;</span>9.5</span><span class="kv">big<span class="arrow">&rarr;</span>10**100</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>int</strong> &rarr; whole number</p><p class="line"><strong>float</strong> &rarr; with a dot</p><span class="dict-tag">Unlimited int size</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Make</div><span class="op-code">n=25</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Add</div><span class="op-code">n+1</span></div><div class="op-card"><div class="op-ico chg">//</div><div class="op-name">Floor /</div><span class="op-code">7//2 &rarr; 3</span></div><div class="op-card"><div class="op-ico read">/</div><div class="op-name">True /</div><span class="op-code">7/2 &rarr; 3.5</span></div><div class="op-card"><div class="op-ico del">**</div><div class="op-name">Power</div><span class="op-code">2**10</span></div></div></div><div class="mm-sec"><h3>3. Quick rules</h3><div class="mm-grid"><div class="mm-card"><b>int vs float</b><code>3</code> is int. <code>3.0</code> is float.<br><code>/</code> always gives float in Python 3.</div><div class="mm-card"><b>bool is a number too</b><code>True == 1</code>, <code>False == 0</code><br>But prefer real <code>bool</code> for yes/no.</div></div></div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Every number is an object. Bigger ints need more bytes.<br><code>sys.getsizeof(1)</code> &lt; <code>sys.getsizeof(10**100)</code><br>Do not memorize exact bytes — they change by Python version.</div><div class="mm-card"><b>Interview point</b><b>Python int has no fixed 32/64-bit box</b> — it grows with the value (unlike C# <code>int</code>).<br>Interview: compare with <code>sys.getsizeof</code>; say sizes vary by build.<br>Float is fixed-width (IEEE) — big ints stay exact; floats can round.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>int</b><br><span class="cheat-mean">Whole count</span></td><td><code>age = 25</code></td></tr><tr><td><b>float</b><br><span class="cheat-mean">With decimal</span></td><td><code>price = 9.5</code></td></tr><tr><td><b>/</b><br><span class="cheat-mean">True divide</span></td><td><code>7/2 &rarr; 3.5</code></td></tr><tr><td><b>//</b><br><span class="cheat-mean">Floor divide</span></td><td><code>7//2 &rarr; 3</code></td></tr><tr><td><b>sizeof</b><br><span class="cheat-mean">Shallow bytes</span></td><td><code>sys.getsizeof(n)</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Make</div><span class="op-code">n=25</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Add</div><span class="op-code">n+1</span></div><div class="op-card"><div class="op-ico chg">//</div><div class="op-name">Floor /</div><span class="op-code">7//2 &rarr; 3</span></div><div class="op-card"><div class="op-ico read">/</div><div class="op-name">True /</div><span class="op-code">7/2 &rarr; 3.5</span></div><div class="op-card"><div class="op-ico del">**</div><div class="op-name">Power</div><span class="op-code">2**10</span></div></div></div><div class="mm-sec"><h3>3. Quick rules</h3><div class="mm-grid"><div class="mm-card"><b>int vs float</b><code>3</code> is int. <code>3.0</code> is float.<br><code>/</code> always gives float in Python 3.</div><div class="mm-card"><b>bool is a number too</b><code>True == 1</code>, <code>False == 0</code><br>But prefer real <code>bool</code> for yes/no.</div></div></div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Every number is an object. Bigger ints need more bytes.<br><code>sys.getsizeof(1)</code> &lt; <code>sys.getsizeof(10**100)</code><br>Do not memorize exact bytes — they change by Python version.</div><div class="mm-card"><b>Interview point</b><b>Python int has no fixed 32/64-bit box</b> — it grows with the value (unlike C# <code>int</code>).<br>Interview: compare with <code>sys.getsizeof</code>; say sizes vary by build.<br>Float is fixed-width (IEEE) — big ints stay exact; floats can round.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>int</b> <span class="cheat-mean">— Whole count</span></td><td><code>age = 25</code></td></tr><tr><td><b>float</b> <span class="cheat-mean">— With decimal</span></td><td><code>price = 9.5</code></td></tr><tr><td><b>/</b> <span class="cheat-mean">— True divide</span></td><td><code>7/2 &rarr; 3.5</code></td></tr><tr><td><b>//</b> <span class="cheat-mean">— Floor divide</span></td><td><code>7//2 &rarr; 3</code></td></tr><tr><td><b>sizeof</b> <span class="cheat-mean">— Shallow bytes</span></td><td><code>sys.getsizeof(n)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13288,7 +13653,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">"H"<span class="arrow">&rarr;</span>0</span><span class="kv">"i"<span class="arrow">&rarr;</span>1</span><span class="kv">"!"<span class="arrow">&rarr;</span>2</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>str</strong> &rarr; text in quotes</p><p class="line"><strong>Index</strong> &rarr; seat number</p><span class="dict-tag">Immutable text</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">s="Hi"</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">s[0]</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Join</div><span class="op-code">s+"!"</span></div><div class="op-card"><div class="op-ico chg">f</div><div class="op-name">f-string</div><span class="op-code">f"Hi {n}"</span></div><div class="op-card"><div class="op-ico del">[:]</div><div class="op-name">Slice</div><span class="op-code">s[0:2]</span></div></div></div><div class="mm-sec"><h3>3. Quick rules</h3><div class="mm-grid"><div class="mm-card"><b>Cannot change one letter</b><code>s[0] = "X"</code> &rarr; error<br>Make a new string instead.</div><div class="mm-card"><b>Quotes</b><code>'hi'</code> or <code>"hi"</code><br>Triple quotes for long text.</div></div></div><div class="dt-trap"><b>Watch out:</b> Strings cannot change in place. <code>s = s + "!"</code> makes a <b>new</b> string.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Longer text uses more memory.<br><code>sys.getsizeof("A")</code> &lt; <code>sys.getsizeof("Hello")</code><br>Empty <code>""</code> still costs some bytes (object header).</div><div class="mm-card"><b>Interview point</b>Strings are <b>immutable</b> &amp; often interned for small literals.<br>Building with many <code>+</code> in a loop can be slow — prefer <code>''.join(parts)</code>.<br>Interview: <code>getsizeof</code> is shallow; shared interned strings may look small.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b><br><span class="cheat-mean">Text box</span></td><td><code>s = "Hi"</code></td></tr><tr><td><b>Index</b><br><span class="cheat-mean">One letter</span></td><td><code>s[0]</code></td></tr><tr><td><b>Slice</b><br><span class="cheat-mean">A piece</span></td><td><code>s[1:3]</code></td></tr><tr><td><b>f-string</b><br><span class="cheat-mean">Fill blanks</span></td><td><code>f"Hi {name}"</code></td></tr><tr><td><b>Join</b><br><span class="cheat-mean">Glue list</span></td><td><code>"".join(parts)</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">s="Hi"</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">s[0]</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Join</div><span class="op-code">s+"!"</span></div><div class="op-card"><div class="op-ico chg">f</div><div class="op-name">f-string</div><span class="op-code">f"Hi {n}"</span></div><div class="op-card"><div class="op-ico del">[:]</div><div class="op-name">Slice</div><span class="op-code">s[0:2]</span></div></div></div><div class="mm-sec"><h3>3. Quick rules</h3><div class="mm-grid"><div class="mm-card"><b>Cannot change one letter</b><code>s[0] = "X"</code> &rarr; error<br>Make a new string instead.</div><div class="mm-card"><b>Quotes</b><code>'hi'</code> or <code>"hi"</code><br>Triple quotes for long text.</div></div></div><div class="dt-trap"><b>Watch out:</b> Strings cannot change in place. <code>s = s + "!"</code> makes a <b>new</b> string.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Longer text uses more memory.<br><code>sys.getsizeof("A")</code> &lt; <code>sys.getsizeof("Hello")</code><br>Empty <code>""</code> still costs some bytes (object header).</div><div class="mm-card"><b>Interview point</b>Strings are <b>immutable</b> &amp; often interned for small literals.<br>Building with many <code>+</code> in a loop can be slow — prefer <code>''.join(parts)</code>.<br>Interview: <code>getsizeof</code> is shallow; shared interned strings may look small.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b> <span class="cheat-mean">— Text box</span></td><td><code>s = "Hi"</code></td></tr><tr><td><b>Index</b> <span class="cheat-mean">— One letter</span></td><td><code>s[0]</code></td></tr><tr><td><b>Slice</b> <span class="cheat-mean">— A piece</span></td><td><code>s[1:3]</code></td></tr><tr><td><b>f-string</b> <span class="cheat-mean">— Fill blanks</span></td><td><code>f"Hi {name}"</code></td></tr><tr><td><b>Join</b> <span class="cheat-mean">— Glue list</span></td><td><code>"".join(parts)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13306,7 +13671,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">yes<span class="arrow">&rarr;</span>True</span><span class="kv">no<span class="arrow">&rarr;</span>False</span><span class="kv">empty<span class="arrow">&rarr;</span>None</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>bool</strong> &rarr; yes / no</p><p class="line"><strong>None</strong> &rarr; nothing here</p><span class="dict-tag">Use is for None</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday checks</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">T/F</div><div class="op-name">Make</div><span class="op-code">ok=True</span></div><div class="op-card"><div class="op-ico read">if</div><div class="op-name">If true</div><span class="op-code">if ok:</span></div><div class="op-card"><div class="op-ico add">not</div><div class="op-name">Flip</div><span class="op-code">not ok</span></div><div class="op-card"><div class="op-ico chg">and</div><div class="op-name">Both</div><span class="op-code">a and b</span></div><div class="op-card"><div class="op-ico del">is</div><div class="op-name">None?</div><span class="op-code">x is None</span></div></div></div><div class="mm-sec"><h3>3. Truthy / falsy (kid rule)</h3><div class="mm-grid"><div class="mm-card"><b>Falsy (count as no)</b><code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>set()</code>, <code>None</code></div><div class="mm-card"><b>Truthy (count as yes)</b>Almost everything else — non-empty text, lists, numbers ≠ 0.</div></div></div><div class="dt-trap"><b>Watch out:</b> Use <code>x is None</code>, not <code>x == None</code>. Use <code>is</code> for identity; <code>==</code> for value.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b><code>True</code>/<code>False</code> are tiny shared objects (bool is a subclass of int).<br><code>None</code> is one shared singleton — everyone points to the same nothing.</div><div class="mm-card"><b>Interview point</b>Interview: <code>bool</code> is a subclass of <code>int</code> (<code>True == 1</code>).<br><code>None</code> is a singleton — identity check with <code>is</code>.<br>Falsy containers still exist in memory; they just test false in <code>if</code>.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>True/False</b><br><span class="cheat-mean">Yes / no</span></td><td><code>ok = True</code></td></tr><tr><td><b>None</b><br><span class="cheat-mean">Missing value</span></td><td><code>x = None</code></td></tr><tr><td><b>is None</b><br><span class="cheat-mean">Same nothing?</span></td><td><code>x is None</code></td></tr><tr><td><b>Truthy test</b><br><span class="cheat-mean">If box has stuff</span></td><td><code>if items:</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday checks</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">T/F</div><div class="op-name">Make</div><span class="op-code">ok=True</span></div><div class="op-card"><div class="op-ico read">if</div><div class="op-name">If true</div><span class="op-code">if ok:</span></div><div class="op-card"><div class="op-ico add">not</div><div class="op-name">Flip</div><span class="op-code">not ok</span></div><div class="op-card"><div class="op-ico chg">and</div><div class="op-name">Both</div><span class="op-code">a and b</span></div><div class="op-card"><div class="op-ico del">is</div><div class="op-name">None?</div><span class="op-code">x is None</span></div></div></div><div class="mm-sec"><h3>3. Truthy / falsy (kid rule)</h3><div class="mm-grid"><div class="mm-card"><b>Falsy (count as no)</b><code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>, <code>set()</code>, <code>None</code></div><div class="mm-card"><b>Truthy (count as yes)</b>Almost everything else — non-empty text, lists, numbers ≠ 0.</div></div></div><div class="dt-trap"><b>Watch out:</b> Use <code>x is None</code>, not <code>x == None</code>. Use <code>is</code> for identity; <code>==</code> for value.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b><code>True</code>/<code>False</code> are tiny shared objects (bool is a subclass of int).<br><code>None</code> is one shared singleton — everyone points to the same nothing.</div><div class="mm-card"><b>Interview point</b>Interview: <code>bool</code> is a subclass of <code>int</code> (<code>True == 1</code>).<br><code>None</code> is a singleton — identity check with <code>is</code>.<br>Falsy containers still exist in memory; they just test false in <code>if</code>.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>True/False</b> <span class="cheat-mean">— Yes / no</span></td><td><code>ok = True</code></td></tr><tr><td><b>None</b> <span class="cheat-mean">— Missing value</span></td><td><code>x = None</code></td></tr><tr><td><b>is None</b> <span class="cheat-mean">— Same nothing?</span></td><td><code>x is None</code></td></tr><tr><td><b>Truthy test</b> <span class="cheat-mean">— If box has stuff</span></td><td><code>if items:</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13324,7 +13689,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">0<span class="arrow">&rarr;</span>"red"</span><span class="kv">1<span class="arrow">&rarr;</span>"blue"</span><span class="kv">2<span class="arrow">&rarr;</span>"green"</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>List</strong> &rarr; row of seats</p><p class="line"><strong>Index</strong> &rarr; seat number</p><span class="dict-tag">Mutable · ordered</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">a=["red"]</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">a[0]</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Append</div><span class="op-code">a.append("x")</span></div><div class="op-card"><div class="op-ico chg">&#9998;</div><div class="op-name">Change</div><span class="op-code">a[0]="y"</span></div><div class="op-card"><div class="op-ico del">&#10005;</div><div class="op-name">Delete</div><span class="op-code">del a[0]</span></div></div></div><div class="mm-sec"><h3>3. Copy vs same box</h3><div class="mm-grid"><div class="mm-card"><b>Alias (same box)</b><code>b = a</code><br>Change <code>b</code> &rarr; <code>a</code> changes too.</div><div class="mm-card"><b>Copy (new box)</b><code>b = a.copy()</code> or <code>a[:]</code><br>Safe separate list.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>b = a</code> does not copy. Both names point to one list.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Lists keep <b>extra empty seats</b> ready for append (over-allocation).<br>Size jumps in steps — not +1 byte each time you append.<br><code>sys.getsizeof([])</code> &gt; <code>sys.getsizeof(())</code> (list shell is heavier).</div><div class="mm-card"><b>Interview point</b>Interview: CPython over-allocates (~grow factor) so append is usually amortized O(1).<br><code>getsizeof(list)</code> is <b>shallow</b> — does not include nested objects.<br>Prefer generators/<code>range</code> when you only need to walk huge data.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b><br><span class="cheat-mean">Row of seats</span></td><td><code>a = [1, 2]</code></td></tr><tr><td><b>Append</b><br><span class="cheat-mean">Add at end</span></td><td><code>a.append(3)</code></td></tr><tr><td><b>Slice</b><br><span class="cheat-mean">Take a piece</span></td><td><code>a[1:3]</code></td></tr><tr><td><b>Copy</b><br><span class="cheat-mean">New row</span></td><td><code>a.copy()</code></td></tr><tr><td><b>sizeof</b><br><span class="cheat-mean">Shell bytes</span></td><td><code>sys.getsizeof(a)</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">a=["red"]</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">a[0]</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Append</div><span class="op-code">a.append("x")</span></div><div class="op-card"><div class="op-ico chg">&#9998;</div><div class="op-name">Change</div><span class="op-code">a[0]="y"</span></div><div class="op-card"><div class="op-ico del">&#10005;</div><div class="op-name">Delete</div><span class="op-code">del a[0]</span></div></div></div><div class="mm-sec"><h3>3. Copy vs same box</h3><div class="mm-grid"><div class="mm-card"><b>Alias (same box)</b><code>b = a</code><br>Change <code>b</code> &rarr; <code>a</code> changes too.</div><div class="mm-card"><b>Copy (new box)</b><code>b = a.copy()</code> or <code>a[:]</code><br>Safe separate list.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>b = a</code> does not copy. Both names point to one list.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Lists keep <b>extra empty seats</b> ready for append (over-allocation).<br>Size jumps in steps — not +1 byte each time you append.<br><code>sys.getsizeof([])</code> &gt; <code>sys.getsizeof(())</code> (list shell is heavier).</div><div class="mm-card"><b>Interview point</b>Interview: CPython over-allocates (~grow factor) so append is usually amortized O(1).<br><code>getsizeof(list)</code> is <b>shallow</b> — does not include nested objects.<br>Prefer generators/<code>range</code> when you only need to walk huge data.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b> <span class="cheat-mean">— Row of seats</span></td><td><code>a = [1, 2]</code></td></tr><tr><td><b>Append</b> <span class="cheat-mean">— Add at end</span></td><td><code>a.append(3)</code></td></tr><tr><td><b>Slice</b> <span class="cheat-mean">— Take a piece</span></td><td><code>a[1:3]</code></td></tr><tr><td><b>Copy</b> <span class="cheat-mean">— New row</span></td><td><code>a.copy()</code></td></tr><tr><td><b>sizeof</b> <span class="cheat-mean">— Shell bytes</span></td><td><code>sys.getsizeof(a)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13342,7 +13707,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">0<span class="arrow">&rarr;</span>12.97</span><span class="kv">1<span class="arrow">&rarr;</span>80.22</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>Tuple</strong> &rarr; fixed record</p><p class="line"><strong>()</strong> &rarr; cannot change</p><span class="dict-tag">Immutable · ordered</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">t=(1,2)</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">t[0]</span></div><div class="op-card"><div class="op-ico add">,</div><div class="op-name">Unpack</div><span class="op-code">a,b=t</span></div><div class="op-card"><div class="op-ico chg">()</div><div class="op-name">One item</div><span class="op-code">t=(1,)</span></div><div class="op-card"><div class="op-ico del">key</div><div class="op-name">Dict key</div><span class="op-code">d[t]=1</span></div></div></div><div class="mm-sec"><h3>3. When to use</h3><div class="mm-grid"><div class="mm-card"><b>Good for</b>GPS <code>(lat, lng)</code>, RGB, <code>return ok, data</code>, dict keys.</div><div class="mm-card"><b>Not for</b>Growing carts / logs — use a <b>list</b> instead.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>(1)</code> is just number 1. One-item tuple needs a comma: <code>(1,)</code>.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Tuples are usually <b>leaner</b> than lists — no append buffer.<br><code>sys.getsizeof((1,2,3))</code> often &lt; same list.<br>Fixed size &rarr; less bookkeeping.</div><div class="mm-card"><b>Interview point</b>Interview: tuple is immutable &amp; hashable (if items are) &rarr; safe dict key.<br>Often slightly faster to iterate fixed data; less memory than list.<br>Nested mutable item (e.g. list inside) can still change — hash with care.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b><br><span class="cheat-mean">Fixed record</span></td><td><code>t = (1, 2)</code></td></tr><tr><td><b>One item</b><br><span class="cheat-mean">Need comma</span></td><td><code>t = (1,)</code></td></tr><tr><td><b>Unpack</b><br><span class="cheat-mean">Split out</span></td><td><code>a, b = t</code></td></tr><tr><td><b>Dict key</b><br><span class="cheat-mean">Safe label</span></td><td><code>d[(1,2)] = "x"</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">t=(1,2)</span></div><div class="op-card"><div class="op-ico read">&#128065;</div><div class="op-name">Read</div><span class="op-code">t[0]</span></div><div class="op-card"><div class="op-ico add">,</div><div class="op-name">Unpack</div><span class="op-code">a,b=t</span></div><div class="op-card"><div class="op-ico chg">()</div><div class="op-name">One item</div><span class="op-code">t=(1,)</span></div><div class="op-card"><div class="op-ico del">key</div><div class="op-name">Dict key</div><span class="op-code">d[t]=1</span></div></div></div><div class="mm-sec"><h3>3. When to use</h3><div class="mm-grid"><div class="mm-card"><b>Good for</b>GPS <code>(lat, lng)</code>, RGB, <code>return ok, data</code>, dict keys.</div><div class="mm-card"><b>Not for</b>Growing carts / logs — use a <b>list</b> instead.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>(1)</code> is just number 1. One-item tuple needs a comma: <code>(1,)</code>.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Tuples are usually <b>leaner</b> than lists — no append buffer.<br><code>sys.getsizeof((1,2,3))</code> often &lt; same list.<br>Fixed size &rarr; less bookkeeping.</div><div class="mm-card"><b>Interview point</b>Interview: tuple is immutable &amp; hashable (if items are) &rarr; safe dict key.<br>Often slightly faster to iterate fixed data; less memory than list.<br>Nested mutable item (e.g. list inside) can still change — hash with care.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b> <span class="cheat-mean">— Fixed record</span></td><td><code>t = (1, 2)</code></td></tr><tr><td><b>One item</b> <span class="cheat-mean">— Need comma</span></td><td><code>t = (1,)</code></td></tr><tr><td><b>Unpack</b> <span class="cheat-mean">— Split out</span></td><td><code>a, b = t</code></td></tr><tr><td><b>Dict key</b> <span class="cheat-mean">— Safe label</span></td><td><code>d[(1,2)] = "x"</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13360,7 +13725,7 @@ def save_report_v2():
   <div class="dict-panel"><div class="dict-viz"><span class="kv">"red"<span class="arrow">&rarr;</span>in</span><span class="kv">"blue"<span class="arrow">&rarr;</span>in</span><span class="kv">"red"<span class="arrow">&rarr;</span>dup gone</span></div></div>
   <div class="dict-panel dict-remember"><h4>Remember</h4><p class="line"><strong>Set</strong> &rarr; bag of unique tags</p><p class="line"><strong>No order</strong> &rarr; no seat numbers</p><span class="dict-tag">Unique · mutable</span></div>
 </div>
-</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">s={"a","b"}</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Add</div><span class="op-code">s.add("c")</span></div><div class="op-card"><div class="op-ico read">in</div><div class="op-name">Ask</div><span class="op-code">"a" in s</span></div><div class="op-card"><div class="op-ico del">&#10005;</div><div class="op-name">Remove</div><span class="op-code">s.discard("a")</span></div><div class="op-card"><div class="op-ico chg">fs</div><div class="op-name">Frozen</div><span class="op-code">frozenset(s)</span></div></div></div><div class="mm-sec"><h3>3. Set vs frozenset</h3><div class="mm-grid"><div class="mm-card"><b>set</b>Can add/remove.<br>Empty: <code>set()</code> — not <code>{}</code>.</div><div class="mm-card"><b>frozenset</b>Cannot change.<br>OK as <b>dict key</b>.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>{}</code> is an empty <b>dict</b>. Empty set is <code>set()</code>.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Sets use a hash table — fast <code>in</code>, but extra memory overhead.<br>Empty set shell is often larger than empty list/tuple.<br>Duplicates are not stored twice.</div><div class="mm-card"><b>Interview point</b>Interview: average O(1) membership via hashing.<br>Items must be hashable (immutable).<br><code>frozenset</code> when you need a set-like dict key.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b><br><span class="cheat-mean">Unique bag</span></td><td><code>s = {"a", "b"}</code></td></tr><tr><td><b>Empty</b><br><span class="cheat-mean">Not {}</span></td><td><code>s = set()</code></td></tr><tr><td><b>in</b><br><span class="cheat-mean">Fast ask</span></td><td><code>"a" in s</code></td></tr><tr><td><b>frozenset</b><br><span class="cheat-mean">Fixed set</span></td><td><code>frozenset(s)</code></td></tr></table></div>
+</div><div class="mm-sec"><h3>2. Everyday operations</h3><div class="ops-row ops-row-5"><div class="op-card"><div class="op-ico new">NEW</div><div class="op-name">Create</div><span class="op-code">s={"a","b"}</span></div><div class="op-card"><div class="op-ico add">+</div><div class="op-name">Add</div><span class="op-code">s.add("c")</span></div><div class="op-card"><div class="op-ico read">in</div><div class="op-name">Ask</div><span class="op-code">"a" in s</span></div><div class="op-card"><div class="op-ico del">&#10005;</div><div class="op-name">Remove</div><span class="op-code">s.discard("a")</span></div><div class="op-card"><div class="op-ico chg">fs</div><div class="op-name">Frozen</div><span class="op-code">frozenset(s)</span></div></div></div><div class="mm-sec"><h3>3. Set vs frozenset</h3><div class="mm-grid"><div class="mm-card"><b>set</b>Can add/remove.<br>Empty: <code>set()</code> — not <code>{}</code>.</div><div class="mm-card"><b>frozenset</b>Cannot change.<br>OK as <b>dict key</b>.</div></div></div><div class="dt-trap"><b>Watch out:</b> <code>{}</code> is an empty <b>dict</b>. Empty set is <code>set()</code>.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Sets use a hash table — fast <code>in</code>, but extra memory overhead.<br>Empty set shell is often larger than empty list/tuple.<br>Duplicates are not stored twice.</div><div class="mm-card"><b>Interview point</b>Interview: average O(1) membership via hashing.<br>Items must be hashable (immutable).<br><code>frozenset</code> when you need a set-like dict key.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Create</b> <span class="cheat-mean">— Unique bag</span></td><td><code>s = {"a", "b"}</code></td></tr><tr><td><b>Empty</b> <span class="cheat-mean">— Not {}</span></td><td><code>s = set()</code></td></tr><tr><td><b>in</b> <span class="cheat-mean">— Fast ask</span></td><td><code>"a" in s</code></td></tr><tr><td><b>frozenset</b> <span class="cheat-mean">— Fixed set</span></td><td><code>frozenset(s)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13639,7 +14004,7 @@ def save_report_v2():
   <code>if myDict["ghost"]:</code> can <b>make</b> a new empty box named
   <code>ghost</code>. To only ask, write <code>if "ghost" in myDict:</code>.
 </div>
-<div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Dict is a hash table: fast lookup, but overhead for buckets.<br>Keys and values are separate objects — <code>getsizeof(d)</code> is shallow.<br>More keys &rarr; more memory (table may resize).</div><div class="mm-card"><b>Interview point</b>Interview: average O(1) get/set via hashing; keys must be hashable.<br>Insertion order preserved (3.7+).<br>Compare tools: plain dict vs defaultdict vs ChainMap (no full merge copy).</div></div></div><div class="mm-sec"><h3>9. Full cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Make dict</b><br><span class="cheat-mean">Start boxes</span></td><td><code>d = {"a": 1}</code></td></tr><tr><td><b>Read</b><br><span class="cheat-mean">Open one</span></td><td><code>d["a"]</code></td></tr><tr><td><b>Safe ask</b><br><span class="cheat-mean">Is label there?</span></td><td><code>"a" in d</code></td></tr><tr><td><b>Safe get</b><br><span class="cheat-mean">Backup value</span></td><td><code>d.get("z", 0)</code></td></tr><tr><td><b>sizeof</b><br><span class="cheat-mean">Shallow bytes</span></td><td><code>sys.getsizeof(d)</code></td></tr></table></div>
+<div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>Dict is a hash table: fast lookup, but overhead for buckets.<br>Keys and values are separate objects — <code>getsizeof(d)</code> is shallow.<br>More keys &rarr; more memory (table may resize).</div><div class="mm-card"><b>Interview point</b>Interview: average O(1) get/set via hashing; keys must be hashable.<br>Insertion order preserved (3.7+).<br>Compare tools: plain dict vs defaultdict vs ChainMap (no full merge copy).</div></div></div><div class="mm-sec"><h3>9. Full cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>Make dict</b> <span class="cheat-mean">— Start boxes</span></td><td><code>d = {"a": 1}</code></td></tr><tr><td><b>Read</b> <span class="cheat-mean">— Open one</span></td><td><code>d["a"]</code></td></tr><tr><td><b>Safe ask</b> <span class="cheat-mean">— Is label there?</span></td><td><code>"a" in d</code></td></tr><tr><td><b>Safe get</b> <span class="cheat-mean">— Backup value</span></td><td><code>d.get("z", 0)</code></td></tr><tr><td><b>sizeof</b> <span class="cheat-mean">— Shallow bytes</span></td><td><code>sys.getsizeof(d)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -13803,7 +14168,7 @@ def save_report_v2():
 <div class="slide-body">
   <div class="main-split no-code">
     <div class="panel-left">
-      <div class="mm-sec"><h3>1. What is a comprehension?</h3><p>A short way to build a list / set / dict (or a lazy generator) in one line.</p></div><div class="mm-sec"><h3>2. Four shapes</h3><div class="mm-grid"><div class="mm-card"><b>List</b><code>[n*n for n in nums]</code><br>Builds all results now.</div><div class="mm-card"><b>Set</b><code>{n%2 for n in nums}</code><br>Unique results.</div><div class="mm-card"><b>Dict</b><code>{n: n*n for n in nums}</code><br>Key &rarr; value.</div><div class="mm-card"><b>Generator</b><code>(n*n for n in nums)</code><br>One at a time — lazy.</div></div></div><div class="mm-sec"><h3>3. Kid rule</h3><div class="mm-grid"><div class="mm-card"><b>Good</b>Build a new collection from an old one.</div><div class="mm-card"><b>Bad</b>Print / write files inside a comprehension — use a normal <code>for</code> loop.</div></div></div><div class="dt-trap"><b>Watch out:</b> List comps keep <b>everything</b> in memory. Huge data? Use a generator expression.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>List/set/dict comps allocate the whole result up front.<br>Generator expression stores almost nothing — computes on demand.<br><code>sys.getsizeof(list(...))</code> &gt;&gt; <code>sys.getsizeof((... for ...))</code>.</div><div class="mm-card"><b>Interview point</b>Interview: comps are syntactic sugar over loops; prefer clarity if nested deep.<br>Memory: O(n) for list comp vs O(1) extra for generator when streaming.<br>Do not use comps for side effects.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>List comp</b><br><span class="cheat-mean">Build list</span></td><td><code>[x for x in a if x&gt;0]</code></td></tr><tr><td><b>Set comp</b><br><span class="cheat-mean">Build set</span></td><td><code>{x for x in a}</code></td></tr><tr><td><b>Dict comp</b><br><span class="cheat-mean">Build dict</span></td><td><code>{k:v for k,v in pairs}</code></td></tr><tr><td><b>Gen exp</b><br><span class="cheat-mean">Lazy stream</span></td><td><code>(x for x in a)</code></td></tr></table></div>
+      <div class="mm-sec"><h3>1. What is a comprehension?</h3><p>A short way to build a list / set / dict (or a lazy generator) in one line.</p></div><div class="mm-sec"><h3>2. Four shapes</h3><div class="mm-grid"><div class="mm-card"><b>List</b><code>[n*n for n in nums]</code><br>Builds all results now.</div><div class="mm-card"><b>Set</b><code>{n%2 for n in nums}</code><br>Unique results.</div><div class="mm-card"><b>Dict</b><code>{n: n*n for n in nums}</code><br>Key &rarr; value.</div><div class="mm-card"><b>Generator</b><code>(n*n for n in nums)</code><br>One at a time — lazy.</div></div></div><div class="mm-sec"><h3>3. Kid rule</h3><div class="mm-grid"><div class="mm-card"><b>Good</b>Build a new collection from an old one.</div><div class="mm-card"><b>Bad</b>Print / write files inside a comprehension — use a normal <code>for</code> loop.</div></div></div><div class="dt-trap"><b>Watch out:</b> List comps keep <b>everything</b> in memory. Huge data? Use a generator expression.</div><div class="mm-sec"><h3>Memory &amp; size</h3><div class="mm-grid"><div class="mm-card"><b>Basic (kid view)</b>List/set/dict comps allocate the whole result up front.<br>Generator expression stores almost nothing — computes on demand.<br><code>sys.getsizeof(list(...))</code> &gt;&gt; <code>sys.getsizeof((... for ...))</code>.</div><div class="mm-card"><b>Interview point</b>Interview: comps are syntactic sugar over loops; prefer clarity if nested deep.<br>Memory: O(n) for list comp vs O(1) extra for generator when streaming.<br>Do not use comps for side effects.</div></div></div><div class="mm-sec"><h3>4. Cheat sheet</h3><table class="data-tbl cheat-tbl"><tr><th>Thing</th><th>Code / tip</th></tr><tr><td><b>List comp</b> <span class="cheat-mean">— Build list</span></td><td><code>[x for x in a if x&gt;0]</code></td></tr><tr><td><b>Set comp</b> <span class="cheat-mean">— Build set</span></td><td><code>{x for x in a}</code></td></tr><tr><td><b>Dict comp</b> <span class="cheat-mean">— Build dict</span></td><td><code>{k:v for k,v in pairs}</code></td></tr><tr><td><b>Gen exp</b> <span class="cheat-mean">— Lazy stream</span></td><td><code>(x for x in a)</code></td></tr></table></div>
     </div>
   </div>
 </div>
@@ -14507,7 +14872,148 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">d</span><span class="t-op">[</span><span class="t-str">&quot;a&quot;</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-kw">foreach</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">key</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">d</span><span class="t-op">.</span><span class="t-id">Keys</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">key</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// b, then a</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Regular Python <code>dict</code> is ordered since 3.7 — <code>OrderedDict</code> is mostly for legacy code or extra methods like <code>.move_to_end()</code>. Modern C# <code>Dictionary</code> is ordered too.</p></div></div>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Regular Python <code>dict</code> is ordered since 3.7 — <code>OrderedDict</code> is mostly for legacy code or extra methods like <code>.move_to_end()</code>. Modern C# <code>Dictionary</code> is ordered too.</p></div></div><div class="csharp-float-win" id="csharp-win-memory-gc" role="dialog" aria-labelledby="csharp-win-title-memory-gc"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-memory-gc">C# Comparison — Memory: refcount, GC, weakref, del</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('memory-gc')" aria-label="Close">&times;</button></div><div class="csharp-float-body">
+<p>
+  <b>Why does Python talk about so many memory words?</b>
+  CPython uses <b>more than one cleanup plan</b> at once.
+  C# mostly uses <b>one big garbage collector</b>, plus a few helpers.
+</p>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Term</th><th>Python (CPython)</th><th>C# (.NET)</th></tr>
+<tr>
+  <td><b>Reference counting</b></td>
+  <td>Each object keeps a count of how many names/boxes point to it.
+  When the count hits <b>0</b>, it is freed <b>right away</b>.
+  Check with <code>sys.getrefcount(x)</code> (count looks a bit high because of the call itself).</td>
+  <td><b>Not the main plan.</b> .NET does not free objects by a visible per-object refcount
+  in everyday code. The <b>CLR GC</b> finds unused objects later.</td>
+</tr>
+<tr>
+  <td><b>Garbage collector</b></td>
+  <td>Extra cleaner for <b>circles</b> (A→B→A) that refcount alone cannot free.
+  Call <code>gc.collect()</code> (usually automatic).</td>
+  <td>This <b>is</b> the main cleanup. Mark / sweep style GC runs in generations.
+  You rarely call <code>GC.Collect()</code> yourself.</td>
+</tr>
+<tr>
+  <td><b>Generation (GC)</b></td>
+  <td>Buckets for young vs older objects: gen <b>0, 1, 2</b>.
+  Young objects are checked more often.</td>
+  <td>Same idea: Gen <b>0, 1, 2</b>. Short-lived objects die in Gen 0 most of the time.</td>
+</tr>
+<tr>
+  <td><b>weakref</b></td>
+  <td>A soft pointer: you can look at the object, but you do <b>not</b> keep it alive.
+  Good for caches. <code>weakref.ref(obj)</code></td>
+  <td><code>WeakReference</code> / <code>WeakReference&lt;T&gt;</code> — same idea for caches
+  without pinning memory forever.</td>
+</tr>
+<tr>
+  <td><b>del</b></td>
+  <td>Removes a <b>name</b> from the namespace (<code>del x</code>).
+  If that was the last strong reference, refcount can free the object soon.</td>
+  <td>No everyday <code>del</code> for locals.
+  Use scope end, <code>using</code> / <code>IDisposable</code> for files/handles,
+  and let the GC reclaim managed memory.</td>
+</tr>
+</table>
+<div class="csharp-diff"><div class="csharp-diff-label">Why Python lists more tools</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code">refcount (fast) + cyclic GC (for circles) + weakref + del</div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code">mainly CLR GC + WeakReference + IDisposable / using</div></div></div></div>
+<p><b>Kid picture</b></p>
+<ul style="margin:6px 0 10px 18px;font-size:13px;line-height:1.45;color:#334155">
+  <li><b>Python:</b> sticky-note counter on each toy (refcount). When nobody holds it, throw it away now.
+  If two toys hold each other in a loop, a special cleaner (GC) comes later.</li>
+  <li><b>C#:</b> a janitor (GC) walks the room later and throws away toys nobody can reach.
+  You still close files yourself with <code>using</code>.</li>
+</ul>
+
+<h4 style="margin:14px 0 6px;color:#5b21b6">What does each line do? (full detail)</h4>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #ca8a04">
+  <b>1) <code>weakref.ref(a)</code> — soft look</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    Creates a <b>weak reference</b> to object <code>a</code> and stores that soft pointer in <code>soft_ref</code>.
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li><b>Does NOT</b> add +1 to the object’s strong refcount (unlike a normal name).</li>
+    <li>So by itself, it does <b>not</b> keep the object alive.</li>
+    <li>Later you can ask: <code>obj = soft_ref()</code>
+      — if the object still exists → you get it;
+      if it was already freed → you get <code>None</code>.</li>
+    <li><b>Why use it?</b> Caches / maps that should remember something <i>only while someone else still needs it</i>.</li>
+    <li><b>C# twin:</b> <code>WeakReference&lt;T&gt;</code> / <code>WeakReference</code>.</li>
+  </ul>
+</div>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #2563eb">
+  <b>2) <code>del a, b</code> — drop the names</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    <code>del</code> removes the <b>names</b> <code>a</code> and <code>b</code> from this scope.
+    It does <b>not</b> mean “erase the object’s memory this second” by itself.
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li>Each <code>del</code> drops one <b>strong</b> reference (refcount −1 for that binding).</li>
+    <li>If refcount hits <b>0</b> → CPython frees the object <b>immediately</b>.</li>
+    <li>In the sample, <code>a</code> and <code>b</code> still point to each other (<code>a.other = b</code>, <code>b.other = a</code>),
+      so after <code>del a, b</code> the objects may still have refcount ≥ 1 from the circle.
+      Refcount alone <b>cannot</b> free them.</li>
+    <li>Also: <code>del</code> works on names, list slots, dict keys (<code>del d["k"]</code>), attributes, etc.</li>
+    <li><b>C# twin:</b> no everyday <code>del</code> for locals — leave scope, or <code>using</code> for resources.</li>
+  </ul>
+</div>
+
+<div class="mm-card" style="margin:8px 0;border-left:4px solid #16a34a">
+  <b>3) <code>gc.collect()</code> — run the circle cleaner now</b>
+  <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#334155">
+    Asks Python’s <b>cyclic garbage collector</b> to run <b>right now</b>
+    (normally it runs automatically in the background).
+  </p>
+  <ul style="margin:6px 0 0 18px;font-size:13px;line-height:1.45;color:#334155">
+    <li>Finds groups of objects that only point to <b>each other</b> and are not reachable from your program.</li>
+    <li>Those circles are freed even though each object’s refcount was never 0.</li>
+    <li>Returns how many objects it collected (an int).</li>
+    <li>You usually <b>do not need</b> to call it in app code — useful for demos, tests, or hunting leaks.</li>
+    <li><b>C# twin:</b> <code>GC.Collect()</code> — also rare in production; prefer letting the runtime decide.</li>
+  </ul>
+</div>
+
+<p>Python — walk the three steps in order:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">gc</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">weakref</span></td></tr>
+<tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">name</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">name</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">other</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">None</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">(</span><span class="t-str">&quot;A&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-id">b</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Node</span><span class="t-op">(</span><span class="t-str">&quot;B&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">other</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">b</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-id">b</span><span class="t-op">.</span><span class="t-id">other</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># circle A ↔ B</span></td></tr>
+<tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-id">soft_ref</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">weakref</span><span class="t-op">.</span><span class="t-id">ref</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 1) soft look — no strong keep-alive by itself</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">soft_ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># still alive → Node A (names a/b exist)</span></td></tr>
+<tr><td class="gutter">15</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-kw">del</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 2) drop strong names; circle may remain</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">soft_ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># may still be Node, or None after GC</span></td></tr>
+<tr><td class="gutter">18</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">gc</span><span class="t-op">.</span><span class="t-id">collect</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 3) force cyclic GC now</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">soft_ref</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># collected count; soft_ref() often None now</span></td></tr>
+</tbody></table></div><p>C# — WeakReference + using (no del / rare GC.Collect):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">using</span><span class="t-op"> </span><span class="t-id">System</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">using</span><span class="t-op"> </span><span class="t-id">System</span><span class="t-op">.</span><span class="t-id">IO</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">softRef</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">WeakReference</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-str">&quot;hello&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">softRef</span><span class="t-op">.</span><span class="t-id">TryGetTarget</span><span class="t-op">(</span><span class="t-kw">out</span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">text</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">text</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// soft look</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-kw">using</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">reader</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">File</span><span class="t-op">.</span><span class="t-id">OpenText</span><span class="t-op">(</span><span class="t-str">&quot;data.txt&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">reader</span><span class="t-op">.</span><span class="t-id">ReadLine</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op">}</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// Dispose closes the file — do not rely on GC for handles</span></td></tr>
+<tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-cm">// GC.Collect();  // possible, but avoid in normal apps</span></td></tr>
+</tbody></table></div>
+<p class="csharp-pop-note"><b>Bottom line:</b> <code>weakref.ref</code> = soft peek (no keep-alive). <code>del</code> = drop a strong name (may free if refcount hits 0). <code>gc.collect()</code> = run cyclic GC now (for unreachable circles). Python lists many tools because it mixes refcount + cyclic GC; C# mostly uses one GC + WeakReference + using.</p>
+</div></div>
 
 <div class="nav-bar">
   <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>

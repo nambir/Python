@@ -102,7 +102,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 6 — Frozenset: immutable set",
-                "body": "Frozenset is like a set but cannot change after creation. It can be a dictionary key.<div class=\"step-pre\">perms = frozenset({\"read\", \"write\"})\n# perms.add(\"admin\")     # AttributeError — cannot change\n\ncache = {}\ncache[frozenset({1, 2})] = \"combo\"   # OK as dict key</div>",
+                "body": "Frozenset is like a set but cannot change after creation. It can be a dictionary key.<div class=\"step-pre\">perms = frozenset({\"read\", \"write\"})\n# perms.add(\"admin\")     # AttributeError — cannot change\n\nstore = {}\nstore[frozenset({1, 2})] = \"combo\"   # OK as dict key</div>",
             },
             {
                 "title": "Step 7 — What is a dictionary?",
@@ -122,7 +122,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 11 — dict and set also fail as keys",
-                "body": "<div class=\"callout\"><b>Name tip:</b> <code>cache</code> is only a <b>variable name</b> (we chose it because this dict acts like a cache). It is not a special Python keyword.</div><div class=\"callout\"><b>{} tip:</b> <code>cache = {}</code> creates an empty <b>dictionary</b>, not a set. Empty set is <code>set()</code>. A non-empty set looks like <code>{\"a\", \"b\"}</code> (values only). A dict looks like <code>{\"id\": 1}</code> (key: value).</div><div class=\"step-pre\">cache = {}                 # empty DICT (not set!)\ncache[{\"id\": 1}] = \"data\"  # TypeError: unhashable type: 'dict'\ncache[{\"a\", \"b\"}] = \"x\"    # TypeError: unhashable type: 'set'\n\n# Compare:\nempty_dict = {}            # dict\nempty_set = set()          # set\nmy_set = {\"a\", \"b\"}        # set (no colon)\nmy_dict = {\"id\": 1}        # dict (has colon)</div><p class=\"step-result\"><b>Fix:</b> use <code>tuple</code> or <code>frozenset</code> instead of list/set as the <i>key</i>.</p>",
+                "body": "<div class=\"callout\"><b>{} tip:</b> <code>store = {}</code> creates an empty <b>dictionary</b>, not a set. Empty set is <code>set()</code>. A non-empty set looks like <code>{\"a\", \"b\"}</code> (values only). A dict looks like <code>{\"id\": 1}</code> (key: value).</div><div class=\"step-pre\">store = {}                 # empty DICT (not set!)\nstore[{\"id\": 1}] = \"data\"  # TypeError: unhashable type: 'dict'\nstore[{\"a\", \"b\"}] = \"x\"    # TypeError: unhashable type: 'set'\n\n# Compare:\nempty_dict = {}            # dict\nempty_set = set()          # set\nmy_set = {\"a\", \"b\"}        # set (no colon)\nmy_dict = {\"id\": 1}        # dict (has colon)</div><p class=\"step-result\"><b>Fix:</b> use <code>tuple</code> or <code>frozenset</code> instead of list/set as the <i>key</i>.</p>",
             },
             {
                 "title": "Step 12 — Tuple and frozenset as keys (safe)",
@@ -331,28 +331,33 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "A class is a blueprint. An object is an instance. <code>__init__</code> initializes state; <code>self</code> refers to the current instance.<div class=\"step-pre\">class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def bark(self):\n        return f\"{self.name} says woof!\"\n\nmy_dog = Dog(\"Rex\")\nmy_dog.bark()</div><p class=\"step-result\"><b>Output:</b> <code>Rex says woof!</code></p>",
             },
             {
-                "title": "Step 2 — Inheritance: single, multiple & MRO",
+                "title": "Step 2 — Same name: class vs function vs method",
+                "body": "<code>Toy(\"ball\")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>. If a <b>function</b> later uses the same name, the class is <b>shadowed</b> (Python keeps the last binding). A <b>method</b> named <code>Toy</code> does <b>not</b> replace the class.<div class=\"step-pre\">class Toy:\n    def __init__(self, name):\n        self.name = name\n\na = Toy(\"ball\")     # class → object\nprint(a.name)       # ball\n\ndef Toy(name):      # same name — hides the class\n    return f\"fn:{name}\"\n\na = Toy(\"ball\")     # now calls the FUNCTION\nprint(a)            # fn:ball</div><div class=\"step-pre\"># Method named Toy — OK; class still works\nclass Toy:\n    def __init__(self, name):\n        self.name = name\n    def Toy(self):\n        return \"method Toy\"\n\na = Toy(\"ball\")     # still creates object\nprint(a.Toy())      # method Toy</div><p class=\"step-result\"><b>Best practice:</b> PascalCase for classes only. Use <code>make_toy()</code> for a helper — never reuse the class name for a function.</p>",
+            },
+            {
+                "title": "Step 3 — Inheritance: single, multiple & MRO",
                 "body": "A child class inherits from one or more parents. MRO (Method Resolution Order) defines lookup order.<div class=\"step-pre\">class Animal:\n    def speak(self): return \"...\"\n\nclass Dog(Animal):\n    def speak(self): return \"woof\"\n\nclass Cat(Animal):\n    def speak(self): return \"meow\"\n\nclass Pet(Dog, Cat): pass\n\nPet.__mro__   # lookup order</div>",
             },
             {
-                "title": "Step 3 — Encapsulation & _ convention",
+                "title": "Step 4 — Encapsulation & _ convention",
                 "body": "Python has no true private fields. A single leading underscore signals \"internal use\" by convention.<div class=\"step-pre\">class BankAccount:\n    def __init__(self, balance):\n        self._balance = balance   # convention: don't touch\n\n    def deposit(self, amount):\n        self._balance += amount</div><p class=\"step-result\"><b>Note:</b> <code>__name</code> triggers name mangling — stronger but not security.</p>",
             },
             {
-                "title": "Step 4 — Polymorphism & overriding",
+                "title": "Step 5 — Polymorphism & overriding",
                 "body": "Different classes share the same interface. Child methods override parent methods.<div class=\"step-pre\">def announce(animal):\n    print(animal.speak())\n\nannounce(Dog())   # woof\nannounce(Cat())   # meow</div>",
             },
             {
-                "title": "Step 5 — Abstract classes (abc)",
+                "title": "Step 6 — Abstract classes (abc)",
                 "body": "Force subclasses to implement required methods using <code>abc.ABC</code> and <code>@abstractmethod</code>.<div class=\"step-pre\">from abc import ABC, abstractmethod\n\nclass Shape(ABC):\n    @abstractmethod\n    def area(self): ...\n\nclass Circle(Shape):\n    def __init__(self, r): self.r = r\n    def area(self): return 3.14 * self.r ** 2</div>",
             },
             {
-                "title": "Step 6 — Dunder methods",
+                "title": "Step 7 — Dunder methods",
                 "body": "Double-underscore methods customize built-in behavior.<table class=\"data-tbl\"><tr><th>Method</th><th>Triggered by</th></tr><tr><td><code>__str__</code></td><td><code>print(obj)</code>, <code>str(obj)</code></td></tr><tr><td><code>__repr__</code></td><td><code>repr(obj)</code>, debugger</td></tr><tr><td><code>__eq__</code></td><td><code>obj == other</code></td></tr><tr><td><code>__len__</code></td><td><code>len(obj)</code></td></tr></table>",
             },
         ],
         "interview_qa": [
             {"q": "What is self in Python?", "a": "The current instance. You must pass it as the first parameter of instance methods. <code>self.name</code> stores data on the object — like <code>this</code> in C#."},
+            {"q": "What if a function has the same name as a class?", "a": "Python keeps the <b>last</b> binding of that name. A function named <code>Toy</code> after <code>class Toy</code> shadows the class — <code>Toy(\"ball\")</code> then calls the function, not the constructor. A method <code>def Toy(self)</code> does not replace the class. Best practice: never reuse the class name for a function."},
             {"q": "__str__ vs __repr__?", "a": "<code>__str__</code> is for end users (readable). <code>__repr__</code> is for developers — ideally valid code to recreate the object."},
             {"q": "What is MRO?", "a": "Method Resolution Order — the sequence Python searches base classes. Check with <code>ClassName.__mro__</code> or <code>help(ClassName)</code>."},
             {"q": "How does Python handle encapsulation?", "a": "By convention: <code>_attr</code> means internal. <code>__attr</code> name-mangles to <code>_ClassName__attr</code>. Not true access control — trust and documentation."},
