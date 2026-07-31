@@ -8,6 +8,7 @@ from training_beginner import BEGINNER_CONTENT
 from slide_glossary import glossary_for
 from slide_scenarios import scenarios_for
 from slide_diagrams import diagram_for
+from slide_flowcharts import flowchart_for
 from slide_real_life import real_life_for
 from slide_csharp_popups import render_csharp_popups
 from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, split_learn
@@ -710,7 +711,7 @@ function showSlide(n) {
     const info = document.getElementById('slideInfo');
     if (info) {
       if (n === 0) info.textContent = 'Navigation';
-      else if (n >= notesStart) info.textContent = 'Notes · ' + (notesTitles[n] || n);
+      else if (n >= notesStart) info.textContent = 'MindMap · ' + (notesTitles[n] || n);
       else info.textContent = 'Slide ' + n + ' of ' + totalTopics;
     }
     updateTimeUI(n);
@@ -1025,7 +1026,7 @@ NAV_BAR = f"""
 <div class="nav-bar">
   <button class="btn-prev" onclick="prevSlide()">&larr; Prev</button>
   <button class="btn-nav" onclick="goSlide(0)">&#9776; Navigation</button>
-  <button type="button" class="btn-nav" style="background:#7c3aed" onclick="goSlide({NOTES_START})" title="Open Notes — Mindmap">&#128221; Notes</button>
+  <button type="button" class="btn-nav" style="background:#7c3aed" onclick="goSlide({NOTES_START})" title="Open MindMap">&#128200; MindMap</button>
   <button type="button" class="btn-audio-nav" onclick="togglePlay(current)" title="Play / pause current slide audio">&#128266; Audio</button>
   <span class="slide-info" id="slideInfo">Navigation</span>
   <button class="btn-next" onclick="nextSlide()">Next &rarr;</button>
@@ -1310,13 +1311,16 @@ def topic_intro(n):
     parts = []
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><p>{meta["definition"]}</p>')
-        # Diagram sits right under Definition, then glossary and real-life example
+        # Decision flowchart sits right under Definition (all week slides)
+        parts.append(flowchart_for(n))
+        # Diagram sits after flowchart, then glossary and real-life example
         if n == 1:
             parts.append(python_vs_csharp_flow())
         parts.append(diagram_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
     else:
+        parts.append(flowchart_for(n))
         parts.append(diagram_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
@@ -6008,16 +6012,9 @@ def build_nav():
     )
     return f'''<div class="slide active" id="slide-0">
 <div class="nav-content">
-  <div class="nav-hero">
-    <div class="nav-hero-main">
-      <h1>Python Training 2026</h1>
-      <div class="sub">Batch 2 &middot; Week-by-week curriculum</div>
-      <div class="org">Click a topic below to jump to that slide</div>
-    </div>
-    {notes_panel_html()}
-  </div>
   {audio_bar(0)}
   <div class="nav-grid">
+    {notes_panel_html()}
 {sections}  </div>
 </div>
 </div>'''
