@@ -6175,8 +6175,8 @@ def build_nav():
 <div class="nav-content">
   {audio_bar(0)}
   <div class="nav-grid">
-    {notes_panel_html()}
-{sections}  </div>
+{sections}    {notes_panel_html()}
+  </div>
 </div>
 </div>'''
 

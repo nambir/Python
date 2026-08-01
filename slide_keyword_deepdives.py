@@ -85,8 +85,37 @@ if (n := len(data)) &gt; 0:
 """,
     15: """
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>self</b> = the current object instance — like C# <code>this</code>, but you must write it explicitly as the first parameter.<br><b>Example:</b> <code>def __init__(self, name): self.name = name</code></div>
-<div class="keyword-box"><b>__init__</b> = constructor — runs when object is created. Not a type name — initializes <code>self</code>.</div>
+<div class="keyword-box"><b>self</b> = the current object instance — like C# <code>this</code>, but you must write it explicitly as the first parameter of <b>instance methods</b>.
+<br><b>Needs __init__?</b> <b>No.</b> Any method can use <code>self</code> — constructor is optional.
+<br><b>Example:</b>
+<div class="step-pre">class Greeter:                 # no __init__
+    def hello(self, name):     # self still required
+        return f"Hi, {name}"
+
+g = Greeter()
+print(g.hello("Anu"))          # Hi, Anu
+# Python passes g as self automatically</div>
+</div>
+<div class="keyword-box"><b>__init__</b> = constructor — runs when the object is created. Not a type name — initializes <code>self</code>.
+<br><b>Mandatory?</b> <b>No.</b> Skip it if the object needs no starting state. Python still creates the object; attributes can be set later.
+<br><b>Example:</b>
+<div class="step-pre"># no __init__ — still valid
+class Marker:
+    def label(self):
+        return "ok"
+
+m = Marker()          # works — empty object
+m.tag = "A"           # set attrs later if you want
+print(m.label())      # ok
+
+# with __init__ — set state at creation
+class User:
+    def __init__(self, name):
+        self.name = name
+
+u = User("Anu")       # __init__ runs here
+print(u.name)         # Anu</div>
+</div>
 <div class="keyword-box"><b>__str__</b> = user-friendly print text. <b>__repr__</b> = developer/debug representation.<br><b>Rule:</b> <code>print(obj)</code> uses <code>__str__</code>.</div>
 <div class="keyword-box"><b>MRO</b> = Method Resolution Order — which parent class method runs in multiple inheritance.<br><b>Check:</b> <code>ClassName.__mro__</code></div>
 """,
