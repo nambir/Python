@@ -114,8 +114,43 @@ GLOSSARY: dict[int, str] = {
 <tr><td>**kwargs</td><td>Collects extra keyword arguments as a dict.</td><td><code>def f(**kw):</code></td></tr>
 <tr><td>Lambda</td><td>Anonymous one-line function. __CSHARP_LAMBDA_BTN__</td><td><code>lambda x: x*2</code></td></tr>
 <tr><td>Closure</td><td>Inner function remembering variables from outer scope.</td><td>counter pattern</td></tr>
-<tr><td>LEGB</td><td>Scope lookup order: Local → Enclosing → Global → Builtin.</td><td>name resolution</td></tr>
-</table>""",
+<tr><td>LEGB</td><td>Scope lookup order: Local → Enclosing → Global → Builtin.
+  Same name in nested scopes = <b>different variables</b> (different bindings).</td><td><code>print(x)</code> in <code>inner</code></td></tr>
+<tr><td>id()</td><td>Object identity — unique int for that object while alive
+  (in CPython, related to memory address). Same <code>id</code> ⇒ same object (<code>is</code>).</td><td><code>id(x)</code></td></tr>
+</table>
+
+<h3 style="margin-top:16px">LEGB — 3 scopes, 3 variables (not one)</h3>
+<p style="font-size:13px;color:#475569;margin:0 0 8px;line-height:1.45">
+  When each level does <code>x = ...</code>, Python creates <b>three separate bindings</b>
+  that only share the name <code>x</code>. They are <b>not</b> one variable reused.
+</p>
+<table class="data-tbl" style="margin-top:4px">
+<tr><th>Scope</th><th>Binding</th><th>Value</th></tr>
+<tr><td><b>Global</b> (module)</td><td><code>x</code></td><td><code>"global"</code></td></tr>
+<tr><td><b>Enclosing</b> (<code>outer</code>)</td><td><code>x</code></td><td><code>"enclosing"</code></td></tr>
+<tr><td><b>Local</b> (<code>inner</code>)</td><td><code>x</code></td><td><code>"local"</code></td></tr>
+</table>
+<div class="step-pre" style="margin-top:10px">x = "global"                 # binding 1 — global
+
+def outer():
+    x = "enclosing"          # binding 2 — enclosing (outer's local)
+    def inner():
+        x = "local"          # binding 3 — local to inner
+        print(x)             # "local" — LEGB finds Local first
+        print("inner id:", id(x))
+    print("outer id:", id(x))
+    inner()
+
+print("global id:", id(x))
+outer()
+# Three different id() values → three different objects</div>
+<p style="font-size:12px;color:#334155;margin:8px 0 0;line-height:1.45">
+  <b>Takeaway:</b> assignment inside a function makes that name <b>local to that function</b>
+  (unless <code>global</code> / <code>nonlocal</code>).
+  <code>id()</code> answers “which object?” — different ids mean different objects in memory.
+</p>
+""",
     11: """
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
@@ -130,7 +165,7 @@ GLOSSARY: dict[int, str] = {
 <tr><td>max / min</td><td>Largest / smallest item; optional <code>key=</code> for custom order.</td><td><code>max(scores, key=scores.get)</code></td></tr>
 </table>""",
     15: """
-<h3>Key terms explained</h3>
+<h3>Key terms explained __CSHARP_OOP_BTN__</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>Class</td><td>Blueprint for objects — attributes + methods.</td><td><code>class Dog:</code></td></tr>
@@ -282,6 +317,9 @@ print(a.Toy())                      # method Toy
 <tr><td>namedtuple</td><td><b>namedtuple</b> = tuple with named fields — lightweight record. __CSHARP_NAMEDTUPLE_BTN__</td><td><code>Point(10, 20).x</code></td></tr>
 <tr><td>ChainMap</td><td><b>ChainMap</b> = stack dicts — lookup tries each in order (<b>first match wins</b>). Does not merge copies. __CSHARP_CHAINMAP_BTN__</td><td><code>ChainMap(Dict1, Dict2)</code></td></tr>
 <tr><td>OrderedDict</td><td><b>OrderedDict</b> = dict remembering insertion order (<b>regular dict since 3.7</b>). __CSHARP_ORDEREDDICT_BTN__</td><td>legacy code</td></tr>
+<tr><td>UserDict / UserList / UserString</td><td>Subclass-friendly wrappers. Real data lives in <code>.data</code>.
+  Override methods (e.g. <code>__setitem__</code>) safely — unlike subclassing built-in <code>dict</code>/<code>list</code>.</td>
+  <td><code>class D(UserDict): ...</code></td></tr>
 </table>""",
     23: """
 <h3>Key terms explained</h3>
@@ -505,7 +543,7 @@ del huge                 # free early (if last strong hold)
 a.other = b; b.other = a
 del a, b                 # names gone, but circle may remain → gc.collect()</div>
 <p style="font-size:12px;color:#334155;margin:8px 0 0;line-height:1.45">
-  <b>Kid picture:</b> a strong hold = hugging the toy.
+  <b>Picture:</b> a strong hold = hugging the toy.
   Dict key, attribute, and variable name are all hugs.
   <code>del</code> = let go. Soft look (<code>weakref</code>) = peek without hugging.
 </p>
@@ -560,7 +598,7 @@ print(soft_ref())            # None — soft look could not save it</div>
   <td><b>No</b> strong +1</td>
 </tr>
 <tr>
-  <td><b>Kid picture</b></td>
+  <td><b>Picture</b></td>
   <td>Hug the toy</td>
   <td>Peek / look without hugging</td>
 </tr>
@@ -727,7 +765,7 @@ print(n, soft_ref())        # collected count; soft_ref() → None</div>
 </tr>
 </table>
 <p style="font-size:13px;color:#334155;margin:10px 0 0;line-height:1.45">
-  <b>Kid takeaway:</b>
+  <b>Takeaway:</b>
   <code>weakref</code> = peek without hugging.
   <code>del</code> = let go of the name.
   <code>gc.collect()</code> = call the special cleaner when toys hold each other in a loop.
@@ -743,12 +781,13 @@ print(n, soft_ref())        # collected count; soft_ref() → None</div>
 <tr><td>RotatingFileHandler</td><td>Log file with size-based rotation.</td><td><code>backupCount=3</code></td></tr>
 </table>""",
     14: """
-<h3>Key terms explained</h3>
+<h3>Key terms explained __CSHARP_PYDANTIC_BTN__</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>BaseModel</td><td>Pydantic schema base class with typed fields.</td><td><code>class User(BaseModel):</code></td></tr>
 <tr><td>ValidationError</td><td>Raised when input fails schema rules.</td><td>HTTP 422 in FastAPI</td></tr>
 <tr><td>Field()</td><td>Constraints and metadata on a field.</td><td><code>Field(ge=18)</code></td></tr>
+<tr><td>field_validator</td><td>Custom rule for a field — runs <b>automatically</b> on validate (normalize or reject).</td><td><code>@field_validator("email")</code></td></tr>
 <tr><td>model_dump()</td><td>Export model to dict (Pydantic v2).</td><td><code>user.model_dump()</code></td></tr>
 <tr><td>from_attributes</td><td>Build schema from ORM object attributes.</td><td><code>model_config</code></td></tr>
 </table>""",
@@ -808,4 +847,6 @@ GLOSSARY_CSHARP_BTNS: dict[str, str] = {
     "__CSHARP_CHAINMAP_BTN__": "chainmap-config",
     "__CSHARP_ORDEREDDICT_BTN__": "ordereddict-dict",
     "__CSHARP_MEMORY_BTN__": "memory-gc",
+    "__CSHARP_PYDANTIC_BTN__": "pydantic-validation",
+    "__CSHARP_OOP_BTN__": "oop-pillars",
 }

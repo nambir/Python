@@ -643,12 +643,20 @@ def _self_this_body() -> str:
 
     def greet(self):
         return self.name""",
-            "C# — <code>this</code> is implicit:",
+            "C# — <code>this</code> is implicit (you can still write it):",
             """class Account
 {
-    public string Name { get; }
-    public Account(string name) => Name = name;
-    public string Greet() => Name;
+    public string Name { get; private set; }
+
+    public Account(string name)
+    {
+        this.Name = name;
+    }
+
+    public string Greet()
+    {
+        return this.Name;
+    }
 }""",
         )
         + _note("<code>self</code> ≈ <code>this</code> but you must declare it on every instance method in Python.")
@@ -665,8 +673,12 @@ def _init_constructor_body() -> str:
             "C# constructor — same name as class:",
             """class User
 {
-    public string Email { get; }
-    public User(string email) => Email = email;
+    public string Email { get; private set; }
+
+    public User(string email)
+    {
+        this.Email = email;
+    }
 }""",
         )
         + _note("<code>__init__</code> sets up the instance after Python creates it. C# constructor runs during <code>new</code>.")
@@ -678,18 +690,31 @@ def _inheritance_body() -> str:
         _py_cs(
             "Python — multiple inheritance allowed:",
             """class Animal:
-    def speak(self): return \"...\"
+    def speak(self): return "..."
 
 class Dog(Animal):
-    def speak(self): return \"Woof\"""",
+    def speak(self): return "Woof\"""",
             "C# — single base class (interfaces for extra contracts):",
-            """class Animal { public virtual string Speak() => \"...\"; }
-class Dog : Animal
+            """class Animal
 {
-    public override string Speak() => \"Woof\";
+    public virtual string Speak()
+    {
+        return "...";
+    }
 }
 
-interface IFly { void Fly(); }""",
+class Dog : Animal
+{
+    public override string Speak()
+    {
+        return "Woof";
+    }
+}
+
+interface IFly
+{
+    void Fly();
+}""",
         )
         + _note("Python MRO resolves multiple bases. C# uses one base class + interfaces. Both support override / polymorphism.")
     )
@@ -1092,7 +1117,7 @@ def _memory_gc_body() -> str:
     "mainly CLR GC + WeakReference + IDisposable / using",
     "Why Python lists more tools",
 )}
-<p><b>Kid picture</b></p>
+<p><b>Picture</b></p>
 <ul style="margin:6px 0 10px 18px;font-size:13px;line-height:1.45;color:#334155">
   <li><b>Python:</b> sticky-note counter on each toy (refcount). When nobody holds it, throw it away now.
   If two toys hold each other in a loop, a special cleaner (GC) comes later.</li>
@@ -1196,6 +1221,241 @@ using (var reader = File.OpenText("data.txt"))
 """
 
 
+def _pydantic_body() -> str:
+    return f"""
+{_diff_first(
+    "Pydantic BaseModel + Field + field_validator → ValidationError → FastAPI HTTP 422",
+    "C# record / DTO + DataAnnotations (or FluentValidation) → ModelState → often HTTP 400",
+    "API validation",
+)}
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Python (Pydantic)</th><th>C# twin</th></tr>
+<tr>
+  <td><b>BaseModel</b> — typed schema; validates on build</td>
+  <td><code>record</code> / DTO class + model binding</td>
+</tr>
+<tr>
+  <td><code>Field(ge=18)</code> — built-in constraint</td>
+  <td><code>[Range(18, 120)]</code> or FluentValidation <code>GreaterThanOrEqualTo(18)</code></td>
+</tr>
+<tr>
+  <td><code>@field_validator("email")</code> — custom rule (runs automatically)</td>
+  <td>Custom <code>ValidationAttribute</code>, or FluentValidation <code>RuleFor(x =&gt; x.Email)</code></td>
+</tr>
+<tr>
+  <td><code>model_validate(dict)</code></td>
+  <td>ASP.NET model binding from JSON body</td>
+</tr>
+<tr>
+  <td><code>ValidationError</code> → FastAPI <b>HTTP 422</b></td>
+  <td>Invalid <code>ModelState</code> → often <b>HTTP 400</b> (or ProblemDetails)</td>
+</tr>
+<tr>
+  <td><code>model_dump()</code></td>
+  <td>Serialize DTO / <code>JsonSerializer.Serialize</code></td>
+</tr>
+</table>
+{_py_cs(
+    "Python — Pydantic model + auto validators:",
+    """from pydantic import BaseModel, Field, field_validator, ValidationError
+
+class UserCreate(BaseModel):
+    email: str
+    age: int = Field(ge=18)
+
+    @field_validator("email")
+    @classmethod
+    def lower_email(cls, v):
+        return v.lower()   # runs automatically on validate
+
+body = {"email": "Anu@Co.COM", "age": "25"}
+user = UserCreate.model_validate(body)
+print(user.email)   # anu@co.com
+
+try:
+    UserCreate.model_validate({"email": "x@y.com", "age": 15})
+except ValidationError as e:
+    print(e.errors())   # FastAPI → HTTP 422""",
+    "C# — DataAnnotations (attributes on the DTO):",
+    """using System.ComponentModel.DataAnnotations;
+
+public record UserCreate(
+    [Required, EmailAddress] string Email,
+    [Range(18, 120)] int Age
+);
+
+// ASP.NET Core: bind JSON → UserCreate
+// if (!ModelState.IsValid) return BadRequest(ModelState);  // often 400""",
+)}
+<p><b>C# — FluentValidation</b> (closer to <code>@field_validator</code> — rules in a separate class, runs when you validate):</p>
+{vs_editor("""using FluentValidation;
+
+public record UserCreate(string Email, int Age);
+
+public class UserCreateValidator : AbstractValidator<UserCreate>
+{
+    public UserCreateValidator()
+    {
+        RuleFor(x => x.Email)
+            .NotEmpty()
+            .EmailAddress()
+            .Must(e => e.Contains('@'))
+            .WithMessage("email must contain @");
+
+        RuleFor(x => x.Age)
+            .GreaterThanOrEqualTo(18);   // like Field(ge=18)
+
+        // Normalize like lower_email — transform before/after rules:
+        RuleFor(x => x.Email)
+            .Transform(e => e.ToLowerInvariant());
+    }
+}
+
+var user = new UserCreate("Anu@Co.COM", 25);
+var result = new UserCreateValidator().Validate(user);
+if (!result.IsValid)
+    foreach (var err in result.Errors)
+        Console.WriteLine(err.ErrorMessage);
+// In ASP.NET: services.AddValidatorsFromAssembly... + automatic 400""", lang="csharp", compact=True)}
+{_note(
+    "Pydantic = runtime schema + coercion + validators in one place. "
+    "C# often uses DataAnnotations on the DTO <b>or</b> FluentValidation (separate validator class — most like <code>field_validator</code>). "
+    "FastAPI → <b>422</b>; ASP.NET → often <b>400</b>."
+)}
+"""
+
+
+def _oop_body() -> str:
+    return f"""
+{_diff_first(
+    "class / object / __init__ / self / inheritance / polymorphism / encapsulation / MRO",
+    "class / instance / constructor / this / : base / override / private+property / single base + interfaces",
+    "OOP terms at a glance",
+)}
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Python term</th><th>Meaning</th><th>C# twin</th></tr>
+<tr>
+  <td><b>Class</b></td>
+  <td>Blueprint — attributes + methods</td>
+  <td><code>class Dog {{ }}</code> (same idea)</td>
+</tr>
+<tr>
+  <td><b>Object</b></td>
+  <td>Instance created at runtime</td>
+  <td><code>new Dog("Rex")</code> — instance of the class</td>
+</tr>
+<tr>
+  <td><b>__init__</b></td>
+  <td>Initializer — sets up the new object</td>
+  <td>Constructor — method named like the class</td>
+</tr>
+<tr>
+  <td><b>self</b></td>
+  <td>Current instance — <b>must</b> be first param</td>
+  <td><code>this</code> — implicit inside instance methods</td>
+</tr>
+<tr>
+  <td><b>Inheritance</b></td>
+  <td><code>class Dog(Animal):</code> — multiple bases OK</td>
+  <td><code>class Dog : Animal</code> — one base class; extra contracts via <code>interface</code></td>
+</tr>
+<tr>
+  <td><b>Polymorphism</b></td>
+  <td>Same call, different behavior — often duck typing</td>
+  <td><code>virtual</code> / <code>override</code>, or interface methods</td>
+</tr>
+<tr>
+  <td><b>Encapsulation</b></td>
+  <td><code>_name</code> convention; <code>@property</code></td>
+  <td><code>private</code> / <code>protected</code> + properties with get/set</td>
+</tr>
+<tr>
+  <td><b>MRO</b></td>
+  <td>Method Resolution Order for multiple inheritance</td>
+  <td>No multiple class inheritance — use interfaces; lookup is simpler</td>
+</tr>
+</table>
+{_py_cs(
+    "Python — class, __init__, self, inheritance, polymorphism:",
+    """class Animal:
+    def __init__(self, name):
+        self.name = name          # self = this instance
+    def speak(self):
+        return "..."
+
+class Dog(Animal):                # inheritance
+    def speak(self):              # override → polymorphism
+        return f"{self.name}: woof"
+
+pet = Dog("Rex")                  # object / instance
+print(pet.speak())                # Rex: woof
+print(Dog.__mro__)                # MRO: Dog → Animal → object""",
+    "C# — class, constructor, this, inheritance, override:",
+    """class Animal
+{
+    public string Name { get; private set; }
+
+    public Animal(string name)   // constructor (like __init__)
+    {
+        this.Name = name;        // this = current object (like self)
+    }
+
+    public virtual string Speak()
+    {
+        return "...";
+    }
+}
+
+class Dog : Animal               // single base class
+{
+    public Dog(string name) : base(name)
+    {
+    }
+
+    public override string Speak()
+    {
+        return this.Name + ": woof";
+    }
+}
+
+Animal pet = new Dog("Rex");     // object / instance
+Console.WriteLine(pet.Speak());  // Rex: woof
+// No MRO list — one base class (+ interfaces if needed)""",
+)}
+{_py_cs(
+    "Python — encapsulation (convention + property):",
+    """class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance   # _ = "internal" by convention
+
+    @property
+    def balance(self):
+        return self._balance""",
+    "C# — encapsulation (access modifiers + property):",
+    """class BankAccount
+{
+    private decimal _balance;    // truly private
+
+    public BankAccount(decimal balance)
+    {
+        this._balance = balance;
+    }
+
+    public decimal Balance
+    {
+        get { return this._balance; }   // read-only property
+    }
+}""",
+)}
+{_note(
+    "Same OOP ideas in both languages. Biggest gaps: Python <code>self</code> is explicit; "
+    "C# <code>this</code> is implicit. Python allows multiple inheritance + MRO; "
+    "C# uses one base class + interfaces. Python privacy is mostly convention (<code>_</code>); "
+    "C# enforces <code>private</code>."
+)}
+"""
+
+
 _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "hetero-list": ("C# Comparison — Heterogeneous Lists", _hetero_list_body),
     "tuple-record": ("C# Comparison — Tuple vs ValueTuple", _tuple_body),
@@ -1230,6 +1490,8 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "chainmap-config": ("C# Comparison — ChainMap vs config layers", _chainmap_body),
     "ordereddict-dict": ("C# Comparison — OrderedDict vs Dictionary", _ordereddict_body),
     "memory-gc": ("C# Comparison — Memory: refcount, GC, weakref, del", _memory_gc_body),
+    "pydantic-validation": ("C# Comparison — Pydantic vs DataAnnotations / FluentValidation", _pydantic_body),
+    "oop-pillars": ("C# Comparison — OOP: class, self, inheritance, MRO", _oop_body),
 }
 
 
@@ -1247,6 +1509,7 @@ def render_csharp_popups() -> str:
             f'onclick="closeCsharpWin(\'{popup_id}\')" aria-label="Close">&times;</button>'
             f"</div>"
             f'<div class="csharp-float-body">{body}</div>'
+            f'<div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>'
             f"</div>"
         )
     return "".join(parts)

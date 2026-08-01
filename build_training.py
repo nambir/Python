@@ -11,7 +11,7 @@ from slide_diagrams import diagram_for
 from slide_flowcharts import flowchart_for
 from slide_real_life import real_life_for
 from slide_csharp_popups import render_csharp_popups
-from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, split_learn
+from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, mark_important_in_step_pres, split_learn
 from notes_slides import (
     NOTES_CONTENT,
     NOTES_CSS,
@@ -183,6 +183,7 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 .t-kw  { color: #0000ff; }
 .t-bi  { color: #0000ff; }
 .t-cm  { color: #008000; }
+.step-pre .t-cm { color: #008000; }
 .t-str { color: #a31515; }
 .t-num { color: #098658; }
 .t-op  { color: #000000; }
@@ -375,6 +376,12 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
   margin-top: 8px; background: #fff; border: 1px solid #bbf7d0;
   white-space: pre; overflow-x: auto;
 }
+.hl-key, mark.hl-key {
+  background: #ede9fe; color: #5b21b6; padding: 0 3px; border-radius: 3px;
+  font-weight: 600; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+.step-pre .hl-key, .step-pre mark.hl-key,
+.real-life .hl-key, .real-life mark.hl-key { background: #ede9fe; color: #5b21b6; }
 
 .interp-libs {
   margin-top: 8px; background: #86efac; border: 1px solid #16a34a; border-radius: 6px;
@@ -498,14 +505,16 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .btn-csharp-pop:hover { background: #ede9fe; }
 .csharp-float-win {
-  display: none; position: fixed; left: 80px; top: 72px; width: min(720px, calc(100vw - 24px));
-  max-height: calc(100vh - 88px); z-index: 2000;
+  display: none; position: fixed; left: 80px; top: 72px; width: 720px;
+  height: 560px; max-width: calc(100vw - 16px); max-height: calc(100vh - 16px);
+  min-width: 360px; min-height: 240px; z-index: 2000;
   background: #fff; border-radius: 10px; border: 1px solid #cbd5e1;
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
   flex-direction: column; overflow: hidden;
 }
 .csharp-float-win.open { display: flex; }
 .csharp-float-win.dragging { user-select: none; cursor: grabbing; }
+.csharp-float-win.resizing { user-select: none; cursor: nwse-resize; }
 .csharp-float-hdr {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 12px 10px 14px; border-bottom: 1px solid #e2e8f0;
@@ -521,8 +530,22 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 }
 .csharp-float-close:hover { background: #ddd6fe; }
 .csharp-float-body {
-  padding: 14px 16px 16px; font-size: 12px; font-weight: 400; line-height: 1.5; color: #1a1a2e;
+  padding: 14px 16px 22px; font-size: 12px; font-weight: 400; line-height: 1.5; color: #1a1a2e;
   overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0;
+}
+.csharp-float-resize {
+  position: absolute; right: 0; bottom: 0; width: 28px; height: 28px;
+  cursor: nwse-resize; z-index: 50; touch-action: none;
+  background:
+    linear-gradient(135deg, transparent 48%, #a78bfa 48%, #a78bfa 56%, transparent 56%),
+    linear-gradient(135deg, transparent 64%, #a78bfa 64%, #a78bfa 72%, transparent 72%),
+    linear-gradient(135deg, transparent 80%, #a78bfa 80%, #a78bfa 88%, transparent 88%);
+}
+.csharp-float-resize:hover {
+  background:
+    linear-gradient(135deg, transparent 48%, #7c3aed 48%, #7c3aed 56%, transparent 56%),
+    linear-gradient(135deg, transparent 64%, #7c3aed 64%, #7c3aed 72%, transparent 72%),
+    linear-gradient(135deg, transparent 80%, #7c3aed 80%, #7c3aed 88%, transparent 88%);
 }
 .csharp-float-body p { margin-bottom: 8px; font-weight: 400; }
 .csharp-float-body b { font-weight: 600; }
@@ -787,6 +810,7 @@ function endSplitDrag() {
 document.addEventListener('pointerup', endSplitDrag);
 document.addEventListener('pointercancel', endSplitDrag);
 let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
+let csharpResize = { active: false, win: null, startX: 0, startY: 0, origW: 0, origH: 0 };
 
 function bringCsharpWinToFront(win) {
   document.querySelectorAll('.csharp-float-win.open').forEach(w => { w.style.zIndex = '2000'; });
@@ -824,40 +848,89 @@ function closeAllCsharpWins() {
 
 function initCsharpFloatWindows() {
   document.querySelectorAll('.csharp-float-win').forEach(win => {
+    if (win.dataset.csharpInit === '1') return;
+    win.dataset.csharpInit = '1';
     const hdr = win.querySelector('.csharp-float-hdr');
-    if (!hdr) return;
-    hdr.addEventListener('mousedown', (e) => {
-      if (e.target.closest('.csharp-float-close')) return;
+    if (hdr) {
+      hdr.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        if (e.target.closest('.csharp-float-close')) return;
+        if (e.target.closest('.csharp-float-resize')) return;
+        bringCsharpWinToFront(win);
+        csharpDrag.active = true;
+        csharpDrag.win = win;
+        const rect = win.getBoundingClientRect();
+        csharpDrag.startX = e.clientX;
+        csharpDrag.startY = e.clientY;
+        csharpDrag.origLeft = rect.left;
+        csharpDrag.origTop = rect.top;
+        win.classList.add('dragging');
+        try { hdr.setPointerCapture(e.pointerId); } catch (_) {}
+        e.preventDefault();
+      });
+    }
+    let handle = win.querySelector('.csharp-float-resize');
+    if (!handle) {
+      handle = document.createElement('div');
+      handle.className = 'csharp-float-resize';
+      handle.title = 'Drag to resize';
+      win.appendChild(handle);
+    }
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
       bringCsharpWinToFront(win);
-      csharpDrag.active = true;
-      csharpDrag.win = win;
+      csharpResize.active = true;
+      csharpResize.win = win;
       const rect = win.getBoundingClientRect();
-      csharpDrag.startX = e.clientX;
-      csharpDrag.startY = e.clientY;
-      csharpDrag.origLeft = rect.left;
-      csharpDrag.origTop = rect.top;
-      win.classList.add('dragging');
+      csharpResize.startX = e.clientX;
+      csharpResize.startY = e.clientY;
+      csharpResize.origW = rect.width;
+      csharpResize.origH = rect.height;
+      win.classList.add('resizing');
+      try { handle.setPointerCapture(e.pointerId); } catch (_) {}
       e.preventDefault();
+      e.stopPropagation();
     });
-    win.addEventListener('mousedown', () => bringCsharpWinToFront(win));
+    win.addEventListener('pointerdown', () => bringCsharpWinToFront(win));
   });
-  document.addEventListener('mousemove', (e) => {
-    if (!csharpDrag.active || !csharpDrag.win) return;
-    const win = csharpDrag.win;
-    const dx = e.clientX - csharpDrag.startX;
-    const dy = e.clientY - csharpDrag.startY;
-    const w = win.offsetWidth;
-    const h = win.offsetHeight;
-    const left = Math.min(Math.max(0, csharpDrag.origLeft + dx), window.innerWidth - w);
-    const top = Math.min(Math.max(0, csharpDrag.origTop + dy), window.innerHeight - h);
-    win.style.left = left + 'px';
-    win.style.top = top + 'px';
+  document.addEventListener('pointermove', (e) => {
+    if (csharpDrag.active && csharpDrag.win) {
+      const win = csharpDrag.win;
+      const dx = e.clientX - csharpDrag.startX;
+      const dy = e.clientY - csharpDrag.startY;
+      const w = win.offsetWidth;
+      const h = win.offsetHeight;
+      const left = Math.min(Math.max(0, csharpDrag.origLeft + dx), Math.max(0, window.innerWidth - w));
+      const top = Math.min(Math.max(0, csharpDrag.origTop + dy), Math.max(0, window.innerHeight - h));
+      win.style.left = left + 'px';
+      win.style.top = top + 'px';
+      return;
+    }
+    if (csharpResize.active && csharpResize.win) {
+      const win = csharpResize.win;
+      const dx = e.clientX - csharpResize.startX;
+      const dy = e.clientY - csharpResize.startY;
+      const rect = win.getBoundingClientRect();
+      const maxW = Math.max(360, window.innerWidth - rect.left - 8);
+      const maxH = Math.max(240, window.innerHeight - rect.top - 8);
+      const nextW = Math.min(Math.max(360, csharpResize.origW + dx), maxW);
+      const nextH = Math.min(Math.max(240, csharpResize.origH + dy), maxH);
+      win.style.width = nextW + 'px';
+      win.style.height = nextH + 'px';
+      win.style.maxWidth = 'none';
+      win.style.maxHeight = 'none';
+    }
   });
-  document.addEventListener('mouseup', () => {
+  const endCsharpPointer = () => {
     if (csharpDrag.win) csharpDrag.win.classList.remove('dragging');
+    if (csharpResize.win) csharpResize.win.classList.remove('resizing');
     csharpDrag.active = false;
     csharpDrag.win = null;
-  });
+    csharpResize.active = false;
+    csharpResize.win = null;
+  };
+  document.addEventListener('pointerup', endCsharpPointer);
+  document.addEventListener('pointercancel', endCsharpPointer);
 }
 document.addEventListener('keydown', function(e) {
   const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
@@ -961,6 +1034,17 @@ async function ensurePyodide(statusEl) {
   if (statusEl) statusEl.textContent = 'Python ready';
   return py;
 }
+const pyodideLoadedPkgs = new Set();
+async function ensurePyodidePackages(py, code, statusEl) {
+  const needed = [];
+  if (/\\bimport\\s+pydantic\\b|\\bfrom\\s+pydantic\\b/.test(code) && !pyodideLoadedPkgs.has('pydantic')) {
+    needed.push('pydantic');
+  }
+  if (!needed.length) return;
+  if (statusEl) statusEl.textContent = 'Installing ' + needed.join(', ') + '…';
+  await py.loadPackage(needed);
+  needed.forEach((p) => pyodideLoadedPkgs.add(p));
+}
 function resetPlayground(btn) {
   const box = btn.closest('.code-playground');
   if (!box) return;
@@ -987,6 +1071,7 @@ async function runPlayground(btn) {
   out.textContent = '';
   try {
     const py = await ensurePyodide(status);
+    await ensurePyodidePackages(py, ed.value, status);
     if (status) status.textContent = 'Running…';
     let stdout = [];
     let stderr = [];
@@ -2842,7 +2927,23 @@ print(factorial(5))  # 120
 multiply_by_two = lambda x: x * 2
 print(multiply_by_two(5))
 
-# ── LEGB + CLOSURE ──
+# ── LEGB: 3 scopes → 3 variables (not one shared x) ──
+x = "global"                 # binding 1
+
+def outer():
+    x = "enclosing"          # binding 2
+    def inner():
+        x = "local"          # binding 3
+        print(x)             # local
+        print("inner id:", id(x))
+    print("outer id:", id(x))
+    inner()
+
+print("global id:", id(x))
+outer()
+# different id() values → different objects in memory
+
+# ── LEGB + CLOSURE (inner remembers outer's n) ──
 def make_multiplier(n):
     def multiply(x):
         return x * n
@@ -2861,6 +2962,9 @@ def good(lst=None):
     lst.append(1)
     return lst''') + '''
 <div class="callout"><b>FP vs OOP (GFG):</b> OOP bundles mutable state in objects. FP prefers pure functions + immutable data — easier to test and safer for concurrency. Python mixes both: use FP tools (<code>map</code>/<code>filter</code>/comprehensions/generators) where they clarify data transforms.</div>
+<div class="tip"><b>LEGB + <code>id()</code>:</b> nested <code>x = ...</code> creates separate bindings (global / enclosing / local).
+<code>id(obj)</code> = object identity (unique int while alive). Different ids ⇒ different objects.
+<code>==</code> compares values; <code>is</code> / same <code>id</code> means the same object.</div>
 <div class="tip"><b>Mutable default trap:</b> never use <code>def f(lst=[])</code> — use <code>def f(lst=None)</code> and create inside.</div>
 <div class="callout"><b>*args / **kwargs:</b> <code>*args</code> = extra positional (<b>tuple</b>); <code>**kwargs</code> = extra named options (<b>dict</b>).
 <div class="step-pre">def book(patient_id, doctor_id, *details, **options):
@@ -3512,12 +3616,11 @@ class Item(BaseModel):
     price: float = None  # type mismatch: float but default None
 
 Item(name="x")  # price=None — but type says float!</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">from pydantic import BaseModel
-from typing import Optional
 
 class Item(BaseModel):
-    name: str             # required
-    price: float          # required
-    tag: str | None = None  # optional</div></div></div><span class="mistake-note">&#128161; For optional fields use <code>str | None = None</code>. For required fields, declare just the type with no default.</span></div>
+    name: str                  # required
+    price: float | None = None # optional float
+    tag: str | None = None     # optional</div></div></div><span class="mistake-note">&#128161; For optional fields use <code>float | None = None</code> (or <code>str | None = None</code>). For required fields, declare just the type with no default.</span></div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; mutating a frozen Pydantic model</span><span class="mistake-desc">With <code>ConfigDict(frozen=True)</code>, instances are immutable. Trying to set an attribute raises a <code>ValidationError</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">from pydantic import BaseModel, ConfigDict
 
 class Config(BaseModel):
@@ -3557,7 +3660,23 @@ def create_user(data: dict) -> User:
 <div class="quiz-box">
   <div class="quiz-q"><b>Q1.</b> Pydantic v2 replacement for <code>.dict()</code>?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>.model_dump()</code> &mdash; returns a dict. <code>.model_dump_json()</code> returns a JSON string.</div>
+      <div class="quiz-reveal">
+        <b>Answer:</b> <code>.model_dump()</code><br><br>
+        <b>What it does:</b> turns a validated model into a plain Python <code>dict</code>
+        (field names → values) so you can print it, pass it to another API, or save it.<br><br>
+        <b>Why the rename?</b> In Pydantic v1 the method was <code>.dict()</code>.
+        v2 renamed export methods to start with <code>model_</code> so they do not clash with
+        a field that might be named <code>dict</code>, and to keep a clear “model API” family.<br><br>
+        <b>Related:</b>
+        <code>.model_dump_json()</code> → JSON <b>string</b> (not a dict);
+        old <code>.json()</code> → use <code>.model_dump_json()</code>.
+        Old <code>.parse_obj()</code> → <code>.model_validate()</code>.
+        Using <code>.dict()</code> in v2 still works briefly but shows a
+        <b>DeprecationWarning</b> and will break later — always use <code>.model_dump()</code>.
+        <div class="step-pre">user = User(name="Anu", age=30)
+print(user.model_dump())       # {'name': 'Anu', 'age': 30}
+print(user.model_dump_json())  # '{"name":"Anu","age":30}'</div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> How to make a Pydantic field required?
@@ -3577,7 +3696,38 @@ def create_user(data: dict) -> User:
   </div>
   <div class="quiz-q"><b>Q5.</b> <code>model_config = ConfigDict(frozen=True)</code> — what does it do?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Makes model instances <b>immutable</b> &mdash; attributes cannot be changed after creation.</div>
+      <div class="quiz-reveal">
+        <b>Answer:</b> Makes instances <b>immutable</b> — you cannot change fields after creation
+        (<code>c.host = "remote"</code> raises <code>ValidationError</code>.<br><br>
+        <b>Without it (default):</b> the model is <b>mutable</b> — you can reassign fields anytime
+        (like a normal object). Useful for forms you keep editing; risky if the object is shared
+        and someone changes it by mistake.<br><br>
+        <b>With <code>frozen=True</code>:</b> create once, then read-only. Good for config, IDs,
+        API responses you must not accidentally overwrite.
+        <div class="step-pre"># WITHOUT frozen — mutation allowed
+class Config(BaseModel):
+    host: str
+
+c = Config(host="localhost")
+c.host = "remote"      # OK — host is now "remote"
+print(c.host)          # remote
+
+# WITH frozen=True — mutation blocked
+class Config(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    host: str
+
+c = Config(host="localhost")
+c.host = "remote"      # ValidationError — instance is frozen
+# Fix: make a new object instead
+c2 = c.model_copy(update={"host": "remote"})</div>
+        <table class="data-tbl" style="margin-top:8px">
+        <tr><th></th><th>Without frozen</th><th>With frozen=True</th></tr>
+        <tr><td><b>Change field later?</b></td><td>Yes — <code>c.host = ...</code> works</td><td>No — raises error</td></tr>
+        <tr><td><b>How to “update”?</b></td><td>Assign in place</td><td><code>model_copy(update=...)</code> → new instance</td></tr>
+        <tr><td><b>Typical use</b></td><td>Editable drafts / working objects</td><td>Config, constants, safe shared values</td></tr>
+        </table>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> How to validate from a JSON string in Pydantic v2?
@@ -3600,54 +3750,64 @@ def create_user(data: dict) -> User:
 '''),
 
 (15, "OOP Concepts", '''
-''' + code('''# ── BASE CLASS ──
-class Animal:
-    def __init__(self, name):
-        self.name = name          # instance attribute
+''' + code('''# Real project: Python-Set2/pythonBasics/MyClass/oops_inheritance_BankAccount.py
+# (+ polymorphism idea from oops_polymorphism_BankAccount.py)
 
-    def speak(self):
-        raise NotImplementedError("Subclass must implement")
+class Account(object):
+    def __init__(self, accountno):
+        self.accountno = accountno
+        self.balance = 0.00
 
-    def __str__(self):
-        return f"Animal({self.name})"   # user-friendly
+    def getbalance(self):
+        print(f"for the AccountNo {self.accountno} balance is {self.balance}")
 
-    def __repr__(self):
-        return f"Animal(name={self.name!r})"  # developer debug
+    def credit(self, amount):
+        print(f"Adding credit amount {amount}")
+        self.balance = self.balance + amount
 
-# ── INHERITANCE: override parent method ──
-class Dog(Animal):
-    def speak(self):
-        return f"{self.name} says Woof!"
 
-class Cat(Animal):
-    def speak(self):
-        return f"{self.name} says Meow!"
+class SavingsAccount(Account):
+    def __init__(self, accountno, panno):
+        super().__init__(accountno)   # run parent __init__
+        self.panno = panno
 
-# ── POLYMORPHISM: same call, different behavior ──
-pets = [Dog("Rex"), Cat("Luna")]
-for pet in pets:
-    print(pet.speak())
+    def interest_rate(self):
+        return 0.04
 
-# ── ENCAPSULATION: _protected convention + @property ──
-class BankAccount:
-    def __init__(self, balance):
-        self._balance = balance   # _ = "protected" by convention
+    def credit(self, amount):         # override — add interest on credit
+        amount = amount + (self.interest_rate() * amount)
+        super().credit(amount)
 
-    @property
-    def balance(self):
-        return self._balance      # getter
 
-    def deposit(self, amount):
-        if amount > 0:
-            self._balance += amount
+class CurrentAccount(Account):
+    def __init__(self, accountno, tanno):
+        super().__init__(accountno)
+        self.tanno = tanno
 
-acct = BankAccount(1000)
-acct.deposit(500)
-print(acct.balance)               # 1500
+    def interest_rate(self):
+        return 0.06
 
-# ── MRO: Method Resolution Order ──
-print(Dog.__mro__)                # search order for methods''') + '''
-<div class="callout">MRO (Method Resolution Order): Python searches base classes left-to-right. Use <code>ClassName.__mro__</code> to inspect.</div>
+
+# ── Inheritance demo (SavingsAccount) ──
+nambi = SavingsAccount(111, "pan111")
+nambi.getbalance()
+nambi.credit(10)          # 10 + 4% interest → credited 10.4
+nambi.getbalance()
+print(isinstance(nambi, SavingsAccount))   # True
+print(isinstance(nambi, CurrentAccount))   # False
+
+# ── Polymorphism: same credit() call, different behaviour ──
+dominos = CurrentAccount(222, "tan222")
+for acct in [nambi, dominos]:
+    acct.credit(10)
+    acct.getbalance()
+
+print(SavingsAccount.__mro__)''') + '''
+<div class="callout"><b>Real project:</b> <code>SavingsAccount.credit</code> overrides the base — adds interest, then calls <code>super().credit(...)</code>.
+<code>CurrentAccount</code> keeps the plain <code>credit</code> but has a different <code>interest_rate</code>.
+Same loop calling <code>acct.credit(10)</code> is <b>polymorphism</b>.
+Source: <a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_inheritance_BankAccount.py">oops_inheritance_BankAccount.py</a>
+· <a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_polymorphism_BankAccount.py">oops_polymorphism_BankAccount.py</a>.</div>
 
 
 <h3>Common mistakes</h3>
@@ -3762,12 +3922,13 @@ print(c2.items)   # []  ← correct</div></div>
 </div>
 ''', '''
 <ul class="checklist">
-  <li>Create a class with __init__ and two methods</li>
-  <li>Add inheritance — override one method</li>
-  <li>Implement __str__ and __repr__</li>
+  <li>Run <code>python Python-Set2/pythonBasics/MyClass/oops_inheritance_BankAccount.py</code></li>
+  <li>Explain why <code>SavingsAccount.credit</code> credits more than 10</li>
+  <li>Run the polymorphism file — same <code>credit(10)</code>, different results</li>
 </ul>
 <a class="file-link" href="Python-Set2/pythonBasics/MyClass/">MyClass</a>
-<a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_inheritance_BankAccount.py">BankAccount</a>
+<a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_inheritance_BankAccount.py">oops_inheritance_BankAccount.py</a>
+<a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_polymorphism_BankAccount.py">oops_polymorphism_BankAccount.py</a>
 '''),
 
 (16, "Descriptors", '''
@@ -6041,6 +6202,8 @@ def main():
 <script>{JS}</script>
 </body>
 </html>"""
+
+    html = mark_important_in_step_pres(html)
 
     OUTPUT.write_text(html, encoding="utf-8")
     notes_count = len(NOTES_CONTENT)

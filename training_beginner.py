@@ -275,8 +275,8 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "Anonymous one-expression function — good for short callbacks.<div class=\"step-pre\">multiply_by_two = lambda x: x * 2\nmultiply_by_two(5)   # 10\n\nsorted(pairs, key=lambda p: p[1])</div>",
             },
             {
-                "title": "Step 5 — LEGB scope",
-                "body": "Python looks up names in order: Local → Enclosing → Global → Builtin.<div class=\"step-pre\">x = \"global\"\n\ndef outer():\n    x = \"enclosing\"\n    def inner():\n        x = \"local\"\n        print(x)   # local\n    inner()\n\nouter()</div>",
+                "title": "Step 5 — LEGB scope (3 variables, not one)",
+                "body": "Python looks up names: <b>L</b>ocal → <b>E</b>nclosing → <b>G</b>lobal → <b>B</b>uiltin. If each level assigns <code>x = ...</code>, you get <b>3 separate variables</b> (3 bindings) that only share the name — not one shared variable.<div class=\"step-pre\">x = \"global\"              # binding 1 — global\n\ndef outer():\n    x = \"enclosing\"       # binding 2 — enclosing\n    def inner():\n        x = \"local\"       # binding 3 — local\n        print(x)          # local\n        print(id(x))      # object identity\n    print(id(x))\n    inner()\n\nprint(id(x))\nouter()\n# three different id() values → three objects</div><p class=\"step-result\"><b><code>id(obj)</code>:</b> unique int for that object while alive (CPython ≈ memory address). Same <code>id</code> means the same object (<code>a is b</code>). Different values of <code>x</code> here → different ids.</p>",
             },
             {
                 "title": "Step 6 — Closures",
@@ -286,7 +286,8 @@ BEGINNER_CONTENT: dict[int, dict] = {
         "interview_qa": [
             {"q": "What is wrong with def f(items=[])?", "a": "The default list is created once at definition time and shared across all calls. Use <code>def f(items=None): items = items or []</code> instead."},
             {"q": "What are *args and **kwargs?", "a": "<code>*args</code> is a tuple of extra positional arguments. <code>**kwargs</code> is a dict of extra keyword arguments. Useful for wrappers and decorators."},
-            {"q": "What is LEGB?", "a": "Name lookup order: Local (inside function), Enclosing (outer functions), Global (module), Builtin (built-in names like <code>len</code>)."},
+            {"q": "What is LEGB?", "a": "Name lookup order: Local (inside function), Enclosing (outer functions), Global (module), Builtin (built-in names like <code>len</code>). If each nested level assigns <code>x = ...</code>, those are <b>three different variables</b> (three bindings), not one shared variable."},
+            {"q": "What does id() do?", "a": "<code>id(obj)</code> returns the object’s identity — a unique integer while the object is alive (in CPython related to its memory address). <code>id(a) == id(b)</code> means the same object (same as <code>a is b</code>). <code>==</code> compares values, which can be equal even when ids differ."},
             {"q": "Lambda vs def?", "a": "Lambda is limited to one expression, no statements. Use <code>def</code> for anything non-trivial — lambdas are for short keys and callbacks."},
             {"q": "What is a pure function?", "a": "Same arguments always produce the same result, and it does not modify globals, mutate inputs, or do hidden I/O. Easier to test and safe for concurrency (FP / GeeksforGeeks)."},
             {"q": "What is a higher-order function?", "a": "A function that takes another function as an argument or returns a function — e.g. <code>sorted(items, key=fn)</code>, <code>map</code>, <code>filter</code>, or a decorator factory."},
@@ -684,7 +685,41 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 7 — UserDict, UserList & UserString",
-                "body": "Subclass-friendly wrappers — override methods without breaking built-in internals.<div class=\"step-pre\">from collections import UserDict\n\nclass CaseInsensitiveDict(UserDict):\n    def __setitem__(self, key, value):\n        super().__setitem__(key.lower(), value)</div><p class=\"step-result\"><b>Why:</b> safer to subclass than built-in <code>dict</code> directly.</p>",
+                "body": (
+                    "<b>What they are:</b> wrappers around a real <code>dict</code> / <code>list</code> / <code>str</code> "
+                    "stored in <code>.data</code>. Designed so you can <b>subclass and override</b> methods safely.<br><br>"
+                    "<b>Why not subclass built-in <code>dict</code>?</b> "
+                    "Built-in <code>dict</code> methods are implemented in C. Some call each other "
+                    "<i>without</i> going through your Python overrides — so <code>d[\"A\"] = 1</code> "
+                    "might bypass your <code>__setitem__</code>. "
+                    "<code>UserDict</code> routes through Python methods, so your override always runs.<br><br>"
+                    "<b>Line-by-line for the example:</b>"
+                    "<div class=\"step-pre\">from collections import UserDict\n\n"
+                    "class CaseInsensitiveDict(UserDict):\n"
+                    "    def __setitem__(self, key, value):\n"
+                    "        # __setitem__ runs for: d[key] = value\n"
+                    "        # key.lower() → store under one form (\"Name\" and \"name\" → \"name\")\n"
+                    "        super().__setitem__(key.lower(), value)\n"
+                    "        # super() = UserDict.__setitem__ → writes into self.data\n\n"
+                    "d = CaseInsensitiveDict()\n"
+                    "d[\"Name\"] = \"Anu\"     # stored as key \"name\"\n"
+                    "d[\"NAME\"] = \"Ravi\"    # same slot — overwrites\n"
+                    "print(d[\"name\"])      # Ravi  (lookup still needs care — see tip)\n"
+                    "print(d.data)         # {'name': 'Ravi'}  ← real dict inside</div>"
+                    "<p class=\"step-result\">"
+                    "<b><code>__setitem__(self, key, value)</code>:</b> Python calls this when you write "
+                    "<code>d[key] = value</code>.<br>"
+                    "<b><code>key.lower()</code>:</b> normalize the key so case does not create different slots.<br>"
+                    "<b><code>super().__setitem__(...)</code>:</b> call the parent’s store logic "
+                    "(puts the pair into <code>self.data</code>) — do not reinvent storage.<br><br>"
+                    "<b>Same idea:</b> <code>UserList</code> (wraps a list in <code>.data</code>), "
+                    "<code>UserString</code> (wraps a string). Override methods there the same way."
+                    "</p>"
+                    "<div class=\"callout\"><b>Tip:</b> for a full case-insensitive dict, also override "
+                    "<code>__getitem__</code> / <code>__contains__</code> to <code>.lower()</code> the key on read "
+                    "(otherwise <code>d[\"Name\"]</code> after storing <code>\"name\"</code> may miss). "
+                    "The example above focuses on write-side normalization.</div>"
+                ),
             },
         ],
         "interview_qa": [
@@ -692,6 +727,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
             {"q": "namedtuple vs dataclass?", "a": "namedtuple is immutable and lighter. dataclass is better when you need mutability, defaults, or methods."},
             {"q": "When use deque over list?", "a": "When you need fast <code>appendleft</code>/<code>popleft</code> — queues, BFS, sliding windows. List pop(0) is O(n)."},
             {"q": "What is ChainMap for?", "a": "Layered lookup: <code>ChainMap(Dict1, Dict2)</code> checks Dict1 first, then Dict2. First match wins — no copy/merge."},
+            {"q": "Why UserDict instead of subclassing dict?", "a": "Built-in <code>dict</code> methods are in C and may skip your Python overrides. <code>UserDict</code> stores items in <code>.data</code> and calls your <code>__setitem__</code> / <code>__getitem__</code> reliably — safer when customizing behavior (e.g. case-insensitive keys)."},
         ],
     },
     23: {
@@ -933,14 +969,15 @@ BEGINNER_CONTENT: dict[int, dict] = {
     14: {
         "steps": [
             {"title": "Step 1 — BaseModel", "body": "Subclass <code>BaseModel</code> with typed fields — Pydantic validates on construction and coercion (e.g. string <code>'25'</code> → int <code>25</code>)."},
-            {"title": "Step 2 — Validation", "body": "<code>Field(ge=18)</code> for constraints. <code>@field_validator</code> for custom rules. Invalid data raises <code>ValidationError</code> with field paths."},
+            {"title": "Step 2 — Validation", "body": "<code>Field(ge=18)</code> = built-in constraint (reject age &lt; 18). <code>@field_validator(\"email\")</code> = custom rule — Pydantic calls it <b>automatically</b> on <code>model_validate</code> / FastAPI body parse (you do not call it yourself). Here <code>return v.lower()</code> <b>normalizes</b> email. For more rules on the same field, add another <code>@field_validator(\"email\")</code> method — they run top→bottom; <code>raise ValueError</code> to reject. Invalid data → <code>ValidationError</code> → FastAPI <b>HTTP 422</b>.<div class=\"step-pre\">user = UserCreate.model_validate(body)\nprint(user.email)   # anu@co.com  (lower_email ran automatically)</div>"},
             {"title": "Step 3 — Serialization", "body": "v2: <code>model_validate(dict)</code> in, <code>model_dump()</code> out. For ORM rows use <code>model_config = {'from_attributes': True}</code>."},
             {"title": "Step 4 — FastAPI integration", "body": "Route parameters typed as Pydantic models auto-parse JSON bodies and return 422 with structured errors — no manual validation boilerplate."},
         ],
         "interview_qa": [
             {"q": "What is Pydantic used for?", "a": "Runtime validation and parsing using type hints — API schemas, config loading, data pipelines. Core of FastAPI request/response models."},
-            {"q": "Pydantic vs dataclasses?", "a": "Dataclasses structure data; Pydantic validates, coerces types, and gives rich errors. Use Pydantic at API boundaries."},
-            {"q": "What happens on validation failure?", "a": "<code>ValidationError</code> with a list of errors per field — FastAPI converts this to HTTP 422 JSON for clients."},
+            {"q": "Pydantic vs dataclasses?", "a": "<b>Both</b> turn typed fields into a class. The big difference: <b>dataclasses store</b>; <b>Pydantic validates</b>.<table class=\"data-tbl\"><tr><th></th><th>dataclasses</th><th>Pydantic BaseModel</th></tr><tr><td><b>Job</b></td><td>Bundle fields into an object (stdlib)</td><td>Validate + coerce + export schemas</td></tr><tr><td><b>Type hints</b></td><td>Hints only — <code>age=\"25\"</code> stays a string</td><td>Enforced at runtime — <code>\"25\"</code> → int <code>25</code></td></tr><tr><td><b>Bad data</b></td><td>Usually accepted silently</td><td><code>ValidationError</code> (FastAPI → HTTP 422)</td></tr><tr><td><b>Constraints</b></td><td>You write your own checks</td><td><code>Field(ge=18)</code>, <code>@field_validator</code></td></tr><tr><td><b>API / JSON</b></td><td>Not built for request bodies</td><td>Built for FastAPI schemas</td></tr><tr><td><b>When to use</b></td><td>Internal/simple records inside your app</td><td>API boundaries, config, untrusted input</td></tr></table><div class=\"mc-row\"><div class=\"mc-col mc-bad\"><span class=\"mc-lbl\">dataclasses — no runtime check</span><div class=\"step-pre\">from dataclasses import dataclass\n\n@dataclass\nclass ItemDC:\n    name: str\n    age: int\n\nItemDC(name=\"Anu\", age=\"25\")\n# OK — no check\n# age is still str!</div></div><div class=\"mc-col mc-good\"><span class=\"mc-lbl\">Pydantic — coerce + validate</span><div class=\"step-pre\">from pydantic import BaseModel, Field\n\nclass ItemPyd(BaseModel):\n    name: str\n    age: int = Field(ge=18)\n\nItemPyd(name=\"Anu\", age=\"25\")\n# coerces to int 25\n# ItemPyd(..., age=15)\n# → ValidationError</div></div></div><b>Interview line:</b> dataclasses = structure; Pydantic = structure + validation. Prefer Pydantic at the edge of the system."},
+            {"q": "What does @field_validator('email') do?", "a": "Runs custom logic on that field during validation. Common uses: normalize (<code>v.lower()</code>), strip spaces, or <code>raise ValueError</code> to reject bad values. It is not the same as <code>Field(ge=18)</code> — Field is a built-in constraint; the validator is your own rule."},
+            {"q": "Why HTTP 422 on bad age?", "a": "<code>Field(ge=18)</code> fails → Pydantic raises <code>ValidationError</code> before the route body runs. FastAPI maps that to <b>422 Unprocessable Entity</b> — the JSON was parsed, but the values break the schema rules."},
         ],
     },
     28: {

@@ -741,7 +741,7 @@ def body_mutable() -> str:
 """,
         )
         + sec(
-            "3. Kid picture",
+            "3. Picture",
             grid(
                 card("Immutable", "Sealed box. To change, buy a new box.<br><code>s = s + \"!\"</code>"),
                 card("Mutable", "Open box. Swap what is inside.<br><code>a.append(1)</code>"),
@@ -828,7 +828,7 @@ def body_comprehensions() -> str:
             ),
         )
         + sec(
-            "3. Kid rule",
+            "3. Rule",
             grid(
                 card("Good", "Build a new collection from an old one."),
                 card("Bad", "Print / write files inside a comprehension — use a normal <code>for</code> loop."),
