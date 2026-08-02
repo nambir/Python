@@ -12,6 +12,7 @@ from slide_flowcharts import flowchart_for
 from slide_real_life import real_life_for
 from slide_csharp_popups import render_csharp_popups
 from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, mark_important_in_step_pres, split_learn
+from slide_io import convert_input_output_pres
 from notes_slides import (
     NOTES_CONTENT,
     NOTES_CSS,
@@ -46,13 +47,13 @@ code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; backgr
 .slide-body { display: flex; flex-direction: column; gap: 0; }
 .main-split {
   display: grid;
-  grid-template-columns: minmax(180px, var(--split-left, 48%)) 12px minmax(240px, 1fr);
+  grid-template-columns: minmax(0, var(--split-left, 48%)) 12px minmax(0, 1fr);
   gap: 0;
   align-items: start;
 }
 .main-split.no-code { grid-template-columns: 1fr; max-width: 900px; }
-.panel-left { min-width: 0; padding-right: 8px; }
-.panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; }
+.panel-left { min-width: 0; padding-right: 8px; overflow-x: auto; }
+.panel-code { min-width: 0; position: sticky; top: 12px; padding-left: 8px; overflow: hidden; }
 .panel-code .vs-editor + .vs-editor { margin-top: 12px; }
 .panel-code .code-playground + .code-playground { margin-top: 14px; }
 
@@ -109,7 +110,7 @@ body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .split-divider {
   width: 12px; cursor: col-resize; align-self: stretch; min-height: 240px;
   position: relative; touch-action: none; user-select: none;
-  background: transparent; z-index: 5;
+  background: transparent; z-index: 5; flex-shrink: 0;
 }
 .split-divider::before {
   content: ""; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px;
@@ -146,6 +147,29 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 .mc-bad  .mc-lbl { background: #fff5f5; color: #c53030; }
 .mc-good .mc-lbl { background: #f0fff4; color: #276749; }
 .mc-col .step-pre { margin: 0; border-radius: 0; border: none; border-top: 1px solid #e2e8f0; font-size: 11px; padding: 6px 8px; line-height: 1.5; }
+.io-split {
+  display: grid; grid-template-columns: 1.35fr 1fr; gap: 0; margin: 8px 0;
+  border: 1px solid #cbd5e1; border-radius: 5px; overflow: hidden; background: #fff;
+}
+.io-split .io-lbl {
+  display: block; font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.io-split .io-in .io-lbl { background: #eff6ff; color: #1d4ed8; }
+.io-split .io-out .io-lbl { background: #f0fdf4; color: #166534; }
+.io-split .io-in { border-right: 2px solid #f87171; min-width: 0; }
+.io-split .io-out { min-width: 0; background: #f8fafc; }
+.io-split .step-pre {
+  margin: 0; border: none; border-radius: 0; background: transparent;
+  white-space: pre; overflow-x: auto; line-height: 1.45; font-size: 11px;
+}
+.real-life .io-split { border-color: #bbf7d0; }
+.mc-col .io-split { margin: 0; border: none; border-radius: 0; border-top: 1px solid #e2e8f0; }
+.mc-col .io-split .io-lbl { border-radius: 0; }
+@media (max-width: 900px) {
+  .io-split { grid-template-columns: 1fr; }
+  .io-split .io-in { border-right: none; border-bottom: 2px solid #f87171; }
+}
 .mistake-note { font-size: 11px; color: #555; margin-top: 4px; }
 .before-after { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: start; margin: 8px 0 12px; }
 .ba-col { border-radius: 6px; overflow: hidden; }
@@ -721,16 +745,37 @@ function initAudioPlayers() {
   });
 }
 
+const SCROLL_KEY = 'pythonTrainingScroll';
+let slideShowCount = 0;
+
+function saveSlideScroll(n, top) {
+  try {
+    const map = JSON.parse(sessionStorage.getItem(SCROLL_KEY) || '{}');
+    map[String(n)] = Math.max(0, Math.round(top));
+    sessionStorage.setItem(SCROLL_KEY, JSON.stringify(map));
+  } catch (_) {}
+}
+
+function getSavedSlideScroll(n) {
+  try {
+    const map = JSON.parse(sessionStorage.getItem(SCROLL_KEY) || '{}');
+    const v = parseInt(map[String(n)], 10);
+    return Number.isFinite(v) && v >= 0 ? v : 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
 function showSlide(n) {
   if (!slideOrder.includes(n)) return;
   pauseAllExcept(null);
   endSplitDrag();
+  const previous = current;
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('slide-' + n);
   if (el) {
     el.classList.add('active');
     current = n;
-    el.scrollTop = 0;
     const info = document.getElementById('slideInfo');
     if (info) {
       if (n === 0) info.textContent = 'Navigation';
@@ -744,6 +789,17 @@ function showSlide(n) {
       location.hash = hash;
     }
     try { localStorage.setItem('pythonTrainingSlide', String(n)); } catch (_) {}
+
+    // Refresh / first paint: restore scroll. Changing slides: start at top.
+    const isFirstPaint = slideShowCount === 0;
+    slideShowCount += 1;
+    if (isFirstPaint || previous === n) {
+      const y = getSavedSlideScroll(n);
+      requestAnimationFrame(() => { el.scrollTop = y; });
+    } else {
+      el.scrollTop = 0;
+      saveSlideScroll(n, 0);
+    }
   }
 }
 function goSlide(n) { showSlide(n); }
@@ -760,11 +816,23 @@ window.addEventListener('hashchange', () => {
   const n = (h === '' || h === 'nav') ? 0 : (parseInt(h, 10) || 0);
   if (n !== current) showSlide(n);
 });
+
+// Persist scroll while reading a slide (slide panel is the scroll container)
+document.addEventListener('scroll', (e) => {
+  const t = e.target;
+  if (!t || !t.classList || !t.classList.contains('slide') || !t.classList.contains('active')) return;
+  saveSlideScroll(current, t.scrollTop);
+}, true);
+window.addEventListener('beforeunload', () => {
+  const el = document.getElementById('slide-' + current);
+  if (el) saveSlideScroll(current, el.scrollTop);
+});
 const SPLIT_KEY = 'pythonTrainingSplitLeft';
 let splitDragging = null;
 function getSavedSplit() {
   const v = parseFloat(localStorage.getItem(SPLIT_KEY) || '');
-  return (Number.isFinite(v) && v >= 20 && v <= 75) ? v : 48;
+  // 5%–98%: code panel can collapse, but divider always stays visible to pull back
+  return (Number.isFinite(v) && v >= 5 && v <= 98) ? v : 48;
 }
 function applySplitTo(split, pct) {
   if (!split || split.classList.contains('no-code')) return;
@@ -778,7 +846,7 @@ function initSplitDividers() {
   document.querySelectorAll('.split-divider').forEach(div => {
     if (div.dataset.splitReady) return;
     div.dataset.splitReady = '1';
-    div.title = 'Drag to resize panels';
+    div.title = 'Drag to resize — drag right to collapse code (bar stays so you can pull back)';
     div.addEventListener('pointerdown', e => {
       if (e.button !== 0) return;
       const split = div.closest('.main-split');
@@ -797,7 +865,7 @@ document.addEventListener('pointermove', e => {
   const { split, left, width } = splitDragging;
   if (width < 80) return;
   let pct = ((e.clientX - left) / width) * 100;
-  pct = Math.max(20, Math.min(75, pct));
+  pct = Math.max(5, Math.min(98, pct));
   applySplitTo(split, pct);
   localStorage.setItem(SPLIT_KEY, String(Math.round(pct * 10) / 10));
 });
@@ -3816,14 +3884,23 @@ Source: <a class="file-link" href="Python-Set2/pythonBasics/MyClass/oops_inherit
         print(f"{name} barks")
 
 d = Dog()
-d.bark()   # TypeError: bark() takes 1 argument but 2 given</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">class Dog:
+d.bark()   # TypeError: bark() takes 1 argument but 2 given</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix — two valid styles</span><div class="step-pre"># A) store name on the object
+class Dog:
     def __init__(self, name):
         self.name = name
-    def bark(self):   # self first
+    def bark(self):            # self first
         print(f"{self.name} barks")
 
 d = Dog("Rex")
-d.bark()   # Rex barks</div></div></div><span class="mistake-note">&#128161; <code>self</code> is just a convention &mdash; Python passes the instance automatically as the first argument. Any name works but <code>self</code> is universal.</span></div>
+d.bark()                       # Rex barks
+
+# B) also OK — pass name each call
+class Dog:
+    def bark(self, name):      # self first, then extra args
+        print(f"{name} barks")
+
+d = Dog()
+d.bark("Rex")                  # Rex barks — name is an argument</div></div></div><span class="mistake-note">&#128161; <code>self</code> is always first; extra parameters like <code>name</code> are fine after it. Style A keeps state on the object; style B passes data only when calling. <code>self</code> is a convention — Python passes the instance automatically.</span></div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; class-level mutable attribute shared by all instances</span><span class="mistake-desc">Mutable class attributes (list, dict) are shared by all instances. Appending to one affects all.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class Student:
     courses = []  # class-level — SHARED!
     def add(self, c): self.courses.append(c)
@@ -3886,7 +3963,43 @@ print(c2.items)   # []  ← correct</div></div>
   </div>
   <div class="quiz-q"><b>Q2.</b> <code>@classmethod</code> receives what as its first argument?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>cls</code> &mdash; the <b>class itself</b>, not an instance. Used for alternative constructors.</div>
+      <div class="quiz-reveal"><code>cls</code> &mdash; the <b>class itself</b>, not an instance. Used for alternative constructors.
+<table class="data-tbl" style="margin:8px 0">
+<tr><th></th><th>Normal method</th><th><code>@classmethod</code></th></tr>
+<tr><td><b>First arg</b></td><td><code>self</code> = <b>this object</b></td><td><code>cls</code> = <b>the class</b></td></tr>
+<tr><td><b>Called on</b></td><td>usually an instance: <code>p.greet()</code></td><td>usually the class: <code>Person.from_birth_year(...)</code></td></tr>
+<tr><td><b>Purpose</b></td><td>use / change <b>one object&apos;s</b> data</td><td>work with the <b>class</b> (factories, shared setup)</td></tr>
+<tr><td><b>Needs an instance first?</b></td><td>Yes (you create <code>p</code>, then call)</td><td>No — often used <b>to create</b> the instance</td></tr>
+</table>
+<div class="step-pre"># INPUT
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    # NORMAL METHOD — first arg is the instance
+    def greet(self):
+        return f"Hi, I am {self.name}, {self.age}"
+
+    # CLASS METHOD — first arg is the class (Person)
+    @classmethod
+    def from_birth_year(cls, name, year):
+        age = 2026 - year
+        return cls(name, age)    # builds a Person — same as Person(name, age)
+
+# --- using classmethod (no instance yet) ---
+p = Person.from_birth_year("Anu", 2000)   # Python passes Person as cls
+
+# --- using normal method (needs instance p) ---
+print(p.greet())                          # Python passes p as self
+print(p.name, p.age)
+
+# OUTPUT
+Hi, I am Anu, 26
+Anu 26
+# self  → one Person object (p)
+# cls   → the Person class (to construct another object)</div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>@staticmethod</code> receives?
@@ -6203,6 +6316,7 @@ def main():
 </body>
 </html>"""
 
+    html = convert_input_output_pres(html)
     html = mark_important_in_step_pres(html)
 
     OUTPUT.write_text(html, encoding="utf-8")

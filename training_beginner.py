@@ -1,5 +1,7 @@
 """Beginner step-by-step explanations and interview Q&A for each slide."""
 
+from slide_io import io_split
+
 BEGINNER_CONTENT: dict[int, dict] = {
     1: {
         "steps": [
@@ -329,60 +331,108 @@ BEGINNER_CONTENT: dict[int, dict] = {
         "steps": [
             {
                 "title": "Step 1 — Class, Object, __init__ & self",
-                "body": "A class is a blueprint. An object is an instance. <code>__init__</code> initializes state; <code>self</code> refers to the current instance. "
-                        "<b>__init__ is optional</b> — only write it when you need starting values."
-                        "<div class=\"step-pre\">class Dog:\n"
-                        "    def __init__(self, name):\n"
-                        "        self.name = name\n"
-                        "\n"
-                        "    def bark(self):\n"
-                        "        return f\"{self.name} says woof!\"\n"
-                        "\n"
-                        "my_dog = Dog(\"Rex\")\n"
-                        "my_dog.bark()</div>"
-                        "<p class=\"step-result\"><b>Output:</b> <code>Rex says woof!</code></p>",
+                "body": (
+                    "A class is a blueprint. An object is an instance. "
+                    "<code>__init__</code> initializes state; <code>self</code> refers to the current instance. "
+                    "<b>__init__ is optional</b> — only write it when you need starting values."
+                    + io_split(
+                        'class Dog:\n'
+                        '    def __init__(self, name):\n'
+                        '        self.name = name\n'
+                        '\n'
+                        '    def bark(self):\n'
+                        '        return f"{self.name} says woof!"\n'
+                        '\n'
+                        'my_dog = Dog("Rex")\n'
+                        'print(my_dog.bark())',
+                        {9: "Rex says woof!"},
+                    )
+                ),
             },
             {
                 "title": "Step 2 — Same name: class vs function vs method",
-                "body": "<code>Toy(\"ball\")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>. If a <b>function</b> later uses the same name, the class is <b>shadowed</b> (Python keeps the last binding). A <b>method</b> named <code>Toy</code> does <b>not</b> replace the class.<div class=\"step-pre\">class Toy:\n    def __init__(self, name):\n        self.name = name\n\na = Toy(\"ball\")     # class → object\nprint(a.name)       # ball\n\ndef Toy(name):      # same name — hides the class\n    return f\"fn:{name}\"\n\na = Toy(\"ball\")     # now calls the FUNCTION\nprint(a)            # fn:ball</div><div class=\"step-pre\"># Method named Toy — OK; class still works\nclass Toy:\n    def __init__(self, name):\n        self.name = name\n    def Toy(self):\n        return \"method Toy\"\n\na = Toy(\"ball\")     # still creates object\nprint(a.Toy())      # method Toy</div><p class=\"step-result\"><b>Best practice:</b> PascalCase for classes only. Use <code>make_toy()</code> for a helper — never reuse the class name for a function.</p>",
+                "body": (
+                    "<code>Toy(\"ball\")</code> looks like a function call, but <code>Toy</code> is normally a <b>class</b>. "
+                    "If a <b>function</b> later uses the same name, the class is <b>shadowed</b> (Python keeps the last binding). "
+                    "A <b>method</b> named <code>Toy</code> does <b>not</b> replace the class."
+                    + io_split(
+                        'class Toy:\n'
+                        '    def __init__(self, name):\n'
+                        '        self.name = name\n'
+                        '\n'
+                        'a = Toy("ball")     # class → object\n'
+                        'print(a.name)\n'
+                        '\n'
+                        'def Toy(name):      # same name — hides the class\n'
+                        '    return f"fn:{name}"\n'
+                        '\n'
+                        'a = Toy("ball")     # now calls the FUNCTION\n'
+                        'print(a)',
+                        {6: "ball", 12: "fn:ball"},
+                    )
+                    + io_split(
+                        '# Method named Toy — OK; class still works\n'
+                        'class Toy:\n'
+                        '    def __init__(self, name):\n'
+                        '        self.name = name\n'
+                        '    def Toy(self):\n'
+                        '        return "method Toy"\n'
+                        '\n'
+                        'a = Toy("ball")     # still creates object\n'
+                        'print(a.Toy())',
+                        {9: "method Toy"},
+                    )
+                    + '<p class="step-result"><b>Best practice:</b> PascalCase for classes only. '
+                    "Use <code>make_toy()</code> for a helper — never reuse the class name for a function.</p>"
+                ),
             },
             {
                 "title": "Step 3 — Inheritance: single, multiple & MRO",
-                "body": "A child class inherits from one or more parents. MRO (Method Resolution Order) defines lookup order. "
-                        "<code>Pet(Dog, Cat)</code> looks left→right: Dog before Cat, so <code>speak</code> is Dog’s \"woof\". "
-                        "<b>Only the first match runs</b> — <code>Cat.speak</code> is <b>not</b> called afterward "
-                        "(unless Dog’s method uses <code>super()</code> to continue the chain)."
-                        "<div class=\"step-pre\">"
-                        "# INPUT\n"
-                        "class Animal:\n"
-                        "    def speak(self): return \"...\"\n"
-                        "\n"
-                        "class Dog(Animal):\n"
-                        "    def speak(self): return \"woof\"\n"
-                        "\n"
-                        "class Cat(Animal):\n"
-                        "    def speak(self): return \"meow\"\n"
-                        "\n"
-                        "class Pet(Dog, Cat):\n"
-                        "    # multiple inheritance — Dog listed first\n"
-                        "    # p.speak() → finds Dog.speak → STOPS (Cat.speak is NOT called)\n"
-                        "    pass\n"
-                        "\n"
-                        "p = Pet()\n"
-                        "print(p.speak())                          # only Dog.speak runs → woof\n"
-                        "print([c.__name__ for c in Pet.__mro__])  # lookup order (Cat is next, but unused here)\n"
-                        "\n"
-                        "# OUTPUT\n"
-                        "woof\n"
-                        "['Pet', 'Dog', 'Cat', 'Animal', 'object']\n"
-                        "# Cat is on the MRO list, but speak lookup stopped at Dog"
-                        "</div>",
+                "body": (
+                    "A child class inherits from one or more parents. MRO (Method Resolution Order) defines lookup order. "
+                    "<code>Pet(Dog, Cat)</code> looks left→right: Dog before Cat, so <code>speak</code> is Dog’s \"woof\". "
+                    "<b>Only the first match runs</b> — <code>Cat.speak</code> is <b>not</b> called afterward "
+                    "(unless Dog’s method uses <code>super()</code> to continue the chain)."
+                    + io_split(
+                        'class Animal:\n'
+                        '    def speak(self): return "..."\n'
+                        '\n'
+                        'class Dog(Animal):\n'
+                        '    def speak(self): return "woof"\n'
+                        '\n'
+                        'class Cat(Animal):\n'
+                        '    def speak(self): return "meow"\n'
+                        '\n'
+                        'class Pet(Dog, Cat):\n'
+                        '    # multiple inheritance — Dog listed first\n'
+                        '    # p.speak() → finds Dog.speak → STOPS (Cat.speak is NOT called)\n'
+                        '    pass\n'
+                        '\n'
+                        'p = Pet()\n'
+                        'print(p.speak())                          # only Dog.speak runs\n'
+                        'print([c.__name__ for c in Pet.__mro__])  # Cat is next, but unused here',
+                        {
+                            16: "woof",
+                            17: "['Pet', 'Dog', 'Cat', 'Animal', 'object']",
+                        },
+                    )
+                    + '<p class="step-result"><b>Takeaway:</b> Cat is on the MRO list, '
+                    "but <code>speak</code> lookup stopped at Dog.</p>"
+                ),
             },
             {
                 "title": "Step 4 — Encapsulation & _ convention",
                 "body": (
                     "Python has <b>no true private fields</b> like C# <code>private</code>. "
                     "Access is by <b>convention</b> and (for <code>__</code>) a rename trick — not a lock."
+                    "<p style=\"font-size:12px;margin:6px 0 8px;line-height:1.45\">"
+                    "<b>So is encapsulation possible?</b> <b>Yes</b> — you still <b>bundle data + methods</b> "
+                    "and mark internals as “don’t touch.” It is <b>soft</b> encapsulation (team discipline), "
+                    "not a compiler lock. "
+                    "<b>What shows it in the code?</b> "
+                    "<code>self._balance</code> / <code>self.__pin</code> (hidden state) + "
+                    "<code>deposit()</code> (the allowed way to change balance)."
+                    "</p>"
                     "<ul style=\"margin:6px 0 8px 18px;font-size:12px;line-height:1.45\">"
                     "<li><b>Public</b> — normal name (<code>balance</code>): meant for callers to use.</li>"
                     "<li><b>“Private” by convention</b> — one underscore (<code>_balance</code>): "
@@ -398,73 +448,75 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "So <code>_</code> / <code>__</code> are for <b>team discipline and avoiding name clashes</b>, "
                     "not for hiding secrets from attackers."
                     "</p>"
-                    "<div class=\"step-pre\">"
-                    "# INPUT\n"
-                    "class BankAccount:\n"
-                    "    def __init__(self, balance):\n"
-                    "        self.owner = \"Anu\"           # public — OK to use\n"
-                    "        self._balance = balance      # convention: internal (please don’t touch)\n"
-                    "        self.__pin = \"1234\"         # mangled → _BankAccount__pin\n"
-                    "\n"
-                    "    def deposit(self, amount):\n"
-                    "        self._balance += amount     # class methods use _ / __ freely\n"
-                    "\n"
-                    "a = BankAccount(100)\n"
-                    "print(a.owner)                     # public\n"
-                    "print(a._balance)                  # “private” — still works!\n"
-                    "try:\n"
-                    "    print(a.__pin)                 # looks private — name was mangled\n"
-                    "except AttributeError as e:\n"
-                    "    print(type(e).__name__ + \":\", e)\n"
-                    "print(a._BankAccount__pin)         # mangled name — still reachable\n"
-                    "print([k for k in a.__dict__])     # see real attribute names\n"
-                    "\n"
-                    "# OUTPUT\n"
-                    "Anu\n"
-                    "100\n"
-                    "AttributeError: 'BankAccount' object has no attribute '__pin'\n"
-                    "1234\n"
-                    "['owner', '_balance', '_BankAccount__pin']\n"
-                    "# Takeaway: _ = please don’t; __ = renamed; neither = locked"
-                    "</div>"
-                    "<p class=\"step-result\"><b>C# contrast:</b> "
-                    "<code>private decimal _balance</code> is enforced by the compiler. "
+                    + io_split(
+                        'class BankAccount:\n'
+                        '    def __init__(self, balance):\n'
+                        '        self.owner = "Anu"           # public — OK to use\n'
+                        '        self._balance = balance      # convention: internal\n'
+                        '        self.__pin = "1234"         # mangled → _BankAccount__pin\n'
+                        '\n'
+                        '    def deposit(self, amount):\n'
+                        '        self._balance += amount     # class methods OK\n'
+                        '\n'
+                        'a = BankAccount(100)\n'
+                        'print(a.owner)                     # public\n'
+                        'print(a._balance)                  # “private” — still works!\n'
+                        'try:\n'
+                        '    print(a.__pin)                 # mangled — AttributeError\n'
+                        'except AttributeError as e:\n'
+                        '    print(type(e).__name__ + ":", e)\n'
+                        'print(a._BankAccount__pin)         # mangled name — still OK\n'
+                        'print([k for k in a.__dict__])     # real attribute names',
+                        {
+                            11: "Anu",
+                            12: "100",
+                            16: "AttributeError: 'BankAccount' object has no attribute '__pin'",
+                            17: "1234",
+                            18: "['owner', '_balance', '_BankAccount__pin']",
+                        },
+                    )
+                    + "<p class=\"step-result\"><b>Takeaway:</b> "
+                    "<code>_</code> = please don’t; <code>__</code> = renamed; neither = locked. "
+                    "<b>C# contrast:</b> <code>private</code> is enforced by the compiler — "
                     "Python’s <code>_balance</code> is a polite sign on an unlocked door.</p>"
                 ),
             },
             {
                 "title": "Step 5 — Polymorphism & overriding",
                 "body": (
-                    "Different classes share the same interface. Child methods <b>override</b> parent methods. "
+                    "Different classes share the same <b>method shape</b> (here: <code>speak()</code>). "
+                    "Child methods <b>override</b> parent methods. "
                     "One function (<code>announce</code>) works with any object that has <code>speak()</code> — "
                     "Python picks the right version at runtime."
-                    "<div class=\"step-pre\">"
-                    "# INPUT\n"
-                    "class Animal:\n"
-                    "    def speak(self):\n"
-                    "        return \"...\"          # base version\n"
-                    "\n"
-                    "class Dog(Animal):\n"
-                    "    def speak(self):\n"
-                    "        return \"woof\"        # overrides Animal.speak\n"
-                    "\n"
-                    "class Cat(Animal):\n"
-                    "    def speak(self):\n"
-                    "        return \"meow\"        # overrides Animal.speak\n"
-                    "\n"
-                    "def announce(animal):\n"
-                    "    print(animal.speak())  # same call — different result\n"
-                    "\n"
-                    "announce(Dog())\n"
-                    "announce(Cat())\n"
-                    "announce(Animal())\n"
-                    "\n"
-                    "# OUTPUT\n"
-                    "woof\n"
-                    "meow\n"
-                    "...\n"
-                    "# Same announce() — Dog / Cat / Animal each use their own speak()"
-                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0 8px;line-height:1.45\">"
+                    "<b>Interface keyword?</b> Python has <b>no</b> <code>interface</code> keyword like C#. "
+                    "Saying “same interface” here means “same public methods” (duck typing), "
+                    "not a C# <code>interface IAnimal</code> type. "
+                    "Closest formal tool: <code>abc.ABC</code> + <code>@abstractmethod</code> (Step 6)."
+                    "</p>"
+                    + io_split(
+                        'class Animal:\n'
+                        '    def speak(self):\n'
+                        '        return "..."          # base version\n'
+                        '\n'
+                        'class Dog(Animal):\n'
+                        '    def speak(self):\n'
+                        '        return "woof"        # overrides Animal.speak\n'
+                        '\n'
+                        'class Cat(Animal):\n'
+                        '    def speak(self):\n'
+                        '        return "meow"        # overrides Animal.speak\n'
+                        '\n'
+                        'def announce(animal):\n'
+                        '    print(animal.speak())  # same call — different result\n'
+                        '\n'
+                        'announce(Dog())\n'
+                        'announce(Cat())\n'
+                        'announce(Animal())',
+                        {16: "woof", 17: "meow", 18: "..."},
+                    )
+                    + '<p class="step-result"><b>Takeaway:</b> Same <code>announce()</code> — '
+                    "Dog / Cat / Animal each use their own <code>speak()</code>.</p>"
                 ),
             },
             {
@@ -473,35 +525,35 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "Force subclasses to implement required methods using <code>abc.ABC</code> and "
                     "<code>@abstractmethod</code>. You <b>cannot</b> create <code>Shape()</code> directly — "
                     "only a complete child like <code>Circle</code>."
-                    "<div class=\"step-pre\">"
-                    "# INPUT\n"
-                    "from abc import ABC, abstractmethod\n"
-                    "\n"
-                    "class Shape(ABC):\n"
-                    "    @abstractmethod\n"
-                    "    def area(self):\n"
-                    "        ...                 # must be implemented by child\n"
-                    "\n"
-                    "class Circle(Shape):\n"
-                    "    def __init__(self, r):\n"
-                    "        self.r = r\n"
-                    "    def area(self):\n"
-                    "        return 3.14 * self.r ** 2\n"
-                    "\n"
-                    "c = Circle(2)\n"
-                    "print(c.area())\n"
-                    "\n"
-                    "try:\n"
-                    "    Shape()                 # incomplete — blocked\n"
-                    "except TypeError as e:\n"
-                    "    print(type(e).__name__ + \":\", e)\n"
-                    "\n"
-                    "# OUTPUT\n"
-                    "12.56\n"
-                    "TypeError: Can't instantiate abstract class Shape without an "
-                    "implementation for abstract method 'area'\n"
-                    "# ABC = blueprint; child must fill in every @abstractmethod"
-                    "</div>"
+                    + io_split(
+                        'from abc import ABC, abstractmethod\n'
+                        '\n'
+                        'class Shape(ABC):\n'
+                        '    @abstractmethod\n'
+                        '    def area(self):\n'
+                        '        ...                 # must be implemented by child\n'
+                        '\n'
+                        'class Circle(Shape):\n'
+                        '    def __init__(self, r):\n'
+                        '        self.r = r\n'
+                        '    def area(self):\n'
+                        '        return 3.14 * self.r ** 2\n'
+                        '\n'
+                        'c = Circle(2)\n'
+                        'print(c.area())\n'
+                        '\n'
+                        'try:\n'
+                        '    Shape()                 # incomplete — blocked\n'
+                        'except TypeError as e:\n'
+                        '    print(type(e).__name__ + ":", e)',
+                        {
+                            15: "12.56",
+                            20: "TypeError: Can't instantiate abstract class Shape without an "
+                            "implementation for abstract method 'area'",
+                        },
+                    )
+                    + '<p class="step-result"><b>Takeaway:</b> ABC = blueprint; '
+                    "child must fill in every <code>@abstractmethod</code>.</p>"
                 ),
             },
             {
@@ -521,38 +573,31 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<div class=\"mc-row\">"
                     "<div class=\"mc-col mc-bad\">"
                     "<span class=\"mc-lbl\">Without __str__</span>"
-                    "<div class=\"step-pre\">"
-                    "# INPUT\n"
-                    "class User:\n"
-                    "    def __init__(self, name):\n"
-                    "        self.name = name\n"
-                    "    # no __str__\n"
-                    "\n"
-                    "u = User(\"Anu\")\n"
-                    "print(u)\n"
-                    "\n"
-                    "# OUTPUT\n"
-                    "&lt;User object at 0x...&gt;\n"
-                    "# default — not friendly"
-                    "</div></div>"
+                    + io_split(
+                        'class User:\n'
+                        '    def __init__(self, name):\n'
+                        '        self.name = name\n'
+                        '    # no __str__\n'
+                        '\n'
+                        'u = User("Anu")\n'
+                        'print(u)',
+                        {7: "&lt;User object at 0x...&gt;"},
+                    )
+                    + "</div>"
                     "<div class=\"mc-col mc-good\">"
                     "<span class=\"mc-lbl\">With __str__</span>"
-                    "<div class=\"step-pre\">"
-                    "# INPUT\n"
-                    "class User:\n"
-                    "    def __init__(self, name):\n"
-                    "        self.name = name\n"
-                    "    def __str__(self):\n"
-                    "        return f\"Hello {self.name}\"\n"
-                    "\n"
-                    "u = User(\"Anu\")\n"
-                    "print(u)   # uses __str__\n"
-                    "\n"
-                    "# OUTPUT\n"
-                    "Hello Anu\n"
-                    "# readable for humans"
-                    "</div></div>"
-                    "</div>"
+                    + io_split(
+                        'class User:\n'
+                        '    def __init__(self, name):\n'
+                        '        self.name = name\n'
+                        '    def __str__(self):\n'
+                        '        return f"Hello {self.name}"\n'
+                        '\n'
+                        'u = User("Anu")\n'
+                        'print(u)   # uses __str__',
+                        {8: "Hello Anu"},
+                    )
+                    + "</div></div>"
                     "<p class=\"step-result\"><b>Tip:</b> Also add <code>__repr__</code> for developers/debuggers. "
                     "If only <code>__repr__</code> exists, <code>print</code> falls back to it.</p>"
                 ),

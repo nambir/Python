@@ -1,5 +1,7 @@
 """Real-life workplace examples for every slide — indented code blocks."""
 
+from slide_io import io_split
+
 REAL_LIFE: dict[int, str] = {
     1: (
         "<b>Order automation bot:</b> A logistics team runs a nightly sync — "
@@ -835,33 +837,30 @@ REAL_LIFE: dict[int, str] = {
         "— polymorphism. Without a base <code>month_end</code>, a plain <code>Account</code> "
         "would raise <code>AttributeError</code> when you call it."
         "</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "class Account:\n"
-        "    def __init__(self, balance):\n"
-        "        self.balance = balance   # shared state for all accounts\n"
-        "\n"
-        "    def deposit(self, amount):    # shared: add money\n"
-        "        self.balance += amount\n"
-        "\n"
-        "    def withdraw(self, amount):   # shared: remove money\n"
-        "        if amount &gt; self.balance:\n"
-        '            raise ValueError("not enough balance")\n'
-        "        self.balance -= amount\n"
-        "\n"
-        "    def month_end(self):\n"
-        "        pass   # default: do nothing (safe for plain accounts)\n"
-        "\n"
-        "a = Account(100)\n"
-        "a.deposit(50)      # 100 → 150\n"
-        "a.withdraw(20)     # 150 → 130\n"
-        "a.month_end()      # still 130 — pass did nothing\n"
-        "print(a.balance)\n"
-        "\n"
-        "# OUTPUT\n"
-        "130"
-        "</div>"
-        "<p style=\"font-size:12px;color:#334155;margin:6px 0 0;line-height:1.45\">"
+        + io_split(
+            "class Account:\n"
+            "    def __init__(self, balance):\n"
+            "        self.balance = balance   # shared state for all accounts\n"
+            "\n"
+            "    def deposit(self, amount):    # shared: add money\n"
+            "        self.balance += amount\n"
+            "\n"
+            "    def withdraw(self, amount):   # shared: remove money\n"
+            "        if amount &gt; self.balance:\n"
+            '            raise ValueError("not enough balance")\n'
+            "        self.balance -= amount\n"
+            "\n"
+            "    def month_end(self):\n"
+            "        pass   # default: do nothing (safe for plain accounts)\n"
+            "\n"
+            "a = Account(100)\n"
+            "a.deposit(50)      # 100 → 150\n"
+            "a.withdraw(20)     # 150 → 130\n"
+            "a.month_end()      # still 130 — pass did nothing\n"
+            "print(a.balance)",
+            {20: "130"},
+        )
+        + "<p style=\"font-size:12px;color:#334155;margin:6px 0 0;line-height:1.45\">"
         "<b>Line by line:</b> "
         "<code>__init__</code> stores starting money. "
         "<code>deposit</code> / <code>withdraw</code> change that shared <code>balance</code>. "
@@ -869,37 +868,32 @@ REAL_LIFE: dict[int, str] = {
         "</p>"
         "<p><b>2) <code>SavingsAccount</code> — override <code>month_end</code></b><br>"
         "Child keeps deposit/withdraw from the parent, but replaces month-end with +4% interest.</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "class SavingsAccount(Account):\n"
-        "    def month_end(self):\n"
-        "        self.balance *= 1.04   # overrides Account.month_end (base was pass) — apply +4% interest\n"
-        "\n"
-        "s = SavingsAccount(200)\n"
-        "s.deposit(0)       # still works — inherited from Account\n"
-        "s.month_end()      # updates balance; returns None (no return)\n"
-        "print(s.balance)   # print the balance — NOT print(s.month_end())\n"
-        "\n"
-        "# OUTPUT\n"
-        "208.0\n"
-        "# Why not print(s.month_end())?\n"
-        "# month_end changes self.balance but has no return → returns None\n"
-        "# so print(s.month_end()) would print: None"
-        "</div>"
+        + io_split(
+            "class SavingsAccount(Account):\n"
+            "    def month_end(self):\n"
+            "        self.balance *= 1.04   # overrides Account.month_end (base was pass) — apply +4% interest\n"
+            "\n"
+            "s = SavingsAccount(200)\n"
+            "s.deposit(0)       # still works — inherited from Account\n"
+            "s.month_end()      # updates balance; returns None (no return)\n"
+            "print(s.balance)   # print the balance — NOT print(s.month_end())",
+            {8: "208.0"},
+        )
+        + "<p style=\"font-size:12px;color:#334155;margin:6px 0 0;line-height:1.45\">"
+        "<b>Why not <code>print(s.month_end())</code>?</b> "
+        "<code>month_end</code> changes <code>self.balance</code> but has no <code>return</code> → returns "
+        "<code>None</code>, so that print would show <code>None</code>."
+        "</p>"
         "<p><b>3) Polymorphism — one loop, different behaviour</b><br>"
         "Call <code>month_end()</code> on every account; Python picks the right version "
         "(base <code>pass</code> vs savings interest).</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "accounts = [Account(100), SavingsAccount(200)]\n"
-        "for a in accounts:\n"
-        "    a.month_end()\n"
-        "    print(type(a).__name__, a.balance)\n"
-        "\n"
-        "# OUTPUT\n"
-        "Account 100          # base month_end → pass → unchanged\n"
-        "SavingsAccount 208.0 # child month_end → +4%"
-        "</div>"
+        + io_split(
+            "accounts = [Account(100), SavingsAccount(200)]\n"
+            "for a in accounts:\n"
+            "    a.month_end()\n"
+            "    print(type(a).__name__, a.balance)   # runs twice",
+            {4: "Account 100\nSavingsAccount 208.0"},
+        )
     ),
     16: (
         "<b>ORM-style field:</b> Descriptor rejects negatives — like a C# property setter — "
