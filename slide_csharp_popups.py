@@ -1047,6 +1047,125 @@ def _property_body() -> str:
     )
 
 
+def _property_vs_descriptor_body() -> str:
+    return (
+        _diff_first(
+            "<code>@property</code> per field<br>"
+            "or <code>price = Positive()</code> descriptor",
+            "C# <code>get</code>/<code>set</code> per property<br>"
+            "+ shared validate helper",
+            "Reuse rules on many fields",
+        )
+        + """
+<p><b>Python choice:</b> one-off field → <code>@property</code>.
+Same check on <code>price</code>, <code>qty</code>, <code>Order.total</code> →
+define a <b>descriptor once</b>, attach at class level.</p>
+<p><b>C# choice:</b> always write a property per field.
+Reuse validation with a <b>shared helper method</b>
+(or attributes / source generators in advanced setups).
+There is no everyday <code>price = Positive()</code> syntax.</p>
+"""
+        + _py_cs(
+            "Python — <code>@property</code> twice (rules copied):",
+            """class Product:
+    def __init__(self):
+        self._price = 0
+        self._qty = 0
+
+    @property
+    def price(self):
+        return self._price
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError("must be >= 0")
+        self._price = value
+
+    @property
+    def qty(self):            # same rules again
+        return self._qty
+    @qty.setter
+    def qty(self, value):
+        if value < 0:
+            raise ValueError("must be >= 0")
+        self._qty = value""",
+            "C# — two properties (same idea; can share a helper):",
+            """class Product
+{
+    private decimal _price;
+    private int _qty;
+
+    static decimal RequireNonNeg(decimal v) =>
+        v < 0 ? throw new ArgumentOutOfRangeException(nameof(v)) : v;
+
+    public decimal Price
+    {
+        get => _price;
+        set => _price = RequireNonNeg(value);
+    }
+
+    public int Qty
+    {
+        get => _qty;
+        set => _qty = (int)RequireNonNeg(value);
+    }
+}""",
+        )
+        + _py_cs(
+            "Python — descriptor once, plug into many fields:",
+            """class Positive:
+    def __set_name__(self, owner, name):
+        self.name = name          # owner=Product, name='price'
+    def __get__(self, obj, owner):
+        return obj.__dict__.get(self.name)
+    def __set__(self, obj, value):
+        if value < 0:
+            raise ValueError("must be >= 0")
+        obj.__dict__[self.name] = value
+
+class Product:
+    price = Positive()            # class-level
+    qty = Positive()
+
+class Order:
+    total = Positive()            # reuse on another class""",
+            "C# — still one property each; reuse = call shared helper "
+            "(closest everyday twin):",
+            """class Product
+{
+    private decimal _price;
+    private int _qty;
+
+    static void EnsureNonNeg(decimal v)
+    {
+        if (v < 0) throw new ArgumentOutOfRangeException(nameof(v));
+    }
+
+    public decimal Price
+    {
+        get => _price;
+        set { EnsureNonNeg(value); _price = value; }
+    }
+
+    public int Qty
+    {
+        get => _qty;
+        set { EnsureNonNeg(value); _qty = value; }
+    }
+}
+
+// Order.Total would still be another property + EnsureNonNeg —
+// C# has no built-in "attach Positive to field" like Python.""",
+        )
+        + _note(
+            "<code>@property</code> ≈ C# property. "
+            "Python <b>descriptor</b> = reusable get/set object at class level. "
+            "C# reuses rules via helper methods / attributes — not by assigning "
+            "<code>Positive()</code> onto the class."
+        )
+    )
+
+
 def _namedtuple_body() -> str:
     return (
         _py_cs(
@@ -1753,6 +1872,7 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "async-await": ("C# Comparison — async/await", _async_await_body),
     "venv-nuget": ("C# Comparison — venv + pip vs NuGet", _venv_nuget_body),
     "property-csharp": ("C# Comparison — @property vs C# Property", _property_body),
+    "property-vs-descriptor": ("C# Comparison — @property vs descriptor (many fields)", _property_vs_descriptor_body),
     "namedtuple-record": ("C# Comparison — namedtuple vs record", _namedtuple_body),
     "counter-linq": ("C# Comparison — Counter vs GroupBy", _counter_body),
     "defaultdict-dict": ("C# Comparison — defaultdict vs Dictionary", _defaultdict_body),

@@ -4414,7 +4414,7 @@ print(circle.area)                # 78.54...''') + '''
 
 
 <h3>Common mistakes</h3>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; storing descriptor data on the descriptor instance</span><span class="mistake-desc">Descriptor data stored on the descriptor itself is <b>shared by all instances</b> of the owner class.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class Validated:
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; storing descriptor data on the descriptor instance</span><span class="mistake-desc"><code>self.value = value</code> stores on the <b>descriptor</b> (one object shared by every User) — so ages overwrite each other. Fix: store per instance with <code>obj.__dict__[self.name] = value</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class Validated:
     def __set__(self, obj, value):
         self.value = value  # stored on DESCRIPTOR — shared!
     def __get__(self, obj, cls):
@@ -4433,15 +4433,55 @@ print(u1.age)  # 25 ← wrong!</div></div><div class="mc-col mc-good"><span clas
     def __get__(self, obj, cls):
         if obj is None: return self
         return obj.__dict__.get(self.name)</div></div></div><span class="mistake-note">&#128161; Always store data on <code>obj.__dict__</code> using a key derived from <code>__set_name__</code>.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; <code>__get__</code> not handling the class access case</span><span class="mistake-desc">When a descriptor is accessed on the <b>class</b> (not an instance), <code>obj</code> is <code>None</code>. Not handling this raises <code>AttributeError</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class Positive:
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; <code>__get__</code> not handling the class access case</span><span class="mistake-desc">
+<b>Same method, two call paths:</b>
+<table class="data-tbl" style="margin:6px 0;font-size:12px">
+<tr><th>You write</th><th><code>obj</code> in <code>__get__</code></th><th>What to return</th></tr>
+<tr><td><code>u.score</code> (instance)</td><td>the User object</td><td>the stored value</td></tr>
+<tr><td><code>User.score</code> (class)</td><td><code>None</code></td><td>the descriptor (<code>self</code>)</td></tr>
+</table>
+<b>Bug:</b> always using <code>obj.__dict__</code> &mdash; crashes when <code>obj</code> is <code>None</code>.
+<br><b>Fix:</b> <code>if obj is None: return self</code> before touching <code>obj.__dict__</code>.
+</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class Positive:
+    def __set_name__(self, owner, name):
+        self.name = name
+    def __set__(self, obj, value):
+        obj.__dict__[self.name] = value
     def __get__(self, obj, cls):
-        return obj.__dict__[self.name]  # crashes if obj is None!
+        # no guard — fails on class access
+        return obj.__dict__[self.name]
 
-print(User.score)  # AttributeError: 'NoneType' has no attribute...</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">class Positive:
+class User:
+    score = Positive()
+
+u = User()
+u.score = 10
+print(u.score)      # 10 — OK (obj is u)
+print(User.score)   # AttributeError: 'NoneType'
+                    #   has no attribute '__dict__'</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">class Positive:
+    def __set_name__(self, owner, name):
+        self.name = name
+    def __set__(self, obj, value):
+        obj.__dict__[self.name] = value
     def __get__(self, obj, cls):
         if obj is None:
-            return self  # class access → return the descriptor itself
-        return obj.__dict__[self.name]</div></div></div><span class="mistake-note">&#128161; The pattern <code>if obj is None: return self</code> is standard for all <code>__get__</code> implementations.</span></div>
+            return self  # class → descriptor
+        return obj.__dict__[self.name]
+
+class User:
+    score = Positive()
+
+u = User()
+u.score = 10
+print(u.score)      # 10
+print(User.score)   # &lt;Positive object&gt; — OK</div></div></div>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.5">
+<b>What &ldquo;&lt;Positive object&gt; — OK&rdquo; means:</b>
+<code>u.score</code> &rarr; this user&apos;s value (<code>10</code>).
+<code>User.score</code> &rarr; the descriptor helper on the class (not a number).
+Returning <code>self</code> on class access is <b>expected</b> — it is not a bug; the guard stopped the crash on purpose.
+</p>
+<span class="mistake-note">&#128161; Always guard class access first: <code>if obj is None: return self</code>.</span></div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; using a data descriptor when a <code>@property</code> suffices</span><span class="mistake-desc">For per-class validation that doesn&apos;t need reuse, <code>@property</code> is simpler than a full descriptor class.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"># Overkill for one-off validation:
 class PositiveInt:
     def __set_name__(self, owner, name): ...
@@ -4524,7 +4564,77 @@ class Order:
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>property</code> is what kind of descriptor?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A <b>data descriptor</b> (implements <code>__get__</code>, <code>__set__</code>, and <code>__delete__</code>).</div>
+      <div class="quiz-reveal">
+        A <b>data descriptor</b>.
+        <br><br>
+        <b>Step-by-step — what <code>@property</code> really is</b>
+        <ol style="margin:6px 0 8px 18px;padding:0;line-height:1.55">
+          <li>You write <code>@property</code> / <code>@temp.setter</code> / <code>@temp.deleter</code>.</li>
+          <li>Python builds one <code>property</code> object and puts it on the <b>class</b>
+              (<code>Celsius.temp</code>.</li>
+          <li>That object is a descriptor: reading / writing / deleting
+              <code>c.temp</code> call its <code>__get__</code> / <code>__set__</code> /
+              <code>__delete__</code>.</li>
+          <li>Because it has <code>__set__</code> (and usually <code>__delete__</code>),
+              it is classified as a <b>data</b> descriptor — not non-data.</li>
+          <li>Even a read-only property (no setter written) still has
+              <code>__set__</code>: assignment raises <code>AttributeError</code>
+              instead of storing into <code>__dict__</code>.</li>
+        </ol>
+        <b>Comparison</b>
+        <table class="data-tbl" style="margin:6px 0;font-size:12px">
+          <tr><th></th><th><code>@property</code> (data)</th><th>Function / soft field (non-data)</th></tr>
+          <tr><td>Protocols</td><td><code>__get__</code> + <code>__set__</code> (+ <code>__delete__</code>)</td><td>only <code>__get__</code></td></tr>
+          <tr><td>Read <code>obj.x</code></td><td>runs getter</td><td>runs <code>__get__</code> (or returns stored value)</td></tr>
+          <tr><td>Write <code>obj.x = v</code></td><td>always runs setter / blocks write</td><td>normal store into <code>obj.__dict__</code> — helper can be skipped</td></tr>
+          <tr><td>Can instance dict bypass?</td><td><b>No</b> — data descriptor wins</td><td><b>Yes</b> — after assign, instance value usually wins</td></tr>
+          <tr><td>Typical use</td><td>validated / computed attributes</td><td>methods, defaults, lazy helpers</td></tr>
+        </table>
+        <b>Write example — data vs non-data</b>
+        <div class="mc-row" style="margin-top:6px">
+          <div class="mc-col mc-good"><span class="mc-lbl">@property (data) — always runs setter</span>
+          <div class="step-pre">class Product:
+    def __init__(self):
+        self._price = 0
+    @property
+    def price(self):
+        return self._price
+    @price.setter
+    def price(self, value):
+        print("setter ran")
+        if value &lt; 0:
+            raise ValueError("must be &gt;= 0")
+        self._price = value
+
+p = Product()
+p.price = 10          # prints: setter ran
+print(p.price)        # 10
+# p.price = -1        # ValueError — cannot bypass</div></div>
+          <div class="mc-col mc-bad"><span class="mc-lbl">Non-data — normal store into __dict__</span>
+          <div class="step-pre">class Soft:
+    def __set_name__(self, owner, name):
+        self.name = name
+    def __get__(self, obj, owner):
+        print("get ran")
+        return obj.__dict__.get(self.name, 0)
+    # NO __set__
+
+class Product:
+    price = Soft()
+
+p = Product()
+print(p.price)        # get ran → 0
+p.price = -1          # normal store — NO guard!
+print(p.price)        # -1 (get may be skipped)
+print(p.__dict__)     # {'price': -1}</div></div>
+        </div>
+        <p style="font-size:12px;margin:8px 0 0;line-height:1.45">
+          <b>Takeaway:</b> <code>obj.x = v</code> on a <b>data</b> descriptor
+          (<code>@property</code>) always hits the setter / can block the write.
+          On a <b>non-data</b> field, write is a plain
+          <code>obj.__dict__["x"] = v</code> — validation is skipped.
+        </p>
+      </div>
     </details>
   </div>
 </div>

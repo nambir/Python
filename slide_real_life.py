@@ -1,5 +1,6 @@
 """Real-life workplace examples for every slide — indented code blocks."""
 
+from slide_csharp_popups import csharp_compare_btn
 from slide_io import io_split
 
 REAL_LIFE: dict[int, str] = {
@@ -896,49 +897,205 @@ REAL_LIFE: dict[int, str] = {
         )
     ),
     16: (
-        "<b>ORM-style field:</b> Descriptor rejects negatives — like a C# property setter. "
-        "<code>price = PositiveDecimal()</code> on <code>Product</code> is the field; "
-        "<code>p.price = …</code> triggers <code>__set__</code>."
-        "<p><b>1) Wire the field on the model</b><br>"
-        "<code>class Product</code> declares <code>price = PositiveDecimal()</code> — "
-        "that is where <code>product.price</code> / <code>p.price</code> comes from.</p>"
+        "<b>Start with <code>@property</code>, then reuse the same rules with <code>__get__</code> / <code>__set__</code>.</b> "
+        "Both reject negatives — like a C# property setter."
+        "<p><b>1) One field with <code>@property</code></b><br>"
+        "<code>p.price</code> reads the getter; <code>p.price = …</code> runs the setter. "
+        "<b>Naming convention:</b> public name <code>price</code> → backing store "
+        "<code>self._price</code> → getter <code>def price</code> → "
+        "<code>@price.setter</code> (same name).</p>"
         + io_split(
-            "class PositiveDecimal:\n"
+            "class Product:\n"
+            "    def __init__(self):\n"
+            "        self._price = 0\n"
+            "\n"
+            "    @property\n"
+            "    def price(self):                 # getter\n"
+            "        return self._price\n"
+            "\n"
+            "    @price.setter\n"
+            "    def price(self, value):          # setter\n"
+            "        if value < 0:\n"
+            '            raise ValueError("must be >= 0")\n'
+            "        self._price = value\n"
+            "\n"
+            "p = Product()\n"
+            "p.price = 99\n"
+            "print(p.price)",
+            {15: "99"},
+        )
+        + "<p><b>2) Two fields — <code>@property</code> vs descriptor (side by side)</b> "
+        + csharp_compare_btn("property-vs-descriptor")
+        + "<br>"
+        "<code>@property</code> is <b>per field</b> (copy getter/setter again). "
+        "A descriptor is defined <b>once at class level</b>, then plugged into every field that needs it.</p>"
+        "<div class=\"mc-row\">"
+        "<div class=\"mc-col mc-bad\">"
+        "<span class=\"mc-lbl\">@property × 2 (repeat code)</span>"
+        + io_split(
+            "class Product:\n"
+            "    def __init__(self):\n"
+            "        self._price = 0\n"
+            "        self._qty = 0\n"
+            "\n"
+            "    @property\n"
+            "    def price(self):\n"
+            "        return self._price\n"
+            "    @price.setter\n"
+            "    def price(self, value):\n"
+            "        if value < 0:\n"
+            '            raise ValueError("must be >= 0")\n'
+            "        self._price = value\n"
+            "\n"
+            "    @property\n"
+            "    def qty(self):                   # same rules again!\n"
+            "        return self._qty\n"
+            "    @qty.setter\n"
+            "    def qty(self, value):\n"
+            "        if value < 0:\n"
+            '            raise ValueError("must be >= 0")\n'
+            "        self._qty = value\n"
+            "\n"
+            "p = Product()\n"
+            "p.price = 10\n"
+            "p.qty = 3\n"
+            "print(p.price, p.qty)",
+            {27: "10 3"},
+        )
+        + "</div>"
+        "<div class=\"mc-col mc-good\">"
+        "<span class=\"mc-lbl\">Descriptor once → many fields</span>"
+        + io_split(
+            "class Positive:                     # define ONCE\n"
             "    def __set_name__(self, owner, name):\n"
-            "        self.name = name          # remembers 'price'\n"
+            "        # NOT the constructor — runs AFTER class Product is created\n"
+            "        # owner = the CLASS (Product), name = 'price' / 'qty'\n"
+            "        self.name = name\n"
+            "    def __get__(self, obj, owner):\n"
+            "        # obj = instance p (or None if Product.price)\n"
+            "        # owner = class Product\n"
+            "        return obj.__dict__.get(self.name)\n"
+            "    def __set__(self, obj, value):\n"
+            "        # obj = instance p; value = what you assign\n"
+            "        if value < 0:\n"
+            '            raise ValueError("must be >= 0")\n'
+            "        obj.__dict__[self.name] = value\n"
+            "\n"
+            "class Product:                      # plug in where needed\n"
+            "    price = Positive()              # class-level field\n"
+            "    qty = Positive()                # same helper again\n"
+            "\n"
+            "class Order:\n"
+            "    total = Positive()              # reuse on another class!\n"
+            "\n"
+            "p = Product()\n"
+            "p.price = 10\n"
+            "p.qty = 3\n"
+            "print(p.price, p.qty)\n"
+            "try:\n"
+            "    p.qty = -1\n"
+            "except ValueError as e:\n"
+            "    print(type(e).__name__)",
+            {26: "10 3", 30: "ValueError"},
+        )
+        + "</div></div>"
+        + '<table class="data-tbl" style="margin:8px 0">'
+        "<tr><th>Parameter</th><th>Meaning (for <code>price = Positive()</code> on <code>Product</code>)</th></tr>"
+        "<tr><td><code>self</code></td><td>The descriptor object (<code>Positive</code> instance)</td></tr>"
+        "<tr><td><code>owner</code></td><td>The <b>class</b> that owns the field — here <code>Product</code> "
+        "(not the instance <code>p</code>)</td></tr>"
+        "<tr><td><code>name</code></td><td>Attribute name as a string — <code>'price'</code> or <code>'qty'</code></td></tr>"
+        "<tr><td><code>obj</code></td><td>The <b>instance</b> — here <code>p</code> "
+        "(or <code>None</code> if you access <code>Product.price</code> on the class)</td></tr>"
+        "<tr><td><code>value</code></td><td>What you assign — <code>p.price = 10</code> → <code>value</code> is <code>10</code></td></tr>"
+        "</table>"
+        "<p><b>2b) <code>__init__</code> vs <code>__set_name__</code> — when each runs</b><br>"
+        "<code>__init__</code> = constructor of the helper. "
+        "<code>__set_name__</code> = later, when the owning class finishes.</p>"
+        "<div class=\"mc-row\">"
+        "<div class=\"mc-col mc-good\">"
+        "<span class=\"mc-lbl\">Code + live OUTPUT</span>"
+        + io_split(
+            "class Positive:\n"
+            "    def __init__(self):\n"
+            '        print("1) __init__ — Positive() created")\n'
+            "\n"
+            "    def __set_name__(self, owner, name):\n"
+            '        print(f"2) __set_name__ — {owner.__name__}.{name}")\n'
+            "        self.name = name\n"
+            "\n"
             "    def __get__(self, obj, owner):\n"
             "        return obj.__dict__.get(self.name)\n"
             "    def __set__(self, obj, value):\n"
-            "        if value < 0:\n"
-            '            raise ValueError("price must be >= 0")\n'
             "        obj.__dict__[self.name] = value\n"
             "\n"
+            'print("--- defining Product ---")\n'
             "class Product:\n"
-            "    price = PositiveDecimal()    # ← product.price / p.price\n"
+            "    price = Positive()   # ← __init__ HERE\n"
+            "    qty = Positive()     # ← __init__ again\n"
+            "    # class ends → __set_name__ for price, then qty\n"
             "\n"
-            "p = Product()\n"
-            "print(type(Product.price).__name__)  # descriptor on the class",
-            {15: "PositiveDecimal"},
+            'print("--- creating instance ---")\n'
+            "p = Product()           # ← neither method\n"
+            "p.price = 10            # ← __set__ only\n"
+            'print("stored", p.price)  # ← __get__ only',
+            {
+                14: "--- defining Product ---\n"
+                "1) __init__ — Positive() created\n"
+                "1) __init__ — Positive() created\n"
+                "2) __set_name__ — Product.price\n"
+                "2) __set_name__ — Product.qty",
+                20: "--- creating instance ---",
+                23: "stored 10",
+            },
+            out_label="# OUTPUT (call order)",
         )
-        + "<p><b>2) Valid price — stored</b><br>"
-        "Assigning <code>p.price = 99</code> calls <code>PositiveDecimal.__set__</code>; "
-        "reading <code>p.price</code> calls <code>__get__</code>.</p>"
-        + io_split(
-            "p = Product()\n"
-            "p.price = 99          # __set__ — OK\n"
-            "print(p.price)        # __get__ → 99",
-            {3: "99"},
-        )
-        + "<p><b>3) Negative price — <code>ValueError</code></b><br>"
-        "Same idea as a C# property setter that throws on invalid values.</p>"
-        + io_split(
-            "p = Product()\n"
-            "try:\n"
-            "    p.price = -1       # __set__ rejects\n"
-            "except ValueError as e:\n"
-            "    print(type(e).__name__ + \":\", e)",
-            {5: "ValueError: price must be >= 0"},
-        )
+        + "</div>"
+        "<div class=\"mc-col mc-bad\">"
+        "<span class=\"mc-lbl\">Explanation (same moments)</span>"
+        '<div class="step-pre" style="margin:0;border:none;border-radius:0;border-top:1px solid #e2e8f0">'
+        "A) price = Positive()\n"
+        "   → __init__     constructor\n"
+        "\n"
+        "B) qty = Positive()\n"
+        "   → __init__     constructor again\n"
+        "\n"
+        "C) class Product finishes\n"
+        "   → __set_name__(Product, 'price')\n"
+        "   → __set_name__(Product, 'qty')\n"
+        "\n"
+        "D) p = Product()\n"
+        "   → no __init__ / no __set_name__\n"
+        "\n"
+        "E) p.price = 10 / read\n"
+        "   → __set__ / __get__ only\n"
+        "\n"
+        "Remember:\n"
+        "__init__      = make helper\n"
+        "__set_name__  = learn field name\n"
+        "p = Product()  = neither again"
+        "</div>"
+        "</div></div>"
+        + '<table class="data-tbl" style="margin-top:8px">'
+        "<tr><th></th><th><code>@property</code></th><th>Descriptor (<code>__get__</code>/<code>__set__</code>)</th></tr>"
+        "<tr><td><b>Where defined</b></td>"
+        "<td>Inside each model, <b>per field</b></td>"
+        "<td>Helper class once, then <code>field = Helper()</code></td></tr>"
+        "<tr><td><b>Two fields</b></td>"
+        "<td>Copy getter + setter twice</td>"
+        "<td><code>price = Positive()</code> · <code>qty = Positive()</code></td></tr>"
+        "<tr><td><b>Reuse on other classes</b></td>"
+        "<td>Hard — paste again</td>"
+        "<td>Easy — same <code>Positive()</code> on <code>Order.total</code></td></tr>"
+        "<tr><td><b>Applied at</b></td>"
+        "<td>Instance attribute access</td>"
+        "<td><b>Class level</b> assignment of the helper object</td></tr>"
+        "</table>"
+        "<p><b>3) Remember</b><br>"
+        "<code>@property</code> = fine for one-off fields. "
+        "Need the <b>same check on many fields/classes</b>? "
+        "Define a descriptor and attach it where needed — "
+        "<code>get</code>/<code>set</code> logic lives in the helper, not copied.</p>"
     ),
     17: (
         "<b>Export 50M+ CSV rows:</b> Stream with yield — avoid MemoryError from read().split() — "

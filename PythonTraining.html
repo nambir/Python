@@ -976,7 +976,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 <div class="slide-hdr">
   <div class="slide-meta">Slide 1 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">What is Python?</div>
-  <div class="slide-sub">We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.py…</div>
+  <div class="slide-sub">Python is a high-level language you run with the interpreter — no separate compile-to-DLL step like …</div>
   <div class="audio-player" id="player-1" data-slide="1">
   <audio id="audio-1" preload="metadata" src="audio/slide-01.mp3"></audio>
   <div class="audio-controls">
@@ -994,7 +994,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">We run the .py file using the Python interpreter. Internally, CPython converts it into bytecode (.pyc) and executes the bytecode step by step. Python is a high-level, general-purpose language. C# .cs files are compiled first into a .NET assembly (.dll/.exe), then the CLR/JIT runs the IL.</div>
+      <h3>Definition</h3><div class="def-block">Python is a high-level language you run with the <b>interpreter</b> — no separate compile-to-DLL step like C#.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>How it runs:</b> CPython reads <code>.py</code> → builds <b>bytecode</b> (<code>.pyc</code>) → executes step by step.</li><li><b>vs C#:</b> <code>.cs</code> → compile to assembly (<code>.dll</code>/<code>.exe</code>) → CLR/JIT runs IL.</li><li><b>Deploy:</b> Python usually ships as source/package/container; C# often publishes a DLL or self-contained exe.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -1410,7 +1410,7 @@ print(notify(SlackNotifier(), &quot;Build done&quot;))
 <div class="slide-hdr">
   <div class="slide-meta">Slide 2 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Setup &amp; Run Python on Windows</div>
-  <div class="slide-sub">On Windows, install Python from python.org, add it to PATH, verify with python --version, then run c…</div>
+  <div class="slide-sub">Set up Python on Windows, verify it works, then run code from REPL, scripts, or an IDE. Install: pyt…</div>
   <div class="audio-player" id="player-2" data-slide="2">
   <audio id="audio-2" preload="metadata" src="audio/slide-02.mp3"></audio>
   <div class="audio-controls">
@@ -1428,7 +1428,7 @@ print(notify(SlackNotifier(), &quot;Build done&quot;))
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">On Windows, install Python from python.org, add it to PATH, verify with python --version, then run code in the REPL, as a script (python file.py), or from Cursor/VS Code with the Python extension. Other popular IDEs include PyCharm (JetBrains), Jupyter, Spyder, Visual Studio, and IDLE. Python scripts run top to bottom — define functions before calling them.</div>
+      <h3>Definition</h3><div class="def-block">Set up Python on Windows, verify it works, then run code from REPL, scripts, or an IDE.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Install:</b> python.org → check <b>Add to PATH</b> → <code>python --version</code> / <code>pip --version</code>.</li><li><b>Run:</b> REPL for quick tests · <code>python file.py</code> for scripts · Cursor / VS Code / PyCharm as IDE.</li><li><b>Order matters:</b> scripts run top→bottom — define functions before calling them; put <code>if __name__ == '__main__'</code> at the bottom.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -1759,7 +1759,7 @@ if __name__ == &quot;__main__&quot;:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 3 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Your Training Workspace</div>
-  <div class="slide-sub">Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Pyth…</div>
+  <div class="slide-sub">Your training workspace has three layers : slides (theory), Projects/ (short practice), and Python-S…</div>
   <div class="audio-player" id="player-3" data-slide="3">
   <audio id="audio-3" preload="metadata" src="audio/slide-03.mp3"></audio>
   <div class="audio-controls">
@@ -1777,7 +1777,7 @@ if __name__ == &quot;__main__&quot;:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Your training workspace combines this slide deck, Projects/ practice files (one per topic), and Python-Set2/ real projects. Use a virtual environment per project, requirements.txt for dependencies, and Cursor or VS Code as your main IDE.</div>
+      <h3>Definition</h3><div class="def-block">Your training workspace has <b>three layers</b>: slides (theory), <code>Projects/</code> (short practice), and <code>Python-Set2/</code> (real apps).<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Tools:</b> one <b>venv</b> per project · <code>requirements.txt</code> for deps · Cursor / VS Code as IDE.</li><li><b>Workflow:</b> open repo root → select Python 3.12 → run with <code>python</code> or <code>pytest</code>.</li><li><b>Goal:</b> learn theory on slides, then prove it with runnable code.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -2023,7 +2023,7 @@ python oops_inheritance_BankAccount.py
 <div class="slide-hdr">
   <div class="slide-meta">Slide 4 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">PEP Standards</div>
-  <div class="slide-sub">PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and mod…</div>
+  <div class="slide-sub">PEPs (Python Enhancement Proposals) document language standards and best practices. Key PEPs: PEP 8 …</div>
   <div class="audio-player" id="player-4" data-slide="4">
   <audio id="audio-4" preload="metadata" src="audio/slide-04.mp3"></audio>
   <div class="audio-controls">
@@ -2041,7 +2041,7 @@ python oops_inheritance_BankAccount.py
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">PEPs document Python standards — PEP 8 style, PEP 257 docstrings, type hints, Zen of Python, and modern packaging via pyproject.toml.</div>
+      <h3>Definition</h3><div class="def-block"><b>PEPs</b> (Python Enhancement Proposals) document language standards and best practices.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Key PEPs:</b> PEP 8 (style) · PEP 257 (docstrings) · type hints · Zen of Python (<code>import this</code>).</li><li><b>Style:</b> <code>snake_case</code>, 4-space indent — use ruff / Black in CI.</li><li><b>Packaging:</b> modern projects use <code>pyproject.toml</code> for metadata and deps.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -2310,7 +2310,7 @@ import this   # PEP 20 — run in REPL once
 <div class="slide-hdr">
   <div class="slide-meta">Slide 5 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Python Datatypes</div>
-  <div class="slide-sub">Primitive types store a single value — for example int, float, str, and bool. Collection types store…</div>
+  <div class="slide-sub">Python types fall into two big groups: primitives (one value) and collections (many values). Primiti…</div>
   <div class="audio-player" id="player-5" data-slide="5">
   <audio id="audio-5" preload="metadata" src="audio/slide-05.mp3"></audio>
   <div class="audio-controls">
@@ -2328,7 +2328,7 @@ import this   # PEP 20 — run in REPL once
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Primitive types store a single value — for example int, float, str, and bool. Collection types store multiple values — for example list, tuple, set, and dict. This slide builds step by step: first primitives, then collections, then how dictionaries use keys.</div>
+      <h3>Definition</h3><div class="def-block">Python types fall into two big groups: <b>primitives</b> (one value) and <b>collections</b> (many values).<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Primitives:</b> <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>.</li><li><b>Collections:</b> <code>list</code>, <code>tuple</code>, <code>set</code>, <code>dict</code>.</li><li><b>Pick:</b> <code>tuple</code> when shape is fixed / needs to be a dict key · <code>list</code> when you need append/remove/sort.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -2899,7 +2899,7 @@ prices[(12.97, 80.22)] = &quot;Chennai warehouse&quot;   # tuple GPS
 <div class="slide-hdr">
   <div class="slide-meta">Slide 6 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Typing</div>
-  <div class="slide-sub">Type hints annotate variables, parameters, and return types. typing provides Optional, Union, List, …</div>
+  <div class="slide-sub">Type hints document expected types on variables, parameters, and return values — Python does not enf…</div>
   <div class="audio-player" id="player-6" data-slide="6">
   <audio id="audio-6" preload="metadata" src="audio/slide-06.mp3"></audio>
   <div class="audio-controls">
@@ -2917,7 +2917,7 @@ prices[(12.97, 80.22)] = &quot;Chennai warehouse&quot;   # tuple GPS
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Type hints annotate variables, parameters, and return types. typing provides Optional, Union, List, Dict, TypeVar, Generic, Protocol. mypy statically checks types before runtime.</div>
+      <h3>Definition</h3><div class="def-block"><b>Type hints</b> document expected types on variables, parameters, and return values — Python does <b>not</b> enforce them at runtime by default.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Basics:</b> <code>def greet(name: str) -&gt; str:</code> · <code>age: int = 25</code>.</li><li><b>Compose:</b> <code>Optional[str]</code> / <code>str | None</code> · <code>list[int]</code> · <code>dict[str, int]</code> · <code>TypeVar</code> / <code>Protocol</code>.</li><li><b>Check:</b> run <code>mypy app.py</code> (or CI) — <code>python app.py</code> alone ignores hints.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -3235,7 +3235,7 @@ greet(42)        # runs fine - mypy would warn
 <div class="slide-hdr">
   <div class="slide-meta">Slide 7 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Operators</div>
-  <div class="slide-sub">Operators perform computation and comparison: arithmetic (+, -, *, /, //, %, **), comparison (==, !=…</div>
+  <div class="slide-sub">Operators perform computation and comparison — arithmetic, logical, identity, membership, and bitwis…</div>
   <div class="audio-player" id="player-7" data-slide="7">
   <audio id="audio-7" preload="metadata" src="audio/slide-07.mp3"></audio>
   <div class="audio-controls">
@@ -3253,7 +3253,7 @@ greet(42)        # runs fine - mypy would warn
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Operators perform computation and comparison: arithmetic (+, -, *, /, //, %, **), comparison (==, !=, <), logical (and, or, not), identity (is), membership (in), and bitwise (&, |, ^, ~, <<, >>).</div>
+      <h3>Definition</h3><div class="def-block"><b>Operators</b> perform computation and comparison — arithmetic, logical, identity, membership, and bitwise.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Arithmetic:</b> <code>+</code> <code>-</code> <code>*</code> <code>/</code> (always float) · <code>//</code> floor · <code>%</code> · <code>**</code>.</li><li><b>Compare / logic:</b> <code>==</code> <code>!=</code> · <code>and</code> <code>or</code> <code>not</code>.</li><li><b>Traps:</b> <code>is</code> = identity (use for <code>None</code>) · <code>==</code> = value · <code>in</code> = membership.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -3710,7 +3710,7 @@ while (line := input(&quot;Name (empty to quit): &quot;)) != &quot;&quot;:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 8 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Conditional &amp; Flow Control</div>
-  <div class="slide-sub">Flow control directs execution: if/elif/else for branching, for/while for loops, break/continue for …</div>
+  <div class="slide-sub">Flow control directs which code runs — branches, loops, and early exits. Indentation defines blocks …</div>
   <div class="audio-player" id="player-8" data-slide="8">
   <audio id="audio-8" preload="metadata" src="audio/slide-08.mp3"></audio>
   <div class="audio-controls">
@@ -3728,7 +3728,7 @@ while (line := input(&quot;Name (empty to quit): &quot;)) != &quot;&quot;:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Flow control directs execution: if/elif/else for branching, for/while for loops, break/continue for loop control, pass as a no-op placeholder, and an optional else on loops that runs when no break occurred.</div>
+      <h3>Definition</h3><div class="def-block"><b>Flow control</b> directs which code runs — branches, loops, and early exits. Indentation defines blocks (no braces).<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Branch:</b> <code>if</code> / <code>elif</code> / <code>else</code>.</li><li><b>Loop:</b> <code>for</code> (like foreach) · <code>while</code> · <code>break</code> / <code>continue</code> · <code>pass</code> placeholder.</li><li><b>for…else:</b> <code>else</code> runs only if the loop finished <b>without</b> <code>break</code> — useful for search.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -4156,7 +4156,7 @@ else:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 9 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Comprehensions</div>
-  <div class="slide-sub">Comprehensions build collections in one expression: list [x for x in items], set {x for x in items},…</div>
+  <div class="slide-sub">Comprehensions build collections in one readable expression instead of a loop + append . Forms: list…</div>
   <div class="audio-player" id="player-9" data-slide="9">
   <audio id="audio-9" preload="metadata" src="audio/slide-09.mp3"></audio>
   <div class="audio-controls">
@@ -4174,7 +4174,7 @@ else:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Comprehensions build collections in one expression: list [x for x in items], set {x for x in items}, dict {k: v for k, v in pairs}, and generator (x for x in items) which is lazy.</div>
+      <h3>Definition</h3><div class="def-block"><b>Comprehensions</b> build collections in one readable expression instead of a loop + <code>append</code>.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Forms:</b> list <code>[x for x in items]</code> · set <code>{x for x in items}</code> · dict <code>{k: v for k, v in pairs}</code>.</li><li><b>Filter:</b> add <code>if</code> — <code>[n*n for n in range(10) if n % 2 == 0]</code>.</li><li><b>Generator:</b> <code>(x for x in items)</code> is lazy — saves memory vs a full list.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -4541,7 +4541,7 @@ print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre cl
 <div class="slide-hdr">
   <div class="slide-meta">Slide 10 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Python Functions</div>
-  <div class="slide-sub">Functions are defined with def. Python also supports functional-programming ideas: pure functions, f…</div>
+  <div class="slide-sub">Functions are defined with def . Python also supports functional-programming ideas alongside normal …</div>
   <div class="audio-player" id="player-10" data-slide="10">
   <audio id="audio-10" preload="metadata" src="audio/slide-10.mp3"></audio>
   <div class="audio-controls">
@@ -4559,7 +4559,7 @@ print(sys.getsizeof(gen))      # ~200 bytes (generator object)</textarea><pre cl
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Functions are defined with def. Python also supports functional-programming ideas: pure functions, first-class/higher-order functions, recursion, and preferring immutable data — alongside *args/**kwargs, lambda, LEGB, and closures.</div>
+      <h3>Definition</h3><div class="def-block">Functions are defined with <code>def</code>. Python also supports <b>functional-programming</b> ideas alongside normal OOP/procedural style.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Core:</b> positional / keyword args · <code>*args</code> / <code>**kwargs</code> · <code>lambda</code> · LEGB scope · closures.</li><li><b>FP ideas:</b> pure functions · first-class / higher-order functions · recursion · prefer immutable data where helpful.</li><li><b>Trap:</b> never use mutable defaults — <code>def f(cart=[])</code> shares one list across calls.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -5089,7 +5089,7 @@ def good(lst=None):
 <div class="slide-hdr">
   <div class="slide-meta">Slide 11 of 35 &middot; Week 1 — Foundations</div>
   <div class="slide-title">Built-in Functions</div>
-  <div class="slide-sub">Built-in functions operate on iterables and objects: map/filter/reduce transform data; zip/enumerate…</div>
+  <div class="slide-sub">Built-in functions work on iterables and objects — transform, inspect, and sequence helpers you use …</div>
   <div class="audio-player" id="player-11" data-slide="11">
   <audio id="audio-11" preload="metadata" src="audio/slide-11.mp3"></audio>
   <div class="audio-controls">
@@ -5107,7 +5107,7 @@ def good(lst=None):
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Built-in functions operate on iterables and objects: map/filter/reduce transform data; zip/enumerate pair iterables; type/id/isinstance inspect objects; range/len/sorted/reversed handle sequences.</div>
+      <h3>Definition</h3><div class="def-block"><b>Built-in functions</b> work on iterables and objects — transform, inspect, and sequence helpers you use every day.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Transform:</b> <code>map</code> · <code>filter</code> · <code>reduce</code> (functools) · <code>zip</code> · <code>enumerate</code>.</li><li><b>Inspect:</b> <code>type</code> · <code>id</code> · <code>isinstance</code> (prefer over <code>type() ==</code> for inheritance).</li><li><b>Sequences:</b> <code>range</code> · <code>len</code> · <code>sorted</code> (new list) · <code>list.sort()</code> (in place) · <code>reversed</code>.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -5586,7 +5586,7 @@ max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" 
 <div class="slide-hdr">
   <div class="slide-meta">Slide 12 of 35 &middot; Week 2 — Collections & OOP</div>
   <div class="slide-title">Python Collections</div>
-  <div class="slide-sub">collections module extends built-in types: Counter counts elements, defaultdict provides default val…</div>
+  <div class="slide-sub">The collections module adds specialized containers beyond plain list / dict / tuple. Counting / grou…</div>
   <div class="audio-player" id="player-12" data-slide="12">
   <audio id="audio-12" preload="metadata" src="audio/slide-12.mp3"></audio>
   <div class="audio-controls">
@@ -5604,7 +5604,7 @@ max(scores, key=scores.get)  # &quot;Anu&quot;</textarea><pre class="py-output" 
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">collections module extends built-in types: Counter counts elements, defaultdict provides default values, OrderedDict preserves order (less needed in 3.7+), ChainMap chains dicts, namedtuple creates tuple subclasses with names, deque is a fast double-ended queue.</div>
+      <h3>Definition</h3><div class="def-block">The <code>collections</code> module adds specialized containers beyond plain list / dict / tuple.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Counting / grouping:</b> <code>Counter</code> · <code>defaultdict</code> (auto-creates missing keys).</li><li><b>Structure:</b> <code>namedtuple</code> (named fields) · <code>deque</code> (fast ends) · <code>ChainMap</code> (layered dicts).</li><li><b>Note:</b> <code>OrderedDict</code> is less needed in 3.7+ (normal dict keeps insertion order).</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -6078,7 +6078,7 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
 <div class="slide-hdr">
   <div class="slide-meta">Slide 13 of 35 &middot; Week 2 — Collections & OOP</div>
   <div class="slide-title">Memory Management & Garbage Collection</div>
-  <div class="slide-sub">Python uses reference counting plus a generational garbage collector for circular references. Unders…</div>
+  <div class="slide-sub">Python frees memory with reference counting plus a generational GC for circular references. Refcount…</div>
   <div class="audio-player" id="player-13" data-slide="13">
   <audio id="audio-13" preload="metadata" src="audio/slide-13.mp3"></audio>
   <div class="audio-controls">
@@ -6096,7 +6096,7 @@ print(CombinedDict[&quot;size&quot;])               # M — falls through to Dic
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Python uses reference counting plus a generational garbage collector for circular references. Understanding refs, gc, and weakref helps debug memory leaks.</div>
+      <h3>Definition</h3><div class="def-block">Python frees memory with <b>reference counting</b> plus a <b>generational GC</b> for circular references.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Refcount:</b> when count hits zero, the object is reclaimed immediately.</li><li><b>Cycles:</b> A↔B need the <code>gc</code> module — refcount alone is not enough.</li><li><b>Tools:</b> <code>del</code> removes a name · <code>weakref</code> · <code>with</code> for resource cleanup — profile before tuning GC.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -6691,7 +6691,7 @@ print(ref())        # None — object collected</textarea><pre class="py-output"
 <div class="slide-hdr">
   <div class="slide-meta">Slide 14 of 35 &middot; Week 2 — Collections & OOP</div>
   <div class="slide-title">Pydantic</div>
-  <div class="slide-sub">Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model…</div>
+  <div class="slide-sub">Pydantic validates and parses data using type hints — the schema layer behind FastAPI. Core: BaseMod…</div>
   <div class="audio-player" id="player-14" data-slide="14">
   <audio id="audio-14" preload="metadata" src="audio/slide-14.mp3"></audio>
   <div class="audio-controls">
@@ -6709,7 +6709,7 @@ print(ref())        # None — object collected</textarea><pre class="py-output"
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Pydantic validates and parses data with type hints — BaseModel, Field constraints, validators, model_dump — core of FastAPI schemas.</div>
+      <h3>Definition</h3><div class="def-block"><b>Pydantic</b> validates and parses data using type hints — the schema layer behind FastAPI.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Core:</b> <code>BaseModel</code> · <code>Field</code> constraints · validators · <code>model_dump()</code>.</li><li><b>Why?</b> Coercion + clear <code>ValidationError</code> at API boundaries (FastAPI → HTTP 422).</li><li><b>ORM bridge:</b> <code>from_attributes=True</code> maps SQLAlchemy rows to response schemas.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -7147,7 +7147,7 @@ except Exception as e:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 15 of 35 &middot; Week 2 — Collections & OOP</div>
   <div class="slide-title">OOP Concepts</div>
-  <div class="slide-sub">OOP models entities as classes and objects. Python supports __init__ constructors, single/multiple i…</div>
+  <div class="slide-sub">OOP models entities as classes and objects — blueprint + instance, like C#. Basics: __init__ · self …</div>
   <div class="audio-player" id="player-15" data-slide="15">
   <audio id="audio-15" preload="metadata" src="audio/slide-15.mp3"></audio>
   <div class="audio-controls">
@@ -7165,7 +7165,7 @@ except Exception as e:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">OOP models entities as classes and objects. Python supports __init__ constructors, single/multiple inheritance with MRO, encapsulation via _ convention, polymorphism via overriding, ABC for abstract classes, and dunder methods for operator overloading.</div>
+      <h3>Definition</h3><div class="def-block"><b>OOP</b> models entities as <b>classes</b> and <b>objects</b> — blueprint + instance, like C#.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Basics:</b> <code>__init__</code> · <code>self</code> (like <code>this</code>) · inheritance · polymorphism (override).</li><li><b>Python extras:</b> multiple inheritance + <b>MRO</b> · <code>_</code> / <code>__</code> encapsulation convention · ABC / <code>@abstractmethod</code>.</li><li><b>Dunders:</b> <code>__str__</code> (humans) · <code>__repr__</code> (devs) · <code>__eq__</code> · <code>__len__</code> · <code>super().__init__()</code>.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -8463,28 +8463,30 @@ print(SavingsAccount.__mro__)</textarea><pre class="py-output" hidden></pre><det
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Descriptor</td><td>Helper object (security guard) that controls how an attribute is read/written/deleted via <code>__get__</code>, <code>__set__</code>, <code>__delete__</code>.</td><td><code>price = PositiveNumber()</code></td></tr>
-<tr><td>@property</td><td>Built-in <b>data</b> descriptor — managed attribute. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('property-csharp')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>@property def age:</code></td></tr>
+<tr><td>@property</td><td>Built-in <b>data</b> descriptor — managed attribute (start here). <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('property-csharp')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>@property def price:</code></td></tr>
+<tr><td>Getter</td><td>Method called when attribute is read.</td><td><code>def price(self): return self._price</code></td></tr>
+<tr><td>Setter</td><td>Method called when attribute is assigned — validate here.</td><td><code>@price.setter</code></td></tr>
+<tr><td>Managed attribute</td><td>Looks like a field, runs code on get/set.</td><td><code>p.price = 25</code></td></tr>
+<tr><td>Descriptor</td><td>Helper object (security guard) behind the scenes — <code>__get__</code> / <code>__set__</code> / <code>__delete__</code>.</td><td><code>price = PositiveDecimal()</code></td></tr>
+<tr><td>Data descriptor</td><td><code>__get__</code> + <code>__set__</code> — every write goes through the helper (same job as <code>@property</code>).</td><td>can validate assignments</td></tr>
 <tr><td>Non-data descriptor</td><td>Only <code>__get__</code> — write can bypass (instance var wins).</td><td>read helper only</td></tr>
-<tr><td>Data descriptor</td><td><code>__get__</code> + <code>__set__</code> — every write goes through the helper.</td><td>can validate assignments</td></tr>
-<tr><td>Getter</td><td>Method called when attribute is read.</td><td><code>def temp(self): return self._t</code></td></tr>
-<tr><td>Setter</td><td>Method called when attribute is assigned — validate here.</td><td><code>@temp.setter</code></td></tr>
-<tr><td>Managed attribute</td><td>Looks like field, runs code on get/set.</td><td><code>c.temp = 25</code></td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>ORM-style field:</b> Descriptor rejects negatives — like a C# property setter. <code>price = PositiveDecimal()</code> on <code>Product</code> is the field; <code>p.price = …</code> triggers <code>__set__</code>.<p><b>1) Wire the field on the model</b><br><code>class Product</code> declares <code>price = PositiveDecimal()</code> — that is where <code>product.price</code> / <code>p.price</code> comes from.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> PositiveDecimal:
-    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
-        self.name = name          <span class="t-cm"># remembers 'price'</span>
-    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
-        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name)
-    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+</table><div class="real-life"><b>Real-life example:</b> <b>Start with <code>@property</code>, then reuse the same rules with <code>__get__</code> / <code>__set__</code>.</b> Both reject negatives — like a C# property setter.<p><b>1) One field with <code>@property</code></b><br><code>p.price</code> reads the getter; <code>p.price = …</code> runs the setter. <b>Naming convention:</b> public name <code>price</code> → backing store <code>self._price</code> → getter <code>def price</code> → <code>@price.setter</code> (same name).</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self):
+        self._price = 0
+
+    <mark class="hl-key">@property</mark>
+    <mark class="hl-key">def</mark> price(self):                 <span class="t-cm"># getter</span>
+        <mark class="hl-key">return</mark> self._price
+
+    <mark class="hl-key">@price</mark>.setter
+    <mark class="hl-key">def</mark> price(self, value):          <span class="t-cm"># setter</span>
         <mark class="hl-key">if</mark> value < 0:
-            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("price must be >= 0")
-        obj.<mark class="hl-key">__dict__</mark>[self.name] = value
-
-<mark class="hl-key">class</mark> Product:
-    price = PositiveDecimal()    <span class="t-cm"># ← product.price / p.price</span>
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
+        self._price = value
 
 p = Product()
-<mark class="hl-key">print</mark>(<mark class="hl-key">type</mark>(Product.price).<mark class="hl-key">__name__</mark>)  <span class="t-cm"># descriptor on the class</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+p.price = 99
+<mark class="hl-key">print</mark>(p.price)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 
 
 
@@ -8498,62 +8500,35 @@ p = Product()
 
 
 
-PositiveDecimal</div></div></div><p><b>2) Valid price — stored</b><br>Assigning <code>p.price = 99</code> calls <code>PositiveDecimal.__set__</code>; reading <code>p.price</code> calls <code>__get__</code>.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre">p = Product()
-p.price = 99          <span class="t-cm"># __set__ — OK</span>
-<mark class="hl-key">print</mark>(p.price)        <span class="t-cm"># __get__ → 99</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+99
 
-99</div></div></div><p><b>3) Negative price — <code>ValueError</code></b><br>Same idea as a C# property setter that throws on invalid values.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre">p = Product()
-<mark class="hl-key">try</mark>:
-    p.price = -1       <span class="t-cm"># __set__ rejects</span>
-<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
-    <mark class="hl-key">print</mark>(<mark class="hl-key">type</mark>(e).<mark class="hl-key">__name__</mark> + ":", e)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+</div></div></div><p><b>2) Two fields — <code>@property</code> vs descriptor (side by side)</b> <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('property-vs-descriptor')" title="Open draggable C# comparison window">C# Comparison</button><br><code>@property</code> is <b>per field</b> (copy getter/setter again). A descriptor is defined <b>once at class level</b>, then plugged into every field that needs it.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">@property × 2 (repeat code)</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self):
+        self._price = 0
+        self._qty = 0
 
+    <mark class="hl-key">@property</mark>
+    <mark class="hl-key">def</mark> price(self):
+        <mark class="hl-key">return</mark> self._price
+    <mark class="hl-key">@price</mark>.setter
+    <mark class="hl-key">def</mark> price(self, value):
+        <mark class="hl-key">if</mark> value < 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
+        self._price = value
 
-
-<mark class="hl-key">ValueError</mark>: price must be >= 0</div></div></div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is a descriptor? (security guard)</b><br>Think of a <b>descriptor</b> as a <b>security guard</b> in front of a variable. Normally Python gives the value directly; with a descriptor it asks the helper first.<div class="step-pre">Without descriptor:
-  person.name  →  "John"
-
-With descriptor:
-  person.name
-       │
-       ▼
-  Descriptor (helper)
-       │
-       ▼
-  validate / calculate / <mark class="hl-key">return</mark></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Definition:</b> a helper object that controls how an attribute is <b>read</b>, <b>written</b>, or <b>deleted</b>.</p><p style="font-size:12px;margin:0 0 6px;line-height:1.45"><b>Why need it?</b> Without it, <code>person.age = -20</code> is stored. A descriptor can raise <code>ValueError</code> instead. Use for: validate, calculate, restrict, log, type-check.</p></li><li><b>Step 2 — Create in 2 steps + read/write flow</b><br><b>Step A — helper class</b> (this <b>is</b> the descriptor):<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> PositiveNumber:
-    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
-        ...   <span class="t-cm"># runs on READ</span>
-    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
-        ...   <span class="t-cm"># runs on WRITE</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
-
-
-
-</div></div></div><b>Step B — attach it</b> (stores a <b>helper</b>, not a number):<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
-    price = PositiveNumber()   <span class="t-cm"># helper object</span>
-
-<span class="t-cm"># p.price        → asks __get__</span>
-<span class="t-cm"># p.price = 100  → asks __set__</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
-
-
-
-</div></div></div><div class="step-pre">READ:   p.price        →  PositiveNumber.<mark class="hl-key">__get__</mark>()  →  <mark class="hl-key">return</mark> value
-WRITE:  p.price = 100  →  PositiveNumber.<mark class="hl-key">__set__</mark>(100)
-        → accept / reject / modify before store
-BAD:    p.price = -10  →  <mark class="hl-key">__set__</mark> can <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark></div></li><li><b>Step 3 — Type 1 Non-data vs Type 2 Data</b><br>Only <b>two types</b>. Non-data = only <code>__get__</code> (write can bypass). Data = <code>__get__</code> + <code>__set__</code> (guard on every write).<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Type 1 — Non-data (only __get__)</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> SoftField:
-    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
-        self.name = name
-    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
-        <mark class="hl-key">print</mark>("Reading...")
-        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name, "empty")
-    <span class="t-cm"># NO __set__</span>
-
-<mark class="hl-key">class</mark> Product:
-    price = SoftField()
+    <mark class="hl-key">@property</mark>
+    <mark class="hl-key">def</mark> qty(self):                   <span class="t-cm"># same rules again!</span>
+        <mark class="hl-key">return</mark> self._qty
+    <mark class="hl-key">@qty</mark>.setter
+    <mark class="hl-key">def</mark> qty(self, value):
+        <mark class="hl-key">if</mark> value < 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
+        self._qty = value
 
 p = Product()
-<mark class="hl-key">print</mark>(p.price)      <span class="t-cm"># helper on read</span>
-p.price = -1        <span class="t-cm"># helper SKIPPED on write</span>
-<mark class="hl-key">print</mark>(p.price)      <span class="t-cm"># instance value wins</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+p.price = 10
+p.qty = 3
+<mark class="hl-key">print</mark>(p.price, p.qty)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 
 
 
@@ -8565,29 +8540,48 @@ p.price = -1        <span class="t-cm"># helper SKIPPED on write</span>
 
 
 
-Reading...
-empty
 
--1</div></div></div><div class="step-pre" style="font-size:11px;margin:6px 8px">Before write:  Class price→SoftField   Instance (empty)
-After p.price=-1: Class price→SoftField   Instance price→-1
-Python finds instance var first → descriptor bypassed.</div></div><div class="mc-col mc-good"><span class="mc-lbl">Type 2 — Data (__get__ + __set__)</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> PositiveNumber:
+
+
+
+
+
+
+
+
+
+
+
+
+
+10 3</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">Descriptor once → many fields</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:                     <span class="t-cm"># define ONCE</span>
     <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        <span class="t-cm"># NOT the constructor — runs AFTER class Product is created</span>
+        <span class="t-cm"># owner = the CLASS (Product), name = 'price' / 'qty'</span>
         self.name = name
     <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <span class="t-cm"># obj = instance p (or None if Product.price)</span>
+        <span class="t-cm"># owner = class Product</span>
         <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name)
     <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        <span class="t-cm"># obj = instance p; value = what you assign</span>
         <mark class="hl-key">if</mark> value < 0:
             <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
         obj.<mark class="hl-key">__dict__</mark>[self.name] = value
 
-<mark class="hl-key">class</mark> Product:
-    price = PositiveNumber()
+<mark class="hl-key">class</mark> Product:                      <span class="t-cm"># plug in where needed</span>
+    price = Positive()              <span class="t-cm"># class-level field</span>
+    qty = Positive()                <span class="t-cm"># same helper again</span>
+
+<mark class="hl-key">class</mark> Order:
+    total = Positive()              <span class="t-cm"># reuse on another class!</span>
 
 p = Product()
-p.price = 100
-<mark class="hl-key">print</mark>(p.price)
+p.price = 10
+p.qty = 3
+<mark class="hl-key">print</mark>(p.price, p.qty)
 <mark class="hl-key">try</mark>:
-    p.price = -50     <span class="t-cm"># always goes through __set__</span>
+    p.qty = -1
 <mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
     <mark class="hl-key">print</mark>(<mark class="hl-key">type</mark>(e).<mark class="hl-key">__name__</mark>)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 
@@ -8604,33 +8598,98 @@ p.price = 100
 
 
 
-100
 
 
 
-<mark class="hl-key">ValueError</mark></div></div></div></div></div><table class="data-tbl" style="margin-top:8px"><tr><th>Feature</th><th>Non-data</th><th>Data</th></tr><tr><td><code>__get__</code></td><td class="cell-yes">Yes</td><td class="cell-yes">Yes</td></tr><tr><td><code>__set__</code></td><td class="cell-no">No</td><td class="cell-yes">Yes</td></tr><tr><td>Controls write / validate</td><td class="cell-no">No</td><td class="cell-yes">Yes</td></tr><tr><td>Instance var can override</td><td class="cell-yes">Yes</td><td class="cell-no">No</td></tr></table><p class="step-result"><b>Memory trick:</b> Non-data = read helper only · Data = read + write helper · <code>@property</code> = data.</p></li><li><b>Step 4 — Why __dict__? (store without recursion)</b><br>Every instance has <code>__dict__</code> — the object’s storage bag (name → value). Descriptors must write <b>here</b>, or they call themselves again.<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
-    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, name):
+
+
+
+
+
+
+
+10 3
+
+
+
+<mark class="hl-key">ValueError</mark></div></div></div></div></div><table class="data-tbl" style="margin:8px 0"><tr><th>Parameter</th><th>Meaning (for <code>price = Positive()</code> on <code>Product</code>)</th></tr><tr><td><code>self</code></td><td>The descriptor object (<code>Positive</code> instance)</td></tr><tr><td><code>owner</code></td><td>The <b>class</b> that owns the field — here <code>Product</code> (not the instance <code>p</code>)</td></tr><tr><td><code>name</code></td><td>Attribute name as a string — <code>'price'</code> or <code>'qty'</code></td></tr><tr><td><code>obj</code></td><td>The <b>instance</b> — here <code>p</code> (or <code>None</code> if you access <code>Product.price</code> on the class)</td></tr><tr><td><code>value</code></td><td>What you assign — <code>p.price = 10</code> → <code>value</code> is <code>10</code></td></tr></table><p><b>2b) <code>__init__</code> vs <code>__set_name__</code> — when each runs</b><br><code>__init__</code> = constructor of the helper. <code>__set_name__</code> = later, when the owning class finishes.</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">Code + live OUTPUT</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self):
+        <mark class="hl-key">print</mark>("1) __init__ — Positive() created")
+
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        <mark class="hl-key">print</mark>(f"2) __set_name__ — {owner.__name__}.{name}")
         self.name = name
-        self.price = 99
 
-p = Product("Pen")
-<mark class="hl-key">print</mark>(p.<mark class="hl-key">__dict__</mark>)
-<mark class="hl-key">print</mark>(p.<mark class="hl-key">__dict__</mark>["price"])
-p.<mark class="hl-key">__dict__</mark>["price"] = 50
-<mark class="hl-key">print</mark>(p.price)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name)
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        obj.<mark class="hl-key">__dict__</mark>[self.name] = value
+
+<mark class="hl-key">print</mark>("--- defining Product ---")
+<mark class="hl-key">class</mark> Product:
+    price = Positive()   <span class="t-cm"># ← __init__ HERE</span>
+    qty = Positive()     <span class="t-cm"># ← __init__ again</span>
+    <span class="t-cm"># class ends → __set_name__ for price, then qty</span>
+
+<mark class="hl-key">print</mark>("--- creating instance ---")
+p = Product()           <span class="t-cm"># ← neither method</span>
+p.price = 10            <span class="t-cm"># ← __set__ only</span>
+<mark class="hl-key">print</mark>("stored", p.price)  <span class="t-cm"># ← __get__ only</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (call order)</span><div class="step-pre">
 
 
 
 
 
-{'name': 'Pen', 'price': 99}
-99
 
-50</div></div></div><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Bug — infinite recursion</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
-    obj.price = value   <span class="t-cm"># calls __set__ again!</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
-</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">Fix — write into __dict__</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
-    obj.<mark class="hl-key">__dict__</mark>[self.name] = value  <span class="t-cm"># safe store</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
-</div></div></div></div></div><p class="step-result"><b>Takeaway:</b> guard = descriptor · cupboard storage = <code>__dict__</code>.</p></li><li><b>Step 5 — @property is a data descriptor</b><br><code>@property</code> + <code>@age.setter</code> creates a built-in <b>data</b> descriptor. Read → <code>property.__get__</code>; write → <code>property.__set__</code>.<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Student:
+
+
+
+
+
+
+--- defining Product ---
+1) <mark class="hl-key">__init__</mark> — Positive() created
+1) <mark class="hl-key">__init__</mark> — Positive() created
+2) <mark class="hl-key">__set_name__</mark> — Product.price
+2) <mark class="hl-key">__set_name__</mark> — Product.qty
+
+
+
+
+
+--- creating instance ---
+
+
+stored 10</div></div></div></div><div class="mc-col mc-bad"><span class="mc-lbl">Explanation (same moments)</span><div class="step-pre" style="margin:0;border:none;border-radius:0;border-top:1px solid #e2e8f0">A) price = Positive()
+   → __init__     constructor
+
+B) qty = Positive()
+   → __init__     constructor again
+
+C) class Product finishes
+   → __set_name__(Product, 'price')
+   → __set_name__(Product, 'qty')
+
+D) p = Product()
+   → no __init__ / no __set_name__
+
+E) p.price = 10 / read
+   → __set__ / __get__ only
+
+Remember:
+__init__      = make helper
+__set_name__  = learn field name
+p = Product()  = neither again</div></div></div><table class="data-tbl" style="margin-top:8px"><tr><th></th><th><code>@property</code></th><th>Descriptor (<code>__get__</code>/<code>__set__</code>)</th></tr><tr><td><b>Where defined</b></td><td>Inside each model, <b>per field</b></td><td>Helper class once, then <code>field = Helper()</code></td></tr><tr><td><b>Two fields</b></td><td>Copy getter + setter twice</td><td><code>price = Positive()</code> · <code>qty = Positive()</code></td></tr><tr><td><b>Reuse on other classes</b></td><td>Hard — paste again</td><td>Easy — same <code>Positive()</code> on <code>Order.total</code></td></tr><tr><td><b>Applied at</b></td><td>Instance attribute access</td><td><b>Class level</b> assignment of the helper object</td></tr></table><p><b>3) Remember</b><br><code>@property</code> = fine for one-off fields. Need the <b>same check on many fields/classes</b>? Define a descriptor and attach it where needed — <code>get</code>/<code>set</code> logic lives in the helper, not copied.</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — What is a descriptor? (security guard)</b><br>Think of a <b>descriptor</b> as a <b>security guard</b> in front of a variable. Normally Python gives the value directly; with a descriptor it asks the helper first.<div class="step-pre">Without descriptor:
+  person.name  →  "John"
+
+With descriptor:
+  person.name
+       │
+       ▼
+  Descriptor (helper)
+       │
+       ▼
+  validate / calculate / <mark class="hl-key">return</mark></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Definition:</b> a helper object that controls how an attribute is <b>read</b>, <b>written</b>, or <b>deleted</b>.</p><p style="font-size:12px;margin:0 0 6px;line-height:1.45"><b>Why need it?</b> Without it, <code>person.age = -20</code> is stored. A descriptor can raise <code>ValueError</code> instead. Use for: validate, calculate, restrict, log, type-check.</p></li><li><b>Step 2 — Start with @property (getter + setter)</b><br>Start here — like a C# property. <code>@property</code> + <code>@age.setter</code> creates a built-in <b>data</b> descriptor. Read → <code>property.__get__</code>; write → <code>property.__set__</code>.<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Student:
     <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self):
         self._age = 0
 
@@ -8670,7 +8729,145 @@ s.age = 20
 
 
 
-<mark class="hl-key">ValueError</mark></div></div></div><table class="data-tbl" style="margin-top:8px"><tr><th>Remember</th><th>Meaning</th></tr><tr><td>Descriptor</td><td>Helper that controls an attribute</td></tr><tr><td><code>__get__</code></td><td>Runs on read</td></tr><tr><td><code>__set__</code></td><td>Runs on write</td></tr><tr><td>Non-data</td><td>Read helper only</td></tr><tr><td>Data</td><td>Read + write helper</td></tr><tr><td><code>@property</code></td><td>Built-in data descriptor</td></tr></table><p class="step-result"><b>One-line:</b> A descriptor sits between your code and an attribute so Python can control read / write / delete.</p></li></ul>
+<mark class="hl-key">ValueError</mark></div></div></div><table class="data-tbl" style="margin-top:8px"><tr><th>Public name</th><th>Backing store</th><th>Getter</th><th>Setter</th></tr><tr><td><code>price</code></td><td><code>self._price</code></td><td><code>@property</code> / <code>def price</code></td><td><code>@price.setter</code> / <code>def price</code></td></tr><tr><td><code>age</code></td><td><code>self._age</code></td><td><code>@property</code> / <code>def age</code></td><td><code>@age.setter</code> / <code>def age</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Yes — follow the field name.</b> Outside code uses <code>p.price</code>; inside, store in <code>self._price</code> (leading <code>_</code> = “internal”). Never write <code>self.price = …</code> inside the setter — that calls the setter again.</p><table class="data-tbl" style="margin-top:8px"><tr><th>Remember</th><th>Meaning</th></tr><tr><td>Descriptor</td><td>Helper that controls an attribute</td></tr><tr><td><code>__get__</code></td><td>Runs on read</td></tr><tr><td><code>__set__</code></td><td>Runs on write</td></tr><tr><td>Non-data</td><td>Read helper only</td></tr><tr><td>Data</td><td>Read + write helper</td></tr><tr><td><code>@property</code></td><td>Built-in data descriptor</td></tr></table><p class="step-result"><b>One-line:</b> A descriptor sits between your code and an attribute so Python can control read / write / delete.</p></li><li><b>Step 3 — Same idea with __get__ / __set__</b><br>Same job as <code>@property</code>, but <b>reusable</b>. Define the helper <b>once</b>, then attach it at <b>class level</b> on every field that needs the same rules (<code>price</code>, <code>qty</code>, even another class).<br><b>Step A — helper class</b> (get/set logic lives here):<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> PositiveNumber:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        ...   <span class="t-cm"># like @property getter</span>
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        ...   <span class="t-cm"># like @property.setter</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+</div></div></div><b>Step B — plug into required fields</b> (class-level — not inside <code>__init__</code>):<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
+    price = PositiveNumber()   <span class="t-cm"># field 1</span>
+    qty = PositiveNumber()     <span class="t-cm"># field 2 — same rules</span>
+
+<mark class="hl-key">class</mark> Order:
+    total = PositiveNumber()   <span class="t-cm"># reuse on another class</span>
+
+<span class="t-cm"># p.price / p.qty / o.total all ask the same helper</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+</div></div></div><p class="step-result"><b>vs @property:</b> two properties → copy getter/setter twice. Descriptor → one class, many <code>field = PositiveNumber()</code> lines. See the Real-life side-by-side above.</p></li><li><b>Step 4 — Type 1 Non-data vs Type 2 Data</b><br>Only <b>two types</b>. Non-data = only <code>__get__</code> (write can bypass). Data = <code>__get__</code> + <code>__set__</code> (guard on every write).<p style="font-size:12px;margin:6px 0;line-height:1.5"><b>No setter — how does get still work?</b> On <b>read</b> (<code>p.price</code>), if the instance has <b>no</b> <code>price</code> in <code>__dict__</code> yet, Python calls <code>__get__</code> (default / compute / log). On <b>write</b> (<code>p.price = -1</code>), with no <code>__set__</code>, Python just does a normal store into <code>p.__dict__['price']</code> — the helper is skipped. After that, reads often use the instance value and may skip <code>__get__</code> too.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Type 1 — Non-data (only __get__)</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> SoftField:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        self.name = name
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <mark class="hl-key">print</mark>("Reading via __get__...")
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name, "empty")
+    <span class="t-cm"># NO __set__ — write is a normal store</span>
+
+<mark class="hl-key">class</mark> Product:
+    price = SoftField()
+
+p = Product()
+<mark class="hl-key">print</mark>(p.price)      <span class="t-cm"># no instance value yet → __get__</span>
+p.price = -1        <span class="t-cm"># no __set__ → stored in __dict__</span>
+<mark class="hl-key">print</mark>(p.price)      <span class="t-cm"># instance wins (may skip __get__)</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+Reading via <mark class="hl-key">__get__</mark>...
+empty
+
+-1</div></div></div><div class="step-pre" style="font-size:11px;margin:6px 8px">Before write:  Class price→SoftField   Instance (empty)
+               read → __get__ → 'empty'
+After write:   Class price→SoftField   Instance price→-1
+               read → instance value (descriptor bypassed)</div></div><div class="mc-col mc-good"><span class="mc-lbl">Type 2 — Data (__get__ + __set__)</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> PositiveNumber:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        self.name = name
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name)
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        <mark class="hl-key">if</mark> value < 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
+        obj.<mark class="hl-key">__dict__</mark>[self.name] = value
+
+<mark class="hl-key">class</mark> Product:
+    price = PositiveNumber()
+
+p = Product()
+p.price = 100
+<mark class="hl-key">print</mark>(p.price)
+<mark class="hl-key">try</mark>:
+    p.price = -50     <span class="t-cm"># always goes through __set__</span>
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(<mark class="hl-key">type</mark>(e).<mark class="hl-key">__name__</mark>)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100
+
+
+
+<mark class="hl-key">ValueError</mark></div></div></div></div></div><table class="data-tbl" style="margin-top:8px"><tr><th>Feature</th><th>Non-data</th><th>Data</th></tr><tr><td><code>__get__</code></td><td class="cell-yes">Yes</td><td class="cell-yes">Yes</td></tr><tr><td><code>__set__</code></td><td class="cell-no">No</td><td class="cell-yes">Yes</td></tr><tr><td>Controls write / validate</td><td class="cell-no">No</td><td class="cell-yes">Yes</td></tr><tr><td>Instance var can override</td><td class="cell-yes">Yes</td><td class="cell-no">No</td></tr></table><p style="font-size:12px;margin:8px 0 6px;line-height:1.5"><b>When use non-data?</b> When you only want to customize <b>read</b> (default / lazy / log), and it’s OK if a normal assignment <b>overrides</b> the helper afterward.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> DefaultTitle:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <span class="t-cm"># only runs until someone assigns obj.title = ...</span>
+        <span class="t-cm"># usual (with __set_name__ + store): return obj.__dict__.get(self.name)</span>
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get("title", "Untitled")
+
+<mark class="hl-key">class</mark> Doc:
+    title = DefaultTitle()     <span class="t-cm"># non-data: no __set__</span>
+
+d = Doc()
+<mark class="hl-key">print</mark>(d.title)        <span class="t-cm"># __get__ → default</span>
+d.title = "Report"    <span class="t-cm"># normal write — OK, no validation</span>
+<mark class="hl-key">print</mark>(d.title)        <span class="t-cm"># instance value</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+Untitled
+
+Report</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Real examples of non-data:</b> plain functions on a class, <code>@staticmethod</code>, <code>@classmethod</code> — they use <code>__get__</code> only, so you can still assign an instance attribute of the same name if needed. <b>Need validation on every write?</b> Use a <b>data</b> descriptor (or <code>@property</code> with a setter).</p><p class="step-result"><b>Memory trick:</b> Non-data = read helper only (write can override) · Data = read + write helper · <code>@property</code> with setter = data.</p></li><li><b>Step 5 — Why __dict__? (store without recursion)</b><br>Every instance has <code>__dict__</code> — the object’s storage bag (name → value). Descriptors must write <b>here</b>, or they call themselves again.<div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> Product:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, name):
+        self.name = name
+        self.price = 99
+
+p = Product("Pen")
+<mark class="hl-key">print</mark>(p.<mark class="hl-key">__dict__</mark>)
+<mark class="hl-key">print</mark>(p.<mark class="hl-key">__dict__</mark>["price"])
+p.<mark class="hl-key">__dict__</mark>["price"] = 50
+<mark class="hl-key">print</mark>(p.price)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+{'name': 'Pen', 'price': 99}
+99
+
+50</div></div></div><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Bug — infinite recursion</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+    obj.price = value   <span class="t-cm"># calls __set__ again!</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">Fix — write into __dict__</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+    obj.<mark class="hl-key">__dict__</mark>[self.name] = value  <span class="t-cm"># safe store</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+</div></div></div></div></div><p class="step-result"><b>Takeaway:</b> guard = descriptor · cupboard storage = <code>__dict__</code>.</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>@property</b> = attribute that runs code on get/set but looks like a field.<br><b>Use when:</b> validate on assign: <code>@score.setter</code>.<br><b>Looks like:</b> <code>obj.score = 5</code> — runs setter logic.</div>
 <div class="keyword-box"><b>Descriptor</b> = object with <code>__get__</code> / <code>__set__</code> — powers <code>@property</code> internally.</div>
@@ -8690,7 +8887,7 @@ s.age = 20
 
 
 <h3>Common mistakes</h3>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; storing descriptor data on the descriptor instance</span><span class="mistake-desc">Descriptor data stored on the descriptor itself is <b>shared by all instances</b> of the owner class.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">class</mark> Validated:
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; storing descriptor data on the descriptor instance</span><span class="mistake-desc"><code>self.value = value</code> stores on the <b>descriptor</b> (one object shared by every User) — so ages overwrite each other. Fix: store per instance with <code>obj.__dict__[self.name] = value</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">class</mark> Validated:
     <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
         self.value = value  <span class="t-cm"># stored on DESCRIPTOR — shared!</span>
     <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, cls):
@@ -8709,15 +8906,55 @@ u2 = User(); u2.age = 25
     <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, cls):
         <mark class="hl-key">if</mark> obj <mark class="hl-key">is</mark> <mark class="hl-key">None</mark>: <mark class="hl-key">return</mark> self
         <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name)</div></div></div><span class="mistake-note">&#128161; Always store data on <code>obj.__dict__</code> using a key derived from <code>__set_name__</code>.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; <code>__get__</code> not handling the class access case</span><span class="mistake-desc">When a descriptor is accessed on the <b>class</b> (not an instance), <code>obj</code> is <code>None</code>. Not handling this raises <code>AttributeError</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; <code>__get__</code> not handling the class access case</span><span class="mistake-desc">
+<b>Same method, two call paths:</b>
+<table class="data-tbl" style="margin:6px 0;font-size:12px">
+<tr><th>You write</th><th><code>obj</code> in <code>__get__</code></th><th>What to return</th></tr>
+<tr><td><code>u.score</code> (instance)</td><td>the User object</td><td>the stored value</td></tr>
+<tr><td><code>User.score</code> (class)</td><td><code>None</code></td><td>the descriptor (<code>self</code>)</td></tr>
+</table>
+<b>Bug:</b> always using <code>obj.__dict__</code> &mdash; crashes when <code>obj</code> is <code>None</code>.
+<br><b>Fix:</b> <code>if obj is None: return self</code> before touching <code>obj.__dict__</code>.
+</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        self.name = name
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        obj.<mark class="hl-key">__dict__</mark>[self.name] = value
     <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, cls):
-        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>[self.name]  <span class="t-cm"># crashes if obj is None!</span>
+        <span class="t-cm"># no guard — fails on class access</span>
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>[self.name]
 
-<mark class="hl-key">print</mark>(User.score)  <span class="t-cm"># AttributeError: 'NoneType' has no attribute...</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:
+<mark class="hl-key">class</mark> User:
+    score = Positive()
+
+u = User()
+u.score = 10
+<mark class="hl-key">print</mark>(u.score)      <span class="t-cm"># 10 — OK (obj is u)</span>
+<mark class="hl-key">print</mark>(User.score)   <span class="t-cm"># AttributeError: 'NoneType'</span>
+                    <span class="t-cm">#   has no attribute '__dict__'</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre"><mark class="hl-key">class</mark> Positive:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        self.name = name
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set__</mark>(self, obj, value):
+        obj.<mark class="hl-key">__dict__</mark>[self.name] = value
     <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, cls):
         <mark class="hl-key">if</mark> obj <mark class="hl-key">is</mark> <mark class="hl-key">None</mark>:
-            <mark class="hl-key">return</mark> self  <span class="t-cm"># class access → return the descriptor itself</span>
-        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>[self.name]</div></div></div><span class="mistake-note">&#128161; The pattern <code>if obj is None: return self</code> is standard for all <code>__get__</code> implementations.</span></div>
+            <mark class="hl-key">return</mark> self  <span class="t-cm"># class → descriptor</span>
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>[self.name]
+
+<mark class="hl-key">class</mark> User:
+    score = Positive()
+
+u = User()
+u.score = 10
+<mark class="hl-key">print</mark>(u.score)      <span class="t-cm"># 10</span>
+<mark class="hl-key">print</mark>(User.score)   <span class="t-cm"># &lt;Positive object&gt; — OK</span></div></div></div>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.5">
+<b>What &ldquo;&lt;Positive object&gt; — OK&rdquo; means:</b>
+<code>u.score</code> &rarr; this user&apos;s value (<code>10</code>).
+<code>User.score</code> &rarr; the descriptor helper on the class (not a number).
+Returning <code>self</code> on class access is <b>expected</b> — it is not a bug; the guard stopped the crash on purpose.
+</p>
+<span class="mistake-note">&#128161; Always guard class access first: <code>if obj is None: return self</code>.</span></div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; using a data descriptor when a <code>@property</code> suffices</span><span class="mistake-desc">For per-class validation that doesn&apos;t need reuse, <code>@property</code> is simpler than a full descriptor class.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><span class="t-cm"># Overkill for one-off validation:</span>
 <mark class="hl-key">class</mark> PositiveInt:
     <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name): ...
@@ -8800,11 +9037,81 @@ u2 = User(); u2.age = 25
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>property</code> is what kind of descriptor?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A <b>data descriptor</b> (implements <code>__get__</code>, <code>__set__</code>, and <code>__delete__</code>).</div>
+      <div class="quiz-reveal">
+        A <b>data descriptor</b>.
+        <br><br>
+        <b>Step-by-step — what <code>@property</code> really is</b>
+        <ol style="margin:6px 0 8px 18px;padding:0;line-height:1.55">
+          <li>You write <code>@property</code> / <code>@temp.setter</code> / <code>@temp.deleter</code>.</li>
+          <li>Python builds one <code>property</code> object and puts it on the <b>class</b>
+              (<code>Celsius.temp</code>.</li>
+          <li>That object is a descriptor: reading / writing / deleting
+              <code>c.temp</code> call its <code>__get__</code> / <code>__set__</code> /
+              <code>__delete__</code>.</li>
+          <li>Because it has <code>__set__</code> (and usually <code>__delete__</code>),
+              it is classified as a <b>data</b> descriptor — not non-data.</li>
+          <li>Even a read-only property (no setter written) still has
+              <code>__set__</code>: assignment raises <code>AttributeError</code>
+              instead of storing into <code>__dict__</code>.</li>
+        </ol>
+        <b>Comparison</b>
+        <table class="data-tbl" style="margin:6px 0;font-size:12px">
+          <tr><th></th><th><code>@property</code> (data)</th><th>Function / soft field (non-data)</th></tr>
+          <tr><td>Protocols</td><td><code>__get__</code> + <code>__set__</code> (+ <code>__delete__</code>)</td><td>only <code>__get__</code></td></tr>
+          <tr><td>Read <code>obj.x</code></td><td>runs getter</td><td>runs <code>__get__</code> (or returns stored value)</td></tr>
+          <tr><td>Write <code>obj.x = v</code></td><td>always runs setter / blocks write</td><td>normal store into <code>obj.__dict__</code> — helper can be skipped</td></tr>
+          <tr><td>Can instance dict bypass?</td><td><b>No</b> — data descriptor wins</td><td><b>Yes</b> — after assign, instance value usually wins</td></tr>
+          <tr><td>Typical use</td><td>validated / computed attributes</td><td>methods, defaults, lazy helpers</td></tr>
+        </table>
+        <b>Write example — data vs non-data</b>
+        <div class="mc-row" style="margin-top:6px">
+          <div class="mc-col mc-good"><span class="mc-lbl">@property (data) — always runs setter</span>
+          <div class="step-pre"><mark class="hl-key">class</mark> Product:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self):
+        self._price = 0
+    <mark class="hl-key">@property</mark>
+    <mark class="hl-key">def</mark> price(self):
+        <mark class="hl-key">return</mark> self._price
+    <mark class="hl-key">@price</mark>.setter
+    <mark class="hl-key">def</mark> price(self, value):
+        <mark class="hl-key">print</mark>("setter ran")
+        <mark class="hl-key">if</mark> value &lt; 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be &gt;= 0")
+        self._price = value
+
+p = Product()
+p.price = 10          <span class="t-cm"># prints: setter ran</span>
+<mark class="hl-key">print</mark>(p.price)        <span class="t-cm"># 10</span>
+<span class="t-cm"># p.price = -1        # ValueError — cannot bypass</span></div></div>
+          <div class="mc-col mc-bad"><span class="mc-lbl">Non-data — normal store into __dict__</span>
+          <div class="step-pre"><mark class="hl-key">class</mark> Soft:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__set_name__</mark>(self, owner, name):
+        self.name = name
+    <mark class="hl-key">def</mark> <mark class="hl-key">__get__</mark>(self, obj, owner):
+        <mark class="hl-key">print</mark>("get ran")
+        <mark class="hl-key">return</mark> obj.<mark class="hl-key">__dict__</mark>.get(self.name, 0)
+    <span class="t-cm"># NO __set__</span>
+
+<mark class="hl-key">class</mark> Product:
+    price = Soft()
+
+p = Product()
+<mark class="hl-key">print</mark>(p.price)        <span class="t-cm"># get ran → 0</span>
+p.price = -1          <span class="t-cm"># normal store — NO guard!</span>
+<mark class="hl-key">print</mark>(p.price)        <span class="t-cm"># -1 (get may be skipped)</span>
+<mark class="hl-key">print</mark>(p.<mark class="hl-key">__dict__</mark>)     <span class="t-cm"># {'price': -1}</span></div></div>
+        </div>
+        <p style="font-size:12px;margin:8px 0 0;line-height:1.45">
+          <b>Takeaway:</b> <code>obj.x = v</code> on a <b>data</b> descriptor
+          (<code>@property</code>) always hits the setter / can block the write.
+          On a <b>non-data</b> field, write is a plain
+          <code>obj.__dict__["x"] = v</code> — validation is skipped.
+        </p>
+      </div>
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is a descriptor in one line?</p><p class="qa-a"><b>A:</b> A helper object that sits between your code and an attribute and controls how it is read, written, or deleted.</p><p class="qa-q"><b>Q:</b> Non-data vs data descriptor?</p><p class="qa-a"><b>A:</b> Non-data has only <code>__get__</code> — a normal instance write can bypass it. Data has <code>__set__</code> too — every assignment goes through the helper (can validate).</p><p class="qa-q"><b>Q:</b> Is @property a descriptor?</p><p class="qa-a"><b>A:</b> Yes — a built-in <b>data</b> descriptor. Getter → <code>__get__</code>, setter → <code>__set__</code>.</p><p class="qa-q"><b>Q:</b> Why use obj.__dict__ inside __set__?</p><p class="qa-a"><b>A:</b> To store the value without calling the descriptor again. <code>obj.price = value</code> inside <code>__set__</code> causes infinite recursion.</p><p class="qa-q"><b>Q:</b> When custom descriptor instead of @property?</p><p class="qa-a"><b>A:</b> When the same validation/access logic must be reused across many classes or fields (ORM-style columns).</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Is @property a descriptor?</p><p class="qa-a"><b>A:</b> Yes — start here. Built-in <b>data</b> descriptor: getter → <code>__get__</code>, setter → <code>__set__</code>.</p><p class="qa-q"><b>Q:</b> What is a descriptor in one line?</p><p class="qa-a"><b>A:</b> A helper object that sits between your code and an attribute and controls how it is read, written, or deleted.</p><p class="qa-q"><b>Q:</b> Non-data vs data descriptor?</p><p class="qa-a"><b>A:</b> Non-data has only <code>__get__</code> — a normal instance write can bypass it. Data has <code>__set__</code> too — every assignment goes through the helper (can validate).</p><p class="qa-q"><b>Q:</b> Why use obj.__dict__ inside __set__?</p><p class="qa-a"><b>A:</b> To store the value without calling the descriptor again. <code>obj.price = value</code> inside <code>__set__</code> causes infinite recursion.</p><p class="qa-q"><b>Q:</b> When custom descriptor instead of @property?</p><p class="qa-a"><b>A:</b> When the same validation/access logic must be reused across many classes or fields (ORM-style columns).</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -8906,7 +9213,7 @@ print(circle.area)                # 78.54...</textarea><pre class="py-output" hi
 <div class="slide-hdr">
   <div class="slide-meta">Slide 17 of 35 &middot; Week 2 — Collections & OOP</div>
   <div class="slide-title">Generators &amp; Iterators</div>
-  <div class="slide-sub">Generators (PEP 255) return lazy iterators via yield — you can loop like a list without storing all …</div>
+  <div class="slide-sub">Generators return lazy iterators via yield — loop like a list without storing all values in memory. …</div>
   <div class="audio-player" id="player-17" data-slide="17">
   <audio id="audio-17" preload="metadata" src="audio/slide-17.mp3"></audio>
   <div class="audio-controls">
@@ -8924,7 +9231,7 @@ print(circle.area)                # 78.54...</textarea><pre class="py-output" hi
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Generators (PEP 255) return lazy iterators via yield — you can loop like a list without storing all values in memory. Critical for large files and streams. Generator expressions, infinite sequences, and generator pipelines are common patterns (Real Python).</div>
+      <h3>Definition</h3><div class="def-block"><b>Generators</b> return <b>lazy iterators</b> via <code>yield</code> — loop like a list without storing all values in memory.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Why?</b> <code>file.read().split()</code> on a huge CSV can <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>vs return:</b> <code>return</code> ends with one result · <code>yield</code> pauses and can produce many values.</li><li><b>Also:</b> generator expressions · infinite sequences · pipelines (Real Python / PEP 255).</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -9329,7 +9636,7 @@ list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden
 <div class="slide-hdr">
   <div class="slide-meta">Slide 18 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Decorators</div>
-  <div class="slide-sub">Decorators wrap functions or classes to add behavior without changing their source. They use @syntax…</div>
+  <div class="slide-sub">A decorator wraps a function or class to add behavior without changing its source . Syntax: @timer a…</div>
   <div class="audio-player" id="player-18" data-slide="18">
   <audio id="audio-18" preload="metadata" src="audio/slide-18.mp3"></audio>
   <div class="audio-controls">
@@ -9347,7 +9654,7 @@ list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Decorators wrap functions or classes to add behavior without changing their source. They use @syntax, nested functions, closures, and functools.wraps to preserve metadata.</div>
+      <h3>Definition</h3><div class="def-block">A <b>decorator</b> wraps a function or class to add behavior <b>without changing its source</b>.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Syntax:</b> <code>@timer</code> above <code>def work()</code> means <code>work = timer(work)</code>.</li><li><b>How:</b> nested function + closure · use <code>functools.wraps</code> to keep <code>__name__</code> / <code>__doc__</code>.</li><li><b>Real use:</b> FastAPI routes <code>@app.get('/')</code> · logging · timing · auth checks.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -9745,7 +10052,7 @@ def say_hi():
 <div class="slide-hdr">
   <div class="slide-meta">Slide 19 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Exception Handling</div>
-  <div class="slide-sub">Exceptions are handled with try/except/else/finally. Python has a hierarchy of built-in exceptions. …</div>
+  <div class="slide-sub">Exceptions signal errors. Handle them with try / except / else / finally . Rules: catch specific typ…</div>
   <div class="audio-player" id="player-19" data-slide="19">
   <audio id="audio-19" preload="metadata" src="audio/slide-19.mp3"></audio>
   <div class="audio-controls">
@@ -9763,7 +10070,7 @@ def say_hi():
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Exceptions are handled with try/except/else/finally. Python has a hierarchy of built-in exceptions. Custom exceptions inherit from Exception. raise and re-raise propagate errors up the call stack.</div>
+      <h3>Definition</h3><div class="def-block"><b>Exceptions</b> signal errors. Handle them with <code>try</code> / <code>except</code> / <code>else</code> / <code>finally</code>.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Rules:</b> catch <b>specific</b> types — avoid bare <code>except:</code>.</li><li><b>Blocks:</b> <code>else</code> runs if no error · <code>finally</code> always runs (cleanup).</li><li><b>Custom:</b> <code>class ValidationError(Exception)</code> · <code>raise</code> / <code>raise from</code> to propagate with context.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -10118,7 +10425,7 @@ except ValidationError:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 20 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Threading &amp; GIL</div>
-  <div class="slide-sub">threading runs concurrent tasks in one process but is limited by the GIL for CPU-bound work. multipr…</div>
+  <div class="slide-sub">Concurrency runs overlapping work — threads share one process; processes get separate memory. thread…</div>
   <div class="audio-player" id="player-20" data-slide="20">
   <audio id="audio-20" preload="metadata" src="audio/slide-20.mp3"></audio>
   <div class="audio-controls">
@@ -10136,7 +10443,7 @@ except ValidationError:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">threading runs concurrent tasks in one process but is limited by the GIL for CPU-bound work. multiprocessing and concurrent.futures bypass or manage this for parallel execution.</div>
+      <h3>Definition</h3><div class="def-block"><b>Concurrency</b> runs overlapping work — threads share one process; processes get separate memory.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>threading:</b> good for I/O · limited by the <b>GIL</b> for CPU-bound work · use <code>Lock</code> against races.</li><li><b>multiprocessing / futures:</b> <code>ProcessPoolExecutor</code> for CPU · <code>ThreadPoolExecutor</code> for I/O.</li><li><b>Pick:</b> I/O wait → threads · heavy CPU math → processes.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -10504,7 +10811,7 @@ print(results)
 <div class="slide-hdr">
   <div class="slide-meta">Slide 21 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Async / Await</div>
-  <div class="slide-sub">asyncio runs concurrent I/O-bound tasks on one thread via an event loop. async def defines coroutine…</div>
+  <div class="slide-sub">asyncio runs many I/O-bound tasks on one thread using an event loop — concurrency, not CPU paralleli…</div>
   <div class="audio-player" id="player-21" data-slide="21">
   <audio id="audio-21" preload="metadata" src="audio/slide-21.mp3"></audio>
   <div class="audio-controls">
@@ -10522,7 +10829,7 @@ print(results)
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">asyncio runs concurrent I/O-bound tasks on one thread via an event loop. async def defines coroutines; await pauses until a result; asyncio.gather runs multiple coroutines; async with/async for extend context managers and iteration.</div>
+      <h3>Definition</h3><div class="def-block"><b>asyncio</b> runs many I/O-bound tasks on <b>one thread</b> using an event loop — concurrency, not CPU parallelism.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Keywords:</b> <code>async def</code> (coroutine) · <code>await</code> (pause until ready) · <code>asyncio.gather</code> (run many together).</li><li><b>Start:</b> <code>asyncio.run(main())</code> · also <code>async with</code> / <code>async for</code>.</li><li><b>Trap:</b> don’t call blocking I/O inside async code — FastAPI can use <code>async def</code> endpoints for non-blocking DB/HTTP.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -10893,7 +11200,7 @@ asyncio.run(main())
 <div class="slide-hdr">
   <div class="slide-meta">Slide 22 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Logging</div>
-  <div class="slide-sub">The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, mo…</div>
+  <div class="slide-sub">The logging module is production output — levels, timestamps, and routing to files/agents (not print…</div>
   <div class="audio-player" id="player-22" data-slide="22">
   <audio id="audio-22" preload="metadata" src="audio/slide-22.mp3"></audio>
   <div class="audio-controls">
@@ -10911,7 +11218,7 @@ asyncio.run(main())
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">The logging module provides leveled, configurable output for production — DEBUG through CRITICAL, module loggers, handlers, and rotation.</div>
+      <h3>Definition</h3><div class="def-block">The <code>logging</code> module is production output — levels, timestamps, and routing to files/agents (not <code>print</code>).<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Levels:</b> DEBUG → INFO → WARNING → ERROR → CRITICAL.</li><li><b>Pattern:</b> <code>logging.getLogger(__name__)</code> · INFO in prod · <code>logger.exception</code> inside <code>except</code>.</li><li><b>Handlers:</b> console · <code>RotatingFileHandler</code> · lazy <code>%</code> formatting.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -11217,7 +11524,7 @@ logger.addHandler(handler)</textarea><pre class="py-output" hidden></pre><detail
 <div class="slide-hdr">
   <div class="slide-meta">Slide 23 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Unit Testing</div>
-  <div class="slide-sub">Unit testing verifies code with unittest (TestCase, setUp, tearDown) or pytest (simpler syntax). ass…</div>
+  <div class="slide-sub">Unit tests verify one behavior at a time — unittest or simpler pytest . unittest: TestCase · setUp /…</div>
   <div class="audio-player" id="player-23" data-slide="23">
   <audio id="audio-23" preload="metadata" src="audio/slide-23.mp3"></audio>
   <div class="audio-controls">
@@ -11235,7 +11542,7 @@ logger.addHandler(handler)</textarea><pre class="py-output" hidden></pre><detail
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Unit testing verifies code with unittest (TestCase, setUp, tearDown) or pytest (simpler syntax). assert methods check outcomes. unittest.mock patches dependencies. Tests run in a defined order per class.</div>
+      <h3>Definition</h3><div class="def-block"><b>Unit tests</b> verify one behavior at a time — <code>unittest</code> or simpler <code>pytest</code>.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>unittest:</b> <code>TestCase</code> · <code>setUp</code> / <code>tearDown</code> · assert methods.</li><li><b>pytest:</b> plain <code>assert</code> · less boilerplate · great for day-to-day work.</li><li><b>Mocks:</b> <code>unittest.mock</code> / <code>@patch</code> for external calls (HTTP, DB).</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -11609,7 +11916,7 @@ def test_mock_print(mock_print):
 <div class="slide-hdr">
   <div class="slide-meta">Slide 24 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Regular Expressions</div>
-  <div class="slide-sub">Regular expressions match patterns in text using the re module: match, search, findall, groups, spec…</div>
+  <div class="slide-sub">Regular expressions match text patterns with the re module — validation, parsing, log scraping. Sear…</div>
   <div class="audio-player" id="player-24" data-slide="24">
   <audio id="audio-24" preload="metadata" src="audio/slide-24.mp3"></audio>
   <div class="audio-controls">
@@ -11627,7 +11934,7 @@ def test_mock_print(mock_print):
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Regular expressions match patterns in text using the re module: match, search, findall, groups, special sequences (\d, \w, \s), and lookahead/lookbehind for advanced matching.</div>
+      <h3>Definition</h3><div class="def-block"><b>Regular expressions</b> match text patterns with the <code>re</code> module — validation, parsing, log scraping.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Search:</b> <code>re.search</code> (anywhere) · <code>re.match</code> (start only) · <code>re.findall</code> (all).</li><li><b>Pieces:</b> groups <code>(\d+)</code> · <code>\d</code> <code>\w</code> <code>\s</code> · lookahead / lookbehind.</li><li><b>Tip:</b> always use raw strings — <code>r'\d+'</code> — to avoid backslash headaches.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -11953,7 +12260,7 @@ print(emails)  # [&#x27;alice@example.com&#x27;]</textarea><pre class="py-output
 <div class="slide-hdr">
   <div class="slide-meta">Slide 25 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">File Operations</div>
-  <div class="slide-sub">File operations use open() with modes r/w/a, context managers (with) for safe closing, csv/json modu…</div>
+  <div class="slide-sub">File I/O uses open() , context managers, and helpers for CSV / JSON / paths. Safe open: with open(pa…</div>
   <div class="audio-player" id="player-25" data-slide="25">
   <audio id="audio-25" preload="metadata" src="audio/slide-25.mp3"></audio>
   <div class="audio-controls">
@@ -11971,7 +12278,7 @@ print(emails)  # [&#x27;alice@example.com&#x27;]</textarea><pre class="py-output
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">File operations use open() with modes r/w/a, context managers (with) for safe closing, csv/json modules for structured data, and pathlib for object-oriented path handling.</div>
+      <h3>Definition</h3><div class="def-block">File I/O uses <code>open()</code>, context managers, and helpers for CSV / JSON / paths.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Safe open:</b> <code>with open(path, encoding='utf-8') as f:</code> (like C# <code>using</code>) — auto-closes.</li><li><b>Modes:</b> <code>r</code> read · <code>w</code> write · <code>a</code> append.</li><li><b>Helpers:</b> <code>pathlib.Path</code> · <code>json</code> · <code>csv.DictReader</code>.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -12279,7 +12586,7 @@ print(list(Path(&quot;Projects&quot;).glob(&quot;*.py&quot;)))  # all .py files<
 <div class="slide-hdr">
   <div class="slide-meta">Slide 26 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Context Manager</div>
-  <div class="slide-sub">Context managers guarantee setup/teardown via __enter__/__exit__ or the @contextmanager decorator. T…</div>
+  <div class="slide-sub">A context manager guarantees setup/teardown — the with statement triggers it. Protocol: __enter__ / …</div>
   <div class="audio-player" id="player-26" data-slide="26">
   <audio id="audio-26" preload="metadata" src="audio/slide-26.mp3"></audio>
   <div class="audio-controls">
@@ -12297,7 +12604,7 @@ print(list(Path(&quot;Projects&quot;).glob(&quot;*.py&quot;)))  # all .py files<
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Context managers guarantee setup/teardown via __enter__/__exit__ or the @contextmanager decorator. The with statement triggers this protocol — used for files, locks, and database connections.</div>
+      <h3>Definition</h3><div class="def-block">A <b>context manager</b> guarantees setup/teardown — the <code>with</code> statement triggers it.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Protocol:</b> <code>__enter__</code> / <code>__exit__</code> · or <code>@contextmanager</code> + one <code>yield</code>.</li><li><b>Why?</b> Files, locks, DB connections close even if an exception occurs.</li><li><b>Custom:</b> setup → <code>yield</code> → teardown; <code>__exit__</code> can suppress errors by returning <code>True</code>.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -12651,7 +12958,7 @@ with Managed() as m:
 <div class="slide-hdr">
   <div class="slide-meta">Slide 27 of 35 &middot; Week 3 — Advanced Core</div>
   <div class="slide-title">Virtual Environment</div>
-  <div class="slide-sub">Virtual environments isolate project dependencies. venv creates them; pip installs packages; require…</div>
+  <div class="slide-sub">A virtual environment isolates project dependencies so packages don’t clash across projects. Create …</div>
   <div class="audio-player" id="player-27" data-slide="27">
   <audio id="audio-27" preload="metadata" src="audio/slide-27.mp3"></audio>
   <div class="audio-controls">
@@ -12669,7 +12976,7 @@ with Managed() as m:
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Virtual environments isolate project dependencies. venv creates them; pip installs packages; requirements.txt pins versions; pyenv manages multiple Python versions on one machine.</div>
+      <h3>Definition</h3><div class="def-block">A <b>virtual environment</b> isolates project dependencies so packages don’t clash across projects.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Create / use:</b> <code>python -m venv .venv</code> → activate → <code>pip install …</code>.</li><li><b>Pin:</b> <code>pip freeze &gt; requirements.txt</code> · install with <code>pip install -r requirements.txt</code>.</li><li><b>Rule:</b> never install project packages globally · pyenv can manage multiple Python versions.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -12984,7 +13291,7 @@ print(sys.executable)   # shows path to current Python</textarea><pre class="py-
 <div class="slide-hdr">
   <div class="slide-meta">Slide 28 of 35 &middot; Week 4 — Web Stack</div>
   <div class="slide-title">FastAPI with SQLAlchemy</div>
-  <div class="slide-sub">FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM model…</div>
+  <div class="slide-sub">FastAPI + Pydantic + SQLAlchemy is a common production Python API stack. Layers: routes (HTTP only) …</div>
   <div class="audio-player" id="player-28" data-slide="28">
   <audio id="audio-28" preload="metadata" src="audio/slide-28.mp3"></audio>
   <div class="audio-controls">
@@ -13002,7 +13309,7 @@ print(sys.executable)   # shows path to current Python</textarea><pre class="py-
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">FastAPI + Pydantic + SQLAlchemy is a common production stack — thin routes, service layer, ORM models, session per request via Depends.</div>
+      <h3>Definition</h3><div class="def-block"><b>FastAPI + Pydantic + SQLAlchemy</b> is a common production Python API stack.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Layers:</b> routes (HTTP only) · services (business + transactions) · ORM models · Pydantic schemas.</li><li><b>DI:</b> <code>Depends(get_db)</code> scopes a session per request (like <code>DbContext</code>).</li><li><b>Rule:</b> keep routes thin — don’t mix SQL and HTTP parsing in one function.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -13238,7 +13545,7 @@ def create_user(body: UserCreate, db: Session = Depends(get_db)):
 <div class="slide-hdr">
   <div class="slide-meta">Slide 29 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">Python-Set2 — Portfolio Overview</div>
-  <div class="slide-sub">Python-Set2 is your portfolio of six real project areas covering fundamentals, exercises, data analy…</div>
+  <div class="slide-sub">Python-Set2 is your portfolio of six real project areas you can demo in interviews. Areas: fundament…</div>
   <div class="audio-player" id="player-29" data-slide="29">
   <audio id="audio-29" preload="metadata" src="audio/slide-29.mp3"></audio>
   <div class="audio-controls">
@@ -13256,7 +13563,7 @@ def create_user(body: UserCreate, db: Session = Depends(get_db)):
 <div class="slide-body">
   <div class="main-split no-code">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Python-Set2 is your portfolio of six real project areas covering fundamentals, exercises, data analysis, Django web apps, REST APIs, and voice AI with Pipecat.</div>
+      <h3>Definition</h3><div class="def-block"><code>Python-Set2</code> is your <b>portfolio</b> of six real project areas you can demo in interviews.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Areas:</b> fundamentals · exercises · pandas · Django · DRF · Pipecat voice AI.</li><li><b>Why?</b> Proves you didn’t only read slides — you ran and built apps.</li><li><b>Tip:</b> pick one folder and walk through it aloud.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -13395,7 +13702,7 @@ def create_user(body: UserCreate, db: Session = Depends(get_db)):
 <div class="slide-hdr">
   <div class="slide-meta">Slide 30 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">pythonBasics — Topic Modules</div>
-  <div class="slide-sub">pythonBasics/ has seven modules — MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, M…</div>
+  <div class="slide-sub">pythonBasics/ has seven topic modules — each a runnable mini-lab for one skill. Modules: MyClass · M…</div>
   <div class="audio-player" id="player-30" data-slide="30">
   <audio id="audio-30" preload="metadata" src="audio/slide-30.mp3"></audio>
   <div class="audio-controls">
@@ -13413,7 +13720,7 @@ def create_user(body: UserCreate, db: Session = Depends(get_db)):
 <div class="slide-body">
   <div class="main-split no-code">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">pythonBasics/ has seven modules — MyClass, MyCollections, MyLoops, MyModules, MyExceptionHandling, MyDebug, MyUnitTesting — each with runnable scripts for one topic.</div>
+      <h3>Definition</h3><div class="def-block"><code>pythonBasics/</code> has <b>seven topic modules</b> — each a runnable mini-lab for one skill.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Modules:</b> MyClass · MyCollections · MyLoops · MyModules · MyExceptionHandling · MyDebug · MyUnitTesting.</li><li><b>OOP focus:</b> MyClass — inheritance, polymorphism, dunder methods.</li><li><b>How to use:</b> open the folder → run the <code>.py</code> → explain it in interview language.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -13548,7 +13855,7 @@ Savings vs current account month-end balances printed</div></div></div><p><b>2) 
 <div class="slide-hdr">
   <div class="slide-meta">Slide 31 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">Google Exercises &amp; Pandas</div>
-  <div class="slide-sub">google-python-exercises/ teaches classic puzzles (babynames, copyspecial, logpuzzle). pandas/ has Ju…</div>
+  <div class="slide-sub">Practice data and text skills with classic exercises plus pandas notebooks. google-python-exercises:…</div>
   <div class="audio-player" id="player-31" data-slide="31">
   <audio id="audio-31" preload="metadata" src="audio/slide-31.mp3"></audio>
   <div class="audio-controls">
@@ -13566,7 +13873,7 @@ Savings vs current account month-end balances printed</div></div></div><p><b>2) 
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">google-python-exercises/ teaches classic puzzles (babynames, copyspecial, logpuzzle). pandas/ has Jupyter notebooks analyzing Titanic and FIFA CSV datasets.</div>
+      <h3>Definition</h3><div class="def-block">Practice data and text skills with classic exercises plus pandas notebooks.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>google-python-exercises:</b> babynames (regex) · copyspecial (files) · logpuzzle.</li><li><b>pandas:</b> Jupyter notebooks on Titanic / FIFA CSV — <code>read_csv</code>, <code>groupby</code>, missing values.</li><li><b>Feel:</b> like LINQ on in-memory tables.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -13740,7 +14047,7 @@ df.groupby(&quot;Sex&quot;)[&quot;Age&quot;].mean()   # group and aggregate</tex
 <div class="slide-hdr">
   <div class="slide-meta">Slide 32 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">Django &amp; Django REST</div>
-  <div class="slide-sub">djangobasics/meeting_planner/ is a Django 4 app with MVT, templates, auth, and JWT API. DjangoRestBa…</div>
+  <div class="slide-sub">Two web stacks in the portfolio: Django MVT and Django REST Framework . Django: meeting_planner — mo…</div>
   <div class="audio-player" id="player-32" data-slide="32">
   <audio id="audio-32" preload="metadata" src="audio/slide-32.mp3"></audio>
   <div class="audio-controls">
@@ -13758,7 +14065,7 @@ df.groupby(&quot;Sex&quot;)[&quot;Age&quot;].mean()   # group and aggregate</tex
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">djangobasics/meeting_planner/ is a Django 4 app with MVT, templates, auth, and JWT API. DjangoRestBasics/inventory/ is a multi-app DRF project with serializers and ViewSets.</div>
+      <h3>Definition</h3><div class="def-block">Two web stacks in the portfolio: <b>Django MVT</b> and <b>Django REST Framework</b>.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Django:</b> <code>meeting_planner</code> — models, templates, migrations, auth, JWT.</li><li><b>DRF:</b> <code>inventory</code> — serializers, ViewSets, multi-app layout.</li><li><b>Compare:</b> Django = batteries-included web · DRF serializers ≈ Pydantic schemas in FastAPI.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -13927,7 +14234,7 @@ JSON → [{"id": 1, "name": "Board A", "available": true}, …]</div></div></div
 <div class="slide-hdr">
   <div class="slide-meta">Slide 33 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">Pipecat — Voice AI POCs</div>
-  <div class="slide-sub">Pipecat-Project/ contains voice AI POCs: pipecat-quickstart, phase1 (local STT/LLM/TTS), phase2 (ful…</div>
+  <div class="slide-sub">Pipecat-Project/ has voice-AI POCs — speech in, LLM, speech out. Pipeline: STT → LLM → TTS (often ov…</div>
   <div class="audio-player" id="player-33" data-slide="33">
   <audio id="audio-33" preload="metadata" src="audio/slide-33.mp3"></audio>
   <div class="audio-controls">
@@ -13945,7 +14252,7 @@ JSON → [{"id": 1, "name": "Board A", "available": true}, …]</div></div></div
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Pipecat-Project/ contains voice AI POCs: pipecat-quickstart, phase1 (local STT/LLM/TTS), phase2 (full pipeline), and voice-bouncer (IVR-style auth demo).</div>
+      <h3>Definition</h3><div class="def-block"><code>Pipecat-Project/</code> has voice-AI POCs — speech in, LLM, speech out.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Pipeline:</b> STT → LLM → TTS (often over WebRTC).</li><li><b>Phases:</b> quickstart · phase1 (local services) · phase2 (full pipeline) · voice-bouncer (IVR-style auth).</li><li><b>Demo tip:</b> explain greeting → member ID → zip like a phone IVR.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -14103,7 +14410,7 @@ reply → "What is your member ID number?"</div></div></div><p><b>3) TTS — tex
 <div class="slide-hdr">
   <div class="slide-meta">Slide 34 of 35 &middot; Real Projects (Python-Set2)</div>
   <div class="slide-title">Real Project Structure &amp; Learning Path</div>
-  <div class="slide-sub">A real Python project separates concerns into folders: routes, services, schemas, models, tests, con…</div>
+  <div class="slide-sub">A real Python project separates concerns into clear folders — thin routes, fat services. Typical tre…</div>
   <div class="audio-player" id="player-34" data-slide="34">
   <audio id="audio-34" preload="metadata" src="audio/slide-34.mp3"></audio>
   <div class="audio-controls">
@@ -14121,7 +14428,7 @@ reply → "What is your member ID number?"</div></div></div><p><b>3) TTS — tex
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">A real Python project separates concerns into folders: routes, services, schemas, models, tests, config. Python-Set2 projects demonstrate both learning structure and production patterns.</div>
+      <h3>Definition</h3><div class="def-block">A real Python project <b>separates concerns</b> into clear folders — thin routes, fat services.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Typical tree:</b> routes · services · schemas · models · tests · config.</li><li><b>Rules:</b> <code>main.py</code> entry · tests outside app · one job per layer.</li><li><b>Variants:</b> Django apps per domain · DRF serializers · Pipecat processors for audio streams.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -14290,7 +14597,7 @@ tests/              <span class="t-cm"># at repo root</span></div></div><div cla
 <div class="slide-hdr">
   <div class="slide-meta">Slide 35 of 35 &middot; Appendix</div>
   <div class="slide-title">C# vs Python — Quick Reference</div>
-  <div class="slide-sub">Quick reference mapping C# concepts to Python — syntax, stubs (pass vs { }), null/None, OOP, web, as…</div>
+  <div class="slide-sub">Quick map from C# habits to Python — same ideas, different syntax. Syntax: indentation not braces · …</div>
   <div class="audio-player" id="player-35" data-slide="35">
   <audio id="audio-35" preload="metadata" src="audio/slide-35.mp3"></audio>
   <div class="audio-controls">
@@ -14308,7 +14615,7 @@ tests/              <span class="t-cm"># at repo root</span></div></div><div cla
 <div class="slide-body">
   <div class="main-split">
     <div class="panel-left">
-      <h3>Definition</h3><div class="def-block">Quick reference mapping C# concepts to Python — syntax, stubs (pass vs { }), null/None, OOP, web, async, and tooling — for developers transitioning between languages.</div>
+      <h3>Definition</h3><div class="def-block">Quick map from <b>C# habits</b> to <b>Python</b> — same ideas, different syntax.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Syntax:</b> indentation not braces · <code>elif</code> · <code>pass</code> ≈ empty <code>{ }</code> · <code>None</code> ≈ <code>null</code>.</li><li><b>OOP / typing:</b> explicit <code>self</code> · duck typing · type hints optional at runtime.</li><li><b>Tooling:</b> venv + pip ≈ NuGet isolation · <code>try/except</code> ≈ <code>try/catch</code> · async in both ecosystems.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -15950,7 +16257,102 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
 <tr><td class="gutter">11</td><td class="src"><span class="t-op">}</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>@property</code> ≈ C# property get/set. Descriptors are the lower-level mechanism behind <code>@property</code>.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-namedtuple-record" role="dialog" aria-labelledby="csharp-win-title-namedtuple-record"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-namedtuple-record">C# Comparison — namedtuple vs record</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('namedtuple-record')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>namedtuple</code> — lightweight record:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>@property</code> ≈ C# property get/set. Descriptors are the lower-level mechanism behind <code>@property</code>.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-property-vs-descriptor" role="dialog" aria-labelledby="csharp-win-title-property-vs-descriptor"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-property-vs-descriptor">C# Comparison — @property vs descriptor (many fields)</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('property-vs-descriptor')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><div class="csharp-diff"><div class="csharp-diff-label">Reuse rules on many fields</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code"><code>@property</code> per field<br>or <code>price = Positive()</code> descriptor</div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code">C# <code>get</code>/<code>set</code> per property<br>+ shared validate helper</div></div></div></div>
+<p><b>Python choice:</b> one-off field → <code>@property</code>.
+Same check on <code>price</code>, <code>qty</code>, <code>Order.total</code> →
+define a <b>descriptor once</b>, attach at class level.</p>
+<p><b>C# choice:</b> always write a property per field.
+Reuse validation with a <b>shared helper method</b>
+(or attributes / source generators in advanced setups).
+There is no everyday <code>price = Positive()</code> syntax.</p>
+<p>Python — <code>@property</code> twice (rules copied):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Product</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_price</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_qty</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">property</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">price</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_price</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">price</span><span class="t-op">.</span><span class="t-id">setter</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">price</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">(</span><span class="t-str">&quot;must be &gt;= 0&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_price</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">value</span></td></tr>
+<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">property</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">qty</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">)</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># same rules again</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_qty</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-id">qty</span><span class="t-op">.</span><span class="t-id">setter</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">qty</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">(</span><span class="t-str">&quot;must be &gt;= 0&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">_qty</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">value</span></td></tr>
+</tbody></table></div><p>C# — two properties (same idea; can share a helper):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Product</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">static</span><span class="t-op"> </span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">RequireNonNeg</span><span class="t-op">(</span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op"> </span><span class="t-op">?</span><span class="t-op"> </span><span class="t-kw">throw</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">ArgumentOutOfRangeException</span><span class="t-op">(</span><span class="t-id">nameof</span><span class="t-op">(</span><span class="t-id">v</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">Price</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">get</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">set</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">RequireNonNeg</span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">Qty</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">get</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">set</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op">)</span><span class="t-id">RequireNonNeg</span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div><p>Python — descriptor once, plug into many fields:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Positive</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__set_name__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">owner</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">name</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># owner=Product, name=&#x27;price&#x27;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__get__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">obj</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">owner</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">obj</span><span class="t-op">.</span><span class="t-id">__dict__</span><span class="t-op">.</span><span class="t-id">get</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">name</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__set__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">obj</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">(</span><span class="t-str">&quot;must be &gt;= 0&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">obj</span><span class="t-op">.</span><span class="t-id">__dict__</span><span class="t-op">[</span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">name</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">value</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Product</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">price</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Positive</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># class-level</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">qty</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Positive</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Order</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">total</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Positive</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># reuse on another class</span></td></tr>
+</tbody></table></div><p>C# — still one property each; reuse = call shared helper (closest everyday twin):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">Product</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">static</span><span class="t-op"> </span><span class="t-kw">void</span><span class="t-op"> </span><span class="t-id">EnsureNonNeg</span><span class="t-op">(</span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">v</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">v</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">throw</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">ArgumentOutOfRangeException</span><span class="t-op">(</span><span class="t-id">nameof</span><span class="t-op">(</span><span class="t-id">v</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">decimal</span><span class="t-op"> </span><span class="t-id">Price</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">get</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">set</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">EnsureNonNeg</span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">_price</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">16</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">Qty</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">get</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">set</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">EnsureNonNeg</span><span class="t-op">(</span><span class="t-id">value</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">_qty</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">value</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">23</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-cm">// Order.Total would still be another property + EnsureNonNeg —</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-cm">// C# has no built-in &quot;attach Positive to field&quot; like Python.</span></td></tr>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>@property</code> ≈ C# property. Python <b>descriptor</b> = reusable get/set object at class level. C# reuses rules via helper methods / attributes — not by assigning <code>Positive()</code> onto the class.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-namedtuple-record" role="dialog" aria-labelledby="csharp-win-title-namedtuple-record"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-namedtuple-record">C# Comparison — namedtuple vs record</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('namedtuple-record')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>namedtuple</code> — lightweight record:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">collections</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">namedtuple</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-id">Point</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">namedtuple</span><span class="t-op">(</span><span class="t-str">&quot;Point&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;x y&quot;</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-id">p</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Point</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">20</span><span class="t-op">)</span></td></tr>

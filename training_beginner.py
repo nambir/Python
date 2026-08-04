@@ -721,38 +721,113 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 ),
             },
             {
-                "title": "Step 2 — Create in 2 steps + read/write flow",
+                "title": "Step 2 — Start with @property (getter + setter)",
                 "body": (
-                    "<b>Step A — helper class</b> (this <b>is</b> the descriptor):"
+                    "Start here — like a C# property. <code>@property</code> + <code>@age.setter</code> creates a built-in "
+                    "<b>data</b> descriptor. "
+                    "Read → <code>property.__get__</code>; write → <code>property.__set__</code>."
                     + io_split(
-                        "class PositiveNumber:\n"
-                        "    def __get__(self, obj, owner):\n"
-                        "        ...   # runs on READ\n"
-                        "    def __set__(self, obj, value):\n"
-                        "        ...   # runs on WRITE",
-                    )
-                    + "<b>Step B — attach it</b> (stores a <b>helper</b>, not a number):"
-                    + io_split(
-                        "class Product:\n"
-                        "    price = PositiveNumber()   # helper object\n"
+                        "class Student:\n"
+                        "    def __init__(self):\n"
+                        "        self._age = 0\n"
                         "\n"
-                        "# p.price        → asks __get__\n"
-                        "# p.price = 100  → asks __set__",
+                        "    @property\n"
+                        "    def age(self):                # __get__\n"
+                        "        return self._age\n"
+                        "\n"
+                        "    @age.setter\n"
+                        "    def age(self, value):         # __set__\n"
+                        "        if value < 0:\n"
+                        '            raise ValueError("age cannot be negative")\n'
+                        "        self._age = value\n"
+                        "\n"
+                        "s = Student()\n"
+                        "s.age = 20\n"
+                        "print(s.age)\n"
+                        "try:\n"
+                        "    s.age = -5\n"
+                        "except ValueError as e:\n"
+                        "    print(type(e).__name__)",
+                        {17: "20", 21: "ValueError"},
                     )
-                    + '<div class="step-pre">'
-                    "READ:   p.price        →  PositiveNumber.__get__()  →  return value\n"
-                    "WRITE:  p.price = 100  →  PositiveNumber.__set__(100)\n"
-                    "        → accept / reject / modify before store\n"
-                    "BAD:    p.price = -10  →  __set__ can raise ValueError"
-                    "</div>"
+                    + '<table class="data-tbl" style="margin-top:8px">'
+                    "<tr><th>Public name</th><th>Backing store</th><th>Getter</th><th>Setter</th></tr>"
+                    "<tr><td><code>price</code></td><td><code>self._price</code></td>"
+                    "<td><code>@property</code> / <code>def price</code></td>"
+                    "<td><code>@price.setter</code> / <code>def price</code></td></tr>"
+                    "<tr><td><code>age</code></td><td><code>self._age</code></td>"
+                    "<td><code>@property</code> / <code>def age</code></td>"
+                    "<td><code>@age.setter</code> / <code>def age</code></td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Yes — follow the field name.</b> "
+                    "Outside code uses <code>p.price</code>; inside, store in <code>self._price</code> "
+                    "(leading <code>_</code> = “internal”). "
+                    "Never write <code>self.price = …</code> inside the setter — that calls the setter again."
+                    "</p>"
+                    + '<table class="data-tbl" style="margin-top:8px">'
+                    "<tr><th>Remember</th><th>Meaning</th></tr>"
+                    "<tr><td>Descriptor</td><td>Helper that controls an attribute</td></tr>"
+                    "<tr><td><code>__get__</code></td><td>Runs on read</td></tr>"
+                    "<tr><td><code>__set__</code></td><td>Runs on write</td></tr>"
+                    "<tr><td>Non-data</td><td>Read helper only</td></tr>"
+                    "<tr><td>Data</td><td>Read + write helper</td></tr>"
+                    "<tr><td><code>@property</code></td><td>Built-in data descriptor</td></tr>"
+                    "</table>"
+                    '<p class="step-result"><b>One-line:</b> '
+                    "A descriptor sits between your code and an attribute so Python can control "
+                    "read / write / delete.</p>"
                 ),
             },
             {
-                "title": "Step 3 — Type 1 Non-data vs Type 2 Data",
+                "title": "Step 3 — Same idea with __get__ / __set__",
+                "body": (
+                    "Same job as <code>@property</code>, but <b>reusable</b>. "
+                    "Define the helper <b>once</b>, then attach it at <b>class level</b> "
+                    "on every field that needs the same rules "
+                    "(<code>price</code>, <code>qty</code>, even another class)."
+                    "<br><b>Step A — helper class</b> (get/set logic lives here):"
+                    + io_split(
+                        "class PositiveNumber:\n"
+                        "    def __get__(self, obj, owner):\n"
+                        "        ...   # like @property getter\n"
+                        "    def __set__(self, obj, value):\n"
+                        "        ...   # like @property.setter",
+                    )
+                    + "<b>Step B — plug into required fields</b> "
+                    "(class-level — not inside <code>__init__</code>):"
+                    + io_split(
+                        "class Product:\n"
+                        "    price = PositiveNumber()   # field 1\n"
+                        "    qty = PositiveNumber()     # field 2 — same rules\n"
+                        "\n"
+                        "class Order:\n"
+                        "    total = PositiveNumber()   # reuse on another class\n"
+                        "\n"
+                        "# p.price / p.qty / o.total all ask the same helper",
+                    )
+                    + '<p class="step-result"><b>vs @property:</b> '
+                    "two properties → copy getter/setter twice. "
+                    "Descriptor → one class, many <code>field = PositiveNumber()</code> lines. "
+                    "See the Real-life side-by-side above.</p>"
+                ),
+            },
+            {
+                "title": "Step 4 — Type 1 Non-data vs Type 2 Data",
                 "body": (
                     "Only <b>two types</b>. "
                     "Non-data = only <code>__get__</code> (write can bypass). "
                     "Data = <code>__get__</code> + <code>__set__</code> (guard on every write)."
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.5\">"
+                    "<b>No setter — how does get still work?</b> "
+                    "On <b>read</b> (<code>p.price</code>), if the instance has <b>no</b> "
+                    "<code>price</code> in <code>__dict__</code> yet, Python calls "
+                    "<code>__get__</code> (default / compute / log). "
+                    "On <b>write</b> (<code>p.price = -1</code>), with no <code>__set__</code>, "
+                    "Python just does a normal store into <code>p.__dict__['price']</code> — "
+                    "the helper is skipped. After that, reads often use the instance value "
+                    "and may skip <code>__get__</code> too."
+                    "</p>"
                     "<div class=\"mc-row\">"
                     "<div class=\"mc-col mc-bad\">"
                     "<span class=\"mc-lbl\">Type 1 — Non-data (only __get__)</span>"
@@ -761,23 +836,24 @@ BEGINNER_CONTENT: dict[int, dict] = {
                         "    def __set_name__(self, owner, name):\n"
                         "        self.name = name\n"
                         "    def __get__(self, obj, owner):\n"
-                        '        print("Reading...")\n'
+                        '        print("Reading via __get__...")\n'
                         '        return obj.__dict__.get(self.name, "empty")\n'
-                        "    # NO __set__\n"
+                        "    # NO __set__ — write is a normal store\n"
                         "\n"
                         "class Product:\n"
                         "    price = SoftField()\n"
                         "\n"
                         "p = Product()\n"
-                        "print(p.price)      # helper on read\n"
-                        "p.price = -1        # helper SKIPPED on write\n"
-                        "print(p.price)      # instance value wins",
-                        {13: "Reading...\nempty", 15: "-1"},
+                        "print(p.price)      # no instance value yet → __get__\n"
+                        "p.price = -1        # no __set__ → stored in __dict__\n"
+                        "print(p.price)      # instance wins (may skip __get__)",
+                        {13: "Reading via __get__...\nempty", 15: "-1"},
                     )
                     + '<div class="step-pre" style="font-size:11px;margin:6px 8px">'
                     "Before write:  Class price→SoftField   Instance (empty)\n"
-                    "After p.price=-1: Class price→SoftField   Instance price→-1\n"
-                    "Python finds instance var first → descriptor bypassed."
+                    "               read → __get__ → 'empty'\n"
+                    "After write:   Class price→SoftField   Instance price→-1\n"
+                    "               read → instance value (descriptor bypassed)"
                     "</div>"
                     + "</div>"
                     "<div class=\"mc-col mc-good\">"
@@ -813,13 +889,43 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<tr><td>Controls write / validate</td><td class=\"cell-no\">No</td><td class=\"cell-yes\">Yes</td></tr>"
                     "<tr><td>Instance var can override</td><td class=\"cell-yes\">Yes</td><td class=\"cell-no\">No</td></tr>"
                     "</table>"
+                    "<p style=\"font-size:12px;margin:8px 0 6px;line-height:1.5\">"
+                    "<b>When use non-data?</b> When you only want to customize <b>read</b> "
+                    "(default / lazy / log), and it’s OK if a normal assignment "
+                    "<b>overrides</b> the helper afterward."
+                    "</p>"
+                    + io_split(
+                        "class DefaultTitle:\n"
+                        "    def __get__(self, obj, owner):\n"
+                        "        # only runs until someone assigns obj.title = ...\n"
+                        "        # usual (with __set_name__ + store): return obj.__dict__.get(self.name)\n"
+                        '        return obj.__dict__.get("title", "Untitled")\n'
+                        "\n"
+                        "class Doc:\n"
+                        "    title = DefaultTitle()     # non-data: no __set__\n"
+                        "\n"
+                        "d = Doc()\n"
+                        "print(d.title)        # __get__ → default\n"
+                        'd.title = "Report"    # normal write — OK, no validation\n'
+                        "print(d.title)        # instance value",
+                        {11: "Untitled", 13: "Report"},
+                    )
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Real examples of non-data:</b> "
+                    "plain functions on a class, <code>@staticmethod</code>, "
+                    "<code>@classmethod</code> — they use <code>__get__</code> only, "
+                    "so you can still assign an instance attribute of the same name if needed. "
+                    "<b>Need validation on every write?</b> Use a <b>data</b> descriptor "
+                    "(or <code>@property</code> with a setter)."
+                    "</p>"
                     '<p class="step-result"><b>Memory trick:</b> '
-                    "Non-data = read helper only · Data = read + write helper · "
-                    "<code>@property</code> = data.</p>"
+                    "Non-data = read helper only (write can override) · "
+                    "Data = read + write helper · "
+                    "<code>@property</code> with setter = data.</p>"
                 ),
             },
             {
-                "title": "Step 4 — Why __dict__? (store without recursion)",
+                "title": "Step 5 — Why __dict__? (store without recursion)",
                 "body": (
                     "Every instance has <code>__dict__</code> — the object’s storage bag "
                     "(name → value). Descriptors must write <b>here</b>, or they call themselves again."
@@ -859,55 +965,11 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "guard = descriptor · cupboard storage = <code>__dict__</code>.</p>"
                 ),
             },
-            {
-                "title": "Step 5 — @property is a data descriptor",
-                "body": (
-                    "<code>@property</code> + <code>@age.setter</code> creates a built-in "
-                    "<b>data</b> descriptor. "
-                    "Read → <code>property.__get__</code>; write → <code>property.__set__</code>."
-                    + io_split(
-                        "class Student:\n"
-                        "    def __init__(self):\n"
-                        "        self._age = 0\n"
-                        "\n"
-                        "    @property\n"
-                        "    def age(self):                # __get__\n"
-                        "        return self._age\n"
-                        "\n"
-                        "    @age.setter\n"
-                        "    def age(self, value):         # __set__\n"
-                        "        if value < 0:\n"
-                        '            raise ValueError("age cannot be negative")\n'
-                        "        self._age = value\n"
-                        "\n"
-                        "s = Student()\n"
-                        "s.age = 20\n"
-                        "print(s.age)\n"
-                        "try:\n"
-                        "    s.age = -5\n"
-                        "except ValueError as e:\n"
-                        "    print(type(e).__name__)",
-                        {17: "20", 21: "ValueError"},
-                    )
-                    + '<table class="data-tbl" style="margin-top:8px">'
-                    "<tr><th>Remember</th><th>Meaning</th></tr>"
-                    "<tr><td>Descriptor</td><td>Helper that controls an attribute</td></tr>"
-                    "<tr><td><code>__get__</code></td><td>Runs on read</td></tr>"
-                    "<tr><td><code>__set__</code></td><td>Runs on write</td></tr>"
-                    "<tr><td>Non-data</td><td>Read helper only</td></tr>"
-                    "<tr><td>Data</td><td>Read + write helper</td></tr>"
-                    "<tr><td><code>@property</code></td><td>Built-in data descriptor</td></tr>"
-                    "</table>"
-                    '<p class="step-result"><b>One-line:</b> '
-                    "A descriptor sits between your code and an attribute so Python can control "
-                    "read / write / delete.</p>"
-                ),
-            },
         ],
         "interview_qa": [
+            {"q": "Is @property a descriptor?", "a": "Yes — start here. Built-in <b>data</b> descriptor: getter → <code>__get__</code>, setter → <code>__set__</code>."},
             {"q": "What is a descriptor in one line?", "a": "A helper object that sits between your code and an attribute and controls how it is read, written, or deleted."},
             {"q": "Non-data vs data descriptor?", "a": "Non-data has only <code>__get__</code> — a normal instance write can bypass it. Data has <code>__set__</code> too — every assignment goes through the helper (can validate)."},
-            {"q": "Is @property a descriptor?", "a": "Yes — a built-in <b>data</b> descriptor. Getter → <code>__get__</code>, setter → <code>__set__</code>."},
             {"q": "Why use obj.__dict__ inside __set__?", "a": "To store the value without calling the descriptor again. <code>obj.price = value</code> inside <code>__set__</code> causes infinite recursion."},
             {"q": "When custom descriptor instead of @property?", "a": "When the same validation/access logic must be reused across many classes or fields (ORM-style columns)."},
         ],
