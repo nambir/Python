@@ -243,8 +243,10 @@ print(a.Toy())                      # method Toy
 <h3>Key terms explained</h3>
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
-<tr><td>Descriptor</td><td>Object defining <code>__get__</code>, <code>__set__</code>, <code>__delete__</code> for attribute access.</td><td>advanced pattern</td></tr>
-<tr><td>@property</td><td>Built-in descriptor — read-only or managed attribute. __CSHARP_PROPERTY_BTN__</td><td><code>@property def age:</code></td></tr>
+<tr><td>Descriptor</td><td>Helper object (security guard) that controls how an attribute is read/written/deleted via <code>__get__</code>, <code>__set__</code>, <code>__delete__</code>.</td><td><code>price = PositiveNumber()</code></td></tr>
+<tr><td>@property</td><td>Built-in <b>data</b> descriptor — managed attribute. __CSHARP_PROPERTY_BTN__</td><td><code>@property def age:</code></td></tr>
+<tr><td>Non-data descriptor</td><td>Only <code>__get__</code> — write can bypass (instance var wins).</td><td>read helper only</td></tr>
+<tr><td>Data descriptor</td><td><code>__get__</code> + <code>__set__</code> — every write goes through the helper.</td><td>can validate assignments</td></tr>
 <tr><td>Getter</td><td>Method called when attribute is read.</td><td><code>def temp(self): return self._t</code></td></tr>
 <tr><td>Setter</td><td>Method called when attribute is assigned — validate here.</td><td><code>@temp.setter</code></td></tr>
 <tr><td>Managed attribute</td><td>Looks like field, runs code on get/set.</td><td><code>c.temp = 25</code></td></tr>

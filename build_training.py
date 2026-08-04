@@ -10,7 +10,7 @@ from slide_scenarios import scenarios_for
 from slide_diagrams import diagram_for
 from slide_flowcharts import flowchart_for
 from slide_real_life import real_life_for
-from slide_csharp_popups import render_csharp_popups
+from slide_csharp_popups import csharp_compare_btn, render_csharp_popups
 from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, mark_important_in_step_pres, split_learn
 from slide_io import convert_input_output_pres
 from notes_slides import (
@@ -39,6 +39,9 @@ html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Ge
 
 h3 { font-size: 15px; color: #0066cc; margin: 10px 0 6px; }
 p { font-size: 13px; line-height: 1.5; margin-bottom: 6px; }
+.def-block { font-size: 13px; line-height: 1.55; margin-bottom: 8px; color: #1a1a2e; }
+.def-block ul { margin: 6px 0 0 18px; }
+.def-block li { font-size: 12px; line-height: 1.5; margin-bottom: 4px; }
 ul { margin: 0 0 8px 18px; }
 li { font-size: 12px; line-height: 1.45; margin-bottom: 2px; }
 code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; background: #f0f7ff; padding: 1px 4px; border-radius: 3px; }
@@ -148,7 +151,9 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 .mc-good .mc-lbl { background: #f0fff4; color: #276749; }
 .mc-col .step-pre { margin: 0; border-radius: 0; border: none; border-top: 1px solid #e2e8f0; font-size: 11px; padding: 6px 8px; line-height: 1.5; }
 .io-split {
-  display: grid; grid-template-columns: 1.35fr 1fr; gap: 0; margin: 8px 0;
+  display: grid;
+  grid-template-columns: minmax(0, var(--io-left, 58%)) 10px minmax(0, 1fr);
+  gap: 0; margin: 8px 0;
   border: 1px solid #cbd5e1; border-radius: 5px; overflow: hidden; background: #fff;
 }
 .io-split .io-lbl {
@@ -157,8 +162,22 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 }
 .io-split .io-in .io-lbl { background: #eff6ff; color: #1d4ed8; }
 .io-split .io-out .io-lbl { background: #f0fdf4; color: #166534; }
-.io-split .io-in { border-right: 2px solid #f87171; min-width: 0; }
+.io-split .io-in { min-width: 0; border-right: none; }
 .io-split .io-out { min-width: 0; background: #f8fafc; }
+.io-split-divider {
+  width: 10px; cursor: col-resize; align-self: stretch; min-height: 80px;
+  position: relative; z-index: 4; touch-action: none; user-select: none;
+  background: transparent; flex-shrink: 0;
+}
+.io-split-divider::before {
+  content: ""; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px;
+  background: #f87171; border-radius: 1px; transition: background .15s, width .15s, left .15s;
+}
+.io-split-divider:hover::before,
+.io-split-divider.dragging::before {
+  background: #dc2626; width: 3px; left: 3.5px;
+}
+body.io-split-dragging { cursor: col-resize; user-select: none; }
 .io-split .step-pre {
   margin: 0; border: none; border-radius: 0; background: transparent;
   white-space: pre; overflow-x: auto; line-height: 1.45; font-size: 11px;
@@ -166,8 +185,11 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 .real-life .io-split { border-color: #bbf7d0; }
 .mc-col .io-split { margin: 0; border: none; border-radius: 0; border-top: 1px solid #e2e8f0; }
 .mc-col .io-split .io-lbl { border-radius: 0; }
-@media (max-width: 900px) {
+/* Keep INPUT | OUTPUT side-by-side in narrow Cursor browser / split panes.
+   Only stack on very small phones. */
+@media (max-width: 420px) {
   .io-split { grid-template-columns: 1fr; }
+  .io-split-divider { display: none; }
   .io-split .io-in { border-right: none; border-bottom: 2px solid #f87171; }
 }
 .mistake-note { font-size: 11px; color: #555; margin-top: 4px; }
@@ -877,6 +899,56 @@ function endSplitDrag() {
 }
 document.addEventListener('pointerup', endSplitDrag);
 document.addEventListener('pointercancel', endSplitDrag);
+
+const IO_SPLIT_KEY = 'pythonTrainingIoSplitLeft';
+let ioSplitDragging = null;
+function getSavedIoSplit() {
+  const v = parseFloat(localStorage.getItem(IO_SPLIT_KEY) || '');
+  return (Number.isFinite(v) && v >= 20 && v <= 85) ? v : 58;
+}
+function applyIoSplitTo(split, pct) {
+  if (!split) return;
+  split.style.setProperty('--io-left', pct + '%');
+}
+function applySavedIoSplits(root) {
+  const pct = getSavedIoSplit();
+  (root || document).querySelectorAll('.io-split').forEach(s => applyIoSplitTo(s, pct));
+}
+function initIoSplitDividers() {
+  document.querySelectorAll('.io-split-divider').forEach(div => {
+    if (div.dataset.ioSplitReady) return;
+    div.dataset.ioSplitReady = '1';
+    div.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      const split = div.closest('.io-split');
+      if (!split) return;
+      const rect = split.getBoundingClientRect();
+      ioSplitDragging = { split, div, left: rect.left, width: rect.width };
+      div.classList.add('dragging');
+      document.body.classList.add('io-split-dragging');
+      try { div.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+}
+document.addEventListener('pointermove', e => {
+  if (!ioSplitDragging) return;
+  const { split, left, width } = ioSplitDragging;
+  if (width < 60) return;
+  let pct = ((e.clientX - left) / width) * 100;
+  pct = Math.max(20, Math.min(85, pct));
+  applyIoSplitTo(split, pct);
+  localStorage.setItem(IO_SPLIT_KEY, String(Math.round(pct * 10) / 10));
+});
+function endIoSplitDrag() {
+  if (!ioSplitDragging) return;
+  ioSplitDragging.div.classList.remove('dragging');
+  document.body.classList.remove('io-split-dragging');
+  ioSplitDragging = null;
+}
+document.addEventListener('pointerup', endIoSplitDrag);
+document.addEventListener('pointercancel', endIoSplitDrag);
 let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
 let csharpResize = { active: false, win: null, startX: 0, startY: 0, origW: 0, origH: 0 };
 
@@ -1019,6 +1091,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initPyEditorTopResize();
     initSplitDividers();
     applySavedSplit(document);
+    initIoSplitDividers();
+    applySavedIoSplits(document);
   } catch (err) { console.warn('editor init', err); }
   const h = (location.hash || '').replace('#', '');
   let start = 0;
@@ -1445,8 +1519,12 @@ def audio_bar(n: int) -> str:
 
 def slide_hdr(n, title):
     meta = TRAINING_META.get(n, {})
-    sub = meta.get("definition", "")[:100]
-    if len(meta.get("definition", "")) > 100:
+    raw = meta.get("definition", "")
+    # Subtitle must be plain text — truncating HTML (e.g. open <b>) leaks styles to the whole slide.
+    plain = re.sub(r"<[^>]+>", " ", raw)
+    plain = re.sub(r"\s+", " ", plain).strip()
+    sub = plain[:100]
+    if len(plain) > 100:
         sub += "…"
     return f'''<div class="slide-hdr">
   <div class="slide-meta">Slide {n} of {TOTAL_SLIDES} &middot; {module_for(n)}</div>
@@ -1463,7 +1541,7 @@ def topic_intro(n):
         return ""
     parts = []
     if meta.get("definition"):
-        parts.append(f'<h3>Definition</h3><p>{meta["definition"]}</p>')
+        parts.append(f'<h3>Definition</h3><div class="def-block">{meta["definition"]}</div>')
         # Decision flowchart sits right under Definition (all week slides)
         parts.append(flowchart_for(n))
         # Diagram sits after flowchart, then glossary and real-life example
@@ -3962,6 +4040,7 @@ print(c2.items)   # []  ← correct</div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> <code>@classmethod</code> receives what as its first argument?
+    ''' + csharp_compare_btn("classmethod-factory") + '''
     <details class="quiz-ans"><summary>Show answer</summary>
       <div class="quiz-reveal"><code>cls</code> &mdash; the <b>class itself</b>, not an instance. Used for alternative constructors.
 <table class="data-tbl" style="margin:8px 0">
@@ -3985,51 +4064,297 @@ class Person:
     @classmethod
     def from_birth_year(cls, name, year):
         age = 2026 - year
-        return cls(name, age)    # builds a Person — same as Person(name, age)
+        return cls(name, age)    # SAME as: return Person(name, age)
 
-# --- using classmethod (no instance yet) ---
-p = Person.from_birth_year("Anu", 2000)   # Python passes Person as cls
+# Two ways to create the SAME kind of instance:
+# A) normal constructor
+# p = Person("Anu", 26)
 
-# --- using normal method (needs instance p) ---
-print(p.greet())                          # Python passes p as self
+# B) classmethod factory (computes age for you, then still calls __init__)
+p = Person.from_birth_year("Anu", 2000)
+# inside: cls(name, age) → Person("Anu", 26) → p IS a Person instance
+
+print(type(p).__name__)                   # Person — yes, an instance
+print(p.greet())                          # works because p is a real Person
 print(p.name, p.age)
 
 # OUTPUT
+Person
 Hi, I am Anu, 26
 Anu 26
-# self  → one Person object (p)
-# cls   → the Person class (to construct another object)</div>
+# p is an instance either way.
+# classmethod only changes HOW we create it (year → age), not WHAT p is.</div>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>Why not write <code>Person("Anu", 26)</code>?</b> You can — both are fine.
+<code>from_birth_year</code> is an <b>extra door</b> into the same class when you have a birth year instead of age.
+Inside it still builds a normal instance with <code>cls(...)</code> / <code>Person(...)</code>, so <code>p.greet()</code> works.
+</p>
       </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>@staticmethod</code> receives?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">No implicit first argument &mdash; it&apos;s a plain function namespaced inside the class.</div>
+      <div class="quiz-reveal">No implicit first argument &mdash; it&apos;s a plain function namespaced inside the class.
+<table class="data-tbl" style="margin:8px 0">
+<tr><th></th><th>Normal method</th><th><code>@staticmethod</code></th></tr>
+<tr><td><b>First arg</b></td><td><code>self</code> = this object</td><td>None automatic — just your parameters</td></tr>
+<tr><td><b>Can use</b></td><td><code>self.name</code>, instance data</td><td>Only arguments you pass (no <code>self</code>/<code>cls</code>)</td></tr>
+<tr><td><b>Called as</b></td><td><code>p.is_adult()</code> (needs instance)</td><td><code>Person.is_valid_age(20)</code> or <code>p.is_valid_age(20)</code></td></tr>
+<tr><td><b>Purpose</b></td><td>Behaviour of <b>one object</b></td><td>Utility related to the class topic — no object state</td></tr>
+</table>
+<div class="step-pre"># INPUT
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    # NORMAL METHOD — needs the instance (self)
+    def is_adult(self):
+        return self.age &gt;= 18
+
+    # STATIC METHOD — plain function living in the class
+    @staticmethod
+    def is_valid_age(age):
+        return 0 &lt;= age &lt;= 120   # no self / no cls
+
+p = Person("Anu", 26)
+
+print(p.is_adult())                 # uses p.age → True
+print(Person.is_valid_age(26))      # call on class — OK
+print(p.is_valid_age(-1))           # call on instance — also OK
+print(Person.is_adult())            # TypeError — needs an instance
+
+# OUTPUT
+True
+True
+False
+# TypeError: Person.is_adult() missing 1 required positional argument: 'self'
+# static = helper with no object; normal = uses this object's data</div>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>Quick pick:</b> need <code>self.xxx</code>? → normal method.
+Need the <b>class</b> to build an object? → <code>@classmethod</code>.
+Just a helper that fits the class topic? → <code>@staticmethod</code>.
+</p>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>__str__</code> vs <code>__repr__</code> — which is for developers?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>__repr__</code> is for unambiguous developer representation. <code>__str__</code> is for end-user readable output.</div>
+      <div class="quiz-reveal"><code>__repr__</code> is for unambiguous <b>developer</b> representation. <code>__str__</code> is for <b>end-user</b> readable output.
+<table class="data-tbl" style="margin:8px 0">
+<tr><th></th><th><code>__str__</code></th><th><code>__repr__</code></th></tr>
+<tr><td><b>Audience</b></td><td>Humans / UI / logs for users</td><td>Developers / debugger / REPL</td></tr>
+<tr><td><b>Triggered by</b></td><td><code>print(obj)</code>, <code>str(obj)</code></td><td><code>repr(obj)</code>, interactive shell, many debuggers</td></tr>
+<tr><td><b>Goal</b></td><td>Nice to read</td><td>Clear / ideally recreates the object</td></tr>
+</table>
+<div class="step-pre"># INPUT — production-style domain model
+class Order:
+    def __init__(self, order_id, customer, total):
+        self.order_id = order_id
+        self.customer = customer
+        self.total = total
+
+    def __str__(self):
+        # user / email / admin UI / simple log line
+        return f"Order #{self.order_id} for {self.customer} — ${self.total:.2f}"
+
+    def __repr__(self):
+        # developer / debugger / Sentry / logging %r
+        return (
+            f"Order(order_id={self.order_id!r}, "
+            f"customer={self.customer!r}, total={self.total!r})"
+        )
+
+o = Order(42, "Anu", 99.5)
+
+# --- __str__ paths (friendly) ---
+print(o)                              # print → __str__
+print(str(o))                         # explicit str
+print(f"Email body: {o}")             # f-string uses __str__
+
+# --- __repr__ paths (debug) ---
+print(repr(o))                        # explicit repr
+print([o])                            # list uses __repr__
+print("debug: %r" % o)                # logging-style %r → __repr__
+
+# OUTPUT
+Order #42 for Anu — $99.50
+Order #42 for Anu — $99.50
+Email body: Order #42 for Anu — $99.50
+Order(order_id=42, customer='Anu', total=99.5)
+[Order(order_id=42, customer='Anu', total=99.5)]
+debug: Order(order_id=42, customer='Anu', total=99.5)
+# __str__ → humans; __repr__ → developers / tools</div>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>Tip:</b> If only <code>__repr__</code> exists, <code>print</code> falls back to it.
+Best practice: define both — <code>__str__</code> nice, <code>__repr__</code> precise.
+</p>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>Used in real production?</b> <b>Yes.</b>
+<code>__str__</code> → user messages, emails, admin UI, simple logs (“Order #42 for Anu”).
+<code>__repr__</code> → debugging, Sentry/stack traces, <code>logging</code> with <code>%r</code>, REPL, and when lists/dicts print objects.
+Teams often implement at least <code>__repr__</code> on domain models (Order, User, Invoice) so logs are readable.
+</p>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> <code>super().__init__()</code> — when is it needed?
+    ''' + csharp_compare_btn("super-init") + '''
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">When inheriting and overriding <code>__init__</code>, to run the <b>parent class&apos;s</b> initialisation code.</div>
+      <div class="quiz-reveal">When the <b>child defines its own</b> <code>__init__</code> and still needs the
+<b>parent&apos;s</b> initialisation (shared attributes / setup).
+If the child has <b>no</b> <code>__init__</code>, the parent&apos;s runs automatically — no <code>super()</code> needed.
+<table class="data-tbl" style="margin:8px 0">
+<tr><th>Situation</th><th>Need <code>super().__init__</code>?</th><th>Why</th></tr>
+<tr><td>Child has no <code>__init__</code></td><td><b>No</b></td><td>Parent <code>__init__</code> already runs</td></tr>
+<tr><td>Child <code>__init__</code> + needs parent attrs</td><td><b>Yes</b></td><td>Child override skips parent unless you call it</td></tr>
+<tr><td>Child fully replaces setup (rare)</td><td>Usually still yes</td><td>Skipping parent often leaves broken objects</td></tr>
+</table>
+<div class="step-pre"># INPUT
+class Animal:
+    def __init__(self, name):
+        self.name = name          # parent sets shared state
+
+class DogBad(Animal):
+    def __init__(self, name, breed):
+        # forgot super().__init__(name)
+        self.breed = breed
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)   # run Animal.__init__ first
+        self.breed = breed       # then child-only state
+
+# --- without super (broken) ---
+bad = DogBad("Rex", "Lab")
+try:
+    _ = bad.name                 # raises — no print here
+except AttributeError as e:
+    print(type(e).__name__ + ": no name — parent __init__ never ran")
+
+# --- with super (correct) ---
+d = Dog("Rex", "Lab")
+print(d.name, d.breed)
+
+# child with NO __init__ — parent runs alone, no super needed
+class Cat(Animal):
+    pass
+
+c = Cat("Mittens")
+print(c.name)
+
+# OUTPUT
+AttributeError: no name — parent __init__ never ran
+Rex Lab
+Mittens
+# Rule: override __init__? call super().__init__(...) unless you truly replace all parent setup.</div>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>C# twin:</b> <code>public Dog(string name, string breed) : base(name) { ... }</code>
+— <code>: base(...)</code> is the same idea as <code>super().__init__(...)</code>.
+</p>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>@property</code> turns a method into?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A read-only attribute that can be accessed without calling parentheses: <code>obj.value</code> instead of <code>obj.value()</code>.</div>
+      <div class="quiz-reveal">A read-only attribute that can be accessed <b>without parentheses</b>:
+<code>obj.value</code> instead of <code>obj.value()</code>.
+<table class="data-tbl" style="margin:8px 0">
+<tr><th></th><th>Normal method</th><th><code>@property</code></th></tr>
+<tr><td><b>Call</b></td><td><code>c.area()</code></td><td><code>c.area</code> (no <code>()</code>)</td></tr>
+<tr><td><b>Looks like</b></td><td>an action</td><td>a field / computed value</td></tr>
+<tr><td><b>Typical use</b></td><td>do something</td><td>read derived / validated data</td></tr>
+</table>
+<div class="step-pre"># INPUT
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    # NORMAL METHOD — needs ()
+    def area_method(self):
+        return 3.14 * self._radius ** 2
+
+    # PROPERTY — accessed like an attribute
+    @property
+    def area(self):
+        return 3.14 * self._radius ** 2
+
+c = Circle(10)
+print(c.area_method())   # method — needs ()
+print(c.area)            # property — NO ()
+print(type(c.area).__name__)
+
+# OUTPUT
+314.0
+314.0
+float
+# Tip: c.area() would fail — float is not callable. Property already returned the value.</div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> What does <code>ClassName.__mro__</code> show?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">The Method Resolution Order &mdash; the order in which Python searches base classes for methods.</div>
+      <div class="quiz-reveal">The <b>Method Resolution Order</b> &mdash; the order Python searches base classes for methods
+(left → right, then up the chain).
+<div class="step-pre"># INPUT
+class Animal:
+    def speak(self): return "..."
+
+class Dog(Animal):
+    def speak(self): return "woof"
+
+class Cat(Animal):
+    def speak(self): return "meow"
+
+class Pet(Dog, Cat):
+    pass
+
+p = Pet()
+print(p.speak())                           # first match on MRO wins
+print([c.__name__ for c in Pet.__mro__])   # lookup order
+
+# OUTPUT
+woof
+['Pet', 'Dog', 'Cat', 'Animal', 'object']
+# Pet → Dog (found speak → stop). Cat is on the list but unused unless Dog uses super().</div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q8.</b> Difference between <code>__new__</code> and <code>__init__</code>?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>__new__</code> creates the object; <code>__init__</code> initialises it. Override <code>__new__</code> for immutable types like <code>tuple</code> subclasses.</div>
+      <div class="quiz-reveal"><code>__new__</code> <b>creates</b> the object (returns instance);
+<code>__init__</code> <b>initialises</b> it (sets attributes, returns nothing).
+Override <code>__new__</code> mainly for immutable types (e.g. <code>tuple</code> subclasses).
+<table class="data-tbl" style="margin:8px 0">
+<tr><th></th><th><code>__new__</code></th><th><code>__init__</code></th></tr>
+<tr><td><b>When</b></td><td>Before the object exists</td><td>After object is created</td></tr>
+<tr><td><b>Job</b></td><td>Allocate / return instance</td><td>Set <code>self.xxx</code></td></tr>
+<tr><td><b>Returns</b></td><td>the new object</td><td><code>None</code> (always)</td></tr>
+</table>
+<div class="step-pre"># INPUT
+class Demo:
+    def __new__(cls, value):
+        print("1) __new__ creates the object")
+        obj = super().__new__(cls)   # actually make Demo instance
+        return obj
+
+    def __init__(self, value):
+        print("2) __init__ initialises it")
+        self.value = value
+
+d = Demo(42)
+print(d.value)
+
+# OUTPUT
+1) __new__ creates the object
+2) __init__ initialises it
+42
+# Order is always: __new__ first, then __init__. Day-to-day code almost always only needs __init__.</div>
+<p style="margin:6px 0 0;font-size:12px;line-height:1.45">
+<b>When override <code>__new__</code>?</b> Immutable subclasses — e.g. custom <code>tuple</code> —
+because you must build the value <b>during</b> creation, not after.
+</p>
+      </div>
     </details>
   </div>
 </div>

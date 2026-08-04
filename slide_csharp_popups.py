@@ -685,6 +685,157 @@ def _init_constructor_body() -> str:
     )
 
 
+def _classmethod_body() -> str:
+    return (
+        _diff_first(
+            '<code>@classmethod</code> factory<br><code>Person.from_birth_year(...)</code>',
+            'Overloaded constructors<br><code>new Person(...)</code><br>or static factory',
+            "Closest C# idea",
+        )
+        + "<p><b>Yes — same job as an overloaded / alternate constructor</b>, but Python cannot "
+        "overload <code>__init__</code> by signature. Use a <code>@classmethod</code> with a clear name "
+        "(or a <code>@staticmethod</code> factory). C# usually uses <b>constructor overloads</b> "
+        "or a <b>static factory method</b>.</p>"
+        + _py_cs(
+            "Python — one <code>__init__</code> + <code>@classmethod</code> alternate door:",
+            '''class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    @classmethod
+    def from_birth_year(cls, name, year):
+        age = 2026 - year
+        return cls(name, age)   # still builds a Person
+
+p = Person.from_birth_year("Anu", 2000)
+print(p.name, p.age)''',
+            "C# — overloaded constructors (same class, different inputs):",
+            """class Person
+{
+    public string Name { get; }
+    public int Age { get; }
+
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    // alternate constructor — birth year instead of age
+    public Person(string name, int birthYear, bool unused)
+        : this(name, 2026 - birthYear)
+    {
+    }
+}
+
+var p = new Person("Anu", 2000, unused: true);""",
+        )
+        + "<p><b>C# style many teams prefer</b> — named static factory (closest wording to "
+        "<code>from_birth_year</code>):</p>"
+        + vs_editor(
+            """class Person
+{
+    public string Name { get; }
+    public int Age { get; }
+
+    private Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    public static Person FromBirthYear(string name, int year)
+    {
+        return new Person(name, 2026 - year);
+    }
+}
+
+var p = Person.FromBirthYear("Anu", 2000);""",
+            lang="csharp",
+            compact=True,
+        )
+        + _note(
+            "<code>@classmethod</code> ≈ C# <b>named static factory</b> / <b>extra constructor overload</b>. "
+            "It still returns a normal instance, so <code>p.Greet()</code> / <code>p.greet()</code> works."
+        )
+    )
+
+
+def _super_init_body() -> str:
+    return (
+        _diff_first(
+            "<code>super().__init__(name)</code><br>inside child <code>__init__</code>",
+            "<code>: base(name)</code><br>on the child constructor",
+            "Closest C# idea",
+        )
+        + """
+<p><b>When is it needed?</b> Only when the <b>child defines its own</b>
+<code>__init__</code> / constructor <b>and</b> still needs the parent’s setup
+(attributes, validation, shared state). If the child has no
+<code>__init__</code>, the parent’s runs automatically — no
+<code>super()</code> call.</p>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Situation</th><th>Python</th><th>C#</th></tr>
+<tr>
+  <td>Child has no constructor</td>
+  <td>Parent <code>__init__</code> runs alone</td>
+  <td>Parent ctor runs alone</td>
+</tr>
+<tr>
+  <td>Child adds fields + needs parent fields</td>
+  <td><code>super().__init__(...)</code> then set child attrs</td>
+  <td><code>: base(...)</code> then set child fields</td>
+</tr>
+<tr>
+  <td>Skip parent init (usually a bug)</td>
+  <td>Parent attrs missing → <code>AttributeError</code></td>
+  <td>Must call a base ctor (compiler enforces if no parameterless base)</td>
+</tr>
+</table>
+"""
+        + _py_cs(
+            "Python — child <code>__init__</code> must call <code>super().__init__</code>:",
+            '''class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)   # run Animal.__init__
+        self.breed = breed
+
+d = Dog("Rex", "Lab")
+print(d.name, d.breed)           # Rex Lab''',
+            "C# — child constructor chains with <code>: base(...)</code>:",
+            """class Animal
+{
+    public string Name { get; }
+    public Animal(string name) { Name = name; }
+}
+
+class Dog : Animal
+{
+    public string Breed { get; }
+
+    // : base(name) ≈ super().__init__(name)
+    public Dog(string name, string breed) : base(name)
+    {
+        Breed = breed;
+    }
+}
+
+var d = new Dog("Rex", "Lab");
+Console.WriteLine($"{d.Name} {d.Breed}");  // Rex Lab""",
+        )
+        + _note(
+            "<code>super().__init__(...)</code> ≈ C# <code>: base(...)</code>. "
+            "Both mean: finish parent setup first, then add child-specific state. "
+            "Python will not auto-call parent <code>__init__</code> if the child defines its own."
+        )
+    )
+
+
 def _inheritance_body() -> str:
     return (
         _py_cs(
@@ -1325,6 +1476,123 @@ if (!result.IsValid)
 """
 
 
+def _dunder_methods_body() -> str:
+    return (
+        _diff_first(
+            "<code>__str__</code> / <code>__repr__</code> / "
+            "<code>__eq__</code> / <code>__len__</code>",
+            "<code>ToString()</code> / debug display / "
+            "<code>Equals</code> / <code>.Count</code>",
+            "Dunder ≈ C# operator / override hooks",
+        )
+        + """
+<p><b>Dunder</b> = double underscore. Python calls these when you use built-ins
+(<code>print</code>, <code>==</code>, <code>len</code>). C# uses method overrides and properties
+instead of magic names.</p>
+<table class="data-tbl csharp-pop-tbl">
+<tr><th>Python</th><th>Triggered by</th><th>C# twin</th></tr>
+<tr>
+  <td><code>__str__</code></td>
+  <td><code>print(obj)</code>, <code>str(obj)</code>, f-strings</td>
+  <td><code>ToString()</code> — friendly display</td>
+</tr>
+<tr>
+  <td><code>__repr__</code></td>
+  <td><code>repr(obj)</code>, debugger, lists</td>
+  <td>No exact twin — often richer <code>ToString()</code>,
+  <code>[DebuggerDisplay]</code>, or a dedicated debug dump</td>
+</tr>
+<tr>
+  <td><code>__eq__</code></td>
+  <td><code>a == b</code></td>
+  <td><code>Equals</code> + often <code>operator ==</code> /
+  <code>IEquatable&lt;T&gt;</code> (and <code>GetHashCode</code>)</td>
+</tr>
+<tr>
+  <td><code>__len__</code></td>
+  <td><code>len(obj)</code></td>
+  <td><code>.Count</code> / <code>.Length</code> property
+  (no global <code>len()</code>)</td>
+</tr>
+</table>
+"""
+        + _py_cs(
+            "Python — Order with four dunders:",
+            '''class Order:
+    def __init__(self, order_id, customer, items):
+        self.order_id = order_id
+        self.customer = customer
+        self.items = items
+
+    def __str__(self):
+        return f"Order #{self.order_id} for {self.customer}"
+
+    def __repr__(self):
+        return f"Order(order_id={self.order_id!r}, ...)"
+
+    def __eq__(self, other):
+        if not isinstance(other, Order):
+            return NotImplemented
+        return self.order_id == other.order_id
+
+    def __len__(self):
+        return len(self.items)
+
+o = Order(42, "Anu", ["pen", "notebook"])
+print(o)          # __str__
+print(o == Order(42, "X", []))  # __eq__
+print(len(o))     # __len__''',
+            "C# — same ideas with ToString / Equals / Count:",
+            """class Order : IEquatable<Order>
+{
+    public int OrderId { get; }
+    public string Customer { get; }
+    public List<string> Items { get; }
+
+    public Order(int orderId, string customer, List<string> items)
+    {
+        OrderId = orderId;
+        Customer = customer;
+        Items = items;
+    }
+
+    // like __str__ (and often also used as debug text)
+    public override string ToString()
+        => $"Order #{OrderId} for {Customer}";
+
+    // like __eq__
+    public bool Equals(Order? other)
+        => other is not null && OrderId == other.OrderId;
+
+    public override bool Equals(object? obj)
+        => Equals(obj as Order);
+
+    public override int GetHashCode() => OrderId.GetHashCode();
+
+    public static bool operator ==(Order? a, Order? b)
+        => a is null ? b is null : a.Equals(b);
+
+    public static bool operator !=(Order? a, Order? b) => !(a == b);
+
+    // like __len__ — property, not len(order)
+    public int Count => Items.Count;
+}
+
+var o = new Order(42, "Anu", new() { "pen", "notebook" });
+Console.WriteLine(o);                 // ToString
+Console.WriteLine(o == new Order(42, "X", new()));  // Equals
+Console.WriteLine(o.Count);           // Count""",
+        )
+        + _note(
+            "<code>__str__</code> ≈ <code>ToString()</code>. "
+            "<code>__eq__</code> ≈ <code>Equals</code> (+ <code>==</code>). "
+            "<code>__len__</code> ≈ <code>.Count</code>. "
+            "<code>__repr__</code> has no single C# twin — keep debug detail in "
+            "<code>ToString</code> or a debugger attribute."
+        )
+    )
+
+
 def _oop_body() -> str:
     return f"""
 {_diff_first(
@@ -1475,6 +1743,8 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "mutable-default": ("C# Comparison — Mutable Default Trap", _mutable_default_body),
     "self-this": ("C# Comparison — self vs this", _self_this_body),
     "init-constructor": ("C# Comparison — __init__ vs Constructor", _init_constructor_body),
+    "classmethod-factory": ("C# Comparison — @classmethod vs Overloaded Constructor", _classmethod_body),
+    "super-init": ("C# Comparison — super().__init__ vs : base(...)", _super_init_body),
     "inheritance": ("C# Comparison — Inheritance", _inheritance_body),
     "yield-return": ("C# Comparison — yield vs yield return", _yield_return_body),
     "decorator-attribute": ("C# Comparison — Decorators vs Attributes", _decorator_body),
@@ -1491,6 +1761,7 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "ordereddict-dict": ("C# Comparison — OrderedDict vs Dictionary", _ordereddict_body),
     "memory-gc": ("C# Comparison — Memory: refcount, GC, weakref, del", _memory_gc_body),
     "pydantic-validation": ("C# Comparison — Pydantic vs DataAnnotations / FluentValidation", _pydantic_body),
+    "dunder-methods": ("C# Comparison — Dunder methods vs ToString / Equals / Count", _dunder_methods_body),
     "oop-pillars": ("C# Comparison — OOP: class, self, inheritance, MRO", _oop_body),
 }
 

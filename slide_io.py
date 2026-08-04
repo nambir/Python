@@ -45,6 +45,8 @@ def io_split(
         '<span class="io-lbl"># INPUT</span>'
         f'<div class="step-pre">{code}</div>'
         "</div>"
+        '<div class="io-split-divider" role="separator" aria-orientation="vertical" '
+        'title="Drag to resize INPUT / OUTPUT"></div>'
         '<div class="io-out">'
         f'<span class="io-lbl">{out_label}</span>'
         f'<div class="step-pre">{"\n".join(aligned)}</div>'

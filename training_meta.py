@@ -46,8 +46,29 @@ TRAINING_META = {
         "interview": "A decorator is a function that takes a function and returns a modified function. @timer above def work() is syntactic sugar for work = timer(work). functools.wraps preserves __name__ and __doc__. FastAPI uses decorators for routes: @app.get('/').",
     },
     16: {
-        "definition": "Descriptors control attribute access via __get__, __set__, __delete__. The @property decorator is a built-in descriptor for managed attributes without explicit getter/setter boilerplate.",
-        "interview": "Descriptors power properties, class methods, and static methods internally. @property lets me validate on set: @score.setter def score(self, v): assert v >= 0. Custom descriptors are advanced but show deep Python knowledge.",
+        "definition": (
+            "A <b>descriptor</b> is a <b>helper object</b> (think: security guard) that controls "
+            "how an attribute is <b>read</b>, <b>written</b>, or <b>deleted</b>."
+            "<ul style=\"margin:6px 0 8px 18px;font-size:12px;line-height:1.5\">"
+            "<li><b>Why?</b> Without it, <code>person.age = -20</code> is stored. "
+            "With it, Python asks the helper first and can raise <code>ValueError</code>.</li>"
+            "<li><b>Create in 2 steps:</b> "
+            "(1) helper class with <code>__get__</code> / <code>__set__</code> · "
+            "(2) attach it — <code>price = PositiveNumber()</code> "
+            "(stores a helper, not a number).</li>"
+            "<li><b>Non-data</b> = only <code>__get__</code> (write can bypass).</li>"
+            "<li><b>Data</b> = <code>__get__</code> + <code>__set__</code> "
+            "(every write goes through the guard).</li>"
+            "<li><code>@property</code> is a built-in <b>data</b> descriptor.</li>"
+            "</ul>"
+        ),
+        "interview": (
+            "A descriptor sits between your code and an attribute via __get__/__set__/__delete__. "
+            "Non-data has only __get__ — instance assignment can bypass it. "
+            "Data has __set__ too — validates every write (e.g. price >= 0). "
+            "@property is a built-in data descriptor. Store values in obj.__dict__ inside __set__ "
+            "to avoid infinite recursion."
+        ),
     },
     17: {
         "definition": "Generators (PEP 255) return lazy iterators via yield — you can loop like a list without storing all values in memory. Critical for large files and streams. Generator expressions, infinite sequences, and generator pipelines are common patterns (Real Python).",

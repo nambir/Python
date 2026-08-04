@@ -896,47 +896,49 @@ REAL_LIFE: dict[int, str] = {
         )
     ),
     16: (
-        "<b>ORM-style field:</b> Descriptor rejects negatives — like a C# property setter — "
-        "each step with <b>input → output</b>."
-        "<p><b>1) Descriptor — validate on <code>__set__</code></b><br>"
-        "When you assign <code>p.price = …</code>, Python calls the descriptor's setter.</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "class PositiveDecimal:\n"
-        "    def __set_name__(self, owner, name):\n"
-        "        self.name = name\n"
-        "    def __get__(self, obj, owner):\n"
-        "        return obj.__dict__.get(self.name)\n"
-        "    def __set__(self, obj, value):\n"
-        "        if value &lt; 0:\n"
-        '            raise ValueError("price must be &gt;= 0")\n'
-        "        obj.__dict__[self.name] = value\n"
-        "\n"
-        "class Product:\n"
-        "    price = PositiveDecimal()\n"
-        "\n"
-        "# OUTPUT\n"
-        "(Product.price is now a validated field)"
-        "</div>"
-        "<p><b>2) Valid price — stored</b><br>"
-        "Positive values pass through to the instance dict.</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "p = Product()\n"
-        "p.price = 99\n"
-        "\n"
-        "# OUTPUT\n"
-        "p.price → 99"
-        "</div>"
-        "<p><b>3) Negative price — <code>ValueError</code></b><br>"
-        "Same pattern as a C# property that throws on invalid set.</p>"
-        '<div class="step-pre">'
-        "# INPUT\n"
-        "p.price = -1\n"
-        "\n"
-        "# OUTPUT\n"
-        'ValueError: price must be &gt;= 0'
-        "</div>"
+        "<b>ORM-style field:</b> Descriptor rejects negatives — like a C# property setter. "
+        "<code>price = PositiveDecimal()</code> on <code>Product</code> is the field; "
+        "<code>p.price = …</code> triggers <code>__set__</code>."
+        "<p><b>1) Wire the field on the model</b><br>"
+        "<code>class Product</code> declares <code>price = PositiveDecimal()</code> — "
+        "that is where <code>product.price</code> / <code>p.price</code> comes from.</p>"
+        + io_split(
+            "class PositiveDecimal:\n"
+            "    def __set_name__(self, owner, name):\n"
+            "        self.name = name          # remembers 'price'\n"
+            "    def __get__(self, obj, owner):\n"
+            "        return obj.__dict__.get(self.name)\n"
+            "    def __set__(self, obj, value):\n"
+            "        if value < 0:\n"
+            '            raise ValueError("price must be >= 0")\n'
+            "        obj.__dict__[self.name] = value\n"
+            "\n"
+            "class Product:\n"
+            "    price = PositiveDecimal()    # ← product.price / p.price\n"
+            "\n"
+            "p = Product()\n"
+            "print(type(Product.price).__name__)  # descriptor on the class",
+            {15: "PositiveDecimal"},
+        )
+        + "<p><b>2) Valid price — stored</b><br>"
+        "Assigning <code>p.price = 99</code> calls <code>PositiveDecimal.__set__</code>; "
+        "reading <code>p.price</code> calls <code>__get__</code>.</p>"
+        + io_split(
+            "p = Product()\n"
+            "p.price = 99          # __set__ — OK\n"
+            "print(p.price)        # __get__ → 99",
+            {3: "99"},
+        )
+        + "<p><b>3) Negative price — <code>ValueError</code></b><br>"
+        "Same idea as a C# property setter that throws on invalid values.</p>"
+        + io_split(
+            "p = Product()\n"
+            "try:\n"
+            "    p.price = -1       # __set__ rejects\n"
+            "except ValueError as e:\n"
+            "    print(type(e).__name__ + \":\", e)",
+            {5: "ValueError: price must be >= 0"},
+        )
     ),
     17: (
         "<b>Export 50M+ CSV rows:</b> Stream with yield — avoid MemoryError from read().split() — "
