@@ -496,6 +496,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   max-width: 1400px; width: calc(100vw - 48px);
 }
 .nav-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; overflow: visible; }
+/* Small decks (e.g. Dotnet preview) — one card must not sit in a 1/12 column */
+.nav-section:only-child { grid-column: 1 / -1; max-width: 720px; justify-self: center; width: 100%; }
 .nav-section-1 { grid-column: span 5; }
 .nav-section-2 { grid-column: span 3; }
 .nav-section-3 { grid-column: span 4; }

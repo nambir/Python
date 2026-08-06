@@ -12,7 +12,10 @@ _IO_SPLIT_RE = re.compile(
     r"(?P<out>.*)",
     re.DOTALL | re.IGNORECASE,
 )
-_PRINT_RE = re.compile(r"\b(?:print|announce)\s*\(")
+_PRINT_RE = re.compile(
+    r"\b(?:print|announce)\s*\("
+    r"|Console\s*\.\s*Write(?:Line)?\s*\(",
+)
 
 
 def io_split(
@@ -20,12 +23,19 @@ def io_split(
     out_map: dict[int, str] | None = None,
     *,
     line_outputs: list[str] | None = None,
-    out_label: str = "# OUTPUT (same line as each print)",
+    out_label: str | None = None,
 ) -> str:
     """Render code left / outputs right, aligned by line number (1-based in out_map)."""
     code = code.replace("\r\n", "\n").rstrip("\n")
     lines = code.split("\n")
     n = len(lines)
+
+    if out_label is None:
+        # C# samples use WriteLine; Python uses print
+        if any("Console.Write" in ln for ln in lines):
+            out_label = "# OUTPUT (same line as each WriteLine)"
+        else:
+            out_label = "# OUTPUT (same line as each print)"
 
     if line_outputs is None:
         aligned = [""] * n

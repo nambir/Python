@@ -6,6 +6,7 @@ import html
 import re
 
 _CODE_SNIPPETS: list[str] = []
+_CODE_EXPECTED: dict[int, str] = {}
 _CODE_MARKER = re.compile(r"<!--CODE:(\d+)-->")
 
 _PY_KEYWORDS = {
@@ -141,7 +142,13 @@ def highlight_csharp_line(line: str) -> str:
     return "".join(out) if out else "&#160;"
 
 
-def vs_editor(text: str, lang: str = "python", compact: bool = False, playground: bool = False) -> str:
+def vs_editor(
+    text: str,
+    lang: str = "python",
+    compact: bool = False,
+    playground: bool = False,
+    expected: str | None = None,
+) -> str:
     highlight = highlight_csharp_line if lang == "csharp" else highlight_python_line
     rows = []
     for num, line in enumerate(text.splitlines(), 1):
@@ -155,21 +162,47 @@ def vs_editor(text: str, lang: str = "python", compact: bool = False, playground
     highlighted = (
         f'<div class="vs-editor{compact_cls}"><table class="vs-code"><tbody>\n{body}\n</tbody></table></div>'
     )
-    if not playground or lang != "python":
+    if not playground:
         return highlighted
-    # Editable + runnable panel (Pyodide wired in the HTML page)
     src = html.escape(text)
+    if lang == "python":
+        # Editable + runnable panel (Pyodide wired in the HTML page)
+        return (
+            '<div class="code-playground" data-lang="python">'
+            '<div class="code-toolbar">'
+            '<span class="code-toolbar-label">Code editor</span>'
+            '<button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button>'
+            '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
+            '<span class="py-status"></span>'
+            "</div>"
+            '<div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div>'
+            f'<textarea class="py-editor" spellcheck="false">{src}</textarea>'
+            '<pre class="py-output" hidden></pre>'
+            '<details class="py-highlight" open><summary>Syntax-colored view</summary>'
+            '<div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div>'
+            f"{highlighted}"
+            "</details>"
+            "</div>"
+        )
+    # C#: expected OUTPUT in-page + SharpLab for live Run
+    exp = (expected or "").rstrip("\n")
+    exp_attr = html.escape(exp, quote=True)
+    exp_html = html.escape(exp) if exp else "(no expected output yet — use SharpLab to Run)"
+    out_hidden = "" if exp else " hidden"
     return (
-        '<div class="code-playground">'
+        '<div class="code-playground" data-lang="csharp">'
         '<div class="code-toolbar">'
-        '<span class="code-toolbar-label">Code editor</span>'
-        '<button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button>'
+        '<span class="code-toolbar-label">Code editor (C#)</span>'
+        '<button type="button" class="btn-run-py" onclick="showExpectedOutput(this)" title="Show expected console output">&#9654; Expected</button>'
+        '<button type="button" class="btn-run-py" style="background:#512bd4" onclick="openSharpLab(this)" title="Open SharpLab — paste &amp; Run for live result">SharpLab</button>'
         '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
-        '<span class="py-status"></span>'
+        '<button type="button" class="btn-reset-py" onclick="copyPlayground(this)">Copy</button>'
+        '<span class="py-status">Expected below · SharpLab = live Run</span>'
         "</div>"
         '<div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div>'
-        f'<textarea class="py-editor" spellcheck="false">{src}</textarea>'
-        '<pre class="py-output" hidden></pre>'
+        f'<textarea class="py-editor" spellcheck="false" data-lang="csharp" data-expected="{exp_attr}">{src}</textarea>'
+        f'<div class="py-output-label" style="font-size:11px;font-weight:700;padding:4px 10px;background:#f0fdf4;color:#166534;border-top:1px solid #bbf7d0">OUTPUT (expected)</div>'
+        f'<pre class="py-output"{out_hidden} data-expected="1">{exp_html}</pre>'
         '<details class="py-highlight" open><summary>Syntax-colored view</summary>'
         '<div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div>'
         f"{highlighted}"
@@ -360,17 +393,24 @@ def highlight_step_pres(html_text: str, lang: str = "python") -> str:
     return _STEP_PRE_RE.sub(_repl, html_text)
 
 
-def code(text: str) -> str:
+def code(text: str, *, expected: str | None = None) -> str:
     idx = len(_CODE_SNIPPETS)
     _CODE_SNIPPETS.append(text)
+    if expected is not None:
+        _CODE_EXPECTED[idx] = expected
     return f"<!--CODE:{idx}-->"
 
 
-def code_table(idx: int) -> str:
-    return vs_editor(_CODE_SNIPPETS[idx], lang="python", playground=True)
+def code_table(idx: int, lang: str = "python") -> str:
+    return vs_editor(
+        _CODE_SNIPPETS[idx],
+        lang=lang,
+        playground=True,
+        expected=_CODE_EXPECTED.get(idx),
+    )
 
 
-def split_learn(learn: str) -> tuple[str, str]:
+def split_learn(learn: str, lang: str = "python") -> tuple[str, str]:
     notes_parts: list[str] = []
     code_parts: list[str] = []
     chunks = _CODE_MARKER.split(learn)
@@ -378,7 +418,7 @@ def split_learn(learn: str) -> tuple[str, str]:
         if i % 2 == 0:
             notes_parts.append(chunk)
         else:
-            code_parts.append(code_table(int(chunk)))
+            code_parts.append(code_table(int(chunk), lang=lang))
     return "".join(notes_parts), "\n".join(code_parts)
 
 
