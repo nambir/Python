@@ -121,10 +121,27 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
 .mistake-box code { background: #ffe4e4; color: #c53030; border-radius: 3px; padding: 0 2px; }
 .mistake-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; display: block; }
 .mistake-desc { margin-bottom: 8px; }
-.mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
-.mc-col { border-radius: 5px; overflow: hidden; }
+.mc-row {
+  display: grid;
+  grid-template-columns: minmax(0, var(--mc-left, 50%)) 10px minmax(0, 1fr);
+  gap: 0;
+  margin-bottom: 6px;
+  align-items: stretch;
+}
+.mc-col { border-radius: 5px; overflow: hidden; min-width: 0; }
 .mc-bad  { border: 1.5px solid #e53e3e; }
 .mc-good { border: 1.5px solid #28a745; }
+.mc-row-divider {
+  width: 10px; cursor: col-resize; align-self: stretch; min-height: 80px;
+  position: relative; background: transparent; touch-action: none;
+}
+.mc-row-divider::before {
+  content: ""; position: absolute; top: 8px; bottom: 8px; left: 4px;
+  width: 2px; border-radius: 2px; background: #cbd5e1;
+}
+.mc-row-divider:hover::before,
+.mc-row-divider.dragging::before { background: #0066cc; }
+body.mc-row-dragging { cursor: col-resize; user-select: none; }
 .mc-lbl  { display: block; padding: 3px 8px; font-size: 11px; font-weight: 700; }
 .mc-bad  .mc-lbl { background: #fff5f5; color: #c53030; }
 .mc-good .mc-lbl { background: #f0fff4; color: #276749; }
@@ -170,6 +187,8 @@ body.io-split-dragging { cursor: col-resize; user-select: none; }
   .io-split { grid-template-columns: 1fr; }
   .io-split-divider { display: none; }
   .io-split .io-in { border-right: none; border-bottom: 2px solid #f87171; }
+  .mc-row { grid-template-columns: 1fr; gap: 8px; }
+  .mc-row-divider { display: none; }
 }
 .mistake-note { font-size: 11px; color: #555; margin-top: 4px; }
 .before-after { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: start; margin: 8px 0 12px; }
@@ -9327,25 +9346,93 @@ print(circle.area)                # 78.54...</textarea><pre class="py-output" hi
 <tr><td>Iterator / Iterable</td><td>Iterator: <code>__next__</code>. Iterable: can call <code>iter()</code> / use in <code>for</code>.</td><td><code>next(it)</code></td></tr>
 <tr><td>StopIteration</td><td>Raised when iterator has no more items.</td><td>end of for-loop</td></tr>
 <tr><td>itertools</td><td>Efficient iterator tools — chain, islice, groupby.</td><td><code>itertools.chain</code></td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>Export 50M+ CSV rows:</b> Stream with yield — avoid MemoryError from read().split() — each approach with <b>input → output</b>.<p><b>1) Generator — one row per <code>yield</code></b><br>Read the file inside <code>with</code>; hand back one split row at a time.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> csv_reader(path):
+</table><div class="real-life"><b>Real-life example:</b> <b>Export 50M+ CSV rows:</b> Stream with yield — avoid MemoryError from read().split() — each approach with <b>input → output</b>.<p><b>1) Without <code>yield</code> vs with <code>yield</code> — same job, different memory</b><br>Both parse rows. Left builds a <b>full list in RAM</b>. Right hands back <b>one row at a time</b>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without yield — list in RAM</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> csv_reader(path):
+    rows = []
+    <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(path, encoding="utf-8") <mark class="hl-key">as</mark> f:
+        <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> f:
+            rows.append(line.strip().split(","))
+    <mark class="hl-key">return</mark> rows          <span class="t-cm"># ALL rows at once</span>
+
+data = csv_reader("big.csv")
+<mark class="hl-key">print</mark>(<mark class="hl-key">len</mark>(data))</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+50000000</div></div></div><p class="step-result" style="margin-top:6px">then often → MemoryError on huge files</p></div><div class="mc-col mc-good"><span class="mc-lbl">With yield — one row at a time</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> csv_reader(path):
     <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(path, encoding="utf-8") <mark class="hl-key">as</mark> f:
         <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> f:
             <mark class="hl-key">yield</mark> line.strip().split(",")
 
-row = <mark class="hl-key">next</mark>(csv_reader("big.csv"))</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+<span class="t-cm"># first row only</span>
+row = <mark class="hl-key">next</mark>(csv_reader("big.csv"))
+<mark class="hl-key">print</mark>(row)                 <span class="t-cm"># ['id', 'name', 'amount']</span>
+
+<span class="t-cm"># ALL rows — one per loop (still lazy)</span>
+<mark class="hl-key">for</mark> row <mark class="hl-key">in</mark> csv_reader("big.csv"):
+    <mark class="hl-key">print</mark>(row)             <span class="t-cm"># each line, one at a time</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 
 
 
 
-row → ['id', 'name', 'amount']  (one row — <mark class="hl-key">not</mark> whole file)</div></div></div><p><b>2) Streaming export — write as you read</b><br>Transform each row and write immediately; memory stays flat on 50M rows.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> export(path, out):
+
+
+['id', 'name', 'amount']
+
+
+
+</div></div></div><p class="step-result" style="margin-top:6px">then for-loop prints every remaining row<br>memory: still ONE row at a time — safe for 50M+</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Does the <code>for</code> need <code>next</code>?</b> No — <code>for</code> calls <code>next()</code> for you on each lap until the generator is done. Use <code>next(gen)</code> only when you want <b>one</b> row by hand.<br><b>Takeaway:</b> <code>return rows</code> waits until the whole file is loaded. <code>yield</code> pauses after each row — caller decides when to ask for the next.</p><p><b>2) Export — without <code>yield</code> vs with <code>yield</code></b><br>Same transform + write. Left loads <b>all rows first</b>. Right <b>writes each row as it arrives</b>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without yield — load all, then write</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> export(path, out):
+    rows = csv_reader(path)   <span class="t-cm"># list version — ALL in RAM</span>
     <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(out, "w", encoding="utf-8") <mark class="hl-key">as</mark> dest:
-        <mark class="hl-key">for</mark> row <mark class="hl-key">in</mark> csv_reader(path):
-            transformed = transform(row)
-            dest.write(",".join(transformed) + "\n")</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+        <mark class="hl-key">for</mark> row <mark class="hl-key">in</mark> rows:
+            t = transform(row)
+            dest.write(",".join(t) + "\n")
+
+export("big.csv", "out.csv")</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 
 
 
-out file grows line by line — no MemoryError</div></div></div><p><b>3) Bad approach — load entire file</b><br><code>read().split()</code> loads everything into RAM at once.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre">data = <mark class="hl-key">open</mark>(path).read().split()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">MemoryError on huge files</div></div></div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + same function compared</b><br><code>return</code> ends with one result (or a full list). <code>yield</code> marks a <b>generator function</b> — it pauses and can produce many values over time.<div class="step-pre"><span class="t-cm"># WITHOUT yield — returns a complete list</span>
+
+
+
+</div></div></div><p class="step-result" style="margin-top:6px">may finish… or MemoryError before any write<br>peak RAM ≈ whole file</p></div><div class="mc-col mc-good"><span class="mc-lbl">With yield — write as you read</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> export(path, out):
+    <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(out, "w", encoding="utf-8") <mark class="hl-key">as</mark> dest:
+        <mark class="hl-key">for</mark> row <mark class="hl-key">in</mark> csv_reader(path):  <span class="t-cm"># yield version</span>
+            t = transform(row)
+            dest.write(",".join(t) + "\n")
+
+export("big.csv", "out.csv")</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+out file grows line by line</div></div></div><p class="step-result" style="margin-top:6px">peak RAM ≈ one row — safe for 50M+</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Compare:</b> without yield you must hold the full list before writing. With yield, each <code>for</code> lap = one <code>next()</code> → transform → write → discard.</p><p><b>3) At scale — without <code>yield</code> vs with <code>yield</code></b><br>Same file. Left loads <b>everything into RAM</b>. Right keeps <b>one line</b> in memory.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without yield — fails at scale</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre">data = <mark class="hl-key">open</mark>(path).read().split()   <span class="t-cm"># whole file</span>
+<span class="t-cm"># or: rows = list(csv_reader(path))  # force full list</span>
+
+<mark class="hl-key">print</mark>(<mark class="hl-key">len</mark>(data))</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+MemoryError on huge files</div></div></div><p class="step-result" style="margin-top:6px">(or machine thrashes / freezes)</p></div><div class="mc-col mc-good"><span class="mc-lbl">With yield — stays flat</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> csv_reader(path):
+    <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(path, encoding="utf-8") <mark class="hl-key">as</mark> f:
+        <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> f:
+            <mark class="hl-key">yield</mark> line.strip().split(",")
+
+count = 0
+<mark class="hl-key">for</mark> row <mark class="hl-key">in</mark> csv_reader(path):
+    count += 1
+<mark class="hl-key">print</mark>(count)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+50000000</div></div></div><p class="step-result" style="margin-top:6px">peak RAM ≈ one row — no MemoryError</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why:</b> <code>read().split()</code> / <code>list(...)</code> needs space for <b>all</b> rows at once. <code>yield</code> + <code>for</code> never builds that list.</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Lazy iterators (why generators exist)</b><br>From <a href="https://realpython.com/introduction-to-python-generators/" target="_blank" rel="noopener">Real Python</a>: generators return a <b>lazy iterator</b> — loop like a list, but do <b>not</b> store all contents in memory. Loading a huge CSV with <code>file.read().split()</code> can raise <code>MemoryError</code>; <code>yield</code> one row at a time stays safe.</li><li><b>Step 2 — yield vs return + same function compared</b><br><code>return</code> ends with one result (or a full list). <code>yield</code> marks a <b>generator function</b> — it pauses and can produce many values over time.<div class="step-pre"><span class="t-cm"># WITHOUT yield — returns a complete list</span>
 <mark class="hl-key">def</mark> parse_lines_list(f):
     results = []
     <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> f:
@@ -9366,9 +9453,67 @@ out file grows line by line — no MemoryError</div></div></div><p><b>3) Bad app
         n += 1
 
 gen = infinite_sequence()
-<mark class="hl-key">next</mark>(gen); <mark class="hl-key">next</mark>(gen)   <span class="t-cm"># 0, then 1 — stop manually</span></div></li><li><b>Step 4 — Iterator protocol & itertools</b><br>An iterable has <code>__iter__</code>. An iterator has <code>__iter__</code> and <code>__next__</code>. <code>for</code> uses this until <code>StopIteration</code>.<div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">itertools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">chain</mark>, <mark class="hl-key">islice</mark>
-<mark class="hl-key">list</mark>(<mark class="hl-key">chain</mark>([1, 2], [3, 4]))
-<mark class="hl-key">list</mark>(<mark class="hl-key">islice</mark>(<mark class="hl-key">range</mark>(100), 5))</div></li></ul>
+<mark class="hl-key">next</mark>(gen); <mark class="hl-key">next</mark>(gen)   <span class="t-cm"># 0, then 1 — stop manually</span></div></li><li><b>Step 4 — Iterator protocol & itertools</b><br>An <b>iterable</b> has <code>__iter__</code> (can start a loop). An <b>iterator</b> has <code>__iter__</code> and <code>__next__</code> (gives the next value). <code>for</code> calls these until <code>StopIteration</code>.<table class="data-tbl" style="margin:6px 0;font-size:12px"><tr><th></th><th>Has</th><th>Example</th></tr><tr><td>Iterable</td><td><code>__iter__</code></td><td><code>list</code>, <code>range</code>, generator function result</td></tr><tr><td>Iterator</td><td><code>__iter__</code> + <code>__next__</code></td><td>what <code>iter(list)</code> returns; generators</td></tr></table><p style="font-size:12px;margin:6px 0"><b>1) Full custom iterator</b> — <code>for</code> uses <code>__iter__</code> / <code>__next__</code> for you:</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">class</mark> CountDown:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, start):
+        self.n = start
+
+    <mark class="hl-key">def</mark> <mark class="hl-key">__iter__</mark>(self):
+        <mark class="hl-key">return</mark> self          <span class="t-cm"># I am my own iterator</span>
+
+    <mark class="hl-key">def</mark> <mark class="hl-key">__next__</mark>(self):
+        <mark class="hl-key">if</mark> self.n <= 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">StopIteration</mark>
+        self.n -= 1
+        <mark class="hl-key">return</mark> self.n + 1
+
+<span class="t-cm"># for calls iter(), then next() until StopIteration</span>
+<mark class="hl-key">for</mark> x <mark class="hl-key">in</mark> CountDown(3):
+    <mark class="hl-key">print</mark>(x)
+
+<span class="t-cm"># same idea by hand:</span>
+it = <mark class="hl-key">iter</mark>(CountDown(2))
+<mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(it))
+<mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(it))</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3
+2
+1
+
+
+
+2
+1</div></div></div><p style="font-size:12px;margin:8px 0 4px"><b>2) itertools</b> — ready-made lazy helpers (no giant intermediate lists):</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">itertools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">chain</mark>, <mark class="hl-key">islice</mark>
+
+<span class="t-cm"># chain — stitch iterables as one stream</span>
+<mark class="hl-key">print</mark>(<mark class="hl-key">list</mark>(<mark class="hl-key">chain</mark>([1, 2], [3, 4])))
+
+<span class="t-cm"># islice — take first N from a long/infinite source</span>
+<mark class="hl-key">print</mark>(<mark class="hl-key">list</mark>(<mark class="hl-key">islice</mark>(<mark class="hl-key">range</mark>(100), 5)))
+
+<span class="t-cm"># combine: first 3 from a chain</span>
+<mark class="hl-key">print</mark>(<mark class="hl-key">list</mark>(<mark class="hl-key">islice</mark>(<mark class="hl-key">chain</mark>("ab", "cd"), 3)))</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+[1, 2, 3, 4]
+
+
+[0, 1, 2, 3, 4]
+
+
+['a', 'b', 'c']</div></div></div><p class="step-result"><b>Takeaway:</b> generators already follow this protocol. <code>itertools</code> builds pipelines on top without loading everything.</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>yield</b> = pause function, return one value, resume on next call.<br><b>return</b> = end function completely.<br><b>Generator</b> = any function containing <code>yield</code>.</div>
 <div class="keyword-box"><b>Iterator protocol</b> = <code>__iter__</code> + <code>__next__</code> — <code>for</code> loops call these under the hood.<br><b>StopIteration</b> = signal that iteration ended.</div>
@@ -17218,6 +17363,65 @@ function endIoSplitDrag() {
 }
 document.addEventListener('pointerup', endIoSplitDrag);
 document.addEventListener('pointercancel', endIoSplitDrag);
+
+const MC_SPLIT_KEY = 'pythonTrainingMcSplitLeft';
+let mcRowDragging = null;
+function getSavedMcSplit() {
+  const v = parseFloat(localStorage.getItem(MC_SPLIT_KEY) || '');
+  return (Number.isFinite(v) && v >= 20 && v <= 85) ? v : 50;
+}
+function applyMcSplitTo(row, pct) {
+  if (!row) return;
+  row.style.setProperty('--mc-left', pct + '%');
+}
+function applySavedMcSplits(root) {
+  const pct = getSavedMcSplit();
+  (root || document).querySelectorAll('.mc-row').forEach(r => applyMcSplitTo(r, pct));
+}
+function initMcRowDividers() {
+  document.querySelectorAll('.mc-row').forEach(row => {
+    const cols = [...row.children].filter(el => el.classList.contains('mc-col'));
+    if (cols.length !== 2) return;
+    let div = row.querySelector(':scope > .mc-row-divider');
+    if (!div) {
+      div = document.createElement('div');
+      div.className = 'mc-row-divider';
+      div.setAttribute('role', 'separator');
+      div.setAttribute('aria-orientation', 'vertical');
+      div.title = 'Drag to resize';
+      row.insertBefore(div, cols[1]);
+    }
+    if (div.dataset.mcSplitReady) return;
+    div.dataset.mcSplitReady = '1';
+    div.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      const rect = row.getBoundingClientRect();
+      mcRowDragging = { row, div, left: rect.left, width: rect.width };
+      div.classList.add('dragging');
+      document.body.classList.add('mc-row-dragging');
+      try { div.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+}
+document.addEventListener('pointermove', e => {
+  if (!mcRowDragging) return;
+  const { row, left, width } = mcRowDragging;
+  if (width < 60) return;
+  let pct = ((e.clientX - left) / width) * 100;
+  pct = Math.max(20, Math.min(85, pct));
+  applyMcSplitTo(row, pct);
+  localStorage.setItem(MC_SPLIT_KEY, String(Math.round(pct * 10) / 10));
+});
+function endMcRowDrag() {
+  if (!mcRowDragging) return;
+  mcRowDragging.div.classList.remove('dragging');
+  document.body.classList.remove('mc-row-dragging');
+  mcRowDragging = null;
+}
+document.addEventListener('pointerup', endMcRowDrag);
+document.addEventListener('pointercancel', endMcRowDrag);
 let csharpDrag = { active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
 let csharpResize = { active: false, win: null, startX: 0, startY: 0, origW: 0, origH: 0 };
 
@@ -17362,6 +17566,8 @@ document.addEventListener('DOMContentLoaded', () => {
     applySavedSplit(document);
     initIoSplitDividers();
     applySavedIoSplits(document);
+    initMcRowDividers();
+    applySavedMcSplits(document);
   } catch (err) { console.warn('editor init', err); }
   const h = (location.hash || '').replace('#', '');
   let start = 0;

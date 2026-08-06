@@ -990,7 +990,64 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 4 — Iterator protocol & itertools",
-                "body": "An iterable has <code>__iter__</code>. An iterator has <code>__iter__</code> and <code>__next__</code>. <code>for</code> uses this until <code>StopIteration</code>.<div class=\"step-pre\">from itertools import chain, islice\nlist(chain([1, 2], [3, 4]))\nlist(islice(range(100), 5))</div>",
+                "body": (
+                    "An <b>iterable</b> has <code>__iter__</code> (can start a loop). "
+                    "An <b>iterator</b> has <code>__iter__</code> and <code>__next__</code> "
+                    "(gives the next value). "
+                    "<code>for</code> calls these until <code>StopIteration</code>."
+                    "<table class=\"data-tbl\" style=\"margin:6px 0;font-size:12px\">"
+                    "<tr><th></th><th>Has</th><th>Example</th></tr>"
+                    "<tr><td>Iterable</td><td><code>__iter__</code></td>"
+                    "<td><code>list</code>, <code>range</code>, generator function result</td></tr>"
+                    "<tr><td>Iterator</td><td><code>__iter__</code> + <code>__next__</code></td>"
+                    "<td>what <code>iter(list)</code> returns; generators</td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0\"><b>1) Full custom iterator</b> — "
+                    "<code>for</code> uses <code>__iter__</code> / <code>__next__</code> for you:</p>"
+                    + io_split(
+                        "class CountDown:\n"
+                        "    def __init__(self, start):\n"
+                        "        self.n = start\n"
+                        "\n"
+                        "    def __iter__(self):\n"
+                        "        return self          # I am my own iterator\n"
+                        "\n"
+                        "    def __next__(self):\n"
+                        "        if self.n <= 0:\n"
+                        "            raise StopIteration\n"
+                        "        self.n -= 1\n"
+                        "        return self.n + 1\n"
+                        "\n"
+                        "# for calls iter(), then next() until StopIteration\n"
+                        "for x in CountDown(3):\n"
+                        "    print(x)\n"
+                        "\n"
+                        "# same idea by hand:\n"
+                        "it = iter(CountDown(2))\n"
+                        "print(next(it))\n"
+                        "print(next(it))",
+                        {16: "3\n2\n1", 20: "2", 21: "1"},
+                    )
+                    + "<p style=\"font-size:12px;margin:8px 0 4px\">"
+                    "<b>2) itertools</b> — ready-made lazy helpers "
+                    "(no giant intermediate lists):</p>"
+                    + io_split(
+                        "from itertools import chain, islice\n"
+                        "\n"
+                        "# chain — stitch iterables as one stream\n"
+                        "print(list(chain([1, 2], [3, 4])))\n"
+                        "\n"
+                        "# islice — take first N from a long/infinite source\n"
+                        "print(list(islice(range(100), 5)))\n"
+                        "\n"
+                        "# combine: first 3 from a chain\n"
+                        "print(list(islice(chain(\"ab\", \"cd\"), 3)))",
+                        {4: "[1, 2, 3, 4]", 7: "[0, 1, 2, 3, 4]", 10: "['a', 'b', 'c']"},
+                    )
+                    + '<p class="step-result"><b>Takeaway:</b> '
+                    "generators already follow this protocol. "
+                    "<code>itertools</code> builds pipelines on top without loading everything.</p>"
+                ),
             },
         ],
         "interview_qa": [
