@@ -121,6 +121,17 @@ function initAudioPlayers() {
     else:
         audio_block = "function initAudioPlayers() {}"
 
+    split_key = (
+        cfg.storage_key.replace("Slide", "SplitLeft")
+        if "Slide" in cfg.storage_key
+        else f"{cfg.storage_key}SplitLeft"
+    )
+    io_split_key = (
+        cfg.storage_key.replace("Slide", "IoSplitLeft")
+        if "Slide" in cfg.storage_key
+        else f"{cfg.storage_key}IoSplitLeft"
+    )
+
     return f"""
 let current = 0;
 const slideOrder = [0];
@@ -197,26 +208,35 @@ document.addEventListener('scroll', e => {{
   if (slide) saveSlideScroll(current, slide.scrollTop);
 }}, true);
 
-const SPLIT_KEY = 'trainingSplitLeft';
+const SPLIT_KEY = '{split_key}';
 let splitDragging = null;
+function getSavedSplit() {{
+  const v = parseFloat(localStorage.getItem(SPLIT_KEY) || '');
+  // 5%–98%: code panel can collapse; divider stays so you can pull it back
+  return (Number.isFinite(v) && v >= 5 && v <= 98) ? v : 48;
+}}
+function applySplitTo(split, pct) {{
+  if (!split || split.classList.contains('no-code')) return;
+  split.style.setProperty('--split-left', pct + '%');
+}}
 function applySavedSplit(root) {{
-  const pct = parseFloat(localStorage.getItem(SPLIT_KEY) || '48');
-  (root || document).querySelectorAll('.main-split:not(.no-code)').forEach(s => {{
-    s.style.setProperty('--split-left', pct + '%');
-  }});
+  const pct = getSavedSplit();
+  (root || document).querySelectorAll('.main-split:not(.no-code)').forEach(s => applySplitTo(s, pct));
 }}
 function initSplitDividers() {{
   document.querySelectorAll('.split-divider').forEach(div => {{
     if (div.dataset.splitReady) return;
     div.dataset.splitReady = '1';
+    div.title = 'Drag to resize — drag right to collapse code (bar stays so you can pull back)';
     div.addEventListener('pointerdown', e => {{
       if (e.button !== 0) return;
       const split = div.closest('.main-split');
-      if (!split) return;
+      if (!split || split.classList.contains('no-code')) return;
       const rect = split.getBoundingClientRect();
       splitDragging = {{ split, div, left: rect.left, width: rect.width }};
       div.classList.add('dragging');
       document.body.classList.add('split-dragging');
+      try {{ div.setPointerCapture(e.pointerId); }} catch (_) {{}}
       e.preventDefault();
     }});
   }});
@@ -224,11 +244,11 @@ function initSplitDividers() {{
 document.addEventListener('pointermove', e => {{
   if (!splitDragging) return;
   const {{ split, left, width }} = splitDragging;
-  if (width < 60) return;
+  if (width < 80) return;
   let pct = ((e.clientX - left) / width) * 100;
-  pct = Math.max(25, Math.min(75, pct));
-  split.style.setProperty('--split-left', pct + '%');
-  localStorage.setItem(SPLIT_KEY, String(Math.round(pct)));
+  pct = Math.max(5, Math.min(98, pct));
+  applySplitTo(split, pct);
+  localStorage.setItem(SPLIT_KEY, String(Math.round(pct * 10) / 10));
 }});
 function endSplitDrag() {{
   if (!splitDragging) return;
@@ -239,7 +259,7 @@ function endSplitDrag() {{
 document.addEventListener('pointerup', endSplitDrag);
 document.addEventListener('pointercancel', endSplitDrag);
 
-const IO_SPLIT_KEY = 'trainingIoSplitLeft';
+const IO_SPLIT_KEY = '{io_split_key}';
 let ioSplitDragging = null;
 function applyIoSplitTo(split, pct) {{ if (split) split.style.setProperty('--io-left', pct + '%'); }}
 function applySavedIoSplits(root) {{
@@ -469,9 +489,6 @@ def slide_hdr(
     definition: str = "",
     show_audio: bool = False,
 ) -> str:
-    plain = re.sub(r"<[^>]+>", " ", definition)
-    plain = re.sub(r"\s+", " ", plain).strip()
-    sub = plain[:100] + ("…" if len(plain) > 100 else "")
     audio = ""
     if show_audio:
         audio = f"""<div class="audio-player" id="player-{n}" data-slide="{n}">
@@ -480,7 +497,6 @@ def slide_hdr(
     return f'''<div class="slide-hdr">
   <div class="slide-meta">Slide {n} of {total_slides} &middot; {html.escape(module_label)}</div>
   <div class="slide-title">{html.escape(title)}</div>
-  <div class="slide-sub">{html.escape(sub)}</div>
   {audio}
 </div>'''
 
@@ -495,6 +511,10 @@ def topic_intro(
     diagram_fn=None,
 ) -> str:
     parts: list[str] = []
+    if meta.get("primary"):
+        parts.append(
+            f'<div class="callout"><b>What this primarily describes:</b> {meta["primary"]}</div>'
+        )
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><div class="def-block">{meta["definition"]}</div>')
         if flowchart_fn:

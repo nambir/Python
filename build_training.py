@@ -5,6 +5,7 @@ from pathlib import Path
 from slide_keyword_deepdives import keyword_deepdives_for
 from training_meta import TRAINING_META
 from training_beginner import BEGINNER_CONTENT
+from python_primary import primary_for
 from slide_glossary import glossary_for
 from slide_scenarios import scenarios_for
 from slide_diagrams import diagram_for
@@ -39,9 +40,9 @@ html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Ge
 
 h3 { font-size: 15px; color: #0066cc; margin: 10px 0 6px; }
 p { font-size: 13px; line-height: 1.5; margin-bottom: 6px; }
-.def-block { font-size: 13px; line-height: 1.55; margin-bottom: 8px; color: #1a1a2e; }
+.def-block { font-size: 13px; line-height: 1.55; margin-bottom: 8px; color: #1a1a2e; overflow-wrap: anywhere; word-break: break-word; }
 .def-block ul { margin: 6px 0 0 18px; }
-.def-block li { font-size: 12px; line-height: 1.5; margin-bottom: 4px; }
+.def-block li { font-size: 12px; line-height: 1.5; margin-bottom: 4px; overflow-wrap: anywhere; }
 ul { margin: 0 0 8px 18px; }
 li { font-size: 12px; line-height: 1.45; margin-bottom: 2px; }
 code { font-family: Consolas, monospace; font-size: 12px; color: #0000ff; background: #f0f7ff; padding: 1px 4px; border-radius: 3px; }
@@ -1600,18 +1601,9 @@ def audio_bar(n: int) -> str:
 
 
 def slide_hdr(n, title):
-    meta = TRAINING_META.get(n, {})
-    raw = meta.get("definition", "")
-    # Subtitle must be plain text — truncating HTML (e.g. open <b>) leaks styles to the whole slide.
-    plain = re.sub(r"<[^>]+>", " ", raw)
-    plain = re.sub(r"\s+", " ", plain).strip()
-    sub = plain[:100]
-    if len(plain) > 100:
-        sub += "…"
     return f'''<div class="slide-hdr">
   <div class="slide-meta">Slide {n} of {TOTAL_SLIDES} &middot; {module_for(n)}</div>
   <div class="slide-title">{title}</div>
-  <div class="slide-sub">{sub}</div>
   {audio_bar(n)}
 </div>'''
 
@@ -1622,6 +1614,11 @@ def topic_intro(n):
     if not meta and not beginner:
         return ""
     parts = []
+    primary = meta.get("primary") or primary_for(n)
+    if primary:
+        parts.append(
+            f'<div class="callout"><b>What this primarily describes:</b> {primary}</div>'
+        )
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><div class="def-block">{meta["definition"]}</div>')
         # Decision flowchart sits right under Definition (all week slides)

@@ -85,7 +85,8 @@ SKILLS_PART1 = [
         "LINQ internals: deferred execution, IEnumerable vs IQueryable",
         "Explains a bug caused by deferred execution or multiple enumeration",
         ["Deferred execution", "Enumeration", "IEnumerable", "IQueryable"],
-        "A query looked frozen in time, but every enumeration reran it against changed data because LINQ had stored a <b>recipe</b>, not results.",
+        "A query looked frozen in time, but every enumeration reran it against changed data because LINQ had stored a <b>recipe</b>, not results. "
+        "Remember: <b>LINQ</b> = Language Integrated Query — C# query syntax for collections/SQL-like filters.",
         [
             ("Deferred", "Most LINQ operators execute when the sequence is enumerated, not when the query is declared."),
             ("IEnumerable", "Runs .NET delegates in the process over objects the application can enumerate."),

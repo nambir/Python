@@ -7,6 +7,19 @@ from slide_diagrams import compare, cycle, flow
 from slide_io import io_split
 from training_meta import _def
 
+
+def _before_after(before: str, after: str, *, before_lbl: str = "Before", after_lbl: str = "After") -> str:
+    """Side-by-side comparison used on every subtopic."""
+    return (
+        '<div class="mc-row">'
+        f'<div class="mc-col mc-bad"><span class="mc-lbl">&#10060; {before_lbl}</span>'
+        f'<div class="step-pre">{before}</div></div>'
+        f'<div class="mc-col mc-good"><span class="mc-lbl">&#10004; {after_lbl}</span>'
+        f'<div class="step-pre">{after}</div></div>'
+        "</div>"
+    )
+
+
 # --- Diagrams (shared helpers) ---
 
 
@@ -75,72 +88,184 @@ def _async_cycle() -> str:
 RICH: dict[str, dict] = {
     "D01": {
         "title": "C# Type System",
+        "subtopics": [
+            "Value vs reference",
+            "Boxing (SqlParameter)",
+            "struct vs class (DTO)",
+            "nullable value types",
+        ],
         "meta": {
             "definition": _def(
-                "By default you think of a variable as “holding data.” In C# that is only true for "
-                "<b>value types</b>. A <b>reference type</b> variable holds an <b>arrow</b> to an object "
-                "on the heap — so two variables can point at the same box.",
+                "In C#, a variable does not always “hold the object.” "
+                "<b>Value types</b> (simple/primitive data like <code>int</code>, <code>bool</code>, "
+                "<code>DateTime</code>, small <code>struct</code>s) store their bits "
+                "<b>directly in the variable</b>. "
+                "<b>Reference types</b> (<code>class</code> DTOs, <code>string</code>, "
+                "<code>List&lt;T&gt;</code>) store the <b>starting address</b> (an arrow) of a "
+                "heap object — so two variables can point at the same box.",
                 [
-                    "<b>Value types:</b> <code>int</code>, <code>bool</code>, <code>struct</code>, "
-                    "<code>enum</code> — assignment <b>copies</b> the bits.",
-                    "<b>Reference types:</b> <code>class</code>, arrays, <code>delegate</code> — "
-                    "assignment copies the <b>reference</b> (same object).",
-                    "<b>Boxing:</b> wrapping a value in <code>object</code> moves it to the heap — "
-                    "allocation; avoid in hot loops.",
+                    "<b>Value types:</b> <code>int</code>, <code>bool</code>, <code>DateTime</code>, "
+                    "<code>struct</code> — assignment <b>copies</b> the bits (independent copies).",
+                    "<b>Reference types:</b> <code>class</code> DTOs, <code>string</code>, "
+                    "<code>List&lt;T&gt;</code> — assignment copies the <b>address/reference</b> "
+                    "(same object).",
+                    "<b>Boxing:</b> putting a value into <code>object</code> (or untyped SQL param) "
+                    "allocates on the heap — avoid on busy schedule/payment APIs.",
                     "<b>struct vs class:</b> small immutable value → <code>struct</code>; "
-                    "identity / inheritance / large mutable state → <code>class</code>.",
+                    "shared mutable appointment/patient DTO across layers → <code>class</code>.",
                 ],
             ),
             "interview": (
-                "Value types copy on assign; reference types copy the pointer so both names can "
-                "see the same object. Boxing puts a value on the heap as object — I avoid it on "
-                "hot paths and prefer generics. I pick struct for small immutable values like "
-                "Point or Money, and class when I need identity or inheritance."
+                "In my API Data Access I map SqlDataReader rows into class DTOs because appointments "
+                "are mutated and shared Controller → DA → response. For SQL I use typed SqlParameter "
+                "(SqlDbType.Int / DateTime) so int/DateTime are not boxed as object on busy paths. "
+                "I pick struct only for small immutable values; classes for identity and shared mutation."
             ),
             "skill_id": "D01",
             "area": "D1 — C# Core",
         },
-        "learn": """
-<p>Skill matrix <b>D01</b> — value vs reference types, boxing, struct vs class.</p>
+        "learn": (
+            """
+<p>Skill matrix <b>D01</b> — value vs reference, boxing, struct vs class.
+<span style="color:#64748b">(Project angle from MyDotnet: SqlParameter + appointment DTOs.)</span></p>
+<div class="callout"><b>Level-3 bar:</b> name a place boxing or struct vs class affected performance.</div>
+
 <h3>Quick reference</h3>
 <table class="data-tbl">
-<tr><th>Kind</th><th>Examples</th><th>Stored as</th></tr>
-<tr><td>Value</td><td><code>int</code>, <code>bool</code>, <code>struct</code>, <code>enum</code></td><td>Inline / stack</td></tr>
-<tr><td>Reference</td><td><code>class</code>, <code>string</code>, arrays</td><td>Reference → heap object</td></tr>
+<tr><th>Kind</th><th>Examples in my API</th><th>Assignment does…</th></tr>
+<tr><td>Value</td><td><code>int</code> PatientId, <code>DateTime</code>, <code>bool</code></td><td>Copies the bits</td></tr>
+<tr><td>Reference</td><td><code>ScheduleAppointmentDto</code>, <code>string</code>, <code>List&lt;T&gt;</code></td><td>Copies the arrow (same object)</td></tr>
 </table>
-<h3>Common mistakes</h3>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; assuming assignment always copies data</span>
-<span class="mistake-desc">For reference types, <code>=</code> copies the <b>reference</b>, not the object.</span>
-<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">var a = new List&lt;int&gt; { 1 };
-var b = a;
-b.Add(2);
-// a now has 2 items — surprise!</div></div>
-<div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">var b = new List&lt;int&gt;(a);  // new list
-// or a.ToList()</div></div></div></div>
+
+<h3>1. Value vs reference — full example</h3>
+<p><b>What it means:</b> a value-type variable <b>is</b> the data.
+A reference-type variable holds a <b>pointer</b> to one heap object — so two names can share one DTO.</p>
+<p><b>Why it matters in my project:</b> Controller, DA, and API response all touch the same
+<code>ScheduleAppointmentDto</code> instance. If it were a struct, each layer would get a <b>copy</b>
+and updates would not travel together.</p>
+"""
+            + _before_after(
+                "// BEFORE — think “= always copies data”\n"
+                "var a = new List&lt;int&gt; { 1 };\n"
+                "var b = a;      // looks like a copy…\n"
+                "b.Add(2);\n"
+                "// surprise: a also has 2 items\n"
+                "Console.WriteLine(a.Count);  // 2",
+                "// AFTER — know reference shares the object\n"
+                "var a = new List&lt;int&gt; { 1 };\n"
+                "var b = new List&lt;int&gt;(a);  // real copy\n"
+                "b.Add(2);\n"
+                "Console.WriteLine(a.Count);  // 1\n"
+                "Console.WriteLine(b.Count);  // 2",
+            )
+            + """
+<p class="step-result"><b>Takeaway:</b> value = copy the number · reference = copy the arrow.</p>
+
+<h3>2. Boxing — full example (SqlParameter)</h3>
+<p><b>What it means:</b> boxing wraps a value type in an <code>object</code> on the <b>heap</b>
+(allocation + copy). Unboxing casts it back.</p>
+<p><b>Why it matters in my project:</b> if you pass <code>int</code>/<code>DateTime</code> as plain
+<code>object</code> into SQL parameters, .NET boxes them on every call. On busy schedule/payment APIs
+that is extra GC pressure. Typed <code>SqlParameter</code> + <code>SqlDbType</code> is the fix we use in DA.</p>
+"""
+            + _before_after(
+                "// BEFORE — API takes object → boxes the int\n"
+                "int patientId = 42;\n"
+                "cmd.Parameters.Add(\"@PatientId\", patientId);\n"
+                "// Add(string, object) → int becomes object (heap)",
+                "// AFTER — typed SqlParameter + SqlDbType\n"
+                "int patientId = 42;\n"
+                "cmd.Parameters.Add(\n"
+                "  new SqlParameter(\"@PatientId\", SqlDbType.Int)\n"
+                "  { Value = patientId });\n"
+                "// SQL type is Int — not a bare object bag",
+            )
+            + """
+<div class="keyword-box">
+<b>How typed <code>SqlParameter</code> avoids the boxing trap</b>
+<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
+<li><b>Boxing trigger:</b> a value type (<code>int</code>, <code>DateTime</code>) must live inside something typed as
+<code>object</code> → CLR allocates a heap box and copies the bits.</li>
+<li><b>Before (bad path):</b> <code>Parameters.Add("@PatientId", patientId)</code> uses an overload that takes
+<code>object</code>. Your <code>int</code> is therefore boxed on <b>every</b> call before it even reaches SQL.</li>
+<li><b>After (good path):</b> create the parameter with an explicit SQL type first —
+<code>new SqlParameter("@PatientId", SqlDbType.Int)</code>. ADO.NET already knows “this is an Int column,”
+so you are not stuffing a mystery <code>object</code> into the collection.</li>
+<li><b>What you gain:</b> no untyped object-add boxing on the hot DA path; correct SQL type
+(<code>Int</code> / <code>DateTime</code>) instead of <code>AddWithValue</code> guessing; less GC pressure on busy
+schedule/payment APIs.</li>
+<li><b>Same idea elsewhere:</b> prefer <code>List&lt;int&gt;</code> over <code>List&lt;object&gt;</code> —
+generics keep the value as <code>int</code> and never box.</li>
+</ol>
+<p style="margin:8px 0 0;font-size:12px"><b>Picture of the call:</b></p>
+<div class="step-pre" style="font-size:11px">BEFORE:  int patientId  ──box──▶  object  ──▶  Parameters.Add(name, object)
+AFTER:   int patientId  ──▶  SqlParameter(SqlDbType.Int)  ──▶  SQL INT (typed)</div>
+</div>
+<p class="step-result"><b>Level-3 line:</b> “I avoid boxing on SqlParameter hot paths by using SqlDbType — I never pass int/DateTime as plain object into Add.”</p>
+
+<h3>3. struct vs class — full example (DTO choice)</h3>
+<p><b>What it means:</b> <code>struct</code> = value semantics (copied).
+<code>class</code> = reference semantics (shared identity, mutation, inheritance).</p>
+<p><b>Why it matters in my project:</b> appointments/patients are mapped from <code>SqlDataReader</code>
+into <b>class</b> DTOs — mutated and passed across Controller → DA → API response.
+A struct would copy at each hop and break shared updates / nullability patterns.</p>
+"""
+            + _before_after(
+                "// BEFORE — struct DTO (wrong for shared mutation)\n"
+                "public struct ScheduleAppointmentDto {\n"
+                "  public int AppointmentId { get; set; }\n"
+                "  public string PatientName { get; set; }\n"
+                "}\n"
+                "// each layer gets a COPY — updates may not stick",
+                "// AFTER — class DTO (correct for our layers)\n"
+                "public class ScheduleAppointmentDto {\n"
+                "  public int AppointmentId { get; set; }\n"
+                "  public string PatientName { get; set; }\n"
+                "}\n"
+                "// same instance shared Controller → DA → Ok(dto)",
+            )
+            + """
+<table class="data-tbl">
+<tr><th>Choose</th><th>When</th><th>Project example</th></tr>
+<tr><td><code>class</code></td><td>Shared mutation, nullability, across layers</td><td><code>ScheduleAppointmentDto</code></td></tr>
+<tr><td><code>struct</code></td><td>Small immutable value, copy is OK</td><td><code>Point</code>, <code>Money</code> amount</td></tr>
+</table>
+
+<h3>4. Nullable value types — short example</h3>
+<p><b>What it means:</b> <code>int?</code> / <code>DateTime?</code> can be “no value” without using a reference type.
+Useful for optional SQL columns (appointment end time may be null).</p>
+"""
+            + _before_after(
+                "// BEFORE — magic 0 / MinValue as “missing”\n"
+                "DateTime end = DateTime.MinValue;\n"
+                "if (end == DateTime.MinValue) { /* missing? */ }",
+                "// AFTER — nullable value type\n"
+                "DateTime? end = reader[\"EndTime\"] as DateTime?;\n"
+                "if (end is null) { /* truly missing */ }\n"
+                "else { Use(end.Value); }",
+            )
+            + """
 <h3>Self-check quiz</h3>
 <div class="quiz-box">
-  <div class="quiz-q"><b>Q1.</b> <code>this</code> in a method refers to?
+  <div class="quiz-q"><b>Q1.</b> After <code>var b = a</code> where <code>a</code> is a class DTO, do both names share one object?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">The <b>current instance</b> (the object the method was called on). Same idea as Python <code>self</code> &mdash; C# passes it automatically; use <code>this.Name</code> when you need to be explicit.</div>
+      <div class="quiz-reveal"><b>Yes</b> — reference types copy the arrow. That is why we use <code>class</code> DTOs across Controller → DA → response.</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q2.</b> What is <code>a</code> after this?
-<div class="step-pre">int a = 10;
-int b = a;
-b = 99;</div>
+  <div class="quiz-q"><b>Q2.</b> How do you avoid boxing <code>int patientId</code> into a SQL parameter?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>10</code> &mdash; value types copy the value. Changing <code>b</code> does not change <code>a</code>.</div>
+      <div class="quiz-reveal">Use typed <code>SqlParameter("@PatientId", SqlDbType.Int) { Value = patientId }</code> — not an untyped <code>object</code> add.</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q3.</b> What is boxing?
+  <div class="quiz-q"><b>Q3.</b> Why not make <code>ScheduleAppointmentDto</code> a struct?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Wrapping a value type in <code>object</code> (or an interface) on the <b>heap</b> &mdash; allocation + copy. Prefer generics like <code>List&lt;int&gt;</code> to avoid it.</div>
+      <div class="quiz-reveal">It is mutated and shared across layers. A struct would <b>copy</b> at each hop — updates would not travel together. Prefer class for identity / shared mutation.</div>
     </details>
   </div>
 </div>
 """
-        + code(
-            """// Runnable demo — value vs reference + boxing
+            + code(
+                """// Runnable demo — value vs reference + boxing
 // (top-level statements — paste into SharpLab and Run)
 
 int x = 1, y = x;
@@ -156,65 +281,113 @@ int n = 7;
 object o = n;         // boxing
 int m = (int)o;       // unboxing
 Console.WriteLine($"boxed then unboxed: {m}");""",
-            expected=(
-                "value copy: x=1, y=5\n"
-                "reference: r1[0]=99, r2[0]=99\n"
-                "boxed then unboxed: 7"
-            ),
+                expected=(
+                    "value copy: x=1, y=5\n"
+                    "reference: r1[0]=99, r2[0]=99\n"
+                    "boxed then unboxed: 7"
+                ),
+            )
         ),
         "practice": """
 <ul class="checklist">
-  <li>Explain value vs reference with one list example</li>
-  <li>Name one boxing scenario and how to avoid it</li>
-  <li>Pick struct vs class for a Money / Point type</li>
+  <li>Explain value vs reference with a list / DTO example (before vs after copy)</li>
+  <li>Show typed <code>SqlParameter</code> vs boxing into <code>object</code></li>
+  <li>Defend class DTO vs struct for appointments/patients across layers</li>
+  <li>Use <code>DateTime?</code> for an optional SQL column instead of MinValue</li>
 </ul>
 <a class="file-link" href="Skill_Depth_Matrix_I25054_Sangeetha_Rajendiran_9.csv">Skill matrix CSV</a>
+· <a class="file-link" href="MyDotnet.md">MyDotnet answers (D01)</a>
 """,
         "beginner": {
             "steps": [
                 {
-                    "title": "Step 1 — Value type vs reference type",
+                    "title": "Step 1 — Value vs reference (with before/after)",
                     "body": (
-                        "A <b>value type</b> variable holds the bits of the value itself. "
-                        "A <b>reference type</b> variable holds a pointer to an object on the heap."
+                        "<p>A <b>value type</b> variable holds the bits. A <b>reference type</b> holds an arrow "
+                        "to one heap object — two variables can share the same DTO/list.</p>"
+                        + _before_after(
+                            "int a = 10;\nint b = a;  // COPY value\nb = 99;\n// a is still 10",
+                            "var list1 = new List&lt;int&gt; { 1, 2 };\n"
+                            "var list2 = list1;  // COPY arrow\n"
+                            "list2.Add(3);\n"
+                            "// list1.Count is 3 — same list",
+                            before_lbl="Value type",
+                            after_lbl="Reference type",
+                        )
                         + io_split(
                             "int a = 10;\n"
-                            "int b = a;     // copy the value\n"
+                            "int b = a;\n"
                             "b = 99;\n"
                             "Console.WriteLine(a);  // 10\n"
                             "\n"
                             "var list1 = new List<int> { 1, 2 };\n"
-                            "var list2 = list1;   // copy REFERENCE\n"
+                            "var list2 = list1;\n"
                             "list2.Add(3);\n"
                             "Console.WriteLine(list1.Count);  // 3",
                             {4: "10", 9: "3"},
                         )
                         + '<p class="step-result"><b>Takeaway:</b> value = copy the number · '
-                        "reference = copy the arrow (both can point at one box).</p>"
+                        "reference = copy the arrow.</p>"
                     ),
                 },
                 {
-                    "title": "Step 2 — Boxing and unboxing",
+                    "title": "Step 2 — Boxing on SQL parameters (before/after)",
                     "body": (
-                        "<b>Boxing</b> stores a value type inside an <code>object</code> on the heap. "
-                        "It allocates and copies — fine occasionally, expensive in a hot loop."
+                        "<p><b>Boxing</b> = store a value type inside <code>object</code> on the heap (allocates). "
+                        "On hot API paths we avoid the untyped parameter API.</p>"
+                        + _before_after(
+                            "// BEFORE — Add takes object → boxes int\n"
+                            "int patientId = 42;\n"
+                            "cmd.Parameters.Add(\"@PatientId\", patientId);\n"
+                            "// int → object (heap alloc every call)",
+                            "// AFTER — typed SqlParameter + SqlDbType\n"
+                            "int patientId = 42;\n"
+                            "cmd.Parameters.Add(\n"
+                            "  new SqlParameter(\"@PatientId\", SqlDbType.Int)\n"
+                            "  { Value = patientId });\n"
+                            "// SQL type declared as Int up front",
+                        )
+                        + """
+<div class="keyword-box">
+<b>How this avoids the boxing problem</b>
+<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
+<li><b>Trigger:</b> anytime an <code>int</code> must become <code>object</code>, the CLR boxes it (heap copy).</li>
+<li><b>Before:</b> <code>Add(name, patientId)</code> expects <code>object</code> → <code>patientId</code> is boxed
+on every SQL call in schedule/payment DA.</li>
+<li><b>After:</b> build <code>SqlParameter(..., SqlDbType.Int)</code> first. You tell ADO.NET “this is SQL Int,”
+instead of handing a bare <code>object</code> into the collection.</li>
+<li><b>Why it matters:</b> less GC pressure on busy APIs + correct SQL type (no AddWithValue guessing).</li>
+</ol>
+<div class="step-pre" style="font-size:11px;margin-top:6px">BEFORE: int ──box──▶ object ──▶ Add(name, object)
+AFTER:  int ──▶ SqlParameter(SqlDbType.Int) ──▶ SQL INT</div>
+</div>
+"""
                         + io_split(
                             "int n = 42;\n"
-                            "object boxed = n;        // boxing — heap alloc\n"
+                            "object boxed = n;        // boxing\n"
                             "int back = (int)boxed;   // unboxing\n"
                             "Console.WriteLine(back);",
                             {4: "42"},
                         )
-                        + '<p class="step-result"><b>Level-3 answer:</b> name a place boxing hurt '
-                        "performance (e.g. <code>ArrayList</code> of ints) and what you changed "
-                        "(prefer <code>List&lt;int&gt;</code>).</p>"
+                        + '<p class="step-result"><b>Project line:</b> typed SqlDbType on schedule/payment '
+                        "parameter binding = avoid object-add boxing on the hot path.</p>"
                     ),
                 },
                 {
-                    "title": "Step 3 — struct vs class",
+                    "title": "Step 3 — struct vs class for DTOs (before/after)",
                     "body": (
-                        "Use <code>struct</code> for small, immutable, logical-value data; "
-                        "<code>class</code> when you need identity, inheritance, or large mutable state."
+                        "<p>Use <code>class</code> when the same appointment/patient object is passed and "
+                        "updated across Controller → DA → API response. Use <code>struct</code> only for "
+                        "small immutable values.</p>"
+                        + _before_after(
+                            "public struct ScheduleAppointmentDto { ... }\n"
+                            "// each layer gets a COPY",
+                            "public class ScheduleAppointmentDto {\n"
+                            "  public int AppointmentId { get; set; }\n"
+                            "  public string PatientName { get; set; }\n"
+                            "}\n"
+                            "// shared instance across layers",
+                        )
                         + io_split(
                             "readonly struct Money\n"
                             "{\n"
@@ -225,31 +398,52 @@ Console.WriteLine($"boxed then unboxed: {m}");""",
                             "}\n"
                             "\n"
                             "var fee = new Money(9.99m, \"USD\");\n"
-                            "var copy = fee;   // value copy\n"
+                            "var copy = fee;\n"
                             "Console.WriteLine(copy.Amount);\n"
                             "\n"
                             "class Order { public int Id { get; set; } }\n"
                             "var o1 = new Order { Id = 1 };\n"
-                            "var o2 = o1;      // same object\n"
+                            "var o2 = o1;\n"
                             "o2.Id = 99;\n"
-                            "Console.WriteLine(o1.Id);  // 99 — shared",
+                            "Console.WriteLine(o1.Id);  // 99",
                             {11: "9.99", 17: "99"},
                         )
-                        + '<p class="step-result"><b>Takeaway:</b> when unsure, start with '
-                        "<code>class</code>; switch to <code>struct</code> only when value semantics are clear.</p>"
+                        + '<p class="step-result"><b>Takeaway:</b> DTO across layers → '
+                        "<code>class</code>; tiny immutable value → <code>struct</code>.</p>"
+                    ),
+                },
+                {
+                    "title": "Step 4 — Nullable value types (before/after)",
+                    "body": (
+                        "<p>Optional SQL columns should use <code>int?</code> / <code>DateTime?</code>, "
+                        "not magic zeros or <code>MinValue</code>.</p>"
+                        + _before_after(
+                            "DateTime end = DateTime.MinValue; // “missing?”",
+                            "DateTime? end = reader[\"EndTime\"] as DateTime?;\n"
+                            "if (end is null) { /* missing */ }",
+                        )
+                        + '<p class="step-result"><b>Takeaway:</b> <code>?</code> on value types = '
+                        "true missing without a reference type.</p>"
                     ),
                 },
             ],
             "interview_qa": [
                 {
+                    "q": "Where did boxing or struct vs class matter in your project?",
+                    "a": "Typed <code>SqlParameter</code> (<code>SqlDbType.Int</code>/<code>DateTime</code>) "
+                    "avoids boxing ints/dates as <code>object</code> on busy APIs. Appointment/patient "
+                    "DTOs are <code>class</code> because they are mutated and shared across layers — "
+                    "a struct would copy and break shared updates.",
+                },
+                {
                     "q": "What is boxing?",
-                    "a": "Converting a value type to <code>object</code> or an interface it implements — "
-                    "allocates on the heap and copies the value. Unboxing casts back and copies again.",
+                    "a": "Converting a value type to <code>object</code> (or an interface) — allocates on "
+                    "the heap and copies the value. Prefer generics and typed parameters.",
                 },
                 {
                     "q": "When would you choose struct over class?",
-                    "a": "Small immutable value semantics (coordinates, money amount+currency), "
-                    "no inheritance needed, want stack allocation / fewer heap objects.",
+                    "a": "Small immutable value semantics (Point, Money) with no shared mutation. "
+                    "For DTOs across Controller → DA → response, use class.",
                 },
             ],
         },
@@ -265,17 +459,17 @@ Console.WriteLine($"boxed then unboxed: {m}");""",
                     "key",
                 ),
                 (
-                    "Do you need inheritance, identity, or large mutable state?",
-                    "Use class",
-                    "Reference type — variable holds a pointer to one object on the heap.",
-                    ["class Order", "class Customer"],
+                    "Do you need shared mutation across Controller → DA → API?",
+                    "Use class DTO",
+                    "Reference type — one object shared across layers (ScheduleAppointmentDto).",
+                    ["class ScheduleAppointmentDto", "class PatientDto"],
                     "dd",
                 ),
                 (
-                    "Are value types going into object or non-generic collections?",
-                    "Watch boxing",
-                    "Value → object allocates on heap. Prefer generics: List<int> not ArrayList.",
-                    ["List<int>", "avoid ArrayList"],
+                    "Are value types going into object / untyped SQL params?",
+                    "Avoid boxing",
+                    "Use SqlDbType + generics (List<int>), not object / ArrayList.",
+                    ["SqlParameter + SqlDbType.Int", "List<int>"],
                     "cm",
                 ),
             ],
@@ -286,24 +480,24 @@ Console.WriteLine($"boxed then unboxed: {m}");""",
         "diagram": (
             _memory_picture()
             + compare(
-                "Quick pick",
+                "Quick pick (project)",
                 (
                     "Use value / struct when…",
                     [
                         "Small fixed data (Point, Money)",
                         "Copying is OK / wanted",
-                        "No inheritance needed",
+                        "No shared mutation across layers",
                     ],
                 ),
                 (
                     "Use class when…",
                     [
-                        "Identity / mutable state",
-                        "Inheritance or large object",
-                        "Many references should share one instance",
+                        "DTO shared Controller → DA → Ok()",
+                        "Nullability + mutable fields",
+                        "Appointment / patient identity",
                     ],
                 ),
-                note="When unsure → start with class.",
+                note="My project: class DTOs + typed SqlParameter (avoid boxing).",
             )
             + _boxing_flow()
         ),
