@@ -9734,7 +9734,7 @@ function resetPlayground(btn) {
     }
   }
   if (status && box.dataset.lang === 'csharp') {
-    status.textContent = 'Expected below · SharpLab = live Run';
+    status.textContent = 'Expected below · ▶ Run = live execution';
   } else if (status) {
     status.textContent = '';
   }
@@ -9762,25 +9762,81 @@ function copyPlayground(btn) {
     if (status) status.textContent = 'Copied!';
     setTimeout(() => {
       if (status && box.dataset.lang === 'csharp')
-        status.textContent = 'Expected below · SharpLab = live Run';
+        status.textContent = 'Expected below · ▶ Run = live execution';
     }, 1200);
   }).catch(() => {
     if (status) status.textContent = 'Copy failed — select text manually';
   });
 }
+function _wrapForMono(code) {
+  const stripped = code.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').trim();
+  if (/\b(class|struct|namespace|interface|record)\s+\w/.test(stripped) ||
+      /\bstatic\s+(void|async\s+Task)\s+Main\b/.test(stripped)) return code;
+  const lines = code.split('\n'), usings = [], body = [];
+  for (const l of lines) {
+    if (/^\s*using\s+[\w.]+\s*;/.test(l)) usings.push(l.trim()); else body.push(l);
+  }
+  ['using System;','using System.Collections.Generic;','using System.Linq;'].forEach(u => {
+    if (!usings.some(e => e.replace(/\s+/g,'') === u.replace(/\s+/g,''))) usings.push(u);
+  });
+  return usings.join('\n') + '\n\nclass Program {\n  static void Main() {\n' +
+    body.map(l => '    ' + l).join('\n') + '\n  }\n}';
+}
 async function openSharpLab(btn) {
   const box = btn.closest('.code-playground');
   if (!box) return;
   const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
   const status = box.querySelector('.py-status');
+  const outLabel = box.querySelector('.py-output-label');
   if (!ed) return;
-  const code = ed.value;
+  const code = ed.value.trim();
+  if (!code) { if (status) status.textContent = 'No code to run'; return; }
+  btn.disabled = true;
+  btn.textContent = '\u23f3 Running\u2026';
+  if (status) status.textContent = 'Compiling & running C# code\u2026';
+  if (out) { out.hidden = false; out.textContent = '\u23f3 Running\u2026'; out.classList.remove('err'); }
+  if (outLabel) outLabel.textContent = 'OUTPUT (live)';
+  const ac = new AbortController();
+  const tid = setTimeout(() => ac.abort(), 30000);
+  const execCode = _wrapForMono(code);
   try {
-    await navigator.clipboard.writeText(code);
-    if (status) status.textContent = 'Copied — paste in SharpLab (Ctrl+V), then Run ▶';
-  } catch (_) {
-    if (status) status.textContent = 'Opening SharpLab — paste your code, then Run ▶';
+    const resp = await fetch('https://wandbox.org/api/compile.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ac.signal,
+      body: JSON.stringify({ code: execCode, compiler: 'mono-6.12.0.199' })
+    });
+    clearTimeout(tid);
+    if (!resp.ok) throw new Error('API ' + resp.status);
+    const data = await resp.json();
+    const stdout = data.program_output || '';
+    const stderr = data.compiler_error || data.compiler_output || data.program_error || '';
+    if (out) {
+      out.hidden = false;
+      const txt = (stdout + stderr).trim();
+      if (stderr && !stdout) { out.classList.add('err'); out.textContent = stderr.trim(); }
+      else { out.classList.remove('err'); out.textContent = txt || '(no output)'; }
+    }
+    if (status) status.textContent = (!stderr || stdout) ? '\u2713 Execution complete' : '\u2717 Compilation/runtime error';
+  } catch (e) {
+    clearTimeout(tid);
+    const msg = (e.name === 'AbortError') ? 'Timed out' : 'API unavailable';
+    if (out) { out.hidden = false; out.classList.add('err'); out.textContent = msg + ' \u2014 opening SharpLab as fallback'; }
+    if (status) status.textContent = msg + ' \u2014 falling back to SharpLab\u2026';
+    try { await navigator.clipboard.writeText(code); } catch(_) {}
+    setTimeout(() => window.open('https://sharplab.io/', '_blank', 'noopener'), 800);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '\u25b6 Run';
   }
+}
+function openSharpLabDirect(btn) {
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  if (!ed) return;
+  navigator.clipboard.writeText(ed.value).catch(() => {});
   window.open('https://sharplab.io/', '_blank', 'noopener');
 }
 let pyHeightDrag = null;
@@ -9820,6 +9876,27 @@ document.addEventListener('pointerup', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   try { initAudioPlayers(); } catch (err) { console.warn('audio init', err); }
+  /* ── Convert SharpLab buttons → ▶ Run + SharpLab link ── */
+  try {
+    document.querySelectorAll('.code-playground[data-lang="csharp"] .code-toolbar').forEach(tb => {
+      tb.querySelectorAll('.btn-run-py').forEach(b => {
+        if (b.textContent.trim() === 'SharpLab') {
+          b.textContent = '▶ Run';
+          b.title = 'Run C# code in browser';
+          b.style.background = '#16a34a';
+          const link = document.createElement('button');
+          link.type = 'button';
+          link.className = 'btn-reset-py';
+          link.textContent = 'SharpLab ↗';
+          link.title = 'Open SharpLab in new tab (copies code)';
+          link.onclick = function() { openSharpLabDirect(this); };
+          b.parentNode.insertBefore(link, b.nextSibling);
+        }
+      });
+      const st = tb.querySelector('.py-status');
+      if (st && st.textContent.includes('SharpLab')) st.textContent = 'Expected below · ▶ Run = live execution';
+    });
+  } catch (err) { console.warn('btn init', err); }
   try {
     document.querySelectorAll('.py-editor').forEach(ed => {
       ed.dataset.original = ed.value;

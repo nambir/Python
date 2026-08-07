@@ -142,6 +142,44 @@ Prefer pictures that answer “where is the data?” or “what happens over tim
 | async/await | Cycle: Run → await (release) → Ready → Resume |
 | Struct vs class | Compare columns |
 
+---
+
+## Code Editor — In-Browser Execution
+
+The right-panel **Code editor (C#)** now runs C# code directly in the browser instead of redirecting to SharpLab.
+
+### How it works
+
+| Component | Detail |
+|-----------|--------|
+| API | [Wandbox](https://wandbox.org) — free, CORS-enabled, no API key |
+| Compiler | `mono-6.12.0.199` (Mono C# compiler) |
+| Timeout | 30 seconds |
+| Fallback | If API fails/times out → copies code to clipboard and opens SharpLab |
+
+### Buttons (rendered on page load via JS)
+
+| Button | Action |
+|--------|--------|
+| **▶ Run** (green) | Compile & execute via Wandbox, show output inline |
+| **SharpLab ↗** | Copy code + open sharplab.io in new tab (original behaviour) |
+| **▶ Expected** | Show the `data-expected` output (static, no API call) |
+| **Reset** / **Copy** | Restore original code / copy to clipboard |
+
+### Auto-wrapping for Mono
+
+Mono requires a `class Program { static void Main() {} }` entry point.  
+The `_wrapForMono(code)` function in `DotnetTraining.html`:
+
+1. Detects if the code already has a `class`/`namespace`/`Main` → sends as-is.
+2. Otherwise extracts `using` statements, adds defaults (`System`, `System.Collections.Generic`, `System.Linq`), and wraps the body inside `static void Main()`.
+
+### Limitations
+
+- **No .NET 8 top-level statements directly** — Mono 6.12 caps at C# 7.2 syntax by default. String interpolation (`$"..."`) works, but newer features (records, pattern matching expressions) may not compile.
+- **Network required** — won't work offline (falls back to SharpLab button).
+- **Rate limits** — Wandbox has no documented rate limit but aggressive use may be throttled.
+
 Useful references (ideas only — rewrite in our style, don’t paste copyrighted UI):
 
 - [Microsoft — Value types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/value-types)  
