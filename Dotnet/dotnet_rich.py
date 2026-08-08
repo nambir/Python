@@ -755,3 +755,8 @@ Console.WriteLine($"async waited {sw.ElapsedMilliseconds} ms (thread released du
         ),
     },
 }
+
+# D57–D60 STAR / failure / decision / impact stories (from DOCX + MyDotnet)
+from Dotnet.dotnet_stories_rich import STORIES_RICH  # noqa: E402
+
+RICH.update(STORIES_RICH)

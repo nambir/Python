@@ -1080,7 +1080,7 @@ await _hubContext.Clients.Group(siteName).SendAsync("AccountingBatchUpdated", js
 
 **How:** Feature branches per task, Azure DevOps PRs, peer review. Gave design feedback on migration adapters leading to new tasks.
 
-**Why:** Ask in group who owns area to avoid conflicting PRs (noted in Tickets.docx).
+**Why:** Ask in group who owns area to avoid conflicting PRs.
 
 **Code:**
 ```text
@@ -1471,70 +1471,72 @@ _logger.LogInformation("Wallet created Site={Site} ProfileId={Id}", site, id);
 
 **How/Why/Outcome examples:**
 
-1. **SignalR:** Problem — realtime broken after Core migrate. I proposed solutions, implemented middleware + reconnect, got recognition; web client schedule/accounting live updates restored. 
-2. **Wallet:** Validated net-new payment provider wallet in the web client with DAL/tests/MyQA standards. 
-3. **Registry Subgroups:** Registry Admin Console (WinForm) year 2026 + subgroup package export for external reporting.
+1. **SignalR (primary STAR):** Situation — Legacy jQuery SignalR clients could not connect to migrated TASNX (.NET Core / .NET 10 SignalR) due to incompatible protocol. Task — I went beyond my assigned ticket and owned architecture options. Action — I wrote a design with 3 solutions (migrate clients / dual TAS+TASNX / middleware bridge); detailed ForwardMiddleware + LegacySignalRController bridge. Result — appreciation from tech leads; adapter work created from my design; I completed those adapters; legacy v14 + new v15 clients both get updates.
+2. **Module onboarding:** I moved NX → CareFabric → web-api → cao-integration → registry — setup first, then complex tickets so others could start easier work.
+3. **Wallet / Registry:** Validated net-new payment wallet (web client + DAL + tests); Registry Admin Console year 2026 + subgroup package export.
 
 **Suggested Self Rating:** 3 (Expected TA: 4)
 **Excel paste:**
 - Level-3 asks: 2–3 STAR stories — what I built, why, outcome (use 'I' not 'we').
-- Story 1 — API migration: Situation = legacy and Core must run together. Task = migrate endpoints safely. Action = proxy + middleware + tests. Result = clients kept working with less downtime risk.
-- Story 2 — Wallet: Situation = net-new tokenized payments in web client. Action = validated API, DAL, UI, tests. Result = PCI-safe wallet live in browser.
-- Story 3 — Registry: Situation = reporting year 2026 + subgroups needed. Action = WinForm admin + Cosmos config + export. Result = reporting package ready on time.
+- Story 1 — SignalR: Situation = jQuery vs Core protocol break. Task = I owned dual-client design. Action = 3 options + bridge detail. Result = tech-lead recognition + adapters delivered.
+- Story 2 — Onboarding: setup-first across NX, CareFabric, API, CAO, Registry; then complex tickets.
+- Story 3 — Wallet/Registry: tokenized payments + reporting year 2026 subgroups shipped.
+- Artifacts: SignalR design write-up; ownership notes from delivery.
 
 ---
 
 ## D58 — Failure story
 
-**How:** Early assumption that OWIN group null-check must be ported caused confusion; asking group avoided conflicting PRs. Owned gap: incomplete understanding of Core SignalR group semantics until reproved.
+**How:** Early assumption that OWIN/Framework SignalR group null-check must be ported to Core caused confusion; I reproduced and learned Core empty-group SendAsync is a safe no-op. Separately I ask in group who owns a module before overlapping PRs to avoid merge conflicts.
 
-**Why:** Honesty + process change (verify framework diffs, ask owners).
+**Why:** Honesty + process change (verify Framework vs Core diffs; ask owners).
 
-**Code:** N/A 
+**Code:** N/A  
 **Suggested Self Rating:** 3 (Expected TA: 4)
 **Excel paste:**
 - Level-3 asks: failure you owned end-to-end and what changed after.
-- Failure: I assumed old Framework code pattern must be copied to Core without checking platform difference.
+- Failure: I assumed Framework SignalR patterns must be copied to Core without checking platform difference.
 - This wasted time until I reproduced and learned Core behavior is different.
-- I owned the mistake publicly, documented correct approach, and shared with team.
-- Changed after: framework-diff checklist before migration; ask PR owner before overlapping work.
-- Result: faster correct fix and fewer team conflicts.
+- I owned the mistake, documented correct approach, and shared with team.
+- Changed after: framework-diff checklist before migration; ask PR owner/group before overlapping work.
+- Related ownership: UserSecrets path research when team path was wrong — I found AppData\Roaming\Microsoft\UserSecrets\...\secrets.xml and shared it.
 
 ---
 
 ## D59 — Decision story
 
-**How:** Chose SendAsync always (empty group no-op) over custom group-tracking registry for SignalR; chose Cosmos for Registry reporting config vs forcing SQL schema for flexible subgroup fields; ADO.NET/SP over introducing EF mid-migration.
+**How:** For SignalR dual-client support I compared three options. Chose documenting/pushing Solution3 bridge (TAS ForwardMiddleware + LegacySignalR notify) so APIs live only in TASNX while legacy jQuery clients stay; also ADO.NET/SP over EF mid-migration; Cosmos for Registry config; dual-stack proxy over big-bang.
 
-**Why:** Lower risk, matches platform standards.
+**Why:** Lower risk, single API truth, matches phased migration.
 
-**Code:** N/A 
+**Code:** N/A  
 **Suggested Self Rating:** 3 (Expected TA: 4)
 **Excel paste:**
 - Level-3 asks: technical decision, alternatives considered, why alternatives lost.
-- Decision 1 — Keep ADO.NET/SPs (Stored Procedures) instead of adding EF (Entity Framework) mid-migration. Alternative EF rewrite = too much risk and time.
-- Decision 2 — Cosmos for Registry admin config instead of wide SQL tables. Alternative SQL = slow schema change for reporting fields.
-- Decision 3 — Dual-stack proxy instead of big-bang API rewrite. Alternative big-bang = clinic downtime risk.
-- Deferred until needed: Redis cache, formal circuit breaker library.
+- Decision — SignalR bridge (Solution3). Alternative 1 migrate-all clients = forced upgrades. Alternative 2 dual TAS+TASNX APIs = every fix twice.
+- Bridge advantage: modify APIs only in TASNX; quick SignalR test path; sunset TAS after full migration.
+- Flow: legacy POST /api → ForwardMiddleware → TASNX → Core SignalR to new clients + LegacySignalRController → jQuery hub to v14.
+- Other decisions: ADO.NET/SPs vs EF mid-migration; Cosmos vs wide SQL for Registry; dual-stack vs big-bang.
 - Result: shipped lower-risk choices matching team standards.
 
 ---
 
 ## D60 — Quantified impact
 
-**How:** ~170 unit tests; multiple resolved tasks across web client/integration/Registry reporting/API; Financial Cap 2025→2026 ($2,410→$2,480) automation paths; subgroup support for reporting year 2026.
+**How:** From my work tracker ~75 unique tickets with 50+ Resolved across NX/CareFabric/MIPS/API/Registry/migration/on-site; ~170 xUnit tests; Financial Cap 2025→2026 ($2,410→$2,480); SignalR design → adapters completed.
 
-**Why:** Numbers show test coverage and regulatory year readiness.
+**Why:** Numbers show coverage, regulatory-year readiness, and design→delivery — not only “many tickets.”
 
-**Code:** N/A 
-**Suggested Self Rating:** 2 (Expected TA: 3)
+**Code:** N/A  
+**Suggested Self Rating:** 2–3 (Expected TA: 3)
 **Excel paste:**
 - Level-3 asks: at least 2 real numbers for scale, performance, or business outcome.
 - About 170 xUnit automated tests across roughly 20 integration test folders.
+- Work tracker: ~75 unique tickets tracked; 50+ marked Resolved.
 - Financial Cap automation updated Medicare therapy cap from $2,410 to $2,480 for 2025→2026 path.
-- Delivered 40+ tasks across web client, API, integration, Registry, and WinForm.
-- Registry reporting year 2026 and subgroup package generation shipped for compliance deadline.
-- Result: measurable test coverage and regulatory-year delivery, not just task count.
+- Modules: NX, CareFabric, MIPS, API, CAO, Registry, Web/TAS, on-site.
+- SignalR architecture I authored led to adapter work; I completed those adapters.
+- Result: measurable delivery and design follow-through.
 
 ---
 

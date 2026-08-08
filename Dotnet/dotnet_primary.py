@@ -358,27 +358,24 @@ PRIMARY: dict[str, str] = {
         "when assumptions and alternatives are challenged."
     ),
     "D57": (
-        "<b>STAR</b> means <b>Situation, Task, Action, Result</b> — a structure for telling a concise "
-        "work example: set the context, state your responsibility, explain what you did, and quantify "
-        "the outcome. This slide focuses on project narratives that use \"I\" for personal contribution "
-        "and make results clear."
+        "<b>STAR</b> means <b>Situation → Task → Action → Result</b> — a two-minute ownership story. "
+        "This slide uses your project evidence: SignalR dual-client bridge, "
+        "module onboarding, and Wallet/Registry outcomes."
     ),
     "D58": (
-        "A <b>failure story</b> is an example of a real setback used to show ownership, learning, and "
-        "improved judgment — not an attempt to disguise a success as a weakness. This slide focuses on "
-        "what went wrong, the part you owned, how you responded, and the concrete process or technical "
-        "change that followed."
+        "A <b>failure story</b> shows ownership of a real gap, recovery, and process change. "
+        "Here: Framework→Core SignalR assumption, plus ask-before-overlap "
+        "(and UserSecrets path research)."
     ),
     "D59": (
-        "A <b>decision story</b> explains how you chose among reasonable alternatives under real "
-        "constraints, rather than only naming the final answer. This slide focuses on the criteria and "
-        "evidence used, why the selected option won, why other options lost, and what result followed."
+        "A <b>decision story</b> names alternatives and why they lost. "
+        "Primary example: SignalR Solution1 (migrate clients) vs Solution2 (dual APIs) "
+        "vs Solution3 (TAS <code>ForwardMiddleware</code> bridge)."
     ),
     "D60": (
-        "<b>Quantified impact</b> expresses the result of work with meaningful numbers, such as latency "
-        "reduced from 800 ms to 300 ms or failures cut by 40%, instead of only counting completed "
-        "tasks. This slide focuses on credible before-and-after measures for scale, performance, cost, "
-        "reliability, and business outcomes."
+        "<b>Quantified impact</b> uses real numbers without prompting. "
+        "Ready counts from your tracker: ~75 unique tickets / 50+ Resolved, ~170 tests, "
+        "Cap $2,410→$2,480, and SignalR design → adapter delivery."
     ),
 }
 

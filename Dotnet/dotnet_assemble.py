@@ -438,6 +438,8 @@ def build_all() -> dict[str, Any]:
             if primary:
                 meta[i]["primary"] = primary
             learn = rich_slide["learn"]
+            if isinstance(learn, tuple):
+                learn = "".join(learn)
             # Keep handcrafted D01/D06 depth, but always attach MyDotnet project story + Excel points
             if "My project story (from MyDotnet.md)" not in learn and ans:
                 learn = (

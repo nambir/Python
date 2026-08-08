@@ -184,20 +184,21 @@ def vs_editor(
             "</details>"
             "</div>"
         )
-    # C#: expected OUTPUT in-page + SharpLab for live Run
+    # C#: Expected + live ▶ Run (Wandbox/Mono) + SharpLab fallback
     exp = (expected or "").rstrip("\n")
     exp_attr = html.escape(exp, quote=True)
-    exp_html = html.escape(exp) if exp else "(no expected output yet — use SharpLab to Run)"
+    exp_html = html.escape(exp) if exp else "(no expected output yet — use ▶ Run for live result)"
     out_hidden = "" if exp else " hidden"
     return (
         '<div class="code-playground" data-lang="csharp">'
         '<div class="code-toolbar">'
         '<span class="code-toolbar-label">Code editor (C#)</span>'
         '<button type="button" class="btn-run-py" onclick="showExpectedOutput(this)" title="Show expected console output">&#9654; Expected</button>'
-        '<button type="button" class="btn-run-py" style="background:#512bd4" onclick="openSharpLab(this)" title="Open SharpLab — paste &amp; Run for live result">SharpLab</button>'
+        '<button type="button" class="btn-run-py" style="background:#16a34a" onclick="runCsharpPlayground(this)" title="Compile &amp; run C# in browser (Wandbox/Mono)">&#9654; Run</button>'
+        '<button type="button" class="btn-reset-py" onclick="openSharpLabDirect(this)" title="Copy code and open SharpLab">SharpLab &#8599;</button>'
         '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
         '<button type="button" class="btn-reset-py" onclick="copyPlayground(this)">Copy</button>'
-        '<span class="py-status">Expected below · SharpLab = live Run</span>'
+        '<span class="py-status">Expected below · &#9654; Run = live execution</span>'
         "</div>"
         '<div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div>'
         f'<textarea class="py-editor" spellcheck="false" data-lang="csharp" data-expected="{exp_attr}">{src}</textarea>'

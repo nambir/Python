@@ -369,7 +369,7 @@ function resetPlayground(btn) {{
     }}
   }}
   if (status && box.dataset.lang === 'csharp') {{
-    status.textContent = 'Expected below · SharpLab = live Run';
+    status.textContent = 'Expected below · ▶ Run = live execution';
   }} else if (status) {{
     status.textContent = '';
   }}
@@ -380,11 +380,13 @@ function showExpectedOutput(btn) {{
   const ed = box.querySelector('.py-editor');
   const out = box.querySelector('.py-output');
   const status = box.querySelector('.py-status');
+  const outLabel = box.querySelector('.py-output-label');
   if (!out) return;
   const exp = (ed && ed.dataset.expected) || out.textContent || '';
   out.hidden = false;
   out.classList.remove('err');
   out.textContent = exp || '(no expected output for this sample)';
+  if (outLabel) outLabel.textContent = 'OUTPUT (expected)';
   if (status) status.textContent = 'Showing expected OUTPUT';
 }}
 function copyPlayground(btn) {{
@@ -397,27 +399,85 @@ function copyPlayground(btn) {{
     if (status) status.textContent = 'Copied!';
     setTimeout(() => {{
       if (status && box.dataset.lang === 'csharp')
-        status.textContent = 'Expected below · SharpLab = live Run';
+        status.textContent = 'Expected below · ▶ Run = live execution';
     }}, 1200);
   }}).catch(() => {{
     if (status) status.textContent = 'Copy failed — select text manually';
   }});
 }}
-async function openSharpLab(btn) {{
+function _wrapForMono(code) {{
+  const stripped = code.replace(/\\/\\/.*$/gm, '').replace(/\\/\\*[\\s\\S]*?\\*\\//g, '').trim();
+  if (/\\b(class|struct|namespace|interface|record)\\s+\\w/.test(stripped) ||
+      /\\bstatic\\s+(void|async\\s+Task)\\s+Main\\b/.test(stripped)) return code;
+  const lines = code.split('\\n'), usings = [], body = [];
+  for (const l of lines) {{
+    if (/^\\s*using\\s+[\\w.]+\\s*;/.test(l)) usings.push(l.trim()); else body.push(l);
+  }}
+  ['using System;','using System.Collections.Generic;','using System.Linq;'].forEach(u => {{
+    if (!usings.some(e => e.replace(/\\s+/g,'') === u.replace(/\\s+/g,''))) usings.push(u);
+  }});
+  return usings.join('\\n') + '\\n\\nclass Program {{\\n  static void Main() {{\\n' +
+    body.map(l => '    ' + l).join('\\n') + '\\n  }}\\n}}';
+}}
+async function runCsharpPlayground(btn) {{
   const box = btn.closest('.code-playground');
   if (!box) return;
   const ed = box.querySelector('.py-editor');
+  const out = box.querySelector('.py-output');
   const status = box.querySelector('.py-status');
+  const outLabel = box.querySelector('.py-output-label');
   if (!ed) return;
-  const code = ed.value;
+  const code = ed.value.trim();
+  if (!code) {{ if (status) status.textContent = 'No code to run'; return; }}
+  btn.disabled = true;
+  btn.textContent = '⏳ Running…';
+  if (status) status.textContent = 'Compiling & running C# code…';
+  if (out) {{ out.hidden = false; out.textContent = '⏳ Running…'; out.classList.remove('err'); }}
+  if (outLabel) outLabel.textContent = 'OUTPUT (live)';
+  const ac = new AbortController();
+  const tid = setTimeout(() => ac.abort(), 30000);
+  const execCode = _wrapForMono(code);
   try {{
-    await navigator.clipboard.writeText(code);
-    if (status) status.textContent = 'Copied — paste in SharpLab (Ctrl+V), then Run ▶';
-  }} catch (_) {{
-    if (status) status.textContent = 'Opening SharpLab — paste your code, then Run ▶';
+    const resp = await fetch('https://wandbox.org/api/compile.json', {{
+      method: 'POST',
+      headers: {{ 'Content-Type': 'application/json' }},
+      signal: ac.signal,
+      body: JSON.stringify({{ code: execCode, compiler: 'mono-6.12.0.199' }})
+    }});
+    clearTimeout(tid);
+    if (!resp.ok) throw new Error('API ' + resp.status);
+    const data = await resp.json();
+    const stdout = data.program_output || '';
+    const stderr = data.compiler_error || data.compiler_output || data.program_error || '';
+    if (out) {{
+      out.hidden = false;
+      const txt = (stdout + stderr).trim();
+      if (stderr && !stdout) {{ out.classList.add('err'); out.textContent = stderr.trim(); }}
+      else {{ out.classList.remove('err'); out.textContent = txt || '(no output)'; }}
+    }}
+    if (status) status.textContent = (!stderr || stdout) ? '✓ Execution complete' : '✗ Compilation/runtime error';
+  }} catch (e) {{
+    clearTimeout(tid);
+    const msg = (e.name === 'AbortError') ? 'Timed out' : 'API unavailable';
+    if (out) {{ out.hidden = false; out.classList.add('err'); out.textContent = msg + ' — opening SharpLab as fallback'; }}
+    if (status) status.textContent = msg + ' — falling back to SharpLab…';
+    try {{ await navigator.clipboard.writeText(code); }} catch(_) {{}}
+    setTimeout(() => window.open('https://sharplab.io/', '_blank', 'noopener'), 800);
+  }} finally {{
+    btn.disabled = false;
+    btn.textContent = '▶ Run';
   }}
+}}
+function openSharpLabDirect(btn) {{
+  const box = btn.closest('.code-playground');
+  if (!box) return;
+  const ed = box.querySelector('.py-editor');
+  if (!ed) return;
+  navigator.clipboard.writeText(ed.value).catch(() => {{}});
   window.open('https://sharplab.io/', '_blank', 'noopener');
 }}
+// Back-compat alias if any older markup still calls openSharpLab
+async function openSharpLab(btn) {{ return runCsharpPlayground(btn); }}
 let pyHeightDrag = null;
 function initPyEditorTopResize() {{
   document.querySelectorAll('.py-resize-top').forEach(handle => {{
