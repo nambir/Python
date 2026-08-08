@@ -228,10 +228,10 @@ STORIES_RICH: dict[str, dict] = {
     "D58": {
         "title": "Own Failure and Improve",
         "subtopics": [
-            "accountability",
-            "SignalR assumption gap",
-            "ask-before-overlap",
-            "systemic prevention",
+            "SignalR group null-check gap",
+            "JsonElement proxy fix",
+            "tautological unit tests",
+            "Bluefin WCF DLL POC",
         ],
         "meta": {
             "definition": _def(
@@ -239,23 +239,26 @@ STORIES_RICH: dict[str, dict] = {
                 "and ends on what <b>changed in the process</b> — not blame and not “I was just careful later.”",
                 [
                     "<b>Own:</b> name the wrong assumption (Framework pattern blindly copied to Core).",
-                    "<b>Respond:</b> reproduce, isolate, correct the design, communicate.",
-                    "<b>Learn:</b> framework diffs matter; ask who owns the area before overlapping PRs.",
-                    "<b>Change:</b> checklist + ask-in-group habit.",
+                    "<b>Respond:</b> reproduce, isolate (POC when search/AI loops), correct, prove.",
+                    "<b>Learn:</b> Framework≠Core APIs; sometimes the fix is the <b>DLL version</b>, not code.",
+                    "<b>Change:</b> diff checklist + meaningful asserts + ask-before-overlap.",
                 ],
             ),
             "interview": (
-                "Early in SignalR Core migration I assumed OWIN/Framework group null-checks must be ported. "
-                "That wasted time until I reproduced Core behavior — empty group SendAsync is a safe no-op. "
-                "I owned the gap, documented the correct approach, and changed my process: verify Framework vs Core "
-                "diffs, and ask in the group who already has a PR open so we avoid merge conflicts."
+                "During Core migration I owned several hard gaps. SignalR: OWIN group null-checks do not "
+                "exist in Core — empty-group SendAsync is a safe no-op. Proxy: JsonElement broke SqlParameter "
+                "until Newtonsoft.Json. Tests: removed tautological asserts. Middleware: StringValues uses "
+                ".Count. Separately, Bluefin payment (WCF) failed after migrate — AI and web search kept "
+                "repeating the same wrong code fixes. I built a .NET Framework 4.8 POC with the gateway, "
+                "migrated that POC to .NET 8, and it worked: root cause was a different DLL version, not "
+                "application code. Lesson: when tools loop, isolate with a minimal POC."
             ),
             "skill_id": "D58",
             "area": "D6 — Stories & Impact",
         },
         "learn": (
             """
-<p>Skill matrix <b>D58</b> — failure you owned end to end.</p>
+<p>Skill matrix <b>D58</b> — failure / hard bugs you owned end to end.</p>
 <div class="callout"><b>Level-3 bar:</b> owns the mistake honestly and lands on what changed after.</div>
 
 <h3>1. Accountability — full example</h3>
@@ -270,7 +273,21 @@ STORIES_RICH: dict[str, dict] = {
                 "I was wrong — I should have verified Core semantics first.",
             )
             + """
-<h3>2. Failure story — SignalR assumption</h3>
+<h3>2. Challenge — SignalR dynamic → strongly typed (no group existence check)</h3>
+<p><b>Problem:</b> OWIN used <code>dynamic</code> client methods and checked if the group was null.
+ASP.NET Core SignalR has no “does this group have clients?” API.</p>
+"""
+            + _ba(
+                "// OLD (OWIN) — pattern does not exist in Core\n"
+                "dynamic group = _hub.Clients.Group(siteName, new string[0]);\n"
+                "if (group == null) { return; }\n"
+                "group.AccountingBatchUpdated(json);",
+                "// SOLUTION — empty group SendAsync is a safe no-op\n"
+                "await _hubContext.Clients.Group(siteName.ToLower())\n"
+                "  .SendAsync(\"AccountingBatchUpdated\", json);\n"
+                "// No clients connected → silently ignored (desired)",
+            )
+            + """
 <table class="data-tbl">
 <tr><th>Beat</th><th>What happened</th></tr>
 <tr><td>Gap</td><td>I treated Framework/OWIN SignalR patterns as drop-in for Core.</td></tr>
@@ -278,6 +295,96 @@ STORIES_RICH: dict[str, dict] = {
 <tr><td>Response</td><td>Reproduced multi-tab case; learned Core empty-group send is safe; fixed + documented.</td></tr>
 <tr><td>Prevention</td><td>Framework-diff checklist before porting; ask owners before overlapping fixes.</td></tr>
 </table>
+
+<h3>3. Challenge — JsonElement conversion failures in the proxy</h3>
+<p><b>Problem:</b> When legacy TAS proxied to TASNX, <code>System.Text.Json</code> left integers as
+<code>JsonElement</code>. <code>SqlParameter</code> could not convert JsonElement → Int32
+(“Failed to convert parameter from JsonElement to Int32”).</p>
+"""
+            + _ba(
+                "// BEFORE — System.Text.Json wraps values as JsonElement\n"
+                "// SqlParameter fails: JsonElement → Int32\n"
+                "services.AddControllers(); // default STJ",
+                "// SOLUTION — Newtonsoft deserializes to native types\n"
+                "services.AddControllers()\n"
+                "  .AddNewtonsoftJson(opt => {\n"
+                "    opt.SerializerSettings.ContractResolver =\n"
+                "      new DefaultContractResolver(); // PascalCase\n"
+                "  });\n"
+                "// Also trim Content-Type in proxy middleware:\n"
+                "var mediaType = contentType.Split(';')[0].Trim();\n"
+                "// application/json; charset=utf-8 → application/json",
+            )
+            + """
+<h3>4. Challenge — tautological unit tests (false confidence)</h3>
+<p><b>Problem:</b> tests that can <b>never</b> fail look green but prove nothing.
+<code>Assert.NotNull(success.ToString())</code> is meaningless — <code>bool.ToString()</code>
+always returns <code>"True"</code>/<code>"False"</code>, never null. Suite also lacked failure paths.</p>
+"""
+            + _ba(
+                "// BEFORE — can NEVER fail\n"
+                "Assert.NotNull(success.ToString());\n"
+                "// only success-path setups",
+                "// AFTER — meaningful assert + failure path\n"
+                "Assert.IsType&lt;bool&gt;(success);\n"
+                "_mock.Setup(x => x.SendAsync(It.IsAny&lt;string&gt;()))\n"
+                "  .ReturnsAsync(false); // simulate queue failure\n"
+                "Assert.False(await _mock.Object.SendAsync(\"test\"));",
+            )
+            + """
+<h3>5. Challenge — StringValues API (.Length vs .Count)</h3>
+<p><b>Problem:</b> SignalR middleware used <code>originHeader.Length</code> — that API does not exist on
+<code>StringValues</code>. Also null-checked a struct (structs are never null).</p>
+"""
+            + _ba(
+                "// WRONG — StringValues is a struct; has .Count not .Length\n"
+                "if (bearer != null &amp;&amp; bearer.Length &gt; 0) // compile error",
+                "// FIXED — use .Count; drop null check\n"
+                "if (bearer.Count &gt; 0) // OK",
+            )
+            + """
+<h3>6. Challenge — Bluefin payment (WCF) — fix was the DLL, not the code</h3>
+<p><b>Problem:</b> After migration, one Bluefin payment-gateway path that used <b>WCF</b> threw WCF errors.
+AI tools and web search did not help — suggestions kept looping on the same code-level “fixes.”</p>
+"""
+            + _ba(
+                "// BEFORE — stuck in AI / Google loop\n"
+                "// Same code suggestions repeated; still fails\n"
+                "// Assumption: “must change WCF client code”",
+                "// SOLUTION — isolate with a POC\n"
+                "// 1) New .NET Framework 4.8 project + Bluefin gateway\n"
+                "// 2) Migrate that POC to .NET 8 — works\n"
+                "// Root cause: different DLL version in the real app\n"
+                "// Fix: align the DLL — not rewrite payment code",
+            )
+            + """
+<table class="data-tbl">
+<tr><th>Beat</th><th>What I say</th></tr>
+<tr><td>Stuck</td><td>WCF error on Bluefin after migrate; AI kept proposing the same code changes.</td></tr>
+<tr><td>Method</td><td>Minimal POC: Framework 4.8 + gateway → migrate POC to .NET 8.</td></tr>
+<tr><td>Result</td><td>POC worked → proved app config/DLL mismatch, not business logic.</td></tr>
+<tr><td>Lesson</td><td>When tools loop, stop chatting — <b>isolate</b>. Sometimes the fix is the assembly version.</td></tr>
+</table>
+
+<div class="keyword-box">
+<b>How these stories score Level-3</b>
+<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
+<li>Specific personal assumption or bug (not “migration was hard”).</li>
+<li>Concrete recovery (repro → root cause → code <b>or DLL</b> fix → prove).</li>
+<li>Durable change (checklist, POC habit when AI loops, meaningful asserts, ask-before-overlap).</li>
+</ol>
+</div>
+
+"""
+            + _ba(
+                "// BEFORE process\n"
+                "Keep asking AI the same question; hope for a new answer.\n"
+                "// Risk: same wrong fix forever",
+                "// AFTER process\n"
+                "If search/AI loops → build a minimal POC.\n"
+                "Compare working POC vs failing app (refs, DLL versions).",
+            )
+            + """
 """
             + _ba(
                 "// BEFORE process\n"
@@ -288,35 +395,21 @@ STORIES_RICH: dict[str, dict] = {
                 "If a PR is open, I coordinate instead of conflicting.",
             )
             + """
-<div class="keyword-box">
-<b>How this failure story scores Level-3</b>
-<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
-<li>Specific personal assumption (not “the migration was hard”).</li>
-<li>Concrete recovery (repro → correct Core behavior → docs).</li>
-<li>Durable change (checklist + ask-before-overlap), not only “I’ll be careful.”</li>
-</ol>
-</div>
-
-<h3>3. Related learning — setup research</h3>
-<p>When the team’s UserSecrets path for local setup was wrong, I researched the correct
-<code>AppData\\Roaming\\Microsoft\\UserSecrets\\…\\secrets.xml</code> path and shared it.
-Same pattern: don’t stop at “it doesn’t work” — own the investigation.</p>
-
 <h3>Self-check quiz</h3>
 <div class="quiz-box">
-  <div class="quiz-q"><b>Q1.</b> What was the wrong assumption?
+  <div class="quiz-q"><b>Q1.</b> What was the wrong SignalR assumption?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">That Framework/OWIN SignalR group null-check patterns must be copied into Core.</div>
+      <div class="quiz-reveal">That Framework/OWIN group null-check / dynamic patterns must be copied into Core — empty-group SendAsync is a safe no-op.</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q2.</b> What process changed after?
+  <div class="quiz-q"><b>Q2.</b> Why did the proxy fail converting to Int32?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Verify Framework vs Core diffs; ask in group who owns the module / open PR before overlapping.</div>
+      <div class="quiz-reveal">System.Text.Json left values as JsonElement; SqlParameter cannot convert JsonElement → Int32. Fix: Newtonsoft.Json (+ trim Content-Type).</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q3.</b> Why is “I became careful” a weak ending?
+  <div class="quiz-q"><b>Q3.</b> Bluefin WCF: why did a Framework 4.8 → .NET 8 POC unlock the fix?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Level-3 wants a durable control — checklist, doc, ask-before-overlap — not only intent.</div>
+      <div class="quiz-reveal">POC worked on .NET 8, so the bug was not “WCF can’t migrate” — the real app had a different DLL version. AI had been looping on code changes that were not the root cause.</div>
     </details>
   </div>
 </div>
@@ -324,43 +417,51 @@ Same pattern: don’t stop at “it doesn’t work” — own the investigation.
         ),
         "practice": """
 <ul class="checklist">
-  <li>Say the SignalR assumption gap in one sentence</li>
-  <li>Add the ask-before-overlap habit as prevention</li>
-  <li>Optional: UserSecrets path research as a smaller ownership example</li>
+  <li>Say the SignalR empty-group SendAsync fix in one sentence</li>
+  <li>Explain JsonElement → Newtonsoft proxy fix</li>
+  <li>Name one tautological assert you removed and what replaced it</li>
+  <li>Tell the Bluefin WCF story: AI loop → Framework POC → migrate POC → DLL version fix</li>
 </ul>
 <a class="file-link" href="MyDotnet.md">MyDotnet D58</a>
 """,
         "beginner": {
             "steps": [
                 {
-                    "title": "Step 1 — Own the gap (before/after)",
+                    "title": "Step 1 — Own the SignalR gap",
                     "body": _ba(
-                        "Migration issues happened.",
-                        "I assumed Framework patterns apply to Core SignalR — that was my gap.",
+                        "if (group == null) return; // OWIN habit",
+                        "await Clients.Group(site).SendAsync(...); // Core no-op if empty",
                     ),
                 },
                 {
-                    "title": "Step 2 — Response and proof",
+                    "title": "Step 2 — Proxy / tests / StringValues",
                     "body": (
-                        "<p>Reproduce → learn Core empty-group behavior → document → share.</p>"
+                        "<ol style=\"margin:6px 0 0 18px;font-size:12px;line-height:1.55\">"
+                        "<li><b>JsonElement:</b> switch to Newtonsoft + trim Content-Type.</li>"
+                        "<li><b>Tests:</b> replace NotNull(ToString()) with real asserts + failure paths.</li>"
+                        "<li><b>StringValues:</b> use .Count, not .Length.</li>"
+                        "</ol>"
                     ),
                 },
                 {
-                    "title": "Step 3 — Systemic prevention",
+                    "title": "Step 3 — Bluefin WCF: POC when AI loops",
                     "body": (
-                        "<p>Checklist for Framework vs Core + ask owners before overlapping PRs.</p>"
+                        "<p><b>Method:</b> .NET Framework 4.8 + gateway → migrate POC to .NET 8. "
+                        "If POC works, compare DLL versions with the failing app — fix the assembly, not random code.</p>"
                     ),
                 },
             ],
             "interview_qa": [
                 {
-                    "q": "Tell a failure story you owned.",
-                    "a": "Wrong Framework→Core SignalR assumption; I reproduced, fixed docs, and added "
-                    "diff-check + ask-before-overlap habits.",
+                    "q": "Tell a failure / hard-bug story you owned.",
+                    "a": "Bluefin WCF after migrate: AI kept suggesting the same code fixes. I built a "
+                    "Framework 4.8 POC, migrated it to .NET 8 successfully, and found the real app used a "
+                    "different DLL version — fix was the assembly, not payment code.",
                 },
                 {
                     "q": "What changed after?",
-                    "a": "Process: verify platform diffs; ask who owns the area before starting a conflicting fix.",
+                    "a": "When search/AI loops, isolate with a minimal POC and compare references/DLL "
+                    "versions before rewriting business code.",
                 },
             ],
         },
@@ -371,21 +472,21 @@ Same pattern: don’t stop at “it doesn’t work” — own the investigation.
                 (
                     "Can you name your gap in one sentence?",
                     "State the assumption",
-                    "Framework SignalR patterns ≠ Core — I assumed they were the same.",
+                    "I assumed it was WCF/code — it was the DLL version.",
                     ["own the gap"],
                     "key",
                 ),
                 (
                     "Did you fix impact and prove it?",
-                    "Repro + correct behavior",
-                    "Multi-tab verify; document Core SendAsync semantics.",
-                    ["repro", "docs"],
+                    "POC isolate + compare",
+                    "Framework 4.8 POC → .NET 8 works → align DLL in real app.",
+                    ["POC", "DLL"],
                     "dd",
                 ),
                 (
                     "Did the system change?",
-                    "Checklist + ask owners",
-                    "Prevention beats “I’ll be careful.”",
+                    "Stop AI loops; isolate",
+                    "POC habit when tools repeat the same wrong fix.",
                     ["process change"],
                     "cm",
                 ),

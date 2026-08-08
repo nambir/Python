@@ -982,7 +982,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
     </div>
     <div class="nav-section nav-section-6">
       <h3>D6 — Stories &amp; Impact</h3>
-      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#57" onclick="goSlide(57); return false;">57. Tell Your Project Story</a><ul class="nav-subs"><li><a href="#57" onclick="goSlide(57); return false;">STAR structure</a></li><li><a href="#57" onclick="goSlide(57); return false;">SignalR ownership story</a></li><li><a href="#57" onclick="goSlide(57); return false;">Module onboarding story</a></li><li><a href="#57" onclick="goSlide(57); return false;">Wallet / Registry outcomes</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#58" onclick="goSlide(58); return false;">58. Own Failure and Improve</a><ul class="nav-subs"><li><a href="#58" onclick="goSlide(58); return false;">accountability</a></li><li><a href="#58" onclick="goSlide(58); return false;">SignalR assumption gap</a></li><li><a href="#58" onclick="goSlide(58); return false;">ask-before-overlap</a></li><li><a href="#58" onclick="goSlide(58); return false;">systemic prevention</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#59" onclick="goSlide(59); return false;">59. Tell a Decision Story</a><ul class="nav-subs"><li><a href="#59" onclick="goSlide(59); return false;">decision criteria</a></li><li><a href="#59" onclick="goSlide(59); return false;">3 SignalR alternatives</a></li><li><a href="#59" onclick="goSlide(59); return false;">why bridge won</a></li><li><a href="#59" onclick="goSlide(59); return false;">tradeoffs</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#60" onclick="goSlide(60); return false;">60. Prove Impact With Numbers</a><ul class="nav-subs"><li><a href="#60" onclick="goSlide(60); return false;">ticket volume</a></li><li><a href="#60" onclick="goSlide(60); return false;">tests &amp; automation</a></li><li><a href="#60" onclick="goSlide(60); return false;">Financial Cap dollars</a></li><li><a href="#60" onclick="goSlide(60); return false;">recognition outcomes</a></li></ul></div></div>
+      <div class="nav-links"><div class="nav-topic"><a class="nav-main" href="#57" onclick="goSlide(57); return false;">57. Tell Your Project Story</a><ul class="nav-subs"><li><a href="#57" onclick="goSlide(57); return false;">STAR structure</a></li><li><a href="#57" onclick="goSlide(57); return false;">SignalR ownership story</a></li><li><a href="#57" onclick="goSlide(57); return false;">Module onboarding story</a></li><li><a href="#57" onclick="goSlide(57); return false;">Wallet / Registry outcomes</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#58" onclick="goSlide(58); return false;">58. Own Failure and Improve</a><ul class="nav-subs"><li><a href="#58" onclick="goSlide(58); return false;">SignalR group null-check gap</a></li><li><a href="#58" onclick="goSlide(58); return false;">JsonElement proxy fix</a></li><li><a href="#58" onclick="goSlide(58); return false;">tautological unit tests</a></li><li><a href="#58" onclick="goSlide(58); return false;">Bluefin WCF DLL POC</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#59" onclick="goSlide(59); return false;">59. Tell a Decision Story</a><ul class="nav-subs"><li><a href="#59" onclick="goSlide(59); return false;">decision criteria</a></li><li><a href="#59" onclick="goSlide(59); return false;">3 SignalR alternatives</a></li><li><a href="#59" onclick="goSlide(59); return false;">why bridge won</a></li><li><a href="#59" onclick="goSlide(59); return false;">tradeoffs</a></li></ul></div><div class="nav-topic"><a class="nav-main" href="#60" onclick="goSlide(60); return false;">60. Prove Impact With Numbers</a><ul class="nav-subs"><li><a href="#60" onclick="goSlide(60); return false;">ticket volume</a></li><li><a href="#60" onclick="goSlide(60); return false;">tests &amp; automation</a></li><li><a href="#60" onclick="goSlide(60); return false;">Financial Cap dollars</a></li><li><a href="#60" onclick="goSlide(60); return false;">recognition outcomes</a></li></ul></div></div>
     </div>
   </div>
 </div>
@@ -9201,7 +9201,7 @@ so others could start easier tickets after me.</div></div></div>
 <div class="slide-body">
   <div class="main-split no-code">
     <div class="panel-left">
-      <div class="callout"><b>What this primarily describes:</b> A <b>failure story</b> shows ownership of a real gap, recovery, and process change. Here: Framework→Core SignalR assumption, plus ask-before-overlap (and UserSecrets path research).</div><h3>Definition</h3><div class="def-block">A strong failure story is honest about <b>your</b> gap, shows how you fixed impact, and ends on what <b>changed in the process</b> — not blame and not “I was just careful later.”<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Own:</b> name the wrong assumption (Framework pattern blindly copied to Core).</li><li><b>Respond:</b> reproduce, isolate, correct the design, communicate.</li><li><b>Learn:</b> framework diffs matter; ask who owns the area before overlapping PRs.</li><li><b>Change:</b> checklist + ask-in-group habit.</li></ul></div>
+      <div class="callout"><b>What this primarily describes:</b> A <b>failure story</b> shows ownership of a real gap, recovery, and process change. Here: Framework→Core SignalR empty-group SendAsync, JsonElement→Newtonsoft proxy fix, tautological tests, StringValues <code>.Count</code>, and Bluefin WCF — <b>POC proved a DLL version mismatch</b> when AI kept looping on code fixes.</div><h3>Definition</h3><div class="def-block">A strong failure story is honest about <b>your</b> gap, shows how you fixed impact, and ends on what <b>changed in the process</b> — not blame and not “I was just careful later.”<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Own:</b> name the wrong assumption (Framework pattern blindly copied to Core).</li><li><b>Respond:</b> reproduce, isolate (POC when search/AI loops), correct, prove.</li><li><b>Learn:</b> Framework≠Core APIs; sometimes the fix is the <b>DLL version</b>, not code.</li><li><b>Change:</b> diff checklist + meaningful asserts + ask-before-overlap.</li></ul></div>
 <h3>Decision flowchart</h3>
 <p class="fc-kid-hint">Read from the top. If the answer is <b>YES</b>, stop at that box. If <b>NO</b>, go down.</p>
 <div class="fc-wrap slide-fc">
@@ -9219,7 +9219,7 @@ so others could start easier tickets after me.</div></div></div>
             <div class="fc-h right"></div>
             <div class="fc-use key">
               <b>State the assumption</b>
-              <span class="fc-desc">Framework SignalR patterns ≠ Core — I assumed they were the same.</span>
+              <span class="fc-desc">I assumed it was WCF/code — it was the DLL version.</span>
               <code>own the gap</code>
             </div>
           </div>
@@ -9234,9 +9234,9 @@ so others could start easier tickets after me.</div></div></div>
             <span class="fc-side yes">YES</span>
             <div class="fc-h right"></div>
             <div class="fc-use dd">
-              <b>Repro + correct behavior</b>
-              <span class="fc-desc">Multi-tab verify; document Core SendAsync semantics.</span>
-              <code>repro</code><code>docs</code>
+              <b>POC isolate + compare</b>
+              <span class="fc-desc">Framework 4.8 POC → .NET 8 works → align DLL in real app.</span>
+              <code>POC</code><code>DLL</code>
             </div>
           </div>
         </div>
@@ -9250,8 +9250,8 @@ so others could start easier tickets after me.</div></div></div>
             <span class="fc-side yes">YES</span>
             <div class="fc-h right"></div>
             <div class="fc-use cm">
-              <b>Checklist + ask owners</b>
-              <span class="fc-desc">Prevention beats “I’ll be careful.”</span>
+              <b>Stop AI loops; isolate</b>
+              <span class="fc-desc">POC habit when tools repeat the same wrong fix.</span>
               <code>process change</code>
             </div>
           </div>
@@ -9265,9 +9265,9 @@ so others could start easier tickets after me.</div></div></div>
     </div>
   </div>
 </div>
-<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Own the gap (before/after)</b><br><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">Migration issues happened.</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">I assumed Framework patterns apply to Core SignalR — that was my gap.</div></div></div></li><li><b>Step 2 — Response and proof</b><br><p>Reproduce → learn Core empty-group behavior → document → share.</p></li><li><b>Step 3 — Systemic prevention</b><br><p>Checklist for Framework vs Core + ask owners before overlapping PRs.</p></li></ul>
+<h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Own the SignalR gap</b><br><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre"><mark class="hl-key">if</mark> (group == null) <mark class="hl-key">return</mark>; // OWIN habit</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre"><mark class="hl-key">await</mark> Clients.Group(site).SendAsync(...); // Core no-op <mark class="hl-key">if</mark> empty</div></div></div></li><li><b>Step 2 — Proxy / tests / StringValues</b><br><ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55"><li><b>JsonElement:</b> switch to Newtonsoft + trim Content-Type.</li><li><b>Tests:</b> replace NotNull(ToString()) with real asserts + failure paths.</li><li><b>StringValues:</b> use .Count, not .Length.</li></ol></li><li><b>Step 3 — Bluefin WCF: POC when AI loops</b><br><p><b>Method:</b> .NET Framework 4.8 + gateway → migrate POC to .NET 8. If POC works, compare DLL versions with the failing app — fix the assembly, not random code.</p></li></ul>
       
-<p>Skill matrix <b>D58</b> — failure you owned end to end.</p>
+<p>Skill matrix <b>D58</b> — failure / hard bugs you owned end to end.</p>
 <div class="callout"><b>Level-3 bar:</b> owns the mistake honestly and lands on what changed after.</div>
 
 <h3>1. Accountability — full example</h3>
@@ -9277,7 +9277,16 @@ SignalR was confusing because Core <mark class="hl-key">is</mark> different.
 Someone should have documented it.</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// AFTER — own the gap
 I assumed Framework null-check patterns must be copied.
 I was wrong — I should have verified Core semantics first.</div></div></div>
-<h3>2. Failure story — SignalR assumption (MyDotnet + Tickets)</h3>
+<h3>2. Challenge — SignalR dynamic → strongly typed (no group existence check)</h3>
+<p><b>Problem:</b> OWIN used <code>dynamic</code> client methods and checked if the group was null.
+ASP.NET Core SignalR has no “does this group have clients?” API.</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// OLD (OWIN) — pattern does <mark class="hl-key">not</mark> exist <mark class="hl-key">in</mark> Core
+dynamic group = _hub.Clients.Group(siteName, new string[0]);
+<mark class="hl-key">if</mark> (group == null) { <mark class="hl-key">return</mark>; }
+group.AccountingBatchUpdated(<mark class="hl-key">json</mark>);</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// SOLUTION — empty group SendAsync <mark class="hl-key">is</mark> a safe no-op
+<mark class="hl-key">await</mark> _hubContext.Clients.Group(siteName.ToLower())
+  .SendAsync("AccountingBatchUpdated", <mark class="hl-key">json</mark>);
+// No clients connected → silently ignored (desired)</div></div></div>
 <table class="data-tbl">
 <tr><th>Beat</th><th>What happened</th></tr>
 <tr><td>Gap</td><td>I treated Framework/OWIN SignalR patterns as drop-in for Core.</td></tr>
@@ -9285,54 +9294,132 @@ I was wrong — I should have verified Core semantics first.</div></div></div>
 <tr><td>Response</td><td>Reproduced multi-tab case; learned Core empty-group send is safe; fixed + documented.</td></tr>
 <tr><td>Prevention</td><td>Framework-diff checklist before porting; ask owners before overlapping fixes.</td></tr>
 </table>
+
+<h3>3. Challenge — JsonElement conversion failures in the proxy</h3>
+<p><b>Problem:</b> When legacy TAS proxied to TASNX, <code>System.Text.Json</code> left integers as
+<code>JsonElement</code>. <code>SqlParameter</code> could not convert JsonElement → Int32
+(“Failed to convert parameter from JsonElement to Int32”).</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// BEFORE — System.Text.Json <mark class="hl-key">wraps</mark> values <mark class="hl-key">as</mark> JsonElement
+// SqlParameter fails: JsonElement → Int32
+services.AddControllers(); // default STJ</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// SOLUTION — Newtonsoft deserializes to native types
+services.AddControllers()
+  .AddNewtonsoftJson(opt => {
+    opt.SerializerSettings.ContractResolver =
+      new DefaultContractResolver(); // PascalCase
+  });
+// Also trim Content-Type <mark class="hl-key">in</mark> <mark class="hl-key">proxy</mark> middleware:
+var mediaType = contentType.Split(';')[0].Trim();
+// application/<mark class="hl-key">json</mark>; charset=utf-8 → application/<mark class="hl-key">json</mark></div></div></div>
+<h3>4. Challenge — tautological unit tests (false confidence)</h3>
+<p><b>Problem:</b> tests that can <b>never</b> fail look green but prove nothing.
+<code>Assert.NotNull(success.ToString())</code> is meaningless — <code>bool.ToString()</code>
+always returns <code>"True"</code>/<code>"False"</code>, never null. Suite also lacked failure paths.</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// BEFORE — can NEVER fail
+Assert.NotNull(success.ToString());
+// only success-path setups</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// AFTER — meaningful <mark class="hl-key">assert</mark> + failure path
+Assert.IsType&lt;<mark class="hl-key">bool</mark>&gt;(success);
+_mock.Setup(x => x.SendAsync(It.IsAny&lt;string&gt;()))
+  .ReturnsAsync(false); // simulate queue failure
+Assert.<mark class="hl-key">False</mark>(<mark class="hl-key">await</mark> _mock.Object.SendAsync("test"));</div></div></div>
+<h3>5. Challenge — StringValues API (.Length vs .Count)</h3>
+<p><b>Problem:</b> SignalR middleware used <code>originHeader.Length</code> — that API does not exist on
+<code>StringValues</code>. Also null-checked a struct (structs are never null).</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// WRONG — StringValues <mark class="hl-key">is</mark> a struct; has .Count <mark class="hl-key">not</mark> .Length
+<mark class="hl-key">if</mark> (bearer != null &amp;&amp; bearer.Length &gt; 0) // compile error</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// FIXED — use .Count; drop null check
+<mark class="hl-key">if</mark> (bearer.Count &gt; 0) // OK</div></div></div>
+<h3>6. Challenge — Bluefin payment (WCF) — fix was the DLL, not the code</h3>
+<p><b>Problem:</b> After migration, one Bluefin payment-gateway path that used <b>WCF</b> threw WCF errors.
+AI tools and web search did not help — suggestions kept looping on the same code-level “fixes.”</p>
+<div class="callout"><b>My explanation:</b> Got an error while migrating, for one of the Bluefin payment gateway which was using WCF — got WCF error. Using AI tools, googling not worked. So I did a POC: created .NET 4.8, added payment gateway, then did migration to 8.0 — it worked. It is because it used different DLL version. So fix is DLL and not code. AI tools not find the solution — keeping on suggesting same solution in loop.</div>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// BEFORE — stuck <mark class="hl-key">in</mark> AI / Google loop
+// Same code suggestions repeated; still fails
+// Assumption: “must change WCF client code”</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// SOLUTION — isolate <mark class="hl-key">with</mark> a POC
+// 1) New .NET Framework 4.8 project + Bluefin gateway
+// 2) Migrate that POC to .NET 8 — works
+// Root cause: different DLL version <mark class="hl-key">in</mark> the real app
+// Fix: align the DLL — <mark class="hl-key">not</mark> rewrite payment code</div></div></div>
+<table class="data-tbl">
+<tr><th>Beat</th><th>What I say</th></tr>
+<tr><td>Stuck</td><td>WCF error on Bluefin after migrate; AI kept proposing the same code changes.</td></tr>
+<tr><td>Method</td><td>Minimal POC: Framework 4.8 + gateway → migrate POC to .NET 8.</td></tr>
+<tr><td>Result</td><td>POC worked → proved app config/DLL mismatch, not business logic.</td></tr>
+<tr><td>Lesson</td><td>When tools loop, stop chatting — <b>isolate</b>. Sometimes the fix is the assembly version.</td></tr>
+</table>
+
+<div class="keyword-box">
+<b>How these stories score Level-3</b>
+<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
+<li>Specific personal assumption or bug (not “migration was hard”).</li>
+<li>Concrete recovery (repro → root cause → code <b>or DLL</b> fix → prove).</li>
+<li>Durable change (checklist, POC habit when AI loops, meaningful asserts, ask-before-overlap).</li>
+</ol>
+</div>
+
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// BEFORE process
+Keep asking AI the same question; hope <mark class="hl-key">for</mark> a new answer.
+// Risk: same wrong fix forever</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// AFTER process
+If search/AI loops → build a minimal POC.
+Compare working POC vs failing app (refs, DLL versions).</div></div></div>
 <div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Before</span><div class="step-pre">// BEFORE process
 Start coding a fix without asking who owns it.
 // Risk: conflicting PRs / merge pain</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; After</span><div class="step-pre">// AFTER process
 I ask <mark class="hl-key">in</mark> the group who already worked the area.
 If a PR <mark class="hl-key">is</mark> <mark class="hl-key">open</mark>, I coordinate instead of conflicting.</div></div></div>
-<div class="keyword-box">
-<b>How this failure story scores Level-3</b>
-<ol style="margin:6px 0 0 18px;font-size:12px;line-height:1.55">
-<li>Specific personal assumption (not “the migration was hard”).</li>
-<li>Concrete recovery (repro → correct Core behavior → docs).</li>
-<li>Durable change (checklist + ask-before-overlap), not only “I’ll be careful.”</li>
-</ol>
-</div>
-
-<h3>3. Related learning — setup research</h3>
-<p>When the team’s UserSecrets path for local setup was wrong, I researched the correct
-<code>AppData\Roaming\Microsoft\UserSecrets\…\secrets.xml</code> path and shared it.
-Same pattern: don’t stop at “it doesn’t work” — own the investigation.</p>
-
 <h3>Self-check quiz</h3>
 <div class="quiz-box">
-  <div class="quiz-q"><b>Q1.</b> What was the wrong assumption?
+  <div class="quiz-q"><b>Q1.</b> What was the wrong SignalR assumption?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">That Framework/OWIN SignalR group null-check patterns must be copied into Core.</div>
+      <div class="quiz-reveal">That Framework/OWIN group null-check / dynamic patterns must be copied into Core — empty-group SendAsync is a safe no-op.</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q2.</b> What process changed after?
+  <div class="quiz-q"><b>Q2.</b> Why did the proxy fail converting to Int32?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Verify Framework vs Core diffs; ask in group who owns the module / open PR before overlapping.</div>
+      <div class="quiz-reveal">System.Text.Json left values as JsonElement; SqlParameter cannot convert JsonElement → Int32. Fix: Newtonsoft.Json (+ trim Content-Type).</div>
     </details>
   </div>
-  <div class="quiz-q"><b>Q3.</b> Why is “I became careful” a weak ending?
+  <div class="quiz-q"><b>Q3.</b> Bluefin WCF: why did a Framework 4.8 → .NET 8 POC unlock the fix?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Level-3 wants a durable control — checklist, doc, ask-before-overlap — not only intent.</div>
+      <div class="quiz-reveal">POC worked on .NET 8, so the bug was not “WCF can’t migrate” — the real app had a different DLL version. AI had been looping on code changes that were not the root cause.</div>
     </details>
   </div>
 </div>
 <h3>My project story (from MyDotnet.md)</h3><div class="callout"><b>My project (D58):</b> Failure story</div>
-<p><b>How:</b> Early assumption that OWIN/Framework SignalR group null-check must be ported to Core caused confusion; I reproduced and learned Core empty-group SendAsync is a safe no-op. Separately I ask in group who owns a module before overlapping PRs to avoid merge conflicts.</p>
-<p><b>Why:</b> Honesty + process change (verify Framework vs Core diffs; ask owners).</p>
-<p class="step-result"><b>Self rating:</b> 3 (Expected TA: 4)</p><h3>Excel / assessor talking points</h3><ul style="margin:6px 0 0 18px;font-size:12px;line-height:1.5"><li>Level-3 asks: failure you owned end-to-end and what changed after.</li><li>Failure: I assumed Framework SignalR patterns must be copied to Core without checking platform difference.</li><li>This wasted time until I reproduced and learned Core behavior is different.</li><li>I owned the mistake, documented correct approach, and shared with team.</li><li>Changed after: framework-diff checklist before migration; ask PR owner/group before overlapping work.</li><li>Related ownership: UserSecrets path research when team path was wrong — I found AppData\Roaming\Microsoft\UserSecrets\...\secrets.xml and shared it.</li></ul><div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Tell a failure story you owned.</p><p class="qa-a"><b>A:</b> Wrong Framework→Core SignalR assumption; I reproduced, fixed docs, and added diff-check + ask-before-overlap habits.</p><p class="qa-q"><b>Q:</b> What changed after?</p><p class="qa-a"><b>A:</b> Process: verify platform diffs; ask who owns the area before starting a conflicting fix.</p></div>
+<p><b>How:</b> Hard gaps I owned during Core migration / proxy / payments work:
+1. **SignalR:** assumed OWIN dynamic group null-check must be ported — Core has no group-exists API; empty-group `SendAsync` is a safe no-op.
+2. **Proxy JsonElement:** System.Text.Json left ints as JsonElement → SqlParameter Int32 convert failed; switched to Newtonsoft.Json + trimmed Content-Type (`application/json; charset=utf-8` → `application/json`).
+3. **Tautological tests:** found `Assert.NotNull(success.ToString())` (never fails); replaced with real asserts and added failure-path mocks.
+4. **StringValues:** middleware used `.Length` / null-check on a struct — fixed to `.Count`.
+5. **Bluefin WCF / DLL:** after migrate, Bluefin payment gateway (WCF) failed. AI + Google kept looping the same code suggestions. I built a .NET Framework 4.8 POC with the gateway, migrated the POC to .NET 8 — it worked. Root cause: different DLL version in the real app. Fix was the assembly, not rewriting payment code. Also ask in group who owns a module before overlapping PRs.</p>
+<p><b>Why:</b> Honesty + isolate when tools loop (POC) + durable fixes (platform-diff checklist, serializer choice, meaningful asserts).</p>
+<div class="step-pre">// Challenge 1 — Core: empty group <mark class="hl-key">is</mark> safe no-op
+<mark class="hl-key">await</mark> _hubContext.Clients.Group(siteName.ToLower())
+  .SendAsync("AccountingBatchUpdated", <mark class="hl-key">json</mark>);
+
+// Challenge 2 — native types <mark class="hl-key">for</mark> SqlParameter
+services.AddControllers()
+  .AddNewtonsoftJson(opt =&gt; {
+    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+  });
+var mediaType = contentType.Split(';')[0].Trim();
+
+// Challenge 3 — <mark class="hl-key">assert</mark> that can fail
+Assert.IsType&lt;<mark class="hl-key">bool</mark>&gt;(success);
+
+// Challenge 4 — StringValues API
+<mark class="hl-key">if</mark> (bearer.Count &gt; 0) { /* use token */ }
+
+// Challenge 5 — Bluefin: POC proved DLL mismatch (<mark class="hl-key">not</mark> code)
+// Framework 4.8 POC + gateway → migrate POC to .NET 8 → works
+// → align DLL version <mark class="hl-key">in</mark> the real application</div>
+<p class="step-result"><b>Self rating:</b> 3 (Expected TA: 4)</p><h3>Excel / assessor talking points</h3><ul style="margin:6px 0 0 18px;font-size:12px;line-height:1.5"><li>Level-3 asks: failure you owned end-to-end and what changed after.</li><li>SignalR: I assumed Framework group null-check must be copied to Core — wrong; SendAsync to empty group is safe.</li><li>Proxy: JsonElement → Int32 SqlParameter failure — fixed with Newtonsoft.Json + Content-Type trim.</li><li>Tests: removed tautological Assert.NotNull(bool.ToString()); added failure-path mocks.</li><li>Middleware: StringValues uses .Count not .Length (struct — no null check).</li><li>Bluefin WCF: AI looped on code fixes; Framework 4.8→.NET 8 POC proved different DLL version — fix was the assembly.</li><li>Changed after: when AI/search loops, isolate with a minimal POC; compare references before rewriting code.</li></ul><div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Tell a failure / hard-bug story you owned.</p><p class="qa-a"><b>A:</b> Bluefin WCF after migrate: AI kept suggesting the same code fixes. I built a Framework 4.8 POC, migrated it to .NET 8 successfully, and found the real app used a different DLL version — fix was the assembly, not payment code.</p><p class="qa-q"><b>Q:</b> What changed after?</p><p class="qa-a"><b>A:</b> When search/AI loops, isolate with a minimal POC and compare references/DLL versions before rewriting business code.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
 <ul class="checklist">
-  <li>Say the SignalR assumption gap in one sentence</li>
-  <li>Add the ask-before-overlap habit as prevention</li>
-  <li>Optional: UserSecrets path research as a smaller ownership example</li>
+  <li>Say the SignalR empty-group SendAsync fix in one sentence</li>
+  <li>Explain JsonElement → Newtonsoft proxy fix</li>
+  <li>Name one tautological assert you removed and what replaced it</li>
+  <li>Tell the Bluefin WCF story: AI loop → Framework POC → migrate POC → DLL version fix</li>
 </ul>
 <a class="file-link" href="MyDotnet.md">MyDotnet D58</a>
 

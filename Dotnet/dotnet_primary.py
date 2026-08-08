@@ -364,8 +364,9 @@ PRIMARY: dict[str, str] = {
     ),
     "D58": (
         "A <b>failure story</b> shows ownership of a real gap, recovery, and process change. "
-        "Here: Framework→Core SignalR assumption, plus ask-before-overlap "
-        "(and UserSecrets path research)."
+        "Here: Framework→Core SignalR empty-group SendAsync, JsonElement→Newtonsoft proxy fix, "
+        "tautological tests, StringValues <code>.Count</code>, and Bluefin WCF — "
+        "<b>POC proved a DLL version mismatch</b> when AI kept looping on code fixes."
     ),
     "D59": (
         "A <b>decision story</b> names alternatives and why they lost. "

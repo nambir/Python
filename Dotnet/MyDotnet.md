@@ -1,4 +1,4 @@
-﻿# My .NET Skill Depth Answers — Sangeetha Rajendiran (I25054)
+# My .NET Skill Depth Answers — Sangeetha Rajendiran (I25054)
 
 **Role:** Technical Analyst  
 **Primary project:** My project — .NET 8 Web API, integration services, Registry/admin module, web client + WinForm  
@@ -1487,19 +1487,48 @@ _logger.LogInformation("Wallet created Site={Site} ProfileId={Id}", site, id);
 
 ## D58 — Failure story
 
-**How:** Early assumption that OWIN/Framework SignalR group null-check must be ported to Core caused confusion; I reproduced and learned Core empty-group SendAsync is a safe no-op. Separately I ask in group who owns a module before overlapping PRs to avoid merge conflicts.
+**How:** Hard gaps I owned during Core migration / proxy / payments work:
+1. **SignalR:** assumed OWIN dynamic group null-check must be ported — Core has no group-exists API; empty-group `SendAsync` is a safe no-op.
+2. **Proxy JsonElement:** System.Text.Json left ints as JsonElement → SqlParameter Int32 convert failed; switched to Newtonsoft.Json + trimmed Content-Type (`application/json; charset=utf-8` → `application/json`).
+3. **Tautological tests:** found `Assert.NotNull(success.ToString())` (never fails); replaced with real asserts and added failure-path mocks.
+4. **StringValues:** middleware used `.Length` / null-check on a struct — fixed to `.Count`.
+5. **Bluefin WCF / DLL:** after migrate, Bluefin payment gateway (WCF) failed. AI + Google kept looping the same code suggestions. I built a .NET Framework 4.8 POC with the gateway, migrated the POC to .NET 8 — it worked. Root cause: different DLL version in the real app. Fix was the assembly, not rewriting payment code. Also ask in group who owns a module before overlapping PRs.
 
-**Why:** Honesty + process change (verify Framework vs Core diffs; ask owners).
+**Why:** Honesty + isolate when tools loop (POC) + durable fixes (platform-diff checklist, serializer choice, meaningful asserts).
 
-**Code:** N/A  
+**Code:**
+```csharp
+// Challenge 1 — Core: empty group is safe no-op
+await _hubContext.Clients.Group(siteName.ToLower())
+  .SendAsync("AccountingBatchUpdated", json);
+
+// Challenge 2 — native types for SqlParameter
+services.AddControllers()
+  .AddNewtonsoftJson(opt => {
+    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+  });
+var mediaType = contentType.Split(';')[0].Trim();
+
+// Challenge 3 — assert that can fail
+Assert.IsType<bool>(success);
+
+// Challenge 4 — StringValues API
+if (bearer.Count > 0) { /* use token */ }
+
+// Challenge 5 — Bluefin: POC proved DLL mismatch (not code)
+// Framework 4.8 POC + gateway → migrate POC to .NET 8 → works
+// → align DLL version in the real application
+```
+
 **Suggested Self Rating:** 3 (Expected TA: 4)
 **Excel paste:**
 - Level-3 asks: failure you owned end-to-end and what changed after.
-- Failure: I assumed Framework SignalR patterns must be copied to Core without checking platform difference.
-- This wasted time until I reproduced and learned Core behavior is different.
-- I owned the mistake, documented correct approach, and shared with team.
-- Changed after: framework-diff checklist before migration; ask PR owner/group before overlapping work.
-- Related ownership: UserSecrets path research when team path was wrong — I found AppData\Roaming\Microsoft\UserSecrets\...\secrets.xml and shared it.
+- SignalR: I assumed Framework group null-check must be copied to Core — wrong; SendAsync to empty group is safe.
+- Proxy: JsonElement → Int32 SqlParameter failure — fixed with Newtonsoft.Json + Content-Type trim.
+- Tests: removed tautological Assert.NotNull(bool.ToString()); added failure-path mocks.
+- Middleware: StringValues uses .Count not .Length (struct — no null check).
+- Bluefin WCF: AI looped on code fixes; Framework 4.8→.NET 8 POC proved different DLL version — fix was the assembly.
+- Changed after: when AI/search loops, isolate with a minimal POC; compare references before rewriting code.
 
 ---
 
