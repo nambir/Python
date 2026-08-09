@@ -1007,26 +1007,27 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     + io_split(
                         "class CountDown:\n"
                         "    def __init__(self, start):\n"
-                        "        self.n = start\n"
+                        "        self.n = start          # CREATE instance var n on this object (copies value of start)\n"
                         "\n"
                         "    def __iter__(self):\n"
                         "        return self          # I am my own iterator\n"
                         "\n"
                         "    def __next__(self):\n"
-                        "        if self.n <= 0:\n"
+                        "        if self.n <= 0:        # self.n = this object's current count\n"
                         "            raise StopIteration\n"
-                        "        self.n -= 1\n"
-                        "        return self.n + 1\n"
+                        "        self.n -= 1             # same as self.n = self.n - 1 (count down by 1)\n"
+                        "        return self.n + 1     # return old value (after -=1, add 1 back)\n"
                         "\n"
                         "# for calls iter(), then next() until StopIteration\n"
+                        "# iter() works because of __iter__; next() works because of __next__\n"
                         "for x in CountDown(3):\n"
                         "    print(x)\n"
                         "\n"
                         "# same idea by hand:\n"
-                        "it = iter(CountDown(2))\n"
-                        "print(next(it))\n"
-                        "print(next(it))",
-                        {16: "3\n2\n1", 20: "2", 21: "1"},
+                        "it = iter(CountDown(2))   # calls __iter__\n"
+                        "print(next(it))             # calls __next__\n"
+                        "print(next(it))             # calls __next__ again",
+                        {17: "3\n2\n1", 21: "2", 22: "1"},
                     )
                     + "<p style=\"font-size:12px;margin:8px 0 4px\">"
                     "<b>2) itertools</b> — ready-made lazy helpers "

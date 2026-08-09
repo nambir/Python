@@ -4805,14 +4805,16 @@ list(itertools.islice(countdown(10), 3))''') + '''
         if i % 2 == 0: yield i
 
 gen = evens(10)
-print(list(gen))  # [0, 2, 4, 6, 8]
-print(list(gen))  # []  ← exhausted!</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">def evens(n):
+print(list(gen))  # [0, 2, 4, 6, 8] — list() calls iter()/next() here
+print(list(gen))  # []  ← exhausted! (iter/next again, nothing left)</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre">def evens(n):
     for i in range(n):
         if i % 2 == 0: yield i
 
 # Re-create if you need to iterate again:
-print(list(evens(10)))
-print(list(evens(10)))  # fresh generator</div></div></div><span class="mistake-note">&#128161; Generators are <b>one-pass</b> iterators. Store the results in a list if you need to iterate multiple times.</span></div>
+gen1 = evens(10)
+gen2 = evens(10)
+print(list(gen1))  # list() calls iter()/next() on gen1
+print(list(gen2))  # list() calls iter()/next() on fresh gen2</div></div></div><span class="mistake-note">&#128161; Generators are <b>one-pass</b> iterators. Store the results in a list if you need to iterate multiple times.</span></div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; building a full list when a generator suffices</span><span class="mistake-desc">Loading a million items into a list before processing wastes memory. A generator computes items on demand.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">def process_all(n):
     return [heavy(i) for i in range(n)]  # builds full list
 
@@ -4869,7 +4871,49 @@ for line in read_large_file("huge.log"):
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>range(5)</code> vs <code>list(range(5))</code> — memory?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>range(5)</code> is a lazy object (O(1) memory). <code>list(range(5))</code> allocates all 5 ints in memory.</div>
+      <div class="quiz-reveal"><p><code>range(5)</code> is a lazy object (O(1) memory). <code>list(range(5))</code> allocates all 5 ints in memory.</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl"><code>range(5)</code> — lazy (O(1))</span><div class="step-pre">r = range(5)          # r = range object (not a function pointer)
+# stores only three fields: start=0, stop=5, step=1
+# NOT [0,1,2,3,4] in memory yet
+
+for x in r:
+    print(x)  # iter()/next() one at a time
+
+# Memory: tiny (same for range(1_000_000))
+# Lazy iterator — like a generator</div></div><div class="mc-col mc-bad"><span class="mc-lbl"><code>list(range(5))</code> — eager (O(n))</span><div class="step-pre">nums = list(range(5))  # nums = Python list (like Java ArrayList)
+# list() does NOT change the range — it READS it via iter()/next()
+# What list(iterable) does (simplified):
+result = []
+it = iter(range(5))      # start iteration
+while True:
+    try:
+        value = next(it)   # 0, then 1, then 2, ...
+        result.append(value)
+    except StopIteration:
+        break
+# result → [0, 1, 2, 3, 4]  (same as nums)
+
+print(nums[2])  # 2 — indexing works
+for x in nums:     # can loop again
+    print(x)
+
+# Memory: grows with count
+# Like return [0,1,2,3,4] — all values at once</div></div></div><ul class="learn-steps"><li><b>Step 1 — <code>range(5)</code> is a recipe, not a box</b><br>Python stores only <code>start=0</code>, <code>stop=5</code>, <code>step=1</code>. It does <b>not</b> create <code>[0, 1, 2, 3, 4]</code> yet.</li><li><b>Step 2 — Looping computes one number at a time</b><br><code>for x in range(5):</code> calls <code>iter()</code>, then <code>next()</code> repeatedly (0 → 1 → 2 → 3 → 4) until <code>StopIteration</code>.</li><li><b>Step 3 — <code>list(range(5))</code> builds the full list</b><br><code>list()</code> loops the range and stores every value → <code>[0, 1, 2, 3, 4]</code> all in memory at once.</li><li><b>Step 4 — Memory difference</b><br><code>range(1_000_000)</code> stays tiny. <code>list(range(1_000_000))</code> holds one million integers.</li><li><b>Step 5 — When to use which</b><br>Use <code>range</code> for loops and huge sequences. Use <code>list(range(...))</code> when you need indexing (<code>nums[2]</code>), sorting, or multiple passes.</li><li><b>Step 6 — Link to <code>yield</code> / generators</b><br><code>range(5)</code> is a built-in <b>lazy iterator</b> — same idea as a generator. A function with <code>yield</code> pauses and gives one value at a time; <code>for</code> calls <code>next()</code> until <code>StopIteration</code>. <code>list(range(5))</code> is the eager version — like <code>return [0,1,2,3,4]</code> instead of yielding.</li></ul><div class="step-pre"># range(5) ≈ this generator (lazy, one value at a time):
+def my_range(n):
+    i = 0
+    while i &lt; n:
+        yield i       # pause + give one number
+        i += 1
+
+# list(range(5)) ≈ this function (eager, all at once):
+def my_range_list(n):
+    result = []
+    for i in range(n):
+        result.append(i)
+    return result   # full list in memory
+
+# Same loop syntax — different memory:
+for x in my_range(5): print(x)      # lazy
+for x in my_range_list(5): print(x) # eager list already built</div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> <code>yield from iterable</code> does what?
@@ -4879,12 +4923,26 @@ for line in read_large_file("huge.log"):
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>next(gen)</code> on exhausted generator raises?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>StopIteration</code> &mdash; or returns the default if supplied: <code>next(gen, 'done')</code>.</div>
+      <div class="quiz-reveal"><p><code>StopIteration</code> &mdash; or returns the default if supplied: <code>next(gen, 'done')</code>.</p><div class="step-pre">def one_two():
+    yield 1
+    yield 2
+
+gen = one_two()
+print(next(gen))           # 1
+print(next(gen))           # 2
+print(next(gen, "done"))  # "done" — no StopIteration
+print(next(gen))           # StopIteration (no default)</div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> What is a generator expression?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>(expr for x in iterable)</code> &mdash; lazy generator using comprehension syntax without square brackets.</div>
+      <div class="quiz-reveal"><p><code>(expr for x in iterable)</code> &mdash; lazy generator using comprehension syntax without square brackets.</p><div class="step-pre"># List comprehension — builds all values now
+squares_list = [x * x for x in range(5)]   # [0, 1, 4, 9, 16]
+
+# Generator expression — lazy, one value at a time
+squares_gen = (x * x for x in range(5))
+print(next(squares_gen))                 # 0
+print(list(squares_gen))                  # [1, 4, 9, 16]</div></div>
     </details>
   </div>
 </div>
