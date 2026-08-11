@@ -233,7 +233,7 @@ print(a.Toy())                      # method Toy
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>Decorator</td><td>Function wrapping another function to add behavior. __CSHARP_DECORATOR_BTN__</td><td><code>@timer</code></td></tr>
-<tr><td>@syntax</td><td>Syntactic sugar — <code>@dec</code> above <code>def f</code> means <code>f = dec(f)</code>.</td><td><code>@app.get("/")</code></td></tr>
+<tr><td>@syntax</td><td><b>Syntactic sugar</b> = nicer shortcut for the same long form (no new power). <code>@dec</code> above <code>def f</code> means <code>f = dec(f)</code>.</td><td><code>@app.get("/")</code></td></tr>
 <tr><td>Wrapper</td><td>Inner function that calls the original and adds logic.</td><td><code>def wrapper(*a,**k):</code></td></tr>
 <tr><td>@wraps</td><td>Preserves original function name and docstring metadata.</td><td><code>@wraps(fn)</code></td></tr>
 <tr><td>Stacking</td><td>Multiple decorators applied bottom-up.</td><td><code>@a @b def f</code></td></tr>

@@ -129,6 +129,19 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
   align-items: stretch;
 }
 .mc-col { border-radius: 5px; overflow: hidden; min-width: 0; }
+.mc-row.mc-align-tb .mc-col {
+  display: flex;
+  flex-direction: column;
+}
+.mc-row.mc-align-tb .mc-code { flex: 1; }
+.mc-row.mc-align-tb .mc-code .step-pre { height: 100%; box-sizing: border-box; }
+.mc-row.mc-align-tb .mc-tb-h {
+  flex-shrink: 0;
+  min-height: 2.8em;
+  font-size: 11px;
+  margin: 4px 8px 0;
+  line-height: 1.35;
+}
 .mc-bad  { border: 1.5px solid #e53e3e; }
 .mc-good { border: 1.5px solid #28a745; }
 .mc-row-divider {
@@ -9500,6 +9513,7 @@ it = <mark class="hl-key">iter</mark>(CountDown(2))   <span class="t-cm"># calls
 
 
 
+
 3
 2
 1
@@ -9685,7 +9699,7 @@ it = <mark class="hl-key">iter</mark>(<mark class="hl-key">range</mark>(5))     
 gen = one_two()
 <mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(gen))           <span class="t-cm"># 1</span>
 <mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(gen))           <span class="t-cm"># 2</span>
-<mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(gen, <span class="t-str">"done"</span>))  <span class="t-cm"># "done" — no StopIteration</span>
+<mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(gen, "done"))  <span class="t-cm"># "done" — no StopIteration</span>
 <mark class="hl-key">print</mark>(<mark class="hl-key">next</mark>(gen))           <span class="t-cm"># StopIteration (no default)</span></div></div>
     </details>
   </div>
@@ -9947,12 +9961,46 @@ list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden
 <table class="data-tbl term-tbl">
 <tr><th>Term</th><th>Meaning</th><th>Quick example</th></tr>
 <tr><td>Decorator</td><td>Function wrapping another function to add behavior. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('decorator-attribute')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>@timer</code></td></tr>
-<tr><td>@syntax</td><td>Syntactic sugar — <code>@dec</code> above <code>def f</code> means <code>f = dec(f)</code>.</td><td><code>@app.get("/")</code></td></tr>
+<tr><td>@syntax</td><td><b>Syntactic sugar</b> = nicer shortcut for the same long form (no new power). <code>@dec</code> above <code>def f</code> means <code>f = dec(f)</code>.</td><td><code>@app.get("/")</code></td></tr>
 <tr><td>Wrapper</td><td>Inner function that calls the original and adds logic.</td><td><code>def wrapper(*a,**k):</code></td></tr>
 <tr><td>@wraps</td><td>Preserves original function name and docstring metadata.</td><td><code>@wraps(fn)</code></td></tr>
 <tr><td>Stacking</td><td>Multiple decorators applied bottom-up.</td><td><code>@a @b def f</code></td></tr>
 <tr><td>Higher-order function</td><td>Function that takes or returns another function.</td><td>decorator pattern</td></tr>
-</table><div class="real-life"><b>Real-life example:</b> <b>Cross-cutting concerns:</b> Decorators wrap once — retry, auth, timing — each layer with <b>input → output</b>.<p><b>1) <code>timer</code> decorator — measure runtime</b><br>Wraps any function: record start, call original, print elapsed seconds.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time
+</table><div class="real-life"><b>Real-life example:</b> <b>Cross-cutting concerns:</b> Decorators wrap once — retry, auth, timing — each layer with <b>input → output</b>.<p><b>1) Without decorator vs with decorator — timing</b><br>Same job: measure how long a function takes. Without: copy timing code into every function. With: write timing once in <code>timer</code>, add <code>@timer</code> above each function.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat timing code</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time
+
+<mark class="hl-key">def</mark> run_query():
+    start = time.time()          <span class="t-cm"># copy-paste in every function</span>
+    time.sleep(0.1)
+    result = "ok"
+    <mark class="hl-key">print</mark>(f"run_query took {time.time()-start:.2f}s")
+    <mark class="hl-key">return</mark> result
+
+<mark class="hl-key">def</mark> save_report():
+    start = time.time()          <span class="t-cm"># same timing code again</span>
+    time.sleep(0.05)
+    result = "saved"
+    <mark class="hl-key">print</mark>(f"save_report took {time.time()-start:.2f}s")
+    <mark class="hl-key">return</mark> result
+
+run_query()
+save_report()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+run_query took 0.10s
+
+
+
+
+
+
+save_report took 0.05s
+
+
+
+</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">With @timer — write once, reuse</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time
 <mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
 
 <mark class="hl-key">def</mark> timer(fn):
@@ -9962,40 +10010,440 @@ list(itertools.islice(countdown(10), 3))</textarea><pre class="py-output" hidden
         result = fn(*args, **kwargs)
         <mark class="hl-key">print</mark>(f"{fn.__name__} took {time.time() - start:.2f}s")
         <mark class="hl-key">return</mark> result
-    <mark class="hl-key">return</mark> wrapper</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+    <mark class="hl-key">return</mark> wrapper
 
-
-
-
-
-
-
-(wrapper ready — can decorate <mark class="hl-key">any</mark> function)
-
-</div></div></div><p><b>2) Apply <code>@timer</code> to <code>run_query</code></b><br>Same function body; decorator adds timing without changing business logic.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">@timer</mark>
+<mark class="hl-key">@timer</mark>                        <span class="t-cm"># one line per function</span>
 <mark class="hl-key">def</mark> run_query():
-    time.sleep(0.1)
+    time.sleep(0.1)           <span class="t-cm"># only business logic here</span>
     <mark class="hl-key">return</mark> "ok"
 
-result = run_query()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+<mark class="hl-key">@timer</mark>
+<mark class="hl-key">def</mark> save_report():
+    time.sleep(0.05)
+    <mark class="hl-key">return</mark> "saved"            <span class="t-cm"># timing handled by decorator</span>
+
+run_query()
+save_report()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
 
 
 
 
 run_query took 0.10s
-result → 'ok'</div></div></div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Function decorators</b><br>A decorator wraps a function to add behavior without changing its source. <code>@decorator</code> is syntactic sugar for <code>func = decorator(func)</code>.<div class="step-pre"><mark class="hl-key">import</mark> time
+save_report took 0.05s
 
-<mark class="hl-key">def</mark> timer(func):
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div></div></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Takeaway:</b> a decorator is a reusable wrapper — define extra behavior once, apply with <code>@name</code> on any function.</p><p><b>2) Without decorator vs with decorator — logging</b><br>Same job: log when a function starts and finishes. Without: copy <code>print</code> lines into every function. With: write logging once in <code>log_calls</code>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat log lines</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">def</mark> run_query():
+    <mark class="hl-key">print</mark>("[INFO] run_query started")    <span class="t-cm"># copy in every function</span>
+    result = "ok"
+    <mark class="hl-key">print</mark>(f"[INFO] run_query finished → {result}")
+    <mark class="hl-key">return</mark> result
+
+<mark class="hl-key">def</mark> save_report():
+    <mark class="hl-key">print</mark>("[INFO] save_report started")
+    result = "saved"
+    <mark class="hl-key">print</mark>(f"[INFO] save_report finished → {result}")
+    <mark class="hl-key">return</mark> result
+
+run_query()
+save_report()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+[INFO] run_query started
+
+[INFO] run_query finished → ok
+
+
+
+[INFO] save_report started
+
+[INFO] save_report finished → saved
+
+
+
+</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">With @log_calls — write once, reuse</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> log_calls(fn):
+    <mark class="hl-key">@wraps</mark>(fn)
     <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
-        start = time.time()
-        result = func(*args, **kwargs)
-        <mark class="hl-key">print</mark>(f"took {time.time()-start:.2f}s")
+        <mark class="hl-key">print</mark>(f"[INFO] {fn.__name__} started")
+        result = fn(*args, **kwargs)
+        <mark class="hl-key">print</mark>(f"[INFO] {fn.__name__} finished → {result}")
         <mark class="hl-key">return</mark> result
     <mark class="hl-key">return</mark> wrapper
 
-<mark class="hl-key">@timer</mark>
-<mark class="hl-key">def</mark> work():
-    time.sleep(0.1)</div></li><li><b>Step 2 — Class decorators</b><br>A decorator can wrap a class — modify or register it before use.<div class="step-pre"><mark class="hl-key">def</mark> add_repr(cls):
+<mark class="hl-key">@log_calls</mark>
+<mark class="hl-key">def</mark> run_query():
+    <mark class="hl-key">return</mark> "ok"                 <span class="t-cm"># only business logic</span>
+
+<mark class="hl-key">@log_calls</mark>
+<mark class="hl-key">def</mark> save_report():
+    <mark class="hl-key">return</mark> "saved"
+
+run_query()
+save_report()</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+[INFO] run_query started
+
+[INFO] run_query finished → ok
+[INFO] save_report started
+[INFO] save_report finished → saved
+
+
+
+
+
+
+
+
+
+
+
+
+</div></div></div></div></div><p><b>3) Without decorator vs with decorator — retry</b><br>Same job: retry a flaky network call up to 3 times. Without: copy the <code>while</code> / <code>try</code> / <code>except</code> loop everywhere. With: write retry once in <code>@retry</code>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat retry loop</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time
+
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    attempts = 0
+    <mark class="hl-key">while</mark> attempts < 3:              <span class="t-cm"># copy retry loop everywhere</span>
+        <mark class="hl-key">try</mark>:
+            <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+        <mark class="hl-key">except</mark> ConnectionError:
+            attempts += 1
+            time.sleep(0.1)
+    <mark class="hl-key">raise</mark> ConnectionError("failed after 3 tries")
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+</div></div></div><p class="step-result" style="margin-top:6px">retry logic mixed into the business function</p></div><div class="mc-col mc-good"><span class="mc-lbl">With @retry — write once, reuse</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> retry(times=3, delay=0.1):          <span class="t-cm"># 1) FACTORY - takes settings, returns a decorator</span>
+    <mark class="hl-key">def</mark> decorator(fn):                 <span class="t-cm"># 2) DECORATOR - takes the function, returns wrapper</span>
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># 3) WRAPPER - runs on each call</span>
+            <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+                <mark class="hl-key">try</mark>:
+                    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+                <mark class="hl-key">except</mark> ConnectionError:
+                    <mark class="hl-key">if</mark> attempt == times - 1:
+                        <mark class="hl-key">raise</mark>
+                    time.sleep(delay)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+<mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)  <span class="t-cm"># only business logic</span>
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div></div></div><p class="step-result" style="margin-top:6px">same behavior — retry logic written once</p></div></div><p><b>4) Without decorator vs with decorator — auth</b><br>Same job: only admins may run sensitive functions. Without: copy the role check into every function. With: write the check once in <code>@require_auth</code>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat auth check</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre">current_user = {"name": "guest", "role": "user"}
+
+<mark class="hl-key">def</mark> delete_user(user_id):
+    <mark class="hl-key">if</mark> current_user["role"] != "admin":   <span class="t-cm"># auth check in every function</span>
+        <mark class="hl-key">raise</mark> PermissionError("admin only")
+    <mark class="hl-key">return</mark> f"deleted {user_id}"
+
+<mark class="hl-key">def</mark> export_data():
+    <mark class="hl-key">if</mark> current_user["role"] != "admin":   <span class="t-cm"># same check again</span>
+        <mark class="hl-key">raise</mark> PermissionError("admin only")
+    <mark class="hl-key">return</mark> "export.csv"
+
+delete_user(42)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+PermissionError: admin only</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">With @require_auth — write once, reuse</span><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> require_auth(role="admin"):
+    <mark class="hl-key">def</mark> decorator(fn):
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+            <mark class="hl-key">if</mark> current_user["role"] != role:
+                <mark class="hl-key">raise</mark> PermissionError(f"{role} only")
+            <mark class="hl-key">return</mark> fn(*args, **kwargs)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+current_user = {"name": "guest", "role": "user"}
+
+<mark class="hl-key">@require_auth</mark>("admin")
+<mark class="hl-key">def</mark> delete_user(user_id):
+    <mark class="hl-key">return</mark> f"deleted {user_id}"   <span class="t-cm"># only business logic</span>
+
+<mark class="hl-key">@require_auth</mark>("admin")
+<mark class="hl-key">def</mark> export_data():
+    <mark class="hl-key">return</mark> "export.csv"
+
+delete_user(42)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PermissionError: admin only</div></div></div></div></div><p><b>5) Define a custom decorator — <code>timer</code></b><br>We write our own decorator (not a built-in). <code>timer</code> and <code>wrapper</code> are both functions: <code>timer</code> builds the wrapper; <code>wrapper</code> adds timing around the original.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">import</mark> time                  <span class="t-cm"># for time.time() — start / end clock</span>
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>  <span class="t-cm"># keep original function name & docstring</span>
+
+<mark class="hl-key">def</mark> timer(fn):               <span class="t-cm"># custom decorator function (takes a function)</span>
+    <span class="t-cm"># fn = the function we wrap (e.g. run_query from step 2)</span>
+    <mark class="hl-key">@wraps</mark>(fn)               <span class="t-cm"># copy fn.__name__ / __doc__ onto wrapper</span>
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># inner function — runs instead of fn</span>
+        start = time.time()           <span class="t-cm"># remember start time</span>
+        result = fn(*args, **kwargs)  <span class="t-cm"># run the ORIGINAL function</span>
+        <mark class="hl-key">print</mark>(f"{fn.__name__} took {time.time() - start:.2f}s")  <span class="t-cm"># print duration</span>
+        <mark class="hl-key">return</mark> result                 <span class="t-cm"># pass original return value back</span>
+    <mark class="hl-key">return</mark> wrapper           <span class="t-cm"># give wrapper back — this becomes the new function</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+
+
+
+
+
+
+</div></div></div><p class="step-result" style="margin-top:6px">(wrapper ready — can decorate any function)</p><p><b>6) Apply <code>@timer</code> to <code>run_query</code> — where they link</b><br><code>@timer</code> means <code>run_query = timer(run_query)</code>. So <code>timer</code> receives <code>run_query</code> as <code>fn</code>, and the name <code>run_query</code> now points to <code>wrapper</code>.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><mark class="hl-key">@timer</mark>                       <span class="t-cm"># same as: run_query = timer(run_query)</span>
+<mark class="hl-key">def</mark> run_query():             <span class="t-cm"># timer(fn) runs; fn is this function</span>
+    time.sleep(0.1)
+    <mark class="hl-key">return</mark> "ok"
+
+result = run_query()         <span class="t-cm"># calls wrapper → which calls original</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
+
+
+
+
+run_query took 0.10s
+result → 'ok'</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Flow:</b> <code>@timer</code> → <code>timer(run_query)</code> → returns <code>wrapper</code> → name <code>run_query</code> now means <code>wrapper</code> → when you call <code>run_query()</code>, <code>wrapper</code> runs timing + original body.</p></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — Function decorators</b><br>A decorator wraps a function to add behavior without changing its source. <code>@retry(times=3)</code> means: <code><b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</code>.<p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Syntactic sugar</b> = a <b>nicer shortcut</b> for something that already has a longer form. Same meaning — just sweeter to write. Example: <code>@retry(times=3)</code> (sugar) is the same as <code><b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</code> (real work underneath).</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">@decorator — sugar (what you write)</span><div class="step-pre"><span class="t-cm"># @decorator  (syntactic sugar)</span>
+<mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+
+<span class="t-cm"># Same idea in general:</span>
+<span class="t-cm"># @decorator</span>
+<span class="t-cm"># def func():</span>
+<span class="t-cm">#     ...</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">func = decorator(func) — real form</span><div class="step-pre"><span class="t-cm"># func = decorator(func)  (real form)</span>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+<b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+
+<span class="t-cm"># Same idea in general:</span>
+<span class="t-cm"># def func():</span>
+<span class="t-cm">#     ...</span>
+<span class="t-cm"># func = decorator(func)</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same meaning:</b> both end with <code>GetEmployees</code> pointing to the <b>wrapper</b>. Left is shorter to write; right is what Python does underneath.</p><div class="step-pre"><mark class="hl-key">import</mark> time
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> retry(times=3, delay=0.1):          <span class="t-cm"># 1) FACTORY - takes settings, returns a decorator</span>
+    <mark class="hl-key">def</mark> decorator(fn):                 <span class="t-cm"># 2) DECORATOR - takes the function, returns wrapper</span>
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># 3) WRAPPER - runs on each call</span>
+            <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+                <mark class="hl-key">try</mark>:
+                    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+                <mark class="hl-key">except</mark> ConnectionError:
+                    <mark class="hl-key">if</mark> attempt == times - 1:
+                        <mark class="hl-key">raise</mark>
+                    time.sleep(delay)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+<mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Layers in this code (read top → bottom)</b></p><table class="data-tbl"><tr><th>Line / piece</th><th>What it is</th></tr><tr><td><code>retry(times=3, delay=0.1)</code></td><td>Decorator <b>factory</b> — settings for retry (how many tries, how long to wait)</td></tr><tr><td><code>decorator(fn)</code></td><td>Receives the real function (<code>GetEmployees</code>)</td></tr><tr><td><code>wrapper(*args, **kwargs)</code></td><td>Runs <b>instead of</b> the original when you call it</td></tr><tr><td><code>fn(*args, **kwargs)</code></td><td>Calls the original function, forwarding the same arguments</td></tr><tr><td><code>@retry(times=3)</code></td><td>Applies the decorator: name now points to <code>wrapper</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Diagram — call <code>GetEmployees([101, 102, 103], include_inactive=True)</code></b></p><div class="step-pre">YOU WRITE                                              WHAT ACTUALLY RUNS
+───────────────────────────────────────────            ────────────────────────────────────────
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+    │
+    │  <mark class="hl-key">@retry</mark> replaced the name <mark class="hl-key">with</mark> wrapper
+    ▼
+wrapper([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+    │
+    │  <span class="t-cm"># LIST  → goes into *args   (positional — no name=)</span>
+    │  <span class="t-cm"># BOOL  → goes into **kwargs (keyword — name=value)</span>
+    │
+    │  *args   PACKS  → args   = ([101, 102, 103],)
+    │  <span class="t-cm">#                 ^ tuple with ONE item = the whole list</span>
+    │  <span class="t-cm">#                 args[0] is [101, 102, 103]  (NOT three separate ints)</span>
+    │
+    │  **kwargs PACKS → kwargs = {"include_inactive": <mark class="hl-key">True</mark>}
+    │  <span class="t-cm">#                 ^ dict: key = param name, value = the bool True</span>
+    │  <span class="t-cm">#                 kwargs["include_inactive"] is True</span>
+    │
+    │  retry loop (times=3)
+    ▼
+fn(*args, **kwargs)
+    │  <span class="t-cm"># UNPACK list from args + bool from kwargs:</span>
+    │  UNPACK → fn([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+    ▼
+api_call([101, 102, 103], <mark class="hl-key">True</mark>)   <span class="t-cm"># original GetEmployees body</span>
+
+<span class="t-cm"># if ConnectionError → sleep(0.1), try again (up to 3 times)</span>
+<span class="t-cm"># each retry gets the SAME list (args) AND the SAME bool (kwargs)</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why <code>kwargs</code> has values here</b><br><code>include_inactive=True</code> is written as <code>name=value</code> — that is a <b>keyword</b> argument, so it goes into <code>**kwargs</code>. The list <code>[101, 102, 103]</code> has no name in front, so it goes into <code>*args</code>.</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">PACK — def wrapper(*args, **kwargs)</span><div class="step-pre"><span class="t-cm"># from the retry code</span>
+<mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+    ...
+    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+
+<span class="t-cm"># call: GetEmployees([101, 102, 103], include_inactive=True)</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># LIST [101,102,103]  → *args    (positional)</span>
+<span class="t-cm"># BOOL True           → **kwargs (keyword include_inactive=True)</span>
+<span class="t-cm">#</span>
+args   = ([101, 102, 103],)            <span class="t-cm"># *args: list lives HERE</span>
+<span class="t-cm">#          └─ one tuple slot = whole list</span>
+kwargs = {"include_inactive": <mark class="hl-key">True</mark>}    <span class="t-cm"># **kwargs: bool lives HERE</span>
+<span class="t-cm">#          └─ key=name, value=bool</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Explanation:</b> in <code>def</code>, stars <b>PACK</b>. <code>*args</code> = tuple of positionals. <code>**kwargs</code> = dict of keywords (here <code>include_inactive</code> is present).</p></div><div class="mc-col mc-good"><span class="mc-lbl">UNPACK — fn(*args, **kwargs)</span><div class="step-pre"><span class="t-cm"># from the retry code (inside the loop)</span>
+<mark class="hl-key">return</mark> fn(*args, **kwargs)
+
+<span class="t-cm"># same as writing:</span>
+<mark class="hl-key">return</mark> fn([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+<span class="t-cm">#          └─ from *args (list)   └─ from **kwargs (bool)</span>
+
+<span class="t-cm"># GetEmployees body receives:</span>
+employee_ids = [101, 102, 103]   <span class="t-cm"># came from args[0]</span>
+include_inactive = <mark class="hl-key">True</mark>          <span class="t-cm"># came from kwargs["include_inactive"]</span>
+
+<span class="t-cm"># every retry forwards BOTH: list in args + bool in kwargs</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Explanation:</b> in a <b>call</b>, stars <b>UNPACK</b>. Original <code>GetEmployees(employee_ids, include_inactive=...)</code> gets the list and the flag exactly as you sent them.</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Positional vs keyword — meaning</b><br><b>Positional</b> = pass by <b>order / place</b> (value only, no <code>name=</code>). <b>Keyword</b> = pass by <b>parameter name</b> (<code>name=value</code>). Same value can be either — it depends on <b>how you write the call</b>, not on what the value means.</p><div class="step-pre"><span class="t-cm"># Same value "Alice" — two ways:</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># POSITIONAL — value only, matched by order</span>
+GetEmployees("Alice")
+<span class="t-cm">#             └─ 1st slot → whatever the 1st parameter is</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># KEYWORD — name=value, matched by parameter name</span>
+GetEmployees(employee_name="Alice")
+<span class="t-cm">#             └─ goes to parameter employee_name</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># Your GetEmployees call uses BOTH:</span>
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+<span class="t-cm">#            └───────┬───────┘  └──────────┬─────────┘</span>
+<span class="t-cm">#              positional              keyword</span>
+<span class="t-cm">#              (value only)            (name=value)</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># That is why in the wrapper:</span>
+<span class="t-cm">#   positional → *args    → args   = ([101, 102, 103],)</span>
+<span class="t-cm">#   keyword    → **kwargs → kwargs = {"include_inactive": True}</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>When to use which</b></p><table class="data-tbl"><tr><th>Situation</th><th>Prefer</th><th>Why</th></tr><tr><td>Main required value (id list, text) — meaning is obvious</td><td><b>positional</b></td><td>Short and clear: <code>GetEmployees([101, 102, 103])</code></td></tr><tr><td>Flags / options (<code>True</code>/<code>False</code>, size, date, dept)</td><td><b>keyword</b></td><td>Bare <code>True</code> is unclear — <code>include_inactive=True</code> is safe</td></tr><tr><td>Many arguments, or easy to mix up order</td><td><b>keyword</b></td><td>Names prevent wrong-order bugs</td></tr><tr><td>Skipping optional defaults</td><td><b>keyword</b></td><td>Set only what you need: <code>page_size=50</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Best practice:</b> required main inputs → positional; options/flags → keyword. Example: <code>GetEmployees([101, 102, 103], include_inactive=True, page_size=50)</code>. <b>Yes — keywords are usually clearer and less error-prone</b> for options and anything where order could be confusing. Positional is fine for the obvious first 1–2 required values.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Quick compare — 4 examples each</b></p><table class="data-tbl"><tr><th>Kind</th><th>How you write it</th><th>Matched by</th><th>Examples (4)</th></tr><tr><td><b>Positional</b></td><td>value only</td><td>order / place</td><td>1. <code>[101, 102, 103]</code> — employee id list<br>2. <code>"Alice"</code> — employee name<br>3. <code>42</code> — department id<br>4. <code>True</code> — a flag passed by position</td></tr><tr><td><b>Keyword</b></td><td><code>name=value</code></td><td>parameter name</td><td>1. <code>include_inactive=True</code><br>2. <code>department="HR"</code><br>3. <code>page_size=50</code><br>4. <code>as_of="2026-08-10"</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same idea in one call (mixed)</b></p><div class="step-pre">GetEmployees([101, 102, 103], department="HR", page_size=50)
+<span class="t-cm">#            └─ positional      └─ keyword         └─ keyword</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># args   = ([101, 102, 103],)</span>
+<span class="t-cm"># kwargs = {"department": "HR", "page_size": 50}</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>*args / **kwargs are NOT decorator-only</b> — same packing idea in normal functions and in decorator wrappers. Side-by-side:</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">Normal function — flexible API <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('args-kwargs')" title="Open draggable C# comparison window">C# Comparison</button></span><div class="step-pre"><mark class="hl-key">def</mark> log(msg, *args, **kwargs):
+    <span class="t-cm"># *args   -> extra positionals (tuple)</span>
+    <span class="t-cm"># **kwargs -> extra keywords (dict)</span>
+    <mark class="hl-key">print</mark>(msg)
+    <mark class="hl-key">print</mark>("args  =", args)
+    <mark class="hl-key">print</mark>("kwargs=", kwargs)
+
+log("start", 1, 2, level="debug")
+
+<span class="t-cm"># Result:</span>
+<span class="t-cm"># args   = (1, 2)</span>
+<span class="t-cm"># kwargs = {"level": "debug"}</span>
+
+<span class="t-cm"># Use when: helper/API accepts optional extras</span>
+<span class="t-cm"># No decorator — just a flexible function</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Here:</b> <code>log</code> itself uses <code>*args</code>/<code>**kwargs</code> to collect extras the caller passed. Click <b>C# Comparison</b> for <code>params</code> / named args / <code>Dictionary</code>.</p></div><div class="mc-col mc-good"><span class="mc-lbl">Decorator wrapper — forward any call</span><div class="step-pre"><mark class="hl-key"># INPUT (from @retry)</mark>
+<mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+    <span class="t-cm"># PACK whatever GetEmployees got</span>
+    <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+        <mark class="hl-key">try</mark>:
+            <mark class="hl-key">return</mark> fn(*args, **kwargs)  <span class="t-cm"># UNPACK</span>
+        <mark class="hl-key">except</mark> ConnectionError:
+            ...
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+
+<span class="t-cm"># inside wrapper:</span>
+args   = ([101, 102, 103],)
+kwargs = {'include_inactive': <mark class="hl-key">True</mark>}
+
+<span class="t-cm"># Use when: one wrapper must work for ANY</span>
+<span class="t-cm"># decorated function signature</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Here:</b> wrapper does not care about the function parameters — it packs and forwards them to the original <code>fn</code>.</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same mechanism, different job:</b> normal = collect extras for <b>this</b> function; decorator = catch <b>any</b> call and replay it into the original function.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Rule: all positionals first, then keywords</b><br>You <b>cannot</b> put a positional argument after a keyword argument — Python raises <code>SyntaxError</code>.</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">Valid — positionals, then keyword</span><div class="step-pre">log("start", 1, 2, 3, 4, level="debug")
+<span class="t-cm">#           └─ positionals ─┘  └── keyword ──┘</span>
+
+<span class="t-cm"># inside log:</span>
+<span class="t-cm"># args   = (1, 2, 3, 4)</span>
+<span class="t-cm"># kwargs = {"level": "debug"}</span></div></div><div class="mc-col mc-bad"><span class="mc-lbl">Invalid — positional after keyword</span><div class="step-pre">log("start", 1, 2, level="debug", 3, 4)
+<span class="t-cm">#                   keyword ↑    ↑ positionals after</span>
+<span class="t-cm">#                   NOT ALLOWED</span>
+
+<span class="t-cm"># SyntaxError: positional argument</span>
+<span class="t-cm"># follows keyword argument</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same rule for your decorated call</b></p><div class="step-pre"><span class="t-cm"># OK</span>
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+
+<span class="t-cm"># NOT OK</span>
+GetEmployees(include_inactive=<mark class="hl-key">True</mark>, [101, 102, 103])
+<span class="t-cm">#            keyword first ↑         ↑ positional after — SyntaxError</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Cheat sheet (for this retry wrapper)</b></p><table class="data-tbl"><tr><th></th><th><code>*</code> (one star)</th><th><code>**</code> (two stars)</th></tr><tr><td><b>What</b></td><td>positional values</td><td>keyword values</td></tr><tr><td><b>In <code>def wrapper</code></b></td><td><code>*args</code> → <b>PACK</b> into tuple</td><td><code>**kwargs</code> → <b>PACK</b> into dict</td></tr><tr><td><b>In <code>fn(...)</code> call</b></td><td><code>*args</code> → <b>UNPACK</b> tuple</td><td><code>**kwargs</code> → <b>UNPACK</b> dict</td></tr><tr><td><b>This call</b></td><td><code>([101, 102, 103],)</code></td><td><code>{"include_inactive": True}</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why this matters for retry:</b> on attempt 1, 2, or 3, <code>fn(*args, **kwargs)</code> must send the <b>same</b> employee-id list <b>and</b> the same <code>include_inactive=True</code> each time.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Do not confuse:</b> <code>times=3, delay=0.1</code> are <b>decorator settings</b>. <code>employee_ids</code> / <code>include_inactive</code> are <b>function-call</b> inputs (via <code>*args</code> / <code>**kwargs</code>).</p></li><li><b>Step 2 — Class decorators</b><br>A decorator can wrap a class — modify or register it before use.<div class="step-pre"><mark class="hl-key">def</mark> add_repr(cls):
     <mark class="hl-key">def</mark> <mark class="hl-key">__repr__</mark>(self):
         <mark class="hl-key">return</mark> f"{cls.__name__}()"
     cls.<mark class="hl-key">__repr__</mark> = <mark class="hl-key">__repr__</mark>
@@ -10125,41 +10573,412 @@ greet.<mark class="hl-key">__doc__</mark>    <span class="t-cm"># Say hello</spa
 <div class="quiz-box">
   <div class="quiz-q"><b>Q1.</b> <code>@decorator</code> is syntactic sugar for?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>func = decorator(func)</code> &mdash; the decorator is called with the function and the result replaces the function name.</div>
+      <div class="quiz-reveal">
+        <b>What is “syntactic sugar”?</b><br>
+        A <b>nicer shortcut</b> for writing something that already exists in a longer form.
+        Same meaning — just easier to write.<br><br>
+        <b>Short answer:</b> <code>func = decorator(func)</code><br><br>
+        <b>Side by side — same meaning:</b>
+        <div class="mc-row">
+          <div class="mc-col mc-good"><span class="mc-lbl">@decorator (sugar)</span>
+            <div class="step-pre"><mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div>
+          </div>
+          <div class="mc-col mc-good"><span class="mc-lbl">func = decorator(func)</span>
+            <div class="step-pre"><mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+<b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div>
+          </div>
+        </div>
+        After either form, <code>GetEmployees</code> points to the <b>wrapper</b>.
+        <b>Steps:</b> (1) write function (2) put <code>@retry</code> above (3) Python assigns
+        <code><b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</code> (4) name points to wrapper
+        (5) calling the name runs wrapper + original.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> Why use <code>@functools.wraps(func)</code>?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Preserves the wrapped function&apos;s <code>__name__</code>, <code>__doc__</code>, and other attributes on the wrapper.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> keep the original function’s name and docstring on the wrapper.<br><br>
+        <b>Side by side — without vs with wraps:</b>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">Without @wraps — BAD</span>
+            <div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> bad_timer(fn):
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">return</mark> fn(*args, **kwargs)
+    <mark class="hl-key">return</mark> wrapper
+
+<mark class="hl-key">@bad_timer</mark>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees by id list."""
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__name__</mark>)
+<span class="t-cm"># "wrapper"  ← wrong</span>
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)
+<span class="t-cm"># None       ← lost</span></div>
+          </div>
+          <div class="mc-col mc-good"><span class="mc-lbl">With @wraps — GOOD</span>
+            <div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> good_timer(fn):
+    <mark class="hl-key">@wraps</mark>(fn)
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">return</mark> fn(*args, **kwargs)
+    <mark class="hl-key">return</mark> wrapper
+
+<mark class="hl-key">@good_timer</mark>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees by id list."""
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__name__</mark>)
+<span class="t-cm"># "GetEmployees"  ← correct</span>
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)
+<span class="t-cm"># "Fetch employees by id list."</span>
+<span class="t-cm"># ↑ from """Fetch employees by id list.""" under def</span>
+<span class="t-cm">#   @wraps(fn) copied fn.__doc__ onto wrapper</span></div>
+          </div>
+        </div>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>Where does <code>__doc__</code> come from?</b>
+        The triple-quoted string under <code>def GetEmployees</code> is the
+        <b>docstring</b>. Python saves it as <code>fn.__doc__</code>.
+        <code>@wraps(fn)</code> copies that value onto the wrapper — so
+        <code>print(GetEmployees.__doc__)</code> still shows the original text.
+        </p>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>What is a docstring?</b>
+        <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('docstring-xml')" title="Open draggable C# comparison window">C# Comparison</button><br>
+        A <b>docstring</b> is a string written as the <b>first statement</b> inside a
+        <code>def</code>, <code>class</code>, or module — usually with
+        <code>"""triple quotes"""</code>.
+        It describes <b>what</b> the code does (not how every line works).
+        </p>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>Purpose / use cases:</b><br>
+        1. <b>help()</b> — <code>help(GetEmployees)</code> shows the docstring.<br>
+        2. <b>IDE tooltips</b> — hover over the name to see the description.<br>
+        3. <b>Auto-docs</b> — tools like Sphinx / FastAPI read docstrings for API docs.<br>
+        4. <b>Team clarity</b> — next developer knows the function’s job without reading all code.<br>
+        5. <b>Debugging / logs</b> — with <code>@wraps</code>, name + docstring stay correct after decorating.
+        </p>
+        <div class="step-pre"><mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees by id list."""   <span class="t-cm"># ← docstring</span>
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+help(GetEmployees)           <span class="t-cm"># shows the docstring</span>
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)  <span class="t-cm"># Fetch employees by id list.</span></div>
+        <b>Rule:</b> always put <code>@wraps(fn)</code> on the inner <code>wrapper</code>.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>@dec1 @dec2 def f():</code> — which decorator is applied first?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>dec2</code> (bottom-up). Equivalent to <code>f = dec1(dec2(f))</code>.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> <code>dec2</code> (bottom) is applied first → <code>f = dec1(dec2(f))</code>.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre"><mark class="hl-key">def</mark> dec1(fn):
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">print</mark>("dec1 before")
+        result = fn(*args, **kwargs)
+        <mark class="hl-key">print</mark>("dec1 after")
+        <mark class="hl-key">return</mark> result
+    <mark class="hl-key">return</mark> wrapper
+
+<mark class="hl-key">def</mark> dec2(fn):
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">print</mark>("dec2 before")
+        result = fn(*args, **kwargs)
+        <mark class="hl-key">print</mark>("dec2 after")
+        <mark class="hl-key">return</mark> result
+    <mark class="hl-key">return</mark> wrapper
+
+<span class="t-cm"># SUGAR</span>
+<mark class="hl-key">@dec1</mark>
+<mark class="hl-key">@dec2</mark>
+<mark class="hl-key">def</mark> hello():
+    <mark class="hl-key">print</mark>("hello body")
+
+<span class="t-cm"># REAL FORM (same meaning)</span>
+<span class="t-cm"># hello = dec1(dec2(hello))   # dec2 first (bottom), then dec1</span>
+
+hello()
+
+<mark class="hl-key"># OUTPUT (call order = outside-in)</mark><span class="t-cm">:</span>
+<span class="t-cm"># dec1 before</span>
+<span class="t-cm"># dec2 before</span>
+<span class="t-cm"># hello body</span>
+<span class="t-cm"># dec2 after</span>
+<span class="t-cm"># dec1 after</span></div>
+        Apply bottom → top. Call runs outer → inner → original.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q4.</b> A decorator factory is?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A function that <b>returns a decorator</b>, e.g. <code>@retry(max=3)</code> &mdash; <code>retry</code> is the factory, <code>retry(max=3)</code> returns the actual decorator.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> a function that <b>returns</b> a decorator (so you can pass settings).<br><br>
+        <b>Full code:</b>
+        <div class="step-pre"><mark class="hl-key">import</mark> time
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> retry(times=3, delay=0.1):          <span class="t-cm"># 1) FACTORY - takes settings, returns a decorator</span>
+    <mark class="hl-key">def</mark> decorator(fn):                 <span class="t-cm"># 2) DECORATOR - takes the function, returns wrapper</span>
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># 3) WRAPPER - runs on each call</span>
+            <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+                <mark class="hl-key">try</mark>:
+                    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+                <mark class="hl-key">except</mark> ConnectionError:
+                    <mark class="hl-key">if</mark> attempt == times - 1:
+                        <mark class="hl-key">raise</mark>
+                    time.sleep(delay)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+<mark class="hl-key">@retry</mark>(times=3)                         <span class="t-cm"># factory call returns decorator</span>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+<span class="t-cm"># SAME AS:</span>
+<span class="t-cm"># <b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</span>
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)</div>
+        <b>Important:</b> <code>def decorator(fn):</code> is <b>not</b> the factory.
+        It is the <b>real decorator</b> (takes the function). The <b>factory</b> is the outer
+        <code>retry(...)</code> (takes settings and <b>returns</b> the decorator).<br><br>
+        <b>Three layers:</b>
+        <table class="data-tbl">
+        <tr><th>Name in code</th><th>What it is</th><th>Takes</th><th>Returns</th></tr>
+        <tr><td><code>retry</code></td><td><b>factory</b></td><td>settings (<code>times</code>, <code>delay</code>)</td><td>the decorator</td></tr>
+        <tr><td><code>decorator</code></td><td><b>decorator</b></td><td>function (<code>fn</code>)</td><td>the wrapper</td></tr>
+        <tr><td><code>wrapper</code></td><td><b>wrapper</b></td><td>call args (<code>*args</code>, <code>**kwargs</code>)</td><td>result of <code>fn</code></td></tr>
+        </table>
+        <b>How to tell:</b><br>
+        • Decorator → takes a <b>function</b>, returns a function (usually wrapper).<br>
+        • Factory → takes <b>settings</b>, returns a <b>decorator</b>.<br><br>
+        So <code>@retry(times=3)</code> means: (1) call factory <code>retry(times=3)</code>
+        → get <code>decorator</code>, (2) call <code>decorator(GetEmployees)</code>
+        → get <code>wrapper</code>, (3) name <code>GetEmployees</code> points to that wrapper.<br><br>
+        <b>Note:</b> the name <code>decorator</code> is only a label — you could call it
+        <code>inner</code>. What matters is the <b>job</b>, not the name.<br><br>
+        <b>Why factory?</b> plain <code>@retry</code> cannot take arguments; the factory can.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> What does <code>functools.partial</code> do?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Creates a new function with some arguments <b>pre-filled</b>: <code>add5 = partial(add, 5)</code>.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> makes a new function with some arguments already filled in.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">partial</mark>
+
+<mark class="hl-key">def</mark> add(a, b):
+    <mark class="hl-key">return</mark> a + b
+
+add5 = <mark class="hl-key">partial</mark>(add, 5)     <span class="t-cm"># freeze first arg as 5</span>
+<mark class="hl-key">print</mark>(add5(10))            <span class="t-cm"># add(5, 10) → 15</span>
+
+<span class="t-cm"># Another example — pre-fill keyword</span>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+GetActive = <mark class="hl-key">partial</mark>(GetEmployees, include_inactive=<mark class="hl-key">False</mark>)
+GetActive([101, 102, 103])
+<span class="t-cm"># same as: GetEmployees([101, 102, 103], include_inactive=False)</span></div>
+        <b>Note:</b> <code>partial</code> is <b>not</b> a decorator — it freezes args; decorators wrap behavior.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>@property</code> is itself what kind of object?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A built-in <b>descriptor</b> that turns a method into a computed attribute.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> a built-in <b>descriptor</b> (and also a decorator).<br><br>
+        <b>Full code:</b>
+        <div class="step-pre"><mark class="hl-key">class</mark> Product:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, price):
+        self._price = price
+
+    <mark class="hl-key">@property</mark>
+    <mark class="hl-key">def</mark> price(self):              <span class="t-cm"># used as: product.price  (no ())</span>
+        <mark class="hl-key">return</mark> self._price
+
+    <mark class="hl-key">@price</mark>.setter
+    <mark class="hl-key">def</mark> price(self, value):       <span class="t-cm"># used as: product.price = 20</span>
+        <mark class="hl-key">if</mark> value < 0:
+            <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be >= 0")
+        self._price = value
+
+p = Product(10)
+<mark class="hl-key">print</mark>(p.price)     <span class="t-cm"># calls getter → 10</span>
+p.price = 20       <span class="t-cm"># calls setter</span>
+<span class="t-cm"># p.price = -1     # ValueError</span>
+
+<span class="t-cm"># @property turned the method into a managed attribute (descriptor)</span></div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> Can a decorator be applied to a class (not just a function)?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Yes &mdash; <code>@dataclass</code> is a class decorator that modifies the class in place.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> Yes — class decorator takes a class and returns a class.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre"><mark class="hl-key">from</mark> dataclasses <mark class="hl-key">import</mark> <mark class="hl-key">dataclass</mark>
+
+<span class="t-cm"># SUGAR</span>
+<mark class="hl-key">@dataclass</mark>
+<mark class="hl-key">class</mark> User:
+    name: <mark class="hl-key">str</mark>
+    age: <mark class="hl-key">int</mark>
+
+<span class="t-cm"># REAL FORM (same meaning)</span>
+<span class="t-cm"># class User:</span>
+<span class="t-cm">#     name: str</span>
+<span class="t-cm">#     age: int</span>
+<span class="t-cm"># User = dataclass(User)</span>
+
+u = User("Alice", 30)
+<mark class="hl-key">print</mark>(u)               <span class="t-cm"># User(name='Alice', age=30)</span>
+
+<span class="t-cm"># Custom class decorator example:</span>
+<mark class="hl-key">def</mark> add_repr(cls):
+    <mark class="hl-key">def</mark> <mark class="hl-key">__repr__</mark>(self):
+        <mark class="hl-key">return</mark> f"{cls.__name__}()"
+    cls.<mark class="hl-key">__repr__</mark> = <mark class="hl-key">__repr__</mark>
+    <mark class="hl-key">return</mark> cls
+
+<mark class="hl-key">@add_repr</mark>
+<mark class="hl-key">class</mark> Ticket:
+    <mark class="hl-key">pass</mark>
+
+<mark class="hl-key">print</mark>(Ticket())        <span class="t-cm"># Ticket()</span></div>
+        Same rule: <code>@something</code> means <code>Name = something(Name)</code>.
+      </div>
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Explain decorators in simple terms.</p><p class="qa-a"><b>A:</b> A decorator is a function that takes a function and returns a new function with extra behavior. FastAPI uses <code>@app.get('/')</code> to register routes.</p><p class="qa-q"><b>Q:</b> Why use functools.wraps?</p><p class="qa-a"><b>A:</b> Without it, the wrapped function loses its original <code>__name__</code> and <code>__doc__</code> — bad for debugging, introspection, and docs.</p><p class="qa-q"><b>Q:</b> Can a decorator accept arguments?</p><p class="qa-a"><b>A:</b> Yes — use a factory: <code>def repeat(n): def decorator(func): ... return decorator</code>. Then <code>@repeat(3)</code>.</p><p class="qa-q"><b>Q:</b> Decorator vs inheritance for extending behavior?</p><p class="qa-a"><b>A:</b> Decorators compose behavior around a single function at runtime. Inheritance models is-a relationships between types.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Explain decorators in simple terms.</p><p class="qa-a"><b>A:</b> A decorator is a <b>wrapper</b>. It adds extra work (retry, log, timing) around your function, without editing the function body.<br><br><b>Syntactic sugar:</b> <code>@decorator</code> is a nicer shortcut for <code>name = decorator(name)</code> — same meaning.<br><br><b>Full code:</b><div class="step-pre"><mark class="hl-key">import</mark> time
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> retry(times=3, delay=0.1):          <span class="t-cm"># 1) FACTORY - takes settings, returns a decorator</span>
+    <mark class="hl-key">def</mark> decorator(fn):                 <span class="t-cm"># 2) DECORATOR - takes the function, returns wrapper</span>
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># 3) WRAPPER - runs on each call</span>
+            <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+                <mark class="hl-key">try</mark>:
+                    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+                <mark class="hl-key">except</mark> ConnectionError:
+                    <mark class="hl-key">if</mark> attempt == times - 1:
+                        <mark class="hl-key">raise</mark>
+                    time.sleep(delay)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+<span class="t-cm"># SUGAR</span>
+<mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+<span class="t-cm"># REAL FORM (same):</span>
+<span class="t-cm"># <b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</span>
+
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+<span class="t-cm"># → wrapper runs (retry) → original body</span></div>FastAPI’s <code>@app.get('/')</code> is the same idea.</p><p class="qa-q"><b>Q:</b> Why use functools.wraps?</p><p class="qa-a"><b>A:</b> After decorating, the name points to <code>wrapper</code>. Without <code>@wraps</code>, the name/docstring become wrong.<br><br><b>Side by side — without vs with wraps:</b><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without @wraps — BAD</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> bad(fn):
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">return</mark> fn(*args, **kwargs)
+    <mark class="hl-key">return</mark> wrapper
+
+<mark class="hl-key">@bad</mark>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees."""
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__name__</mark>)
+<span class="t-cm"># "wrapper"  ← wrong</span>
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)
+<span class="t-cm"># None       ← lost</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">With @wraps — GOOD</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> good(fn):
+    <mark class="hl-key">@wraps</mark>(fn)
+    <mark class="hl-key">def</mark> wrapper(*args, **kwargs):
+        <mark class="hl-key">return</mark> fn(*args, **kwargs)
+    <mark class="hl-key">return</mark> wrapper
+
+<mark class="hl-key">@good</mark>
+<mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees."""
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__name__</mark>)
+<span class="t-cm"># "GetEmployees"  ← correct</span>
+
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)
+<span class="t-cm"># "Fetch employees."</span>
+<span class="t-cm"># ↑ from the """Fetch employees.""" docstring above</span>
+<span class="t-cm">#   @wraps(fn) copied fn.__doc__ onto wrapper</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Where does <code>__doc__</code> come from?</b> The text in <code>"""Fetch employees."""</code> right under <code>def GetEmployees</code> is the docstring — Python stores it as <code>GetEmployees.__doc__</code>. <code>@wraps(fn)</code> copies that string onto the wrapper, so after decorating you still see the same docstring.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What is a docstring?</b> <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('docstring-xml')" title="Open draggable C# comparison window">C# Comparison</button><br>A <b>docstring</b> is a string written as the <b>first statement</b> inside a <code>def</code>, <code>class</code>, or module — usually with <code>"""triple quotes"""</code>. It describes <b>what</b> the code does (not how every line works).</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Purpose / use cases:</b><br>1. <b>help()</b> — <code>help(GetEmployees)</code> shows the docstring.<br>2. <b>IDE tooltips</b> — hover over the name to see the description.<br>3. <b>Auto-docs</b> — tools like Sphinx / FastAPI read docstrings for API docs.<br>4. <b>Team clarity</b> — next developer knows the function’s job without reading all code.<br>5. <b>Debugging / logs</b> — with <code>@wraps</code>, name + docstring stay correct after decorating.</p><div class="step-pre"><mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    """Fetch employees by id list."""   <span class="t-cm"># ← docstring</span>
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+help(GetEmployees)           <span class="t-cm"># shows the docstring</span>
+<mark class="hl-key">print</mark>(GetEmployees.<mark class="hl-key">__doc__</mark>)  <span class="t-cm"># Fetch employees by id list.</span></div><b>Rule:</b> always use <code>@wraps(fn)</code> on the inner wrapper.</p><p class="qa-q"><b>Q:</b> Can a decorator accept arguments?</p><p class="qa-a"><b>A:</b> Yes — use a <b>decorator factory</b> (returns a decorator).<br><br><b>Full code:</b><div class="step-pre"><mark class="hl-key">import</mark> time
+<mark class="hl-key">from</mark> <mark class="hl-key">functools</mark> <mark class="hl-key">import</mark> <mark class="hl-key">wraps</mark>
+
+<mark class="hl-key">def</mark> retry(times=3, delay=0.1):          <span class="t-cm"># 1) FACTORY - takes settings, returns a decorator</span>
+    <mark class="hl-key">def</mark> decorator(fn):                 <span class="t-cm"># 2) DECORATOR - takes the function, returns wrapper</span>
+        <mark class="hl-key">@wraps</mark>(fn)
+        <mark class="hl-key">def</mark> wrapper(*args, **kwargs):  <span class="t-cm"># 3) WRAPPER - runs on each call</span>
+            <mark class="hl-key">for</mark> attempt <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(times):
+                <mark class="hl-key">try</mark>:
+                    <mark class="hl-key">return</mark> fn(*args, **kwargs)
+                <mark class="hl-key">except</mark> ConnectionError:
+                    <mark class="hl-key">if</mark> attempt == times - 1:
+                        <mark class="hl-key">raise</mark>
+                    time.sleep(delay)
+        <mark class="hl-key">return</mark> wrapper
+    <mark class="hl-key">return</mark> decorator
+
+<mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids, include_inactive=<mark class="hl-key">False</mark>):
+    <mark class="hl-key">return</mark> api_call(employee_ids, include_inactive)
+
+<span class="t-cm"># means: <b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</span>
+GetEmployees([101, 102, 103], include_inactive=<mark class="hl-key">True</mark>)
+
+<span class="t-cm"># times/delay = decorator settings</span>
+<span class="t-cm"># *args/**kwargs = call inputs to GetEmployees</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Important:</b> <code>def decorator(fn):</code> is <b>not</b> the factory. It is the <b>real decorator</b> (takes the function). The <b>factory</b> is outer <code>retry(...)</code> (takes settings and <b>returns</b> the decorator).</p><table class="data-tbl"><tr><th>Name in code</th><th>What it is</th><th>Takes</th><th>Returns</th></tr><tr><td><code>retry</code></td><td><b>factory</b></td><td>settings (<code>times</code>, <code>delay</code>)</td><td>the decorator</td></tr><tr><td><code>decorator</code></td><td><b>decorator</b></td><td>function (<code>fn</code>)</td><td>the wrapper</td></tr><tr><td><code>wrapper</code></td><td><b>wrapper</b></td><td>call args (<code>*args</code>, <code>**kwargs</code>)</td><td>result of <code>fn</code></td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>How to tell:</b><br>• Decorator → takes a <b>function</b>, returns a function (usually wrapper).<br>• Factory → takes <b>settings</b>, returns a <b>decorator</b>.<br><br>So <code>@retry(times=3)</code> means: (1) call factory <code>retry(times=3)</code> → get <code>decorator</code>, (2) call <code>decorator(GetEmployees)</code> → get <code>wrapper</code>, (3) name <code>GetEmployees</code> points to that wrapper.<br><br><b>Note:</b> the name <code>decorator</code> is only a label — you could call it <code>inner</code>. What matters is the <b>job</b>, not the name.</p></p><p class="qa-q"><b>Q:</b> Decorator vs inheritance for extending behavior?</p><p class="qa-a"><b>A:</b> Different jobs — wrap a function vs model is-a types.<br><br><b>Side by side:</b><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">Decorator — cross-cutting</span><div class="step-pre"><mark class="hl-key">@retry</mark>(times=3)
+<mark class="hl-key">def</mark> GetEmployees(employee_ids):
+    <mark class="hl-key">return</mark> api_call(employee_ids)
+
+<mark class="hl-key">@log_calls</mark>
+<mark class="hl-key">def</mark> SaveReport(path):
+    <mark class="hl-key">return</mark> write(path)
+
+<mark class="hl-key">@require_auth</mark>("admin")
+<mark class="hl-key">def</mark> DeleteUser(user_id):
+    <mark class="hl-key">return</mark> db.delete(user_id)</div></div><div class="mc-col mc-good"><span class="mc-lbl">Inheritance — is-a types</span><div class="step-pre"><mark class="hl-key">class</mark> BankAccount:
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, balance):
+        self.balance = balance
+    <mark class="hl-key">def</mark> deposit(self, amount):
+        self.balance += amount
+
+<mark class="hl-key">class</mark> SavingsAccount(BankAccount):
+    <mark class="hl-key">def</mark> add_interest(self, rate):
+        self.balance *= (1 + rate)</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What is “cross-cutting”?</b> Extra behavior needed by <b>many unrelated functions</b> — not part of the core business rule of each one. You write it <b>once</b> and attach with <code>@</code>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Decorator scenarios (why)</b></p><table class="data-tbl"><tr><th>Need</th><th>Example scenario</th><th>Why decorator?</th></tr><tr><td><b>retry</b></td><td>Flaky network: <code>GetEmployees</code>, <code>SendEmail</code>, <code>FetchInvoice</code> all fail sometimes</td><td>Same retry loop in every function is copy-paste. <code>@retry(times=3)</code> once — business code stays clean.</td></tr><tr><td><b>log</b></td><td>Audit trail: who called <code>SaveReport</code> / <code>UpdateSalary</code>, with args and time</td><td>Logging is not “report logic”. <code>@log_calls</code> adds start/finish prints without editing each body.</td></tr><tr><td><b>auth</b></td><td>Only admins may <code>DeleteUser</code> or <code>ExportPayroll</code></td><td>Role check is security, not delete logic. <code>@require_auth("admin")</code> blocks bad callers in one place.</td></tr><tr><td><b>timing</b></td><td>Slow API: measure <code>run_query</code> / <code>build_report</code></td><td><code>@timer</code> wraps timing around any function without mixing clocks into business code.</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Inheritance scenarios (why)</b></p><table class="data-tbl"><tr><th>Need</th><th>Example scenario</th><th>Why inheritance?</th></tr><tr><td><b>is-a type</b></td><td><code>SavingsAccount</code> <b>is a</b> <code>BankAccount</code> — has balance + deposit, plus interest</td><td>Child reuses parent fields/methods and adds specialized behavior. This is a type hierarchy, not a wrapper around one function.</td></tr><tr><td><b>shared structure</b></td><td><code>Dog</code> / <code>Cat</code> both <b>are</b> <code>Animal</code> with <code>speak()</code> overridden</td><td>Common base holds shared state/API; children customize. Polymorphism: one list of <code>Animal</code>, different <code>speak()</code>.</td></tr><tr><td><b>specialize behavior</b></td><td><code>AdminUser(User)</code> can do everything a user can, plus admin tools</td><td>Natural “kind of” relationship. Inheritance models the domain, not cross-cutting extras like retry.</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Choose:</b><br>• Same extra behavior on <b>many unrelated functions</b> (retry / log / auth / timing) → <b>decorator</b><br>• Related types that <b>share structure</b> (is-a) → <b>inheritance</b><br><br><b>Wrong mix:</b> don’t invent <code>class RetryableGetEmployees(GetEmployees)</code> just to add retry — that is cross-cutting, use <code>@retry</code>. Don’t use <code>@retry</code> to model “savings is a bank account” — that is inheritance.</p></p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -10397,34 +11216,198 @@ upload(valid_file, temp)</div></div><div class="io-split-divider" role="separato
 upload(locked_file, temp)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
 <mark class="hl-key">return</mark> → {'status': 403}; temp cleaned up <mark class="hl-key">in</mark> <mark class="hl-key">finally</mark></div></div></div><p><b>3) Disk error — return 500</b><br><code>OSError</code> covers disk full, network drive gone, etc.</p><div class="io-split"><div class="io-in"><span class="io-lbl"># INPUT</span><div class="step-pre"><span class="t-cm"># save() raises OSError</span>
 upload(file, temp)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize INPUT / OUTPUT"></div><div class="io-out"><span class="io-lbl"># OUTPUT (same line as each print)</span><div class="step-pre">
-<mark class="hl-key">return</mark> → {'status': 500}; temp cleaned up <mark class="hl-key">in</mark> <mark class="hl-key">finally</mark></div></div></div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — try, except, else & finally</b><br>Handle errors gracefully. <code>else</code> runs if no exception. <code>finally</code> always runs.<div class="step-pre"><mark class="hl-key">try</mark>:
-    result = <mark class="hl-key">int</mark>(user_input)
+<mark class="hl-key">return</mark> → {'status': 500}; temp cleaned up <mark class="hl-key">in</mark> <mark class="hl-key">finally</mark></div></div></div></div><h3>Step-by-step (beginner friendly)</h3><ul class="learn-steps"><li><b>Step 1 — try, except, else & finally</b><br>Handle errors gracefully. <code>else</code> runs only if <code>try</code> succeeds. <code>finally</code> always runs (cleanup). <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('try-catch')" title="Open draggable C# comparison window">C# Comparison</button><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Purpose of <code>else</code>:</b> put <b>success-only</b> work there — code that should run after a clean <code>try</code>, but whose own errors must <b>not</b> be caught by the same <code>except</code>. Keep <code>try</code> small: only the risky lines.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Without else — success code inside try</span><div class="step-pre"><mark class="hl-key">def</mark> build_report(n):
+    <mark class="hl-key">if</mark> n &lt; 1:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("n must be >= 1")
+    <mark class="hl-key">return</mark> f"Report for {n}"
+
+user_input = "0"   <span class="t-cm"># this IS a number</span>
+
+<mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)        <span class="t-cm"># OK → n = 0</span>
+    report = build_report(n)  <span class="t-cm"># raises ValueError</span>
+    <mark class="hl-key">print</mark>(report)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("not a number")    <span class="t-cm"># WRONG message</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What “handler catches success code too” means:</b> one <code>except ValueError</code> covers <b>every</b> line in <code>try</code>. <code>int("0")</code> succeeds. Then <code>build_report(0)</code> raises a <b>different</b> <code>ValueError</code> (bad report input, not a parse fail). Python still jumps to the same handler → prints <code>"not a number"</code>. The user thinks typing failed. The real bug is hidden.</p></div><div class="mc-col mc-good"><span class="mc-lbl">With else — success code after clean try</span><div class="step-pre">user_input = "42"
+
+<mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)       <span class="t-cm"># ONLY risky parse</span>
 <mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
     <mark class="hl-key">print</mark>("not a number")
 <mark class="hl-key">else</mark>:
-    <mark class="hl-key">print</mark>(f"parsed: {result}")
+    <span class="t-cm"># runs ONLY if int() worked</span>
+    report = build_report(n)
+    <mark class="hl-key">print</mark>(report)
 <mark class="hl-key">finally</mark>:
-    <mark class="hl-key">print</mark>("cleanup always runs")</div></li><li><b>Step 2 — Built-in exception hierarchy</b><br>All exceptions inherit from <code>BaseException</code>. Catch specific types, not everything.<div class="step-pre"><mark class="hl-key">BaseException</mark>
+    <mark class="hl-key">print</mark>("cleanup always runs")</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why:</b> <code>else</code> runs only on success. Errors from <code>build_report</code> are <b>not</b> treated as parse errors.</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same input, two meanings of ValueError:</b></p><table class="data-tbl"><tr><th>user_input</th><th>int()</th><th>build_report</th><th>Without else (in try)</th><th>With else</th></tr><tr><td><code>"abc"</code></td><td>fails</td><td>never runs</td><td><code>not a number</code> ✓</td><td><code>not a number</code> ✓</td></tr><tr><td><code>"0"</code></td><td>OK (<code>0</code>)</td><td><code>ValueError</code> (n &lt; 1)</td><td><code>not a number</code> ✗ <b>wrong</b></td><td>real error: <code>n must be &gt;= 1</code> ✓</td></tr><tr><td><code>"42"</code></td><td>OK</td><td>OK</td><td>prints report ✓</td><td>prints report ✓</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why not put success work in <code>finally</code>?</b> <code>finally</code> runs on <b>success and failure</b> — it is for cleanup, not “continue only if it worked.”</p><div class="step-pre"><span class="t-cm"># BAD — success code in finally</span>
+<mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("not a number")
+<mark class="hl-key">finally</mark>:
+    report = build_report(n)  <span class="t-cm"># runs even when parse failed!</span>
+    <mark class="hl-key">print</mark>(report)
+
+<span class="t-cm"># user_input = "abc" → except runs, then finally still runs</span>
+<span class="t-cm"># → NameError: n was never set  (or wrong report if n existed)</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Also wrong without else</b> — success code after the whole <code>try/except</code> (same bug C# would have if <code>catch</code> does not stop):</p><div class="step-pre"><mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("not a number")
+<span class="t-cm"># This still runs after a failed parse → NameError or wrong use of n</span>
+<mark class="hl-key">print</mark>(f"parsed: {n}")</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>How C# handles it (no <code>else</code> keyword):</b> early <code>return</code> in <code>catch</code>, then success code after — or use <code>int.TryParse</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('try-catch')" title="Open draggable C# comparison window">C# Comparison</button></p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">Python — else</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("not a number")
+<mark class="hl-key">else</mark>:
+    report = build_report(n)
+    <mark class="hl-key">print</mark>(report)
+<mark class="hl-key">finally</mark>:
+    <mark class="hl-key">print</mark>("cleanup")</div></div><div class="mc-col mc-good"><span class="mc-lbl">C# — return in catch (same job)</span><div class="step-pre"><mark class="hl-key">int</mark> n;
+<mark class="hl-key">try</mark>
+{
+    n = <mark class="hl-key">int</mark>.Parse(userInput);  // risky
+}
+catch (FormatException)
+{
+    Console.WriteLine("not a number");
+    <mark class="hl-key">return</mark>;   // STOP — skip success path
+}
+<mark class="hl-key">finally</mark>
+{
+    Console.WriteLine("cleanup");
+}
+// Reached only <mark class="hl-key">if</mark> Parse worked
+var report = BuildReport(n);
+Console.WriteLine(report);</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>C# without <code>return</code></b> has the same bug as Python without <code>else</code> — success lines after try/catch still run after a handled error. Python uses <code>else</code>; C# uses <code>return</code> (or a flag / <code>TryParse</code>).</p><div class="step-pre">// C<span class="t-cm"># alternative — often preferred for parse (no exception for bad input)</span>
+<mark class="hl-key">if</mark> (!<mark class="hl-key">int</mark>.TryParse(userInput, out <mark class="hl-key">int</mark> n))
+{
+    Console.WriteLine("not a number");
+    <mark class="hl-key">return</mark>;
+}
+var report = BuildReport(n);  // only <mark class="hl-key">if</mark> parse OK
+Console.WriteLine(report);</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Walkthrough</b> (with <code>else</code>):</p><table class="data-tbl"><tr><th>user_input</th><th>What runs</th><th>Output</th></tr><tr><td><code>"42"</code></td><td><code>try</code> OK → <code>else</code> → <code>finally</code></td><td>report printed, then cleanup</td></tr><tr><td><code>"abc"</code></td><td><code>except</code> → skip <code>else</code> → <code>finally</code></td><td><code>not a number</code>, then cleanup</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Rule:</b> <code>try</code> = risk · <code>except</code> = handle that risk · <code>else</code> = “it worked, continue” · <code>finally</code> = always cleanup.<br><b>C# map:</b> <code>else</code> ≈ code after try/catch + <code>return</code> in catch (or <code>TryParse</code>).</p></li><li><b>Step 2 — Built-in exception hierarchy</b><br>All exceptions inherit from <code>BaseException</code>. Catch specific types, not everything.<div class="step-pre"><mark class="hl-key">BaseException</mark>
  └── <mark class="hl-key">Exception</mark>
       ├── <mark class="hl-key">ValueError</mark>
       ├── <mark class="hl-key">TypeError</mark>
       ├── <mark class="hl-key">FileNotFoundError</mark>
-      └── <mark class="hl-key">KeyError</mark></div><p class="step-result"><b>Rule:</b> catch the most specific exception you can handle.</p></li><li><b>Step 3 — Custom exceptions</b><br>Define domain-specific errors your team understands.<div class="step-pre"><mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
+      └── <mark class="hl-key">KeyError</mark></div><p class="step-result"><b>Rule:</b> catch the most specific exception you can handle.</p></li><li><b>Step 3 — Custom exceptions</b><br>Same <code>raise</code> / <code>except</code> machinery. The difference is the <b>type name</b> and extra data — so callers can catch <b>only</b> your domain rule. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('raise-reraise')" title="Open draggable C# comparison window">C# Comparison</button><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Side by side — normal vs custom</b> (same <code>set_age(-5)</code> call):</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Normal — built-in ValueError</span><div class="step-pre"><mark class="hl-key">def</mark> set_age(age):
+    <mark class="hl-key">if</mark> age &lt; 0:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("must be positive")
+    <mark class="hl-key">return</mark> age
+
+<mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)   <span class="t-cm"># can also raise ValueError</span>
+    set_age(n)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("bad input")   <span class="t-cm"># which one failed?</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">Custom — ValidationError</span><div class="step-pre"><mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
     <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, <mark class="hl-key">field</mark>, message):
         self.<mark class="hl-key">field</mark> = <mark class="hl-key">field</mark>
         <mark class="hl-key">super</mark>().<mark class="hl-key">__init__</mark>(message)
 
 <mark class="hl-key">def</mark> set_age(age):
     <mark class="hl-key">if</mark> age &lt; 0:
-        <mark class="hl-key">raise</mark> <mark class="hl-key">ValidationError</mark>("age", "must be positive")</div></li><li><b>Step 4 — raise & re-raise</b><br><code>raise</code> throws an exception. <code>raise ... from ...</code> chains the original cause.<div class="step-pre"><mark class="hl-key">try</mark>:
-    data = <mark class="hl-key">json</mark>.<mark class="hl-key">loads</mark>(raw)
-<mark class="hl-key">except</mark> <mark class="hl-key">json</mark>.JSONDecodeError <mark class="hl-key">as</mark> e:
-    <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("bad config") <mark class="hl-key">from</mark> e
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValidationError</mark>(
+            "age", "must be positive")
+    <mark class="hl-key">return</mark> age
 
-<span class="t-cm"># bare re-raise inside except:</span>
-<mark class="hl-key">except</mark> <mark class="hl-key">FileNotFoundError</mark>:
+<mark class="hl-key">try</mark>:
+    n = <mark class="hl-key">int</mark>(user_input)
+    set_age(n)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValidationError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(e.<mark class="hl-key">field</mark>, e)      <span class="t-cm"># age / must be positive</span>
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("not a number") <span class="t-cm"># only the parse</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>One more realistic example</b> — ATM withdraw: bad typed amount vs not enough money. Same mix-up if both are <code>ValueError</code>.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">Normal — one ValueError for both</span><div class="step-pre"><mark class="hl-key">def</mark> withdraw(balance, amount_text):
+    amount = <mark class="hl-key">float</mark>(amount_text)  <span class="t-cm"># "abc" → ValueError</span>
+    <mark class="hl-key">if</mark> amount > balance:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>("insufficient funds")
+    <mark class="hl-key">return</mark> balance - amount
+
+<mark class="hl-key">try</mark>:
+    withdraw(100, amount_text)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("withdraw failed")
+    <span class="t-cm"># typed "abc"? or only had $100?</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">Custom — InsufficientFundsError</span><div class="step-pre"><mark class="hl-key">class</mark> InsufficientFundsError(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, balance, amount):
+        self.balance = balance
+        self.amount = amount
+        <mark class="hl-key">super</mark>().<mark class="hl-key">__init__</mark>(
+            f"need {amount}, have {balance}")
+
+<mark class="hl-key">def</mark> withdraw(balance, amount_text):
+    amount = <mark class="hl-key">float</mark>(amount_text)
+    <mark class="hl-key">if</mark> amount > balance:
+        <mark class="hl-key">raise</mark> InsufficientFundsError(
+            balance, amount)
+    <mark class="hl-key">return</mark> balance - amount
+
+<mark class="hl-key">try</mark>:
+    withdraw(100, amount_text)
+<mark class="hl-key">except</mark> InsufficientFundsError <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(f"short by {e.amount - e.balance}")
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">print</mark>("amount is not a number")</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45">Same idea as age: parse fail stays <code>ValueError</code>; business rule gets its own type + extra fields (<code>e.balance</code>, <code>e.amount</code>).</p><table class="data-tbl"><tr><th></th><th>Normal (ValueError)</th><th>Custom (ValidationError)</th></tr><tr><td><b>Type name</b></td><td>Built-in — many things raise it</td><td>Yours — only your rule</td></tr><tr><td><b>except</b></td><td><code>except ValueError</code> catches parse <b>and</b> age rule — mixed</td><td><code>except ValidationError</code> = age rule only; parse stays <code>ValueError</code></td></tr><tr><td><b>Extra data</b></td><td>Message string only</td><td><code>e.field</code> + message (highlight the form field)</td></tr><tr><td><b>Team reads traceback</b></td><td><code>ValueError: must be positive</code> — vague</td><td><code>ValidationError: must be positive</code> — domain rule</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What is the same?</b> Still <code>raise</code> + <code>try/except</code>. Custom is just a new class under <code>Exception</code>.<br><b>What is different?</b> Callers can tell “bad number text” from “age rule failed” — and get <code>e.field</code>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Full custom class</b> (define + raise + catch):</p><div class="step-pre"><mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">def</mark> <mark class="hl-key">__init__</mark>(self, <mark class="hl-key">field</mark>, message):
+        self.<mark class="hl-key">field</mark> = <mark class="hl-key">field</mark>              <span class="t-cm"># extra context for UI / logs</span>
+        <mark class="hl-key">super</mark>().<mark class="hl-key">__init__</mark>(message)       <span class="t-cm"># standard exception text</span>
+
+<mark class="hl-key">def</mark> set_age(age):
+    <mark class="hl-key">if</mark> age &lt; 0:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValidationError</mark>("age", "must be positive")
+    <mark class="hl-key">return</mark> age
+
+<mark class="hl-key">try</mark>:
+    set_age(-5)
+<mark class="hl-key">except</mark> <mark class="hl-key">ValidationError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(e.<mark class="hl-key">field</mark>)    <span class="t-cm"># age</span>
+    <mark class="hl-key">print</mark>(e)          <span class="t-cm"># must be positive</span>
+
+<span class="t-cm"># set_age(30)  → returns 30, no exception</span></div></li><li><b>Step 4 — raise & re-raise</b><br><code>raise</code> throws. Bare <code>raise</code> continues the <b>same</b> error. <code>raise ... from ...</code> throws a <b>new</b> error and keeps the original as the cause. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('raise-reraise')" title="Open draggable C# comparison window">C# Comparison</button><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Side by side — payment checkout</b> (amount rule, wrap bank error, log timeout, avoid <code>raise e</code>):</p><div class="mc-row mc-align-tb"><div class="mc-col mc-good"><span class="mc-lbl">raise New — throw a NEW error</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">def</mark> charge(amount):
+    <mark class="hl-key">if</mark> amount &lt;= 0:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(
+            "Payment amount must be greater than 0"
+        )
+    <mark class="hl-key">return</mark> charge_card(amount)
+
+charge(0)</div></div><p class="mc-tb-h"><b>Traceback / message</b> — one error, site is <code>raise</code> in <code>charge</code>:</p><div class="step-pre">Traceback (most recent call last):
+  File "app.py", line 8, <mark class="hl-key">in</mark> &lt;module&gt;
+    charge(0)
+  File "app.py", line 4, <mark class="hl-key">in</mark> charge
+    <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(
+        "Payment amount must be greater than 0")
+<mark class="hl-key">ValueError</mark>: Payment amount must be greater than 0</div></div><div class="mc-col mc-good"><span class="mc-lbl">raise New from e — NEW + keep cause</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">pass</mark>
+
+<mark class="hl-key">try</mark>:
+    bank_charge(order_id)   <span class="t-cm"># SDK / gateway</span>
+<mark class="hl-key">except</mark> ConnectionError <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e</div></div><p class="mc-tb-h"><b>Traceback / message</b> — two blocks: bank cause, then API error.</p><div class="step-pre">Traceback (most recent call last):
+  File "app.py", line 6, <mark class="hl-key">in</mark> &lt;module&gt;
+    bank_charge(order_id)
+ConnectionError: gateway unreachable
+
+The above exception was the direct cause of
+the following exception:
+
+Traceback (most recent call last):
+  File "app.py", line 8, <mark class="hl-key">in</mark> &lt;module&gt;
+    <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e
+PaymentError: Payment failed</div></div></div><div class="mc-row mc-align-tb"><div class="mc-col mc-good"><span class="mc-lbl">bare raise — SAME error continues</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">try</mark>:
+    bank_charge(order_id)
+<mark class="hl-key">except</mark> TimeoutError:
+    log_error()   <span class="t-cm"># log order id</span>
+    <mark class="hl-key">raise</mark>         <span class="t-cm"># SAME TimeoutError</span></div></div><p class="mc-tb-h"><b>Traceback / message</b> — <code>raise</code> line is <b>not</b> listed. Most recent frame is the real site: <code>bank_charge()</code>.</p><div class="step-pre">Traceback (most recent call last):
+  File "app.py", line 3, <mark class="hl-key">in</mark> &lt;module&gt;
+    bank_charge(order_id)
+TimeoutError: payment gateway timed out</div></div><div class="mc-col mc-bad"><span class="mc-lbl">raise e — same type, NEW traceback</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">try</mark>:
+    bank_charge(order_id)
+<mark class="hl-key">except</mark> TimeoutError <mark class="hl-key">as</mark> e:
     log_error()
-    <mark class="hl-key">raise</mark>   <span class="t-cm"># preserves traceback</span></div></li></ul>
+    <mark class="hl-key">raise</mark> e    <span class="t-cm"># NOT the same as raise</span></div></div><p class="mc-tb-h"><b>Traceback / message</b> — same <code>TimeoutError</code>, but <b>most recent</b> frame is <code>raise e</code>.</p><div class="step-pre">Traceback (most recent call last):
+  File "app.py", line 6, <mark class="hl-key">in</mark> &lt;module&gt;
+    <mark class="hl-key">raise</mark> e
+  File "app.py", line 3, <mark class="hl-key">in</mark> &lt;module&gt;
+    bank_charge(order_id)
+TimeoutError: payment gateway timed out</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Better realistic example — payment processing</b> (e-commerce checkout). Same four raise patterns, one story:</p><table class="data-tbl"><tr><th>Type</th><th>Realistic code</th><th>What the caller sees</th><th>Original cause kept?</th><th>When to use</th></tr><tr><td><b>raise New(...)</b></td><td><code>raise ValueError("Payment amount must be greater than 0")</code></td><td>Only the validation error</td><td>No</td><td>Your app detects a business-rule failure (amount is 0 or negative — nothing else threw first).</td></tr><tr><td><b>raise New from e</b></td><td><code>raise PaymentError("Payment failed") from e</code></td><td><code>PaymentError</code> + “caused by” the bank/SDK error</td><td>Yes (<code>__cause__</code>)</td><td>Convert a technical error (card gateway timeout, connection reset) into a meaningful business/API error.</td></tr><tr><td><b>raise</b> (bare)</td><td><code>except TimeoutError: log_error(); raise</code></td><td>Original <code>TimeoutError</code></td><td>Yes (same object, same traceback)</td><td>Log “payment timed out for order 1001”, then let the original error continue so the caller still sees <code>TimeoutError</code>.</td></tr><tr><td><b>raise e</b></td><td><code>except TimeoutError as e: raise e</code></td><td>Same error, but traceback is less clean (top line is <code>raise e</code>)</td><td>Partial — traceback changes</td><td>Avoid — use bare <code>raise</code>.</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>How to read the story:</b><br>• Cart amount <code>&lt;= 0</code> → you found the rule → <b>raise New</b> (<code>ValueError</code>).<br>• Bank SDK throws a low-level error → wrap for the API → <b>raise PaymentError(...) from e</b>.<br>• Gateway <code>TimeoutError</code> → log order id, then <b>bare raise</b> so ops still sees the real timeout.<br>• Don’t <code>raise e</code> — same timeout message, worse stack.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Pick in one line:</b> business rule → <b>raise New</b> · wrap SDK/bank error → <b>from e</b> · log then continue → <b>bare raise</b> · never <b>raise e</b>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>C# map:</b> <code>raise</code> ≈ <code>throw new ...</code> · bare <code>raise</code> ≈ <code>throw;</code> · <code>raise New from e</code> ≈ <code>throw new Exception("…", e)</code> (<code>InnerException</code>).</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>try / except / else / finally</b><br><b>except:</b> handle error.<br><b>else:</b> runs if <b>no</b> exception in try (not the same as loop else!).<br><b>finally:</b> always runs — cleanup.</div>
 <div class="keyword-box"><b>raise</b> = throw an exception. <b>raise ... from ...</b> = chain cause for debugging.<br><b>Custom Exception</b> = <code>class AppError(Exception): pass</code></div>
@@ -10532,7 +11515,7 @@ upload(file, temp)</div></div><div class="io-split-divider" role="separator" ari
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why not use bare except?</p><p class="qa-a"><b>A:</b> It catches everything including <code>KeyboardInterrupt</code> and hides the real bug. Catch specific exceptions you can handle.</p><p class="qa-q"><b>Q:</b> What does raise from do?</p><p class="qa-a"><b>A:</b> Chains exceptions — the new error keeps a link to the original cause in the traceback (<code>__cause__</code>).</p><p class="qa-q"><b>Q:</b> When does else run in try/except?</p><p class="qa-a"><b>A:</b> Only when the <code>try</code> block completes without raising any exception.</p><p class="qa-q"><b>Q:</b> finally vs else?</p><p class="qa-a"><b>A:</b> <code>else</code> runs on success only. <code>finally</code> runs always — use for cleanup like closing connections.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why not use bare except?</p><p class="qa-a"><b>A:</b> It catches everything including <code>KeyboardInterrupt</code> and hides the real bug. Catch specific exceptions you can handle.</p><p class="qa-q"><b>Q:</b> What does raise from do?</p><p class="qa-a"><b>A:</b> Throws a <b>new</b> error and links the original as <code>__cause__</code> (C# <code>InnerException</code>). Bare <code>raise</code> is different — same error continues, traceback kept. Avoid <code>raise e</code> — it resets the traceback.</p><p class="qa-q"><b>Q:</b> When does else run in try/except?</p><p class="qa-a"><b>A:</b> Only when <code>try</code> finishes with <b>no</b> exception. Use it for success-only work so those lines are not covered by the same <code>except</code>. If parse fails, <code>else</code> is skipped; <code>finally</code> still runs.</p><p class="qa-q"><b>Q:</b> finally vs else?</p><p class="qa-a"><b>A:</b> <code>else</code> = success path only (keep <code>try</code> small). <code>finally</code> = always (close files, unlock, cleanup) — even after error or <code>return</code>.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -16362,7 +17345,116 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">3</td><td class="src">&#160;</td></tr>
 <tr><td class="gutter">4</td><td class="src"><span class="t-cm">// Or source generators / interceptors in modern C#</span></td></tr>
 <tr><td class="gutter">5</td><td class="src"><span class="t-cm">// Decorators are not built-in syntax like Python @</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>@decorator</code> wraps callables dynamically. C# uses attributes, middleware, and DI — conceptually similar, different syntax.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-try-catch" role="dialog" aria-labelledby="csharp-win-title-try-catch"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-try-catch">C# Comparison — try/except vs try/catch</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('try-catch')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python — <code>try / except / else / finally</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>@decorator</code> wraps callables dynamically. C# uses attributes, middleware, and DI — conceptually similar, different syntax.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-args-kwargs" role="dialog" aria-labelledby="csharp-win-title-args-kwargs"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-args-kwargs">C# Comparison — *args / **kwargs vs params</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('args-kwargs')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><div class="csharp-diff"><div class="csharp-diff-label">Flexible extras</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code"><code>*args</code> / <code>**kwargs</code></div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code"><code>params</code> + named args / <code>Dictionary</code></div></div></div></div><p>Python — collect extra positionals and keywords:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">log</span><span class="t-op">(</span><span class="t-id">msg</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-id">args</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op">*</span><span class="t-id">kwargs</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># *args   -&gt; extra positionals (tuple)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># **kwargs -&gt; extra keywords (dict)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">msg</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;args  =&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">args</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;kwargs=&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">kwargs</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-id">log</span><span class="t-op">(</span><span class="t-str">&quot;start&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">level</span><span class="t-op">=</span><span class="t-str">&quot;debug&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm"># args   = (1, 2)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-cm"># kwargs = {&quot;level&quot;: &quot;debug&quot;}</span></td></tr>
+</tbody></table></div><p>C# — <code>params</code> ≈ <code>*args</code>; no single <code>**kwargs</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">// *args ≈ params</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">void</span><span class="t-op"> </span><span class="t-id">Log</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">msg</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">params</span><span class="t-op"> </span><span class="t-kw">object</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-id">args</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">msg</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op">.</span><span class="t-id">Join</span><span class="t-op">(</span><span class="t-str">&quot;, &quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">args</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-id">Log</span><span class="t-op">(</span><span class="t-str">&quot;start&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// params packs 1, 2</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-cm">// Keyword-style at call site (named argument):</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-kw">void</span><span class="t-op"> </span><span class="t-id">Log2</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">msg</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">level</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;info&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-op">$</span><span class="t-str">&quot;{msg} level={level}&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-id">Log2</span><span class="t-op">(</span><span class="t-str">&quot;start&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">level</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;debug&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// like one keyword</span></td></tr>
+<tr><td class="gutter">15</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-cm">// Open-ended keywords bag (closest to **kwargs):</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-kw">void</span><span class="t-op"> </span><span class="t-id">Log3</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">msg</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">Dictionary</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">object</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">kwargs</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op">{</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op">*</span><span class="t-op"> </span><span class="t-id">read</span><span class="t-op"> </span><span class="t-id">kwargs</span><span class="t-op">[</span><span class="t-str">&quot;level&quot;</span><span class="t-op">]</span><span class="t-op"> </span><span class="t-id">etc</span><span class="t-op">.</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op">/</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+</tbody></table></div><table class="data-tbl csharp-pop-tbl"><tr><th>Python</th><th>C# closest</th></tr><tr><td><code>*args</code></td><td><code>params T[]</code></td></tr><tr><td><code>**kwargs</code></td><td>Named arguments (<code>level: "debug"</code>) and/or <code>Dictionary&lt;string, object&gt;</code> — no built-in star-star</td></tr><tr><td>Positionals before keywords</td><td>Same rule in C# method calls</td></tr></table><p class="csharp-pop-note"><b>Bottom line:</b> Python <code>*args</code> maps cleanly to C# <code>params</code>. Python <code>**kwargs</code> is more open-ended — C# usually uses named optional parameters, and a dictionary only when you truly need an arbitrary key bag.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-docstring-xml" role="dialog" aria-labelledby="csharp-win-title-docstring-xml"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-docstring-xml">C# Comparison — docstring vs /// summary</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('docstring-xml')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><div class="csharp-diff"><div class="csharp-diff-label">Documentation on the API</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code"><code>"""docstring"""</code> → <code>__doc__</code></div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code"><code>/// &lt;summary&gt;</code> XML docs</div></div></div></div><p>Python — docstring is the first string inside the function:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">GetEmployees</span><span class="t-op">(</span><span class="t-id">employee_ids</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-str">&quot;Fetch employees by id list.&quot;</span><span class="t-str">&quot;&quot;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">api_call</span><span class="t-op">(</span><span class="t-id">employee_ids</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-id">help</span><span class="t-op">(</span><span class="t-id">GetEmployees</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># shows docstring</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">GetEmployees</span><span class="t-op">.</span><span class="t-id">__doc__</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># Fetch employees by id list.</span></td></tr>
+<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-cm"># After a decorator, use @wraps(fn) so __doc__ is preserved</span></td></tr>
+</tbody></table></div><p>C# — XML documentation comments (<code>///</code>):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm">/// &lt;summary&gt;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-cm">/// Fetch employees by id list.</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-cm">/// &lt;/summary&gt;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-cm">/// &lt;param name=&quot;employeeIds&quot;&gt;List of employee ids.&lt;/param&gt;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm">/// &lt;returns&gt;Employee records.&lt;/returns&gt;</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-bi">IEnumerable</span><span class="t-op">&lt;</span><span class="t-id">Employee</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">GetEmployees</span><span class="t-op">(</span><span class="t-bi">IEnumerable</span><span class="t-op">&lt;</span><span class="t-kw">int</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">employeeIds</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">_api</span><span class="t-op">.</span><span class="t-id">Call</span><span class="t-op">(</span><span class="t-id">employeeIds</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-cm">// IDE shows summary on hover (IntelliSense)</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-cm">// Generate HTML docs with: dotnet tool / DocFX / Sandcastle</span></td></tr>
+</tbody></table></div><table class="data-tbl csharp-pop-tbl"><tr><th></th><th>Python</th><th>C#</th></tr><tr><td><b>How you write it</b></td><td><code>"""..."""</code> under <code>def</code></td><td><code>/// &lt;summary&gt;...&lt;/summary&gt;</code> above method</td></tr><tr><td><b>Stored as</b></td><td><code>fn.__doc__</code></td><td>XML in assembly (when enabled) — not a runtime string like Python</td></tr><tr><td><b>help / hover</b></td><td><code>help(fn)</code>, IDE tooltip</td><td>IntelliSense / Quick Info</td></tr><tr><td><b>Auto-docs</b></td><td>Sphinx, FastAPI, mkdocs</td><td>DocFX, Sandcastle, Swagger from attributes</td></tr><tr><td><b>With wrappers</b></td><td><code>@wraps(fn)</code> keeps docstring</td><td>Attributes / filters don’t replace method docs the same way</td></tr></table><p class="csharp-pop-note"><b>Bottom line:</b> Both document <b>what</b> the API does for humans and tools. Python docstrings are live strings on the object (<code>__doc__</code>). C# XML docs are mainly for IDEs and generated documentation.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-try-catch" role="dialog" aria-labelledby="csharp-win-title-try-catch"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-try-catch">C# Comparison — try/except vs try/catch</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('try-catch')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><div class="csharp-diff"><div class="csharp-diff-label">Key difference</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code"><code>else:</code> = success-only path</div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code">No <code>else</code> — <code>return</code> in <code>catch</code></div></div></div></div><p><b>Same problem:</b> success code after try/except still runs if you only <i>handle</i> the error and keep going. Python solves it with <code>else</code>. C# solves it with early <code>return</code> (or <code>TryParse</code>).</p><p>Python WRONG — no else (success lines still run after catch):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">(</span><span class="t-id">user_input</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;not a number&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-cm"># still runs after failed parse → NameError / wrong n</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-id">report</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">build_report</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">report</span><span class="t-op">)</span></td></tr>
+</tbody></table></div><p>C# WRONG — same bug if catch does not stop:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op">.</span><span class="t-id">Parse</span><span class="t-op">(</span><span class="t-id">userInput</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">catch</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">FormatException</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;not a number&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// forgot return!</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-cm">// still runs after failed parse — same bug as Python</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">report</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">BuildReport</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">report</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div><p>Python RIGHT — <code>else</code> (success-only):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">int</span><span class="t-op">(</span><span class="t-id">user_input</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># ONLY the risky parse</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;not a number&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">else</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">report</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">build_report</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># only if int() worked</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">report</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-kw">finally</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;cleanup always runs&quot;</span><span class="t-op">)</span></td></tr>
+</tbody></table></div><p>C# RIGHT — <code>return</code> in catch, then success after:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">try</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op">.</span><span class="t-id">Parse</span><span class="t-op">(</span><span class="t-id">userInput</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// risky parse</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">catch</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">FormatException</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;not a number&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// STOP — skip success path</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">finally</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;cleanup always runs&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-cm">// Reached only if Parse succeeded</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">report</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">BuildReport</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">report</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div><p><b>C# often preferred for parsing — no exception for bad input:</b></p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-op">!</span><span class="t-kw">int</span><span class="t-op">.</span><span class="t-id">TryParse</span><span class="t-op">(</span><span class="t-id">userInput</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">out</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-str">&quot;not a number&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">report</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">BuildReport</span><span class="t-op">(</span><span class="t-id">n</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// only if parse OK</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-bi">Console</span><span class="t-op">.</span><span class="t-id">WriteLine</span><span class="t-op">(</span><span class="t-id">report</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div><p><b>Same idea — file / API style:</b></p><p>Python:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">save</span><span class="t-op">(</span><span class="t-id">data</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">PermissionError</span><span class="t-op">:</span></td></tr>
@@ -16370,10 +17462,10 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">5</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">OSError</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-num">500</span></td></tr>
 <tr><td class="gutter">7</td><td class="src"><span class="t-kw">else</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">info</span><span class="t-op">(</span><span class="t-str">&quot;ok&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">log</span><span class="t-op">.</span><span class="t-id">info</span><span class="t-op">(</span><span class="t-str">&quot;ok&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># only if save worked</span></td></tr>
 <tr><td class="gutter">9</td><td class="src"><span class="t-kw">finally</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">temp</span><span class="t-op">.</span><span class="t-id">cleanup</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
-</tbody></table></div><p>C# — <code>try / catch / finally</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+</tbody></table></div><p>C#:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Save</span><span class="t-op">(</span><span class="t-id">data</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
@@ -16390,7 +17482,66 @@ They are <b>not</b> “any object that has the method.”</p>
 <tr><td class="gutter">14</td><td class="src"><span class="t-op">{</span></td></tr>
 <tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">temp</span><span class="t-op">.</span><span class="t-id">Cleanup</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
 <tr><td class="gutter">16</td><td class="src"><span class="t-op">}</span></td></tr>
-</tbody></table></div><p class="csharp-pop-note"><b>Bottom line:</b> <code>except</code> ≈ <code>catch</code>. Python <code>else</code> on try runs if no exception — C# has no direct equivalent.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-with-using" role="dialog" aria-labelledby="csharp-win-title-with-using"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-with-using">C# Comparison — with vs using</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('with-using')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>with</code> — context manager:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">17</td><td class="src"><span class="t-id">Log</span><span class="t-op">.</span><span class="t-id">Info</span><span class="t-op">(</span><span class="t-str">&quot;ok&quot;</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// only reached if Save did not throw</span></td></tr>
+</tbody></table></div><table class="data-tbl csharp-pop-tbl"><tr><th></th><th>Python</th><th>C#</th></tr><tr><td><b>Handle error</b></td><td><code>except ValueError:</code></td><td><code>catch (FormatException)</code></td></tr><tr><td><b>Success-only</b></td><td><code>else:</code></td><td><code>return</code> in catch, then code after try/catch (or <code>TryParse</code>)</td></tr><tr><td><b>Without stop</b></td><td>Code after try/except still runs → bug</td><td>Same bug if catch prints and continues</td></tr><tr><td><b>Always cleanup</b></td><td><code>finally:</code></td><td><code>finally { }</code></td></tr></table><p class="csharp-pop-note"><b>Bottom line:</b> C# has <b>no</b> try-<code>else</code>. Map Python <code>else</code> → early <code>return</code> in <code>catch</code> (then success code after), or avoid the exception with <code>TryParse</code>. Without that stop, C# has the same “success code still runs” bug as Python without <code>else</code>.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-raise-reraise" role="dialog" aria-labelledby="csharp-win-title-raise-reraise"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-raise-reraise">C# Comparison — raise / re-raise vs throw</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('raise-reraise')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><div class="csharp-diff"><div class="csharp-diff-label">Key difference</div><div class="csharp-diff-grid"><div class="csharp-diff-col"><div class="csharp-diff-lang">Python</div><div class="csharp-diff-code"><code>raise</code> / <code>raise</code> / <code>raise New from e</code></div></div><div class="csharp-diff-vs" aria-hidden="true">vs</div><div class="csharp-diff-col"><div class="csharp-diff-lang">C#</div><div class="csharp-diff-code"><code>throw new</code> / <code>throw;</code> / <code>throw new ...(inner)</code></div></div></div></div><p>Python — custom exception + <code>raise</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">ValidationError</span><span class="t-op">(</span><span class="t-id">Exception</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">self</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">field</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">message</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">self</span><span class="t-op">.</span><span class="t-id">field</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">field</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">super</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-id">__init__</span><span class="t-op">(</span><span class="t-id">message</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">set_age</span><span class="t-op">(</span><span class="t-id">age</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-id">age</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValidationError</span><span class="t-op">(</span><span class="t-str">&quot;age&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;must be positive&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">age</span></td></tr>
+</tbody></table></div><p>C# — custom exception + <code>throw new</code>:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-id">ValidationException</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-bi">Exception</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-id">ValidationException</span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">field</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">message</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">base</span><span class="t-op">(</span><span class="t-id">message</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Field</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">field</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">SetAge</span><span class="t-op">(</span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">age</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">age</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">throw</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">ValidationException</span><span class="t-op">(</span><span class="t-str">&quot;age&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-str">&quot;must be positive&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">age</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div><p>Python — bare <code>raise</code> (keep traceback):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-str">&quot;missing.txt&quot;</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">FileNotFoundError</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">log_error</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># same error, original site</span></td></tr>
+</tbody></table></div><p>C# — bare <code>throw;</code> (keep stack):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">File</span><span class="t-op">.</span><span class="t-id">OpenText</span><span class="t-op">(</span><span class="t-str">&quot;missing.txt&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">catch</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">FileNotFoundException</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">LogError</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">throw</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// same exception, original site</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div><p>Python — <code>raise New from e</code> (chain cause):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">json</span><span class="t-op">.</span><span class="t-id">loads</span><span class="t-op">(</span><span class="t-id">raw</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">except</span><span class="t-op"> </span><span class="t-id">json</span><span class="t-op">.</span><span class="t-id">JSONDecodeError</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">raise</span><span class="t-op"> </span><span class="t-id">ValueError</span><span class="t-op">(</span><span class="t-str">&quot;bad config&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">e</span></td></tr>
+</tbody></table></div><p>C# — inner exception (chain cause):</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">try</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">data</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">JsonSerializer</span><span class="t-op">.</span><span class="t-id">Deserialize</span><span class="t-op">&lt;</span><span class="t-id">Config</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-id">raw</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">catch</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">JsonException</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">throw</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-id">InvalidOperationException</span><span class="t-op">(</span><span class="t-str">&quot;bad config&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">e</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// e becomes InnerException</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div><table class="data-tbl csharp-pop-tbl"><tr><th></th><th>Python</th><th>C#</th></tr><tr><td><b>Throw new</b></td><td><code>raise ValidationError(...)</code></td><td><code>throw new ValidationException(...)</code></td></tr><tr><td><b>Re-throw same</b></td><td>bare <code>raise</code></td><td>bare <code>throw;</code> (not <code>throw ex;</code>)</td></tr><tr><td><b>Chain cause</b></td><td><code>raise New from e</code> → <code>__cause__</code></td><td><code>throw new ...(msg, e)</code> → <code>InnerException</code></td></tr><tr><td><b>Avoid</b></td><td><code>raise e</code> resets traceback</td><td><code>throw ex;</code> resets stack trace</td></tr></table><p class="csharp-pop-note"><b>Bottom line:</b> Custom type + extra fields work the same in both. Bare <code>raise</code> ≈ bare <code>throw;</code>. <code>raise New from e</code> ≈ constructor that takes the inner exception.</p></div><div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div></div><div class="csharp-float-win" id="csharp-win-with-using" role="dialog" aria-labelledby="csharp-win-title-with-using"><div class="csharp-float-hdr"><span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span><h4 id="csharp-win-title-with-using">C# Comparison — with vs using</h4><button type="button" class="csharp-float-close" onclick="closeCsharpWin('with-using')" aria-label="Close">&times;</button></div><div class="csharp-float-body"><p>Python <code>with</code> — context manager:</p><div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
 <tr><td class="gutter">1</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-bi">open</span><span class="t-op">(</span><span class="t-str">&quot;data.txt&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">encoding</span><span class="t-op">=</span><span class="t-str">&quot;utf-8&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">:</span></td></tr>
 <tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">text</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-op">.</span><span class="t-id">read</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
 <tr><td class="gutter">3</td><td class="src"><span class="t-cm"># f closed here even on error</span></td></tr>

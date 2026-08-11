@@ -915,10 +915,198 @@ public IActionResult GetUsers() { ... }
     )
 
 
+def _args_kwargs_body() -> str:
+    return (
+        _diff_first(
+            "<code>*args</code> / <code>**kwargs</code>",
+            "<code>params</code> + named args / <code>Dictionary</code>",
+            "Flexible extras",
+        )
+        + _py_cs(
+            "Python — collect extra positionals and keywords:",
+            '''def log(msg, *args, **kwargs):
+    # *args   -> extra positionals (tuple)
+    # **kwargs -> extra keywords (dict)
+    print(msg)
+    print("args  =", args)
+    print("kwargs=", kwargs)
+
+log("start", 1, 2, level="debug")
+# args   = (1, 2)
+# kwargs = {"level": "debug"}''',
+            "C# — <code>params</code> ≈ <code>*args</code>; no single <code>**kwargs</code>:",
+            '''// *args ≈ params
+void Log(string msg, params object[] args)
+{
+    Console.WriteLine(msg);
+    Console.WriteLine(string.Join(", ", args));
+}
+Log("start", 1, 2);   // params packs 1, 2
+
+// Keyword-style at call site (named argument):
+void Log2(string msg, string level = "info")
+{
+    Console.WriteLine($"{msg} level={level}");
+}
+Log2("start", level: "debug");  // like one keyword
+
+// Open-ended keywords bag (closest to **kwargs):
+void Log3(string msg, Dictionary<string, object> kwargs = null)
+{ /* read kwargs["level"] etc. */ }''',
+        )
+        + '<table class="data-tbl csharp-pop-tbl">'
+        "<tr><th>Python</th><th>C# closest</th></tr>"
+        "<tr><td><code>*args</code></td><td><code>params T[]</code></td></tr>"
+        "<tr><td><code>**kwargs</code></td>"
+        "<td>Named arguments (<code>level: \"debug\"</code>) and/or "
+        "<code>Dictionary&lt;string, object&gt;</code> — no built-in star-star</td></tr>"
+        "<tr><td>Positionals before keywords</td>"
+        "<td>Same rule in C# method calls</td></tr>"
+        "</table>"
+        + _note(
+            "Python <code>*args</code> maps cleanly to C# <code>params</code>. "
+            "Python <code>**kwargs</code> is more open-ended — C# usually uses named optional "
+            "parameters, and a dictionary only when you truly need an arbitrary key bag."
+        )
+    )
+
+
+def _docstring_body() -> str:
+    return (
+        _diff_first(
+            '<code>"""docstring"""</code> → <code>__doc__</code>',
+            "<code>/// &lt;summary&gt;</code> XML docs",
+            "Documentation on the API",
+        )
+        + _py_cs(
+            "Python — docstring is the first string inside the function:",
+            '''def GetEmployees(employee_ids):
+    """Fetch employees by id list."""
+    return api_call(employee_ids)
+
+help(GetEmployees)           # shows docstring
+print(GetEmployees.__doc__)  # Fetch employees by id list.
+
+# After a decorator, use @wraps(fn) so __doc__ is preserved''',
+            "C# — XML documentation comments (<code>///</code>):",
+            '''/// <summary>
+/// Fetch employees by id list.
+/// </summary>
+/// <param name="employeeIds">List of employee ids.</param>
+/// <returns>Employee records.</returns>
+public IEnumerable<Employee> GetEmployees(IEnumerable<int> employeeIds)
+{
+    return _api.Call(employeeIds);
+}
+
+// IDE shows summary on hover (IntelliSense)
+// Generate HTML docs with: dotnet tool / DocFX / Sandcastle''',
+        )
+        + '<table class="data-tbl csharp-pop-tbl">'
+        "<tr><th></th><th>Python</th><th>C#</th></tr>"
+        "<tr><td><b>How you write it</b></td>"
+        "<td><code>\"\"\"...\"\"\"</code> under <code>def</code></td>"
+        "<td><code>/// &lt;summary&gt;...&lt;/summary&gt;</code> above method</td></tr>"
+        "<tr><td><b>Stored as</b></td>"
+        "<td><code>fn.__doc__</code></td>"
+        "<td>XML in assembly (when enabled) — not a runtime string like Python</td></tr>"
+        "<tr><td><b>help / hover</b></td>"
+        "<td><code>help(fn)</code>, IDE tooltip</td>"
+        "<td>IntelliSense / Quick Info</td></tr>"
+        "<tr><td><b>Auto-docs</b></td>"
+        "<td>Sphinx, FastAPI, mkdocs</td>"
+        "<td>DocFX, Sandcastle, Swagger from attributes</td></tr>"
+        "<tr><td><b>With wrappers</b></td>"
+        "<td><code>@wraps(fn)</code> keeps docstring</td>"
+        "<td>Attributes / filters don’t replace method docs the same way</td></tr>"
+        "</table>"
+        + _note(
+            "Both document <b>what</b> the API does for humans and tools. "
+            "Python docstrings are live strings on the object (<code>__doc__</code>). "
+            "C# XML docs are mainly for IDEs and generated documentation."
+        )
+    )
+
+
 def _try_catch_body() -> str:
     return (
-        _py_cs(
-            "Python — <code>try / except / else / finally</code>:",
+        _diff_first(
+            "<code>else:</code> = success-only path",
+            "No <code>else</code> — <code>return</code> in <code>catch</code>",
+            "Key difference",
+        )
+        + "<p><b>Same problem:</b> success code after try/except still runs if you only "
+        "<i>handle</i> the error and keep going. "
+        "Python solves it with <code>else</code>. C# solves it with early <code>return</code> "
+        "(or <code>TryParse</code>).</p>"
+        + _py_cs(
+            "Python WRONG — no else (success lines still run after catch):",
+            """try:
+    n = int(user_input)
+except ValueError:
+    print("not a number")
+# still runs after failed parse → NameError / wrong n
+report = build_report(n)
+print(report)""",
+            "C# WRONG — same bug if catch does not stop:",
+            """try
+{
+    n = int.Parse(userInput);
+}
+catch (FormatException)
+{
+    Console.WriteLine("not a number");
+    // forgot return!
+}
+// still runs after failed parse — same bug as Python
+var report = BuildReport(n);
+Console.WriteLine(report);""",
+        )
+        + _py_cs(
+            "Python RIGHT — <code>else</code> (success-only):",
+            """try:
+    n = int(user_input)          # ONLY the risky parse
+except ValueError:
+    print("not a number")
+else:
+    report = build_report(n)     # only if int() worked
+    print(report)
+finally:
+    print("cleanup always runs")""",
+            "C# RIGHT — <code>return</code> in catch, then success after:",
+            """int n;
+try
+{
+    n = int.Parse(userInput);    // risky parse
+}
+catch (FormatException)
+{
+    Console.WriteLine("not a number");
+    return;                      // STOP — skip success path
+}
+finally
+{
+    Console.WriteLine("cleanup always runs");
+}
+// Reached only if Parse succeeded
+var report = BuildReport(n);
+Console.WriteLine(report);""",
+        )
+        + "<p><b>C# often preferred for parsing — no exception for bad input:</b></p>"
+        + vs_editor(
+            """if (!int.TryParse(userInput, out int n))
+{
+    Console.WriteLine("not a number");
+    return;
+}
+var report = BuildReport(n);  // only if parse OK
+Console.WriteLine(report);""",
+            lang="csharp",
+            compact=True,
+        )
+        + "<p><b>Same idea — file / API style:</b></p>"
+        + _py_cs(
+            "Python:",
             """try:
     save(data)
 except PermissionError:
@@ -926,10 +1114,10 @@ except PermissionError:
 except OSError:
     return 500
 else:
-    log.info(\"ok\")
+    log.info("ok")               # only if save worked
 finally:
     temp.cleanup()""",
-            "C# — <code>try / catch / finally</code>:",
+            "C#:",
             """try
 {
     Save(data);
@@ -945,9 +1133,118 @@ catch (IOException)
 finally
 {
     temp.Cleanup();
+}
+Log.Info("ok");  // only reached if Save did not throw""",
+        )
+        + '<table class="data-tbl csharp-pop-tbl">'
+        "<tr><th></th><th>Python</th><th>C#</th></tr>"
+        "<tr><td><b>Handle error</b></td><td><code>except ValueError:</code></td>"
+        "<td><code>catch (FormatException)</code></td></tr>"
+        "<tr><td><b>Success-only</b></td><td><code>else:</code></td>"
+        "<td><code>return</code> in catch, then code after try/catch "
+        "(or <code>TryParse</code>)</td></tr>"
+        "<tr><td><b>Without stop</b></td>"
+        "<td>Code after try/except still runs → bug</td>"
+        "<td>Same bug if catch prints and continues</td></tr>"
+        "<tr><td><b>Always cleanup</b></td><td><code>finally:</code></td>"
+        "<td><code>finally { }</code></td></tr>"
+        "</table>"
+        + _note(
+            "C# has <b>no</b> try-<code>else</code>. "
+            "Map Python <code>else</code> → early <code>return</code> in <code>catch</code> "
+            "(then success code after), or avoid the exception with <code>TryParse</code>. "
+            "Without that stop, C# has the same “success code still runs” bug as Python without <code>else</code>."
+        )
+    )
+
+
+def _raise_reraise_body() -> str:
+    return (
+        _diff_first(
+            "<code>raise</code> / <code>raise</code> / <code>raise New from e</code>",
+            "<code>throw new</code> / <code>throw;</code> / <code>throw new ...(inner)</code>",
+            "Key difference",
+        )
+        + _py_cs(
+            "Python — custom exception + <code>raise</code>:",
+            """class ValidationError(Exception):
+    def __init__(self, field, message):
+        self.field = field
+        super().__init__(message)
+
+def set_age(age):
+    if age < 0:
+        raise ValidationError("age", "must be positive")
+    return age""",
+            "C# — custom exception + <code>throw new</code>:",
+            """public class ValidationException : Exception
+{
+    public string Field { get; }
+    public ValidationException(string field, string message)
+        : base(message)
+    {
+        Field = field;
+    }
+}
+
+int SetAge(int age)
+{
+    if (age < 0)
+        throw new ValidationException("age", "must be positive");
+    return age;
 }""",
         )
-        + _note("<code>except</code> ≈ <code>catch</code>. Python <code>else</code> on try runs if no exception — C# has no direct equivalent.")
+        + _py_cs(
+            "Python — bare <code>raise</code> (keep traceback):",
+            """try:
+    open("missing.txt")
+except FileNotFoundError:
+    log_error()
+    raise          # same error, original site""",
+            "C# — bare <code>throw;</code> (keep stack):",
+            """try
+{
+    File.OpenText("missing.txt");
+}
+catch (FileNotFoundException)
+{
+    LogError();
+    throw;         // same exception, original site
+}""",
+        )
+        + _py_cs(
+            "Python — <code>raise New from e</code> (chain cause):",
+            """try:
+    data = json.loads(raw)
+except json.JSONDecodeError as e:
+    raise ValueError("bad config") from e""",
+            "C# — inner exception (chain cause):",
+            """try
+{
+    data = JsonSerializer.Deserialize<Config>(raw);
+}
+catch (JsonException e)
+{
+    throw new InvalidOperationException("bad config", e);
+    // e becomes InnerException
+}""",
+        )
+        + '<table class="data-tbl csharp-pop-tbl">'
+        "<tr><th></th><th>Python</th><th>C#</th></tr>"
+        "<tr><td><b>Throw new</b></td><td><code>raise ValidationError(...)</code></td>"
+        "<td><code>throw new ValidationException(...)</code></td></tr>"
+        "<tr><td><b>Re-throw same</b></td><td>bare <code>raise</code></td>"
+        "<td>bare <code>throw;</code> (not <code>throw ex;</code>)</td></tr>"
+        "<tr><td><b>Chain cause</b></td><td><code>raise New from e</code> → <code>__cause__</code></td>"
+        "<td><code>throw new ...(msg, e)</code> → <code>InnerException</code></td></tr>"
+        "<tr><td><b>Avoid</b></td><td><code>raise e</code> resets traceback</td>"
+        "<td><code>throw ex;</code> resets stack trace</td></tr>"
+        "</table>"
+        + _note(
+            "Custom type + extra fields work the same in both. "
+            "Bare <code>raise</code> ≈ bare <code>throw;</code>. "
+            "<code>raise New from e</code> ≈ constructor that takes the inner exception."
+        )
     )
 
 
@@ -1867,7 +2164,10 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "inheritance": ("C# Comparison — Inheritance", _inheritance_body),
     "yield-return": ("C# Comparison — yield vs yield return", _yield_return_body),
     "decorator-attribute": ("C# Comparison — Decorators vs Attributes", _decorator_body),
+    "args-kwargs": ("C# Comparison — *args / **kwargs vs params", _args_kwargs_body),
+    "docstring-xml": ("C# Comparison — docstring vs /// summary", _docstring_body),
     "try-catch": ("C# Comparison — try/except vs try/catch", _try_catch_body),
+    "raise-reraise": ("C# Comparison — raise / re-raise vs throw", _raise_reraise_body),
     "with-using": ("C# Comparison — with vs using", _with_using_body),
     "async-await": ("C# Comparison — async/await", _async_await_body),
     "venv-nuget": ("C# Comparison — venv + pip vs NuGet", _venv_nuget_body),

@@ -151,6 +151,19 @@ body.split-dragging iframe, body.split-dragging .vs-editor { pointer-events: non
   align-items: stretch;
 }
 .mc-col { border-radius: 5px; overflow: hidden; min-width: 0; }
+.mc-row.mc-align-tb .mc-col {
+  display: flex;
+  flex-direction: column;
+}
+.mc-row.mc-align-tb .mc-code { flex: 1; }
+.mc-row.mc-align-tb .mc-code .step-pre { height: 100%; box-sizing: border-box; }
+.mc-row.mc-align-tb .mc-tb-h {
+  flex-shrink: 0;
+  min-height: 2.8em;
+  font-size: 11px;
+  margin: 4px 8px 0;
+  line-height: 1.35;
+}
 .mc-bad  { border: 1.5px solid #e53e3e; }
 .mc-good { border: 1.5px solid #28a745; }
 .mc-row-divider {
@@ -5087,37 +5100,299 @@ def update_user(id, data): return db.update(id, data)</div></div>
 <div class="quiz-box">
   <div class="quiz-q"><b>Q1.</b> <code>@decorator</code> is syntactic sugar for?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>func = decorator(func)</code> &mdash; the decorator is called with the function and the result replaces the function name.</div>
+      <div class="quiz-reveal">
+        <b>What is “syntactic sugar”?</b><br>
+        A <b>nicer shortcut</b> for writing something that already exists in a longer form.
+        Same meaning — just easier to write.<br><br>
+        <b>Short answer:</b> <code>func = decorator(func)</code><br><br>
+        <b>Side by side — same meaning:</b>
+        <div class="mc-row">
+          <div class="mc-col mc-good"><span class="mc-lbl">@decorator (sugar)</span>
+            <div class="step-pre">@retry(times=3)
+def GetEmployees(employee_ids, include_inactive=False):
+    return api_call(employee_ids, include_inactive)
+
+GetEmployees([101, 102, 103], include_inactive=True)</div>
+          </div>
+          <div class="mc-col mc-good"><span class="mc-lbl">func = decorator(func)</span>
+            <div class="step-pre">def GetEmployees(employee_ids, include_inactive=False):
+    return api_call(employee_ids, include_inactive)
+
+<b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)
+
+GetEmployees([101, 102, 103], include_inactive=True)</div>
+          </div>
+        </div>
+        After either form, <code>GetEmployees</code> points to the <b>wrapper</b>.
+        <b>Steps:</b> (1) write function (2) put <code>@retry</code> above (3) Python assigns
+        <code><b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)</code> (4) name points to wrapper
+        (5) calling the name runs wrapper + original.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> Why use <code>@functools.wraps(func)</code>?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Preserves the wrapped function&apos;s <code>__name__</code>, <code>__doc__</code>, and other attributes on the wrapper.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> keep the original function’s name and docstring on the wrapper.<br><br>
+        <b>Side by side — without vs with wraps:</b>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">Without @wraps — BAD</span>
+            <div class="step-pre">from functools import wraps
+
+def bad_timer(fn):
+    def wrapper(*args, **kwargs):
+        return fn(*args, **kwargs)
+    return wrapper
+
+@bad_timer
+def GetEmployees(employee_ids):
+    """Fetch employees by id list."""
+    return api_call(employee_ids)
+
+print(GetEmployees.__name__)
+# "wrapper"  ← wrong
+
+print(GetEmployees.__doc__)
+# None       ← lost</div>
+          </div>
+          <div class="mc-col mc-good"><span class="mc-lbl">With @wraps — GOOD</span>
+            <div class="step-pre">from functools import wraps
+
+def good_timer(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        return fn(*args, **kwargs)
+    return wrapper
+
+@good_timer
+def GetEmployees(employee_ids):
+    """Fetch employees by id list."""
+    return api_call(employee_ids)
+
+print(GetEmployees.__name__)
+# "GetEmployees"  ← correct
+
+print(GetEmployees.__doc__)
+# "Fetch employees by id list."
+# ↑ from """Fetch employees by id list.""" under def
+#   @wraps(fn) copied fn.__doc__ onto wrapper</div>
+          </div>
+        </div>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>Where does <code>__doc__</code> come from?</b>
+        The triple-quoted string under <code>def GetEmployees</code> is the
+        <b>docstring</b>. Python saves it as <code>fn.__doc__</code>.
+        <code>@wraps(fn)</code> copies that value onto the wrapper — so
+        <code>print(GetEmployees.__doc__)</code> still shows the original text.
+        </p>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>What is a docstring?</b>
+        <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('docstring-xml')" title="Open draggable C# comparison window">C# Comparison</button><br>
+        A <b>docstring</b> is a string written as the <b>first statement</b> inside a
+        <code>def</code>, <code>class</code>, or module — usually with
+        <code>"""triple quotes"""</code>.
+        It describes <b>what</b> the code does (not how every line works).
+        </p>
+        <p style="font-size:12px;margin:6px 0;line-height:1.45">
+        <b>Purpose / use cases:</b><br>
+        1. <b>help()</b> — <code>help(GetEmployees)</code> shows the docstring.<br>
+        2. <b>IDE tooltips</b> — hover over the name to see the description.<br>
+        3. <b>Auto-docs</b> — tools like Sphinx / FastAPI read docstrings for API docs.<br>
+        4. <b>Team clarity</b> — next developer knows the function’s job without reading all code.<br>
+        5. <b>Debugging / logs</b> — with <code>@wraps</code>, name + docstring stay correct after decorating.
+        </p>
+        <div class="step-pre">def GetEmployees(employee_ids):
+    """Fetch employees by id list."""   # ← docstring
+    return api_call(employee_ids)
+
+help(GetEmployees)           # shows the docstring
+print(GetEmployees.__doc__)  # Fetch employees by id list.</div>
+        <b>Rule:</b> always put <code>@wraps(fn)</code> on the inner <code>wrapper</code>.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>@dec1 @dec2 def f():</code> — which decorator is applied first?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>dec2</code> (bottom-up). Equivalent to <code>f = dec1(dec2(f))</code>.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> <code>dec2</code> (bottom) is applied first → <code>f = dec1(dec2(f))</code>.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre">def dec1(fn):
+    def wrapper(*args, **kwargs):
+        print("dec1 before")
+        result = fn(*args, **kwargs)
+        print("dec1 after")
+        return result
+    return wrapper
+
+def dec2(fn):
+    def wrapper(*args, **kwargs):
+        print("dec2 before")
+        result = fn(*args, **kwargs)
+        print("dec2 after")
+        return result
+    return wrapper
+
+# SUGAR
+@dec1
+@dec2
+def hello():
+    print("hello body")
+
+# REAL FORM (same meaning)
+# hello = dec1(dec2(hello))   # dec2 first (bottom), then dec1
+
+hello()
+
+# OUTPUT (call order = outside-in):
+# dec1 before
+# dec2 before
+# hello body
+# dec2 after
+# dec1 after</div>
+        Apply bottom → top. Call runs outer → inner → original.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q4.</b> A decorator factory is?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A function that <b>returns a decorator</b>, e.g. <code>@retry(max=3)</code> &mdash; <code>retry</code> is the factory, <code>retry(max=3)</code> returns the actual decorator.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> a function that <b>returns</b> a decorator (so you can pass settings).<br><br>
+        <b>Full code:</b>
+        <div class="step-pre">import time
+from functools import wraps
+
+def retry(times=3, delay=0.1):          # 1) FACTORY - takes settings, returns a decorator
+    def decorator(fn):                 # 2) DECORATOR - takes the function, returns wrapper
+        @wraps(fn)
+        def wrapper(*args, **kwargs):  # 3) WRAPPER - runs on each call
+            for attempt in range(times):
+                try:
+                    return fn(*args, **kwargs)
+                except ConnectionError:
+                    if attempt == times - 1:
+                        raise
+                    time.sleep(delay)
+        return wrapper
+    return decorator
+
+@retry(times=3)                         # factory call returns decorator
+def GetEmployees(employee_ids, include_inactive=False):
+    return api_call(employee_ids, include_inactive)
+
+# SAME AS:
+# <b>GetEmployees</b> = <b>retry</b>(<b>times</b>=3)(<b>GetEmployees</b>)
+
+GetEmployees([101, 102, 103], include_inactive=True)</div>
+        <b>Important:</b> <code>def decorator(fn):</code> is <b>not</b> the factory.
+        It is the <b>real decorator</b> (takes the function). The <b>factory</b> is the outer
+        <code>retry(...)</code> (takes settings and <b>returns</b> the decorator).<br><br>
+        <b>Three layers:</b>
+        <table class="data-tbl">
+        <tr><th>Name in code</th><th>What it is</th><th>Takes</th><th>Returns</th></tr>
+        <tr><td><code>retry</code></td><td><b>factory</b></td><td>settings (<code>times</code>, <code>delay</code>)</td><td>the decorator</td></tr>
+        <tr><td><code>decorator</code></td><td><b>decorator</b></td><td>function (<code>fn</code>)</td><td>the wrapper</td></tr>
+        <tr><td><code>wrapper</code></td><td><b>wrapper</b></td><td>call args (<code>*args</code>, <code>**kwargs</code>)</td><td>result of <code>fn</code></td></tr>
+        </table>
+        <b>How to tell:</b><br>
+        • Decorator → takes a <b>function</b>, returns a function (usually wrapper).<br>
+        • Factory → takes <b>settings</b>, returns a <b>decorator</b>.<br><br>
+        So <code>@retry(times=3)</code> means: (1) call factory <code>retry(times=3)</code>
+        → get <code>decorator</code>, (2) call <code>decorator(GetEmployees)</code>
+        → get <code>wrapper</code>, (3) name <code>GetEmployees</code> points to that wrapper.<br><br>
+        <b>Note:</b> the name <code>decorator</code> is only a label — you could call it
+        <code>inner</code>. What matters is the <b>job</b>, not the name.<br><br>
+        <b>Why factory?</b> plain <code>@retry</code> cannot take arguments; the factory can.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> What does <code>functools.partial</code> do?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Creates a new function with some arguments <b>pre-filled</b>: <code>add5 = partial(add, 5)</code>.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> makes a new function with some arguments already filled in.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre">from functools import partial
+
+def add(a, b):
+    return a + b
+
+add5 = partial(add, 5)     # freeze first arg as 5
+print(add5(10))            # add(5, 10) → 15
+
+# Another example — pre-fill keyword
+def GetEmployees(employee_ids, include_inactive=False):
+    return api_call(employee_ids, include_inactive)
+
+GetActive = partial(GetEmployees, include_inactive=False)
+GetActive([101, 102, 103])
+# same as: GetEmployees([101, 102, 103], include_inactive=False)</div>
+        <b>Note:</b> <code>partial</code> is <b>not</b> a decorator — it freezes args; decorators wrap behavior.
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>@property</code> is itself what kind of object?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">A built-in <b>descriptor</b> that turns a method into a computed attribute.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> a built-in <b>descriptor</b> (and also a decorator).<br><br>
+        <b>Full code:</b>
+        <div class="step-pre">class Product:
+    def __init__(self, price):
+        self._price = price
+
+    @property
+    def price(self):              # used as: product.price  (no ())
+        return self._price
+
+    @price.setter
+    def price(self, value):       # used as: product.price = 20
+        if value < 0:
+            raise ValueError("must be >= 0")
+        self._price = value
+
+p = Product(10)
+print(p.price)     # calls getter → 10
+p.price = 20       # calls setter
+# p.price = -1     # ValueError
+
+# @property turned the method into a managed attribute (descriptor)</div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> Can a decorator be applied to a class (not just a function)?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Yes &mdash; <code>@dataclass</code> is a class decorator that modifies the class in place.</div>
+      <div class="quiz-reveal">
+        <b>Short answer:</b> Yes — class decorator takes a class and returns a class.<br><br>
+        <b>Full code:</b>
+        <div class="step-pre">from dataclasses import dataclass
+
+# SUGAR
+@dataclass
+class User:
+    name: str
+    age: int
+
+# REAL FORM (same meaning)
+# class User:
+#     name: str
+#     age: int
+# User = dataclass(User)
+
+u = User("Alice", 30)
+print(u)               # User(name='Alice', age=30)
+
+# Custom class decorator example:
+def add_repr(cls):
+    def __repr__(self):
+        return f"{cls.__name__}()"
+    cls.__repr__ = __repr__
+    return cls
+
+@add_repr
+class Ticket:
+    pass
+
+print(Ticket())        # Ticket()</div>
+        Same rule: <code>@something</code> means <code>Name = something(Name)</code>.
+      </div>
     </details>
   </div>
 </div>
