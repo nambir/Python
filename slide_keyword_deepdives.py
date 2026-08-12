@@ -56,7 +56,7 @@ if (n := len(data)) &gt; 0:
 """,
     8: """
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>pass</b> = this block is intentionally empty for now (stub). Remove <code>pass</code> when you add real code.</div>
+<div class="keyword-box"><b>pass</b> = this block is intentionally empty for now (stub). Remove <code>pass</code> when you add real code.<br><b>Bug:</b> bare <code>except: pass</code> swallows <code>KeyboardInterrupt</code> / <code>SystemExit</code> and all errors — never do that.</div>
 <div class="keyword-box"><b>continue</b> = skip rest of this loop iteration, go to next.<br><b>pass</b> = do nothing here but stay in the same iteration.<br><b>Does NOT:</b> use <code>pass</code> to skip a loop — use <code>continue</code>.</div>
 <div class="keyword-box"><b>for-else / while-else</b> = <code>else</code> runs only if the loop finished <b>without</b> <code>break</code>.<br><b>Classic use:</b> search loop — <code>else: print("not found")</code>.</div>
 <div class="keyword-box"><b>elif</b> = else-if — test another condition only if previous branches failed.<br><b>Only one branch</b> of <code>if / elif / else</code> runs.</div>

@@ -75,6 +75,9 @@ SCENARIOS: dict[int, str] = {
 <tr><td>Exit loop early when found</td><td><b>break</b></td><td>Search — stop when match found</td></tr>
 <tr><td>Empty block placeholder (stub)</td><td><b>pass</b></td><td>Python requires a body after <code>if</code>/<code>def</code>/<code>class</code></td></tr>
 <tr><td>Stub function — empty for now, code added later</td><td><b>pass</b></td><td>Block intentionally empty — remove pass when implemented</td></tr>
+<tr><td>Empty custom exception class</td><td><b>class E(Exception): pass</b></td><td>Valid empty body — type exists for <code>raise</code> / <code>except</code></td></tr>
+<tr><td>Ignore one known error (rare)</td><td><b>except ValueError: pass</b></td><td>Specific type only — still prefer log / handle</td></tr>
+<tr><td>&#10060; Swallow everything</td><td><b>except: pass</b></td><td><b>Bug</b> — catches <code>BaseException</code> (Ctrl+C / exit) and hides all errors</td></tr>
 <tr><td>Temporarily disable code without deleting</td><td><b>if False:</b></td><td>Block never runs — easy to turn back on</td></tr>
 <tr><td>Learning / TODO block (remove later)</td><td><b>if True: pass</b></td><td>Placeholder only — not for production</td></tr>
 <tr><td>Search list, report if not found</td><td><b>for-else</b></td><td><code>else</code> runs only if no <code>break</code></td></tr>

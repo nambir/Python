@@ -1,7 +1,7 @@
 """Beginner step-by-step explanations and interview Q&A for each slide."""
 
 from slide_csharp_popups import csharp_compare_btn
-from slide_io import io_split
+from slide_io import io_split, side_by_side
 
 BEGINNER_CONTENT: dict[int, dict] = {
     1: {
@@ -211,14 +211,86 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
             {
                 "title": "Step 4 — pass & else clause in loops",
-                "body": "<div class=\"callout\"><b>pass</b> = this block is intentionally empty for now. It is a <b>stub</b> — define the shape today, add real code later. When you implement it, remove <code>pass</code> and write your logic.</div><code>pass</code> does nothing at runtime, but Python accepts it as a valid statement when syntax requires an indented body.<div class=\"step-pre\"># stub — implement later\ndef save_report():\n    pass   # this block is empty for now\n\n# later, replace pass with real code:\n# def save_report():\n#     with open(\"report.txt\", \"w\") as f:\n#         f.write(\"data\")\n\nclass ValidationError(Exception):\n    pass   # empty exception class</div><p class=\"step-result\"><b>Loop else:</b> runs only if the loop did not hit <code>break</code>.</p><div class=\"step-pre\">for x in [1, 2, 3]:\n    if x == 99:\n        break\nelse:\n    print(\"not found\")</div>",
+                "body": (
+                    "<div class=\"callout\"><b>pass</b> = this block is intentionally empty for now. "
+                    "It is a <b>stub</b> — define the shape today, add real code later. "
+                    "When you implement it, remove <code>pass</code> and write your logic.</div>"
+                    "<code>pass</code> does nothing at runtime, but Python accepts it as a valid "
+                    "statement when syntax requires an indented body."
+                    '<div class="step-pre">'
+                    "# stub — implement later\n"
+                    "def save_report():\n"
+                    "    pass   # this block is empty for now\n"
+                    "\n"
+                    "# later, replace pass with real code:\n"
+                    "# def save_report():\n"
+                    '#     with open("report.txt", "w") as f:\n'
+                    '#         f.write("data")\n'
+                    "\n"
+                    "class ValidationError(Exception):\n"
+                    "    pass   # empty exception class"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Where else <code>pass</code> can appear</b> — including a common "
+                    "<b>bug</b> in <code>except</code> blocks:"
+                    "</p>"
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">&#10004; OK uses of pass</span>'
+                    '<div class="step-pre">'
+                    "def save_report():\n"
+                    "    pass                 # stub function\n"
+                    "\n"
+                    "class ValidationError(Exception):\n"
+                    "    pass                 # empty exception class\n"
+                    "\n"
+                    "if True:\n"
+                    "    pass                 # TODO placeholder only\n"
+                    "\n"
+                    "try:\n"
+                    "    result = risky()\n"
+                    "except ValueError:\n"
+                    "    pass                 # rare: ignore ONE known error\n"
+                    "    # (prefer log / handle — empty ignore is still risky)"
+                    "</div>"
+                    '<p style="font-size:11px;margin:6px 8px;line-height:1.4">'
+                    "<b>Idea:</b> <code>pass</code> only fills a required empty body. "
+                    "Stubs and empty classes are the usual good cases."
+                    "</p>"
+                    "</div>"
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug — bare except: pass</span>'
+                    '<div class="step-pre">'
+                    "try:\n"
+                    "    result = risky()\n"
+                    "except:      # catches SystemExit, KeyboardInterrupt!\n"
+                    "    pass       # silently swallows ALL exceptions"
+                    "</div>"
+                    '<p style="font-size:11px;margin:6px 8px;line-height:1.4">'
+                    "<b>Why bad:</b> bare <code>except:</code> = <code>BaseException</code> "
+                    "(includes Ctrl+C / <code>sys.exit()</code>). "
+                    "<code>pass</code> then hides every error — hard to shut down or debug. "
+                    "Prefer <code>except ValueError:</code> or <code>except Exception:</code> "
+                    "and log / re-raise. See slide <b>Exception Handling</b>."
+                    "</p>"
+                    "</div>"
+                    "</div>"
+                    "<p class=\"step-result\"><b>Loop else:</b> runs only if the loop did not hit "
+                    "<code>break</code>.</p>"
+                    '<div class="step-pre">'
+                    "for x in [1, 2, 3]:\n"
+                    "    if x == 99:\n"
+                    "        break\n"
+                    "else:\n"
+                    '    print("not found")'
+                    "</div>"
+                ),
             },
         ],
         "interview_qa": [
             {"q": "How do blocks work without braces?", "a": "Indentation (usually 4 spaces) after a colon defines the block. Dedent ends the block. Mixing tabs and spaces causes <code>IndentationError</code>."},
             {"q": "When is for-else useful?", "a": "Search loops: loop to find an item; if found, <code>break</code>. The <code>else</code> clause runs only when nothing matched — clean 'not found' handling."},
             {"q": "range(5) vs range(2, 10, 2)?", "a": "<code>range(5)</code> → 0–4. <code>range(start, stop, step)</code> — stop is exclusive. <code>range(2, 10, 2)</code> → 2, 4, 6, 8."},
-            {"q": "What is pass used for?", "a": "<b>pass = this block is intentionally empty for now.</b> Use it as a stub in an empty <code>def</code>, <code>class</code>, or unfinished branch. Later, remove <code>pass</code> and add your real code."},
+            {"q": "What is pass used for?", "a": "<b>pass = this block is intentionally empty for now.</b> Use it as a stub in an empty <code>def</code>, <code>class</code>, or unfinished branch. Later, remove <code>pass</code> and add your real code. Never use bare <code>except: pass</code> — that swallows Ctrl+C and all errors."},
+            {"q": "Is except: pass a valid use of pass?", "a": "<code>pass</code> can appear there as an empty body, but bare <code>except: pass</code> is a <b>bug</b> — it catches <code>BaseException</code> (including <code>KeyboardInterrupt</code> / <code>SystemExit</code>) and hides everything. Catch a specific type, or at least <code>Exception</code>, and log or re-raise."},
             {"q": "What is the difference between if True and if False?", "a": "<code>if True:</code> block always runs once — usually a TODO stub with <code>pass</code>. <code>if False:</code> block never runs — used to temporarily disable code without deleting it."},
             {"q": "When should you NOT use if True: pass?", "a": "In finished production code — write the real logic directly, or use a proper <code>def</code> stub with a docstring. Remove <code>if True</code> once you implement the block."},
             {"q": "continue vs pass in a loop?", "a": "<code>continue</code> skips to the next iteration. <code>pass</code> does nothing but stays in the current iteration. Never use <code>pass</code> to skip loop items."},
@@ -1755,145 +1827,188 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<b>Side by side — payment checkout</b> "
                     "(amount rule, wrap bank error, log timeout, avoid <code>raise e</code>):"
                     "</p>"
-                    '<div class="mc-row mc-align-tb">'
-                    '<div class="mc-col mc-good"><span class="mc-lbl">raise New — throw a NEW error</span>'
-                    '<div class="mc-code"><div class="step-pre">'
-                    "def charge(amount):\n"
-                    "    if amount &lt;= 0:\n"
-                    "        raise ValueError(\n"
-                    "            \"Payment amount must be greater than 0\"\n"
-                    "        )\n"
-                    "    return charge_card(amount)\n"
-                    "\n"
-                    "charge(0)"
-                    "</div></div>"
-                    "<p class=\"mc-tb-h\">"
-                    "<b>Traceback / message</b> — one error, site is <code>raise</code> in <code>charge</code>:"
-                    "</p>"
-                    '<div class="step-pre">'
-                    "Traceback (most recent call last):\n"
-                    "  File \"app.py\", line 8, in &lt;module&gt;\n"
-                    "    charge(0)\n"
-                    "  File \"app.py\", line 4, in charge\n"
-                    "    raise ValueError(\n"
-                    "        \"Payment amount must be greater than 0\")\n"
-                    "ValueError: Payment amount must be greater than 0"
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">1 · raise New — throw a NEW error</span>'
+                    + side_by_side(
+                        "def charge(amount):\n"
+                        "    if amount &lt;= 0:\n"
+                        "        raise ValueError(\n"
+                        '            "Payment amount must be greater than 0"\n'
+                        "        )\n"
+                        "    return charge_card(amount)\n"
+                        "\n"
+                        "charge(0)",
+                        "Traceback (most recent call last):\n"
+                        '  File "app.py", line 8, in &lt;module&gt;\n'
+                        "    charge(0)\n"
+                        '  File "app.py", line 4, in charge\n'
+                        "    raise ValueError(\n"
+                        '        "Payment amount must be greater than 0")\n'
+                        "ValueError: Payment amount must be greater than 0",
+                        left_label="# CODE",
+                        right_label=(
+                            "Traceback / message — one error, "
+                            "site is raise in charge"
+                        ),
+                    )
+                    + "</div>"
+                    '<div class="mc-col mc-good"><span class="mc-lbl">2 · raise New from e — NEW + keep cause</span>'
+                    + side_by_side(
+                        "class PaymentError(Exception):\n"
+                        "    pass\n"
+                        "\n"
+                        "try:\n"
+                        "    bank_charge(order_id)   # SDK / gateway\n"
+                        "except ConnectionError as e:\n"
+                        '    raise PaymentError("Payment failed") from e',
+                        "Traceback (most recent call last):\n"
+                        '  File "app.py", line 6, in &lt;module&gt;\n'
+                        "    bank_charge(order_id)\n"
+                        "ConnectionError: gateway unreachable\n"
+                        "\n"
+                        "The above exception was the direct cause of\n"
+                        "the following exception:\n"
+                        "\n"
+                        "Traceback (most recent call last):\n"
+                        '  File "app.py", line 8, in &lt;module&gt;\n'
+                        '    raise PaymentError("Payment failed") from e\n'
+                        "PaymentError: Payment failed",
+                        left_label="# CODE",
+                        right_label=(
+                            "Traceback / message — two blocks: "
+                            "bank cause, then API error"
+                        ),
+                    )
+                    + "</div>"
                     "</div>"
-                    "</div>"
-                    '<div class="mc-col mc-good"><span class="mc-lbl">raise New from e — NEW + keep cause</span>'
-                    '<div class="mc-code"><div class="step-pre">'
-                    "class PaymentError(Exception):\n"
-                    "    pass\n"
-                    "\n"
-                    "try:\n"
-                    "    bank_charge(order_id)   # SDK / gateway\n"
-                    "except ConnectionError as e:\n"
-                    "    raise PaymentError(\"Payment failed\") from e"
-                    "</div></div>"
-                    "<p class=\"mc-tb-h\">"
-                    "<b>Traceback / message</b> — two blocks: bank cause, then API error."
-                    "</p>"
-                    '<div class="step-pre">'
-                    "Traceback (most recent call last):\n"
-                    "  File \"app.py\", line 6, in &lt;module&gt;\n"
-                    "    bank_charge(order_id)\n"
-                    "ConnectionError: gateway unreachable\n"
-                    "\n"
-                    "The above exception was the direct cause of\n"
-                    "the following exception:\n"
-                    "\n"
-                    "Traceback (most recent call last):\n"
-                    "  File \"app.py\", line 8, in &lt;module&gt;\n"
-                    "    raise PaymentError(\"Payment failed\") from e\n"
-                    "PaymentError: Payment failed"
-                    "</div>"
-                    "</div>"
-                    "</div>"
-                    '<div class="mc-row mc-align-tb">'
-                    '<div class="mc-col mc-good"><span class="mc-lbl">bare raise — SAME error continues</span>'
-                    '<div class="mc-code"><div class="step-pre">'
-                    "try:\n"
-                    "    bank_charge(order_id)\n"
-                    "except TimeoutError:\n"
-                    "    log_error()   # log order id\n"
-                    "    raise         # SAME TimeoutError"
-                    "</div></div>"
-                    "<p class=\"mc-tb-h\">"
-                    "<b>Traceback / message</b> — <code>raise</code> line is <b>not</b> listed. "
-                    "Most recent frame is the real site: <code>bank_charge()</code>."
-                    "</p>"
-                    '<div class="step-pre">'
-                    "Traceback (most recent call last):\n"
-                    "  File \"app.py\", line 3, in &lt;module&gt;\n"
-                    "    bank_charge(order_id)\n"
-                    "TimeoutError: payment gateway timed out"
-                    "</div>"
-                    "</div>"
-                    '<div class="mc-col mc-bad"><span class="mc-lbl">raise e — same type, NEW traceback</span>'
-                    '<div class="mc-code"><div class="step-pre">'
-                    "try:\n"
-                    "    bank_charge(order_id)\n"
-                    "except TimeoutError as e:\n"
-                    "    log_error()\n"
-                    "    raise e    # NOT the same as raise"
-                    "</div></div>"
-                    "<p class=\"mc-tb-h\">"
-                    "<b>Traceback / message</b> — same <code>TimeoutError</code>, "
-                    "but <b>most recent</b> frame is <code>raise e</code>."
-                    "</p>"
-                    '<div class="step-pre">'
-                    "Traceback (most recent call last):\n"
-                    "  File \"app.py\", line 6, in &lt;module&gt;\n"
-                    "    raise e\n"
-                    "  File \"app.py\", line 3, in &lt;module&gt;\n"
-                    "    bank_charge(order_id)\n"
-                    "TimeoutError: payment gateway timed out"
-                    "</div>"
-                    "</div>"
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">3 · bare raise — SAME error continues</span>'
+                    + side_by_side(
+                        "try:\n"
+                        "    bank_charge(order_id)\n"
+                        "except TimeoutError:\n"
+                        "    log_error()   # log order id\n"
+                        "    raise         # SAME TimeoutError",
+                        "Traceback (most recent call last):\n"
+                        '  File "app.py", line 3, in &lt;module&gt;\n'
+                        "    bank_charge(order_id)\n"
+                        "TimeoutError: payment gateway timed out",
+                        left_label="# CODE",
+                        right_label=(
+                            "Traceback / message — raise line is not listed. "
+                            "Most recent frame: bank_charge()"
+                        ),
+                    )
+                    + "</div>"
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">4 · avoid raise e — same type, NEW traceback</span>'
+                    + side_by_side(
+                        "try:\n"
+                        "    bank_charge(order_id)\n"
+                        "except TimeoutError as e:\n"
+                        "    log_error()\n"
+                        "    raise e    # NOT the same as raise",
+                        "Traceback (most recent call last):\n"
+                        '  File "app.py", line 6, in &lt;module&gt;\n'
+                        "    raise e\n"
+                        '  File "app.py", line 3, in &lt;module&gt;\n'
+                        "    bank_charge(order_id)\n"
+                        "TimeoutError: payment gateway timed out",
+                        left_label="# CODE",
+                        right_label=(
+                            "Traceback / message — same TimeoutError, "
+                            "but most recent frame is raise e"
+                        ),
+                    )
+                    + "</div>"
                     "</div>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
                     "<b>Better realistic example — payment processing</b> "
-                    "(e-commerce checkout). Same four raise patterns, one story:"
+                    "(e-commerce checkout). Same four raise patterns, one story — "
+                    "<b>ordered by preference</b>:"
                     "</p>"
                     '<table class="data-tbl">'
-                    "<tr><th>Type</th><th>Realistic code</th>"
-                    "<th>What the caller sees</th><th>Original cause kept?</th>"
-                    "<th>When to use</th></tr>"
-                    "<tr><td><b>raise New(...)</b></td>"
+                    "<tr><th>Priority</th><th>Case</th><th>Realistic code</th>"
+                    "<th>Error thrown to caller</th><th>Original cause kept?</th>"
+                    "<th>Recommendation</th></tr>"
+                    "<tr>"
+                    "<td><b>1</b></td>"
+                    "<td><b>New problem</b><br><code>raise New(...)</code></td>"
                     "<td><code>raise ValueError(\"Payment amount must be greater than 0\")</code></td>"
-                    "<td>Only the validation error</td>"
+                    "<td>Only the validation error<br>"
+                    "<code>ValueError: Payment amount must be greater than 0</code></td>"
                     "<td>No</td>"
-                    "<td>Your app detects a business-rule failure "
-                    "(amount is 0 or negative — nothing else threw first).</td></tr>"
-                    "<tr><td><b>raise New from e</b></td>"
+                    "<td>&#10004; <b>Very common</b> — new validation / business rule "
+                    "(nothing else threw first).</td></tr>"
+                    "<tr>"
+                    "<td><b>2</b></td>"
+                    "<td><b>Wrap existing</b><br><code>raise New from e</code></td>"
                     "<td><code>raise PaymentError(\"Payment failed\") from e</code></td>"
-                    "<td><code>PaymentError</code> + “caused by” the bank/SDK error</td>"
+                    "<td><code>PaymentError: Payment failed</code> "
+                    "→ original shown as cause</td>"
                     "<td>Yes (<code>__cause__</code>)</td>"
-                    "<td>Convert a technical error (card gateway timeout, "
-                    "connection reset) into a meaningful business/API error.</td></tr>"
-                    "<tr><td><b>raise</b> (bare)</td>"
+                    "<td>&#10004; <b>Best when changing type</b> — convert SDK/bank "
+                    "error into a meaningful API error.</td></tr>"
+                    "<tr>"
+                    "<td><b>3</b></td>"
+                    "<td><b>Rethrow same</b><br><code>raise</code> (bare)</td>"
                     "<td><code>except TimeoutError: log_error(); raise</code></td>"
-                    "<td>Original <code>TimeoutError</code></td>"
+                    "<td>Original error, unchanged<br>"
+                    "<code>TimeoutError: …</code></td>"
                     "<td>Yes (same object, same traceback)</td>"
-                    "<td>Log “payment timed out for order 1001”, then let the "
-                    "original error continue so the caller still sees "
-                    "<code>TimeoutError</code>.</td></tr>"
-                    "<tr><td><b>raise e</b></td>"
+                    "<td>&#10004; <b>Correct</b> — log order id, then let the same "
+                    "error continue.</td></tr>"
+                    "<tr>"
+                    "<td><b>4</b></td>"
+                    "<td><b>Avoid</b><br><code>raise e</code></td>"
                     "<td><code>except TimeoutError as e: raise e</code></td>"
                     "<td>Same error, but traceback is less clean "
                     "(top line is <code>raise e</code>)</td>"
-                    "<td>Partial — traceback changes</td>"
-                    "<td>Avoid — use bare <code>raise</code>.</td></tr>"
+                    "<td>Partial — traceback resets</td>"
+                    "<td>&#9888; <b>Generally avoid</b> — use bare <code>raise</code> "
+                    "instead.</td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Priority / preference (quick pick):</b> "
+                    + csharp_compare_btn("raise-reraise")
+                    + "</p>"
+                    '<table class="data-tbl">'
+                    "<tr><th>Priority</th><th>Situation</th>"
+                    "<th>Preferred syntax</th>"
+                    "<th>Error thrown to caller</th>"
+                    "<th>Recommendation</th></tr>"
+                    "<tr><td><b>1</b></td>"
+                    "<td>Creating a <b>new validation / business error</b></td>"
+                    "<td><code>raise ValueError(...)</code> "
+                    "or your own exception</td>"
+                    "<td><code>ValueError: Invalid age</code></td>"
+                    "<td>&#10004; Very common</td></tr>"
+                    "<tr><td><b>2</b></td>"
+                    "<td><b>Converting / wrapping</b> an existing low-level error</td>"
+                    "<td><code>raise MyError(...) from e</code></td>"
+                    "<td><code>PaymentError: Payment failed</code> → "
+                    "with the original error shown as the cause</td>"
+                    "<td>&#10004; Best when changing exception type</td></tr>"
+                    "<tr><td><b>3</b></td>"
+                    "<td><b>Log and rethrow</b> the same error</td>"
+                    "<td><code>raise</code></td>"
+                    "<td>The original error, unchanged</td>"
+                    "<td>&#10004; Correct</td></tr>"
+                    "<tr><td><b>4</b></td>"
+                    "<td><code>except … as e: raise e</code></td>"
+                    "<td><code>raise e</code></td>"
+                    "<td>The original error, but traceback information is less clean</td>"
+                    "<td>&#9888; Generally avoid</td></tr>"
                     "</table>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
                     "<b>How to read the story:</b><br>"
                     "• Cart amount <code>&lt;= 0</code> → you found the rule → "
-                    "<b>raise New</b> (<code>ValueError</code>).<br>"
+                    "<b>Priority 1 — raise New</b> (<code>ValueError</code>).<br>"
                     "• Bank SDK throws a low-level error → wrap for the API → "
-                    "<b>raise PaymentError(...) from e</b>.<br>"
+                    "<b>Priority 2 — raise PaymentError(...) from e</b>.<br>"
                     "• Gateway <code>TimeoutError</code> → log order id, then "
-                    "<b>bare raise</b> so ops still sees the real timeout.<br>"
-                    "• Don’t <code>raise e</code> — same timeout message, worse stack."
+                    "<b>Priority 3 — bare raise</b> so ops still sees the real timeout.<br>"
+                    "• Don’t <code>raise e</code> (Priority 4 / avoid) — "
+                    "same timeout message, worse stack."
                     "</p>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
                     "<b>Pick in one line:</b> "
@@ -1906,7 +2021,8 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<b>C# map:</b> <code>raise</code> ≈ <code>throw new ...</code> · "
                     "bare <code>raise</code> ≈ <code>throw;</code> · "
                     "<code>raise New from e</code> ≈ <code>throw new Exception(\"…\", e)</code> "
-                    "(<code>InnerException</code>)."
+                    "(<code>InnerException</code>) · "
+                    "<code>raise e</code> ≈ <code>throw ex;</code> (also resets stack — avoid)."
                     "</p>"
                 ),
             },
@@ -1920,6 +2036,15 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<code>__cause__</code> (C# <code>InnerException</code>). "
                     "Bare <code>raise</code> is different — same error continues, traceback kept. "
                     "Avoid <code>raise e</code> — it resets the traceback."
+                ),
+            },
+            {
+                "q": "In what order should you prefer raise patterns?",
+                "a": (
+                    "<b>1</b> new business/validation → <code>raise New(...)</code>. "
+                    "<b>2</b> wrap low-level → <code>raise MyError(...) from e</code>. "
+                    "<b>3</b> log then continue → bare <code>raise</code>. "
+                    "<b>4</b> avoid <code>raise e</code> (traceback resets)."
                 ),
             },
             {

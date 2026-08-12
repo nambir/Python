@@ -215,7 +215,13 @@ body.io-split-dragging { cursor: col-resize; user-select: none; }
 }
 .real-life .io-split { border-color: #bbf7d0; }
 .mc-col .io-split { margin: 0; border: none; border-radius: 0; border-top: 1px solid #e2e8f0; }
-.mc-col .io-split .io-lbl { border-radius: 0; }
+.mc-col .io-split .io-lbl {
+  border-radius: 0;
+  white-space: normal;
+  line-height: 1.35;
+  min-height: 2.4em;
+}
+.mc-col .io-split .io-out .step-pre { white-space: pre-wrap; word-break: break-word; }
 /* Keep INPUT | OUTPUT side-by-side in narrow Cursor browser / split panes.
    Only stack on very small phones. */
 @media (max-width: 420px) {
@@ -2880,7 +2886,7 @@ for x in [1, 2, 3]:
         break
 else:
     print("not found")      # prints - no break happened''') + '''
-<div class="callout"><b>pass</b> = this block is intentionally empty for now. Use it as a <b>stub</b> — later remove <code>pass</code> and add your real code. <b>if False</b> = disable code. <b>if True: pass</b> = TODO only.</div>
+<div class="callout"><b>pass</b> = this block is intentionally empty for now. Use it as a <b>stub</b> — later remove <code>pass</code> and add your real code. <b>if False</b> = disable code. <b>if True: pass</b> = TODO only. <b>Never</b> bare <code>except: pass</code> — that swallows Ctrl+C and all errors (see Exception Handling).</div>
 
 
 <h3>Common mistakes</h3>
@@ -2949,7 +2955,20 @@ for i, name in enumerate(names):
   </div>
   <div class="quiz-q"><b>Q5.</b> <code>pass</code> does what?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Nothing &mdash; it&apos;s a no-op placeholder for syntactically required but empty blocks.</div>
+      <div class="quiz-reveal">Nothing &mdash; it&apos;s a no-op placeholder for syntactically required but empty blocks (stub <code>def</code>, empty <code>class</code>, TODO).
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Typical OK uses</span><div class="step-pre">def save_report():
+    pass                    # stub — add code later
+
+class ValidationError(Exception):
+    pass                    # empty exception class
+
+if True:
+    pass                    # TODO placeholder only</div></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug — bare except: pass</span><div class="step-pre">try:
+    result = risky()
+except:      # catches SystemExit, KeyboardInterrupt!
+    pass       # silently swallows ALL exceptions
+
+# Fix: catch a specific type (or Exception), log / raise</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>pass</b> can sit in an <code>except</code> body, but bare <code>except: pass</code> is wrong — see Exception Handling.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> What is a guard clause?
@@ -5503,12 +5522,31 @@ def get_user(id):
 <div class="quiz-box">
   <div class="quiz-q"><b>Q1.</b> <code>except Exception</code> vs bare <code>except:</code> — what extra does bare catch?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Bare <code>except:</code> also catches <code>SystemExit</code>, <code>KeyboardInterrupt</code>, and <code>GeneratorExit</code> (all <code>BaseException</code> subclasses).</div>
+      <div class="quiz-reveal">Bare <code>except:</code> also catches <code>SystemExit</code>, <code>KeyboardInterrupt</code>, and <code>GeneratorExit</code> (all <code>BaseException</code> subclasses).
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; except Exception — preferred</span><div class="step-pre">try:
+    result = risky()
+except ValueError as e:
+    logger.warning("bad value: %s", e)
+except Exception as e:
+    logger.error("unexpected: %s", e)
+    raise</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Catches:</b> normal app errors (<code>ValueError</code>, <code>OSError</code>, …).<br><b>Does <u>not</u> catch:</b> <code>KeyboardInterrupt</code>, <code>SystemExit</code>, <code>GeneratorExit</code> — so Ctrl+C and clean exit still work.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; bare except: — too broad</span><div class="step-pre">try:
+    result = risky()
+except:          # = except BaseException
+    pass         # swallows EVERYTHING</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Also catches:</b> <code>SystemExit</code>, <code>KeyboardInterrupt</code>, <code>GeneratorExit</code>.<br><b>Problem:</b> Ctrl+C / <code>sys.exit()</code> can be silently ignored — hard to shut down or debug.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> <code>raise</code> vs <code>raise e</code> in an except block?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>raise</code> preserves the original traceback. <code>raise e</code> resets the traceback origin to the current line.</div>
+      <div class="quiz-reveal"><code>raise</code> preserves the original traceback. <code>raise e</code> resets the traceback origin to the current line.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; bare raise — keep original site</span><div class="step-pre">try:
+    bank_charge(order_id)
+except TimeoutError:
+    log_error()
+    raise          # SAME error + SAME traceback</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Caller sees:</b> original <code>TimeoutError</code>.<br><b>Traceback:</b> most recent frame is still <code>bank_charge()</code> — the real failure site.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; raise e — resets traceback</span><div class="step-pre">try:
+    bank_charge(order_id)
+except TimeoutError as e:
+    log_error()
+    raise e        # same type, NEW traceback</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Caller sees:</b> same <code>TimeoutError</code> message.<br><b>Traceback:</b> most recent frame is <code>raise e</code> — original site is harder to spot.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>finally</code> block runs when?
@@ -5518,22 +5556,152 @@ def get_user(id):
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>except (TypeError, ValueError):</code> catches?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Either <code>TypeError</code> or <code>ValueError</code> &mdash; any of the listed exception types.</div>
+      <div class="quiz-reveal">Either <code>TypeError</code> or <code>ValueError</code> &mdash; any of the listed exception types.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Complete example — one handler, two types</span><div class="step-pre">def parse_qty(raw):
+    try:
+        return int(raw)          # ValueError if not a number
+    except (TypeError, ValueError) as e:
+        # TypeError: int(None) / int([])
+        # ValueError: int("abc")
+        raise ValueError(f"bad qty: {raw!r}") from e
+
+print(parse_qty("3"))     # 3
+# parse_qty("abc")        # ValueError: bad qty: 'abc'
+# parse_qty(None)         # ValueError: bad qty: None</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Meaning:</b> one <code>except</code> runs if <b>either</b> type is raised — same as two separate handlers with the same body.</p></div><div class="mc-col mc-good"><span class="mc-lbl">Same idea — two except blocks</span><div class="step-pre">def parse_qty(raw):
+    try:
+        return int(raw)
+    except TypeError as e:
+        raise ValueError(f"bad qty: {raw!r}") from e
+    except ValueError as e:
+        raise ValueError(f"bad qty: {raw!r}") from e
+
+# Tuple form is shorter when the fix is identical.</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Tip:</b> use <code>except (A, B):</code> when both errors need the <b>same</b> recovery. Split handlers when the fix differs.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> Custom exception should inherit from?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>Exception</code> (not <code>BaseException</code>), so it&apos;s caught by <code>except Exception:</code> but not by bare <code>except:</code>.</div>
+      <div class="quiz-reveal"><code>Exception</code> (not <code>BaseException</code>), so it&apos;s caught by <code>except Exception:</code> but not by bare <code>except:</code>.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Inherit from Exception</span><div class="step-pre">class PaymentError(Exception):
+    """Business / API failure — normal app error."""
+    pass
+
+def charge(amount):
+    if amount &lt;= 0:
+        raise PaymentError("amount must be &gt; 0")
+    return amount
+
+try:
+    charge(0)
+except PaymentError as e:
+    print("handled:", e)     # handled: amount must be &gt; 0
+except Exception:
+    print("other app error")</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Why Exception:</b> your error is catchable by normal <code>except Exception</code> handlers. Ctrl+C / <code>sys.exit()</code> still bypass it.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Inherit from BaseException</span><div class="step-pre">class PaymentError(BaseException):
+    pass   # WRONG for app errors
+
+try:
+    raise PaymentError("fail")
+except Exception:
+    print("caught?")   # NOT printed —
+                       # BaseException is above Exception
+except BaseException as e:
+    print("only here:", type(e).__name__)
+
+# Also: bare except: would catch it,
+# same bucket as KeyboardInterrupt / SystemExit.</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Rule:</b> app/custom errors → <code>Exception</code>. Leave <code>BaseException</code> for the interpreter (exit / interrupt).</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>raise NewError('msg') from original_err</code> does what?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Raises <code>NewError</code> while <b>chaining</b> the original exception, preserving both tracebacks in the output.</div>
+      <div class="quiz-reveal">Raises a <b>new</b> exception while <b>chaining</b> the original — both tracebacks stay in the output. Works with <b>built-in or custom</b> types.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) Built-in → built-in</span><div class="step-pre">def parse_qty(raw):
+    try:
+        return int(raw)                 # may raise ValueError
+    except ValueError as e:
+        # wrap with another built-in
+        raise TypeError(
+            f"qty must be int-like, got {raw!r}"
+        ) from e
+
+# parse_qty("abc")  → caller sees:
+# ValueError: invalid literal for int() ...
+# The above exception was the direct cause of
+# the following exception:
+# TypeError: qty must be int-like, got 'abc'
+
+try:
+    parse_qty("abc")
+except TypeError as e:
+    print(e)                 # qty must be int-like...
+    print(e.__cause__)       # invalid literal for int()...</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Point:</b> <code>from e</code> is <b>not</b> custom-only — any exception can wrap any other (here <code>ValueError</code> → <code>TypeError</code>).</p></div><div class="mc-col mc-good"><span class="mc-lbl">2) Built-in → custom (API wrap)</span><div class="step-pre">class PaymentError(Exception):
+    pass
+
+def bank_charge(order_id):
+    raise ConnectionError("gateway unreachable")
+
+def pay(order_id):
+    try:
+        bank_charge(order_id)
+    except ConnectionError as e:
+        raise PaymentError("Payment failed") from e
+
+# pay(1001)  → caller sees:
+# ConnectionError: gateway unreachable
+# The above exception was the direct cause of
+# the following exception:
+# PaymentError: Payment failed
+
+try:
+    pay(1001)
+except PaymentError as e:
+    print(e)                 # Payment failed
+    print(repr(e.__cause__)) # ConnectionError('gateway unreachable')
+
+# Suppress chain (rare): raise PaymentError("…") from None</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Point:</b> custom type is for a clear API/domain error. <b>C#:</b> <code>throw new PaymentException("…", e)</code> → <code>InnerException</code>.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> What is exception chaining? How to suppress it?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Automatic when an exception is raised inside an except block. Suppress with <code>raise NewError() from None</code>.</div>
+      <div class="quiz-reveal">Chaining links a <b>new</b> error to the one you were handling. It happens automatically if you <code>raise</code> inside <code>except</code>. Suppress with <code>raise NewError(...) from None</code>.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) Chaining on (keep context / cause)</span><div class="step-pre">def load_config(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        # raise inside except → chain is automatic
+        raise RuntimeError(f"missing config: {path}")
+
+# load_config("nope.ini")  → caller sees:
+# FileNotFoundError: [Errno 2] No such file ...
+# During handling of the above exception,
+# another exception occurred:
+# RuntimeError: missing config: nope.ini
+
+# Explicit cause (cleaner wording in traceback):
+try:
+    int("abc")
+except ValueError as e:
+    raise TypeError("bad qty") from e
+# → "The above exception was the direct cause..."
+#    e.__cause__ is the ValueError</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Remember:</b> raise-inside-except → <code>__context__</code> (automatic). <code>from e</code> → <code>__cause__</code> (explicit).</p></div><div class="mc-col mc-good"><span class="mc-lbl">2) Suppress chaining — from None</span><div class="step-pre">def load_config(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        # hide the FileNotFoundError from the caller
+        raise RuntimeError(
+            f"missing config: {path}"
+        ) from None
+
+# load_config("nope.ini")  → caller sees ONLY:
+# RuntimeError: missing config: nope.ini
+# (no FileNotFoundError block underneath)
+
+try:
+    load_config("nope.ini")
+except RuntimeError as e:
+    print(e)              # missing config: nope.ini
+    print(e.__cause__)    # None
+    print(e.__context__)  # None  (suppressed)</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>When:</b> you want a clean public error and the low-level detail would confuse callers. Prefer <code>from e</code> when debugging still matters.</p></div></div></div>
     </details>
   </div>
 </div>

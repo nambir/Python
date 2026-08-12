@@ -18,6 +18,32 @@ _PRINT_RE = re.compile(
 )
 
 
+def side_by_side(
+    left: str,
+    right: str,
+    *,
+    left_label: str = "# CODE",
+    right_label: str = "# OUTPUT",
+) -> str:
+    """Render two panes side by side (e.g. code | traceback) — not line-aligned."""
+    left = left.replace("\r\n", "\n").rstrip("\n")
+    right = right.replace("\r\n", "\n").rstrip("\n")
+    return (
+        '<div class="io-split">'
+        '<div class="io-in">'
+        f'<span class="io-lbl">{left_label}</span>'
+        f'<div class="step-pre">{left}</div>'
+        "</div>"
+        '<div class="io-split-divider" role="separator" aria-orientation="vertical" '
+        'title="Drag to resize"></div>'
+        '<div class="io-out">'
+        f'<span class="io-lbl">{right_label}</span>'
+        f'<div class="step-pre">{right}</div>'
+        "</div>"
+        "</div>"
+    )
+
+
 def io_split(
     code: str,
     out_map: dict[int, str] | None = None,

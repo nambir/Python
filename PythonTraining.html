@@ -193,7 +193,13 @@ body.io-split-dragging { cursor: col-resize; user-select: none; }
 }
 .real-life .io-split { border-color: #bbf7d0; }
 .mc-col .io-split { margin: 0; border: none; border-radius: 0; border-top: 1px solid #e2e8f0; }
-.mc-col .io-split .io-lbl { border-radius: 0; }
+.mc-col .io-split .io-lbl {
+  border-radius: 0;
+  white-space: normal;
+  line-height: 1.35;
+  min-height: 2.4em;
+}
+.mc-col .io-split .io-out .step-pre { white-space: pre-wrap; word-break: break-word; }
 /* Keep INPUT | OUTPUT side-by-side in narrow Cursor browser / split panes.
    Only stack on very small phones. */
 @media (max-width: 420px) {
@@ -3865,7 +3871,7 @@ while (line := input(&quot;Name (empty to quit): &quot;)) != &quot;&quot;:
 <tr><td>while loop</td><td>Repeat while condition is True — watch for infinite loops.</td><td><code>while n &lt; 10:</code></td></tr>
 <tr><td>break</td><td>Exit the loop immediately.</td><td><code>break</code> inside for</td></tr>
 <tr><td>continue</td><td>Skip rest of <b>this</b> loop iteration — go to next.<br><br><b>Does NOT:</b> same as <code>pass</code> — <code>pass</code> does nothing but stays in same iteration.</td><td><code>continue</code></td></tr>
-<tr><td>pass</td><td><b>pass = this block is intentionally empty for now.</b> A stub — define structure today, add real code later. Does nothing at runtime but satisfies syntax.<br><br><b>Use when:</b> stub <code>def</code>, empty <code>class</code>, custom <code>Exception</code>.<br><br><b>Later:</b> remove <code>pass</code> and write your logic.<br><br><b>Does NOT:</b> skip a loop — use <code>continue</code>. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('pass-stub')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>def todo(): pass</code></td></tr>
+<tr><td>pass</td><td><b>pass = this block is intentionally empty for now.</b> A stub — define structure today, add real code later. Does nothing at runtime but satisfies syntax.<br><br><b>Use when:</b> stub <code>def</code>, empty <code>class</code>, custom <code>Exception</code>.<br><br><b>Later:</b> remove <code>pass</code> and write your logic.<br><br><b>Does NOT:</b> skip a loop — use <code>continue</code>.<br><br><b>Bug:</b> bare <code>except: pass</code> swallows Ctrl+C and all errors — catch a specific type instead. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('pass-stub')" title="Open draggable C# comparison window">C# Comparison</button></td><td><code>def todo(): pass</code></td></tr>
 <tr><td>if True / if False</td><td><code>if True</code> always runs once (TODO stub). <code>if False</code> never runs (disable code temporarily).</td><td><code>if False: old_code()</code></td></tr>
 <tr><td>for-else</td><td><code>else</code> on a loop runs only if the loop finished <b>without</b> <code>break</code>.<br><br><b>Not the same as:</b> <code>try/else</code> or <code>if/else</code>.<br><br><b>Use when:</b> search — report "not found" in <code>else</code>.</td><td>search pattern</td></tr>
 <tr><td>range</td><td>Generates sequence of numbers — often used with for.</td><td><code>range(3)</code> → 0,1,2</td></tr>
@@ -3929,13 +3935,29 @@ apply_in_tax(row) called → IN GST applied</div></div></div><p><b>4) <code>pass
 <span class="t-cm">#         f.write("data")</span>
 
 <mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
-    <mark class="hl-key">pass</mark>   <span class="t-cm"># empty exception class</span></div><p class="step-result"><b>Loop else:</b> runs only if the loop did not hit <code>break</code>.</p><div class="step-pre"><mark class="hl-key">for</mark> x <mark class="hl-key">in</mark> [1, 2, 3]:
+    <mark class="hl-key">pass</mark>   <span class="t-cm"># empty exception class</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Where else <code>pass</code> can appear</b> — including a common <b>bug</b> in <code>except</code> blocks:</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; OK uses of pass</span><div class="step-pre"><mark class="hl-key">def</mark> save_report():
+    <mark class="hl-key">pass</mark>                 <span class="t-cm"># stub function</span>
+
+<mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">pass</mark>                 <span class="t-cm"># empty exception class</span>
+
+<mark class="hl-key">if</mark> <mark class="hl-key">True</mark>:
+    <mark class="hl-key">pass</mark>                 <span class="t-cm"># TODO placeholder only</span>
+
+<mark class="hl-key">try</mark>:
+    result = risky()
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark>:
+    <mark class="hl-key">pass</mark>                 <span class="t-cm"># rare: ignore ONE known error</span>
+    <span class="t-cm"># (prefer log / handle — empty ignore is still risky)</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Idea:</b> <code>pass</code> only fills a required empty body. Stubs and empty classes are the usual good cases.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug — bare except: pass</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    result = risky()
+<mark class="hl-key">except</mark>:      <span class="t-cm"># catches SystemExit, KeyboardInterrupt!</span>
+    <mark class="hl-key">pass</mark>       <span class="t-cm"># silently swallows ALL exceptions</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Why bad:</b> bare <code>except:</code> = <code>BaseException</code> (includes Ctrl+C / <code>sys.exit()</code>). <code>pass</code> then hides every error — hard to shut down or debug. Prefer <code>except ValueError:</code> or <code>except Exception:</code> and log / re-raise. See slide <b>Exception Handling</b>.</p></div></div><p class="step-result"><b>Loop else:</b> runs only if the loop did not hit <code>break</code>.</p><div class="step-pre"><mark class="hl-key">for</mark> x <mark class="hl-key">in</mark> [1, 2, 3]:
     <mark class="hl-key">if</mark> x == 99:
         <mark class="hl-key">break</mark>
 <mark class="hl-key">else</mark>:
     <mark class="hl-key">print</mark>("not found")</div></li></ul>
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>pass</b> = this block is intentionally empty for now (stub). Remove <code>pass</code> when you add real code.</div>
+<div class="keyword-box"><b>pass</b> = this block is intentionally empty for now (stub). Remove <code>pass</code> when you add real code.<br><b>Bug:</b> bare <code>except: pass</code> swallows <code>KeyboardInterrupt</code> / <code>SystemExit</code> and all errors — never do that.</div>
 <div class="keyword-box"><b>continue</b> = skip rest of this loop iteration, go to next.<br><b>pass</b> = do nothing here but stay in the same iteration.<br><b>Does NOT:</b> use <code>pass</code> to skip a loop — use <code>continue</code>.</div>
 <div class="keyword-box"><b>for-else / while-else</b> = <code>else</code> runs only if the loop finished <b>without</b> <code>break</code>.<br><b>Classic use:</b> search loop — <code>else: print("not found")</code>.</div>
 <div class="keyword-box"><b>elif</b> = else-if — test another condition only if previous branches failed.<br><b>Only one branch</b> of <code>if / elif / else</code> runs.</div>
@@ -3951,13 +3973,16 @@ apply_in_tax(row) called → IN GST applied</div></div></div><p><b>4) <code>pass
 <tr><td>Exit loop early when found</td><td><b>break</b></td><td>Search — stop when match found</td></tr>
 <tr><td>Empty block placeholder (stub)</td><td><b>pass</b></td><td>Python requires a body after <code>if</code>/<code>def</code>/<code>class</code></td></tr>
 <tr><td>Stub function — empty for now, code added later</td><td><b>pass</b></td><td>Block intentionally empty — remove pass when implemented</td></tr>
+<tr><td>Empty custom exception class</td><td><b>class E(Exception): pass</b></td><td>Valid empty body — type exists for <code>raise</code> / <code>except</code></td></tr>
+<tr><td>Ignore one known error (rare)</td><td><b>except ValueError: pass</b></td><td>Specific type only — still prefer log / handle</td></tr>
+<tr><td>&#10060; Swallow everything</td><td><b>except: pass</b></td><td><b>Bug</b> — catches <code>BaseException</code> (Ctrl+C / exit) and hides all errors</td></tr>
 <tr><td>Temporarily disable code without deleting</td><td><b>if False:</b></td><td>Block never runs — easy to turn back on</td></tr>
 <tr><td>Learning / TODO block (remove later)</td><td><b>if True: pass</b></td><td>Placeholder only — not for production</td></tr>
 <tr><td>Search list, report if not found</td><td><b>for-else</b></td><td><code>else</code> runs only if no <code>break</code></td></tr>
 <tr><td>Fixed count (0 to N-1)</td><td><b>range(N)</b></td><td><code>for i in range(10)</code></td></tr>
 </table>
 
-<div class="callout"><b>pass</b> = this block is intentionally empty for now. Use it as a <b>stub</b> — later remove <code>pass</code> and add your real code. <b>if False</b> = disable code. <b>if True: pass</b> = TODO only.</div>
+<div class="callout"><b>pass</b> = this block is intentionally empty for now. Use it as a <b>stub</b> — later remove <code>pass</code> and add your real code. <b>if False</b> = disable code. <b>if True: pass</b> = TODO only. <b>Never</b> bare <code>except: pass</code> — that swallows Ctrl+C and all errors (see Exception Handling).</div>
 
 
 <h3>Common mistakes</h3>
@@ -4026,7 +4051,20 @@ apply_in_tax(row) called → IN GST applied</div></div></div><p><b>4) <code>pass
   </div>
   <div class="quiz-q"><b>Q5.</b> <code>pass</code> does what?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Nothing &mdash; it&apos;s a no-op placeholder for syntactically required but empty blocks.</div>
+      <div class="quiz-reveal">Nothing &mdash; it&apos;s a no-op placeholder for syntactically required but empty blocks (stub <code>def</code>, empty <code>class</code>, TODO).
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Typical OK uses</span><div class="step-pre"><mark class="hl-key">def</mark> save_report():
+    <mark class="hl-key">pass</mark>                    <span class="t-cm"># stub — add code later</span>
+
+<mark class="hl-key">class</mark> <mark class="hl-key">ValidationError</mark>(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">pass</mark>                    <span class="t-cm"># empty exception class</span>
+
+<mark class="hl-key">if</mark> <mark class="hl-key">True</mark>:
+    <mark class="hl-key">pass</mark>                    <span class="t-cm"># TODO placeholder only</span></div></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug — bare except: pass</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    result = risky()
+<mark class="hl-key">except</mark>:      <span class="t-cm"># catches SystemExit, KeyboardInterrupt!</span>
+    <mark class="hl-key">pass</mark>       <span class="t-cm"># silently swallows ALL exceptions</span>
+
+<span class="t-cm"># Fix: catch a specific type (or Exception), log / raise</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>pass</b> can sit in an <code>except</code> body, but bare <code>except: pass</code> is wrong — see Exception Handling.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> What is a guard clause?
@@ -4045,7 +4083,7 @@ apply_in_tax(row) called → IN GST applied</div></div></div><p><b>4) <code>pass
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How do blocks work without braces?</p><p class="qa-a"><b>A:</b> Indentation (usually 4 spaces) after a colon defines the block. Dedent ends the block. Mixing tabs and spaces causes <code>IndentationError</code>.</p><p class="qa-q"><b>Q:</b> When is for-else useful?</p><p class="qa-a"><b>A:</b> Search loops: loop to find an item; if found, <code>break</code>. The <code>else</code> clause runs only when nothing matched — clean 'not found' handling.</p><p class="qa-q"><b>Q:</b> range(5) vs range(2, 10, 2)?</p><p class="qa-a"><b>A:</b> <code>range(5)</code> → 0–4. <code>range(start, stop, step)</code> — stop is exclusive. <code>range(2, 10, 2)</code> → 2, 4, 6, 8.</p><p class="qa-q"><b>Q:</b> What is pass used for?</p><p class="qa-a"><b>A:</b> <b>pass = this block is intentionally empty for now.</b> Use it as a stub in an empty <code>def</code>, <code>class</code>, or unfinished branch. Later, remove <code>pass</code> and add your real code.</p><p class="qa-q"><b>Q:</b> What is the difference between if True and if False?</p><p class="qa-a"><b>A:</b> <code>if True:</code> block always runs once — usually a TODO stub with <code>pass</code>. <code>if False:</code> block never runs — used to temporarily disable code without deleting it.</p><p class="qa-q"><b>Q:</b> When should you NOT use if True: pass?</p><p class="qa-a"><b>A:</b> In finished production code — write the real logic directly, or use a proper <code>def</code> stub with a docstring. Remove <code>if True</code> once you implement the block.</p><p class="qa-q"><b>Q:</b> continue vs pass in a loop?</p><p class="qa-a"><b>A:</b> <code>continue</code> skips to the next iteration. <code>pass</code> does nothing but stays in the current iteration. Never use <code>pass</code> to skip loop items.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> How do blocks work without braces?</p><p class="qa-a"><b>A:</b> Indentation (usually 4 spaces) after a colon defines the block. Dedent ends the block. Mixing tabs and spaces causes <code>IndentationError</code>.</p><p class="qa-q"><b>Q:</b> When is for-else useful?</p><p class="qa-a"><b>A:</b> Search loops: loop to find an item; if found, <code>break</code>. The <code>else</code> clause runs only when nothing matched — clean 'not found' handling.</p><p class="qa-q"><b>Q:</b> range(5) vs range(2, 10, 2)?</p><p class="qa-a"><b>A:</b> <code>range(5)</code> → 0–4. <code>range(start, stop, step)</code> — stop is exclusive. <code>range(2, 10, 2)</code> → 2, 4, 6, 8.</p><p class="qa-q"><b>Q:</b> What is pass used for?</p><p class="qa-a"><b>A:</b> <b>pass = this block is intentionally empty for now.</b> Use it as a stub in an empty <code>def</code>, <code>class</code>, or unfinished branch. Later, remove <code>pass</code> and add your real code. Never use bare <code>except: pass</code> — that swallows Ctrl+C and all errors.</p><p class="qa-q"><b>Q:</b> Is except: pass a valid use of pass?</p><p class="qa-a"><b>A:</b> <code>pass</code> can appear there as an empty body, but bare <code>except: pass</code> is a <b>bug</b> — it catches <code>BaseException</code> (including <code>KeyboardInterrupt</code> / <code>SystemExit</code>) and hides everything. Catch a specific type, or at least <code>Exception</code>, and log or re-raise.</p><p class="qa-q"><b>Q:</b> What is the difference between if True and if False?</p><p class="qa-a"><b>A:</b> <code>if True:</code> block always runs once — usually a TODO stub with <code>pass</code>. <code>if False:</code> block never runs — used to temporarily disable code without deleting it.</p><p class="qa-q"><b>Q:</b> When should you NOT use if True: pass?</p><p class="qa-a"><b>A:</b> In finished production code — write the real logic directly, or use a proper <code>def</code> stub with a docstring. Remove <code>if True</code> once you implement the block.</p><p class="qa-q"><b>Q:</b> continue vs pass in a loop?</p><p class="qa-a"><b>A:</b> <code>continue</code> skips to the next iteration. <code>pass</code> does nothing but stays in the current iteration. Never use <code>pass</code> to skip loop items.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -11361,26 +11399,26 @@ Console.WriteLine(report);</div><p style="font-size:12px;margin:6px 0;line-heigh
     <mark class="hl-key">print</mark>(e.<mark class="hl-key">field</mark>)    <span class="t-cm"># age</span>
     <mark class="hl-key">print</mark>(e)          <span class="t-cm"># must be positive</span>
 
-<span class="t-cm"># set_age(30)  → returns 30, no exception</span></div></li><li><b>Step 4 — raise & re-raise</b><br><code>raise</code> throws. Bare <code>raise</code> continues the <b>same</b> error. <code>raise ... from ...</code> throws a <b>new</b> error and keeps the original as the cause. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('raise-reraise')" title="Open draggable C# comparison window">C# Comparison</button><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Side by side — payment checkout</b> (amount rule, wrap bank error, log timeout, avoid <code>raise e</code>):</p><div class="mc-row mc-align-tb"><div class="mc-col mc-good"><span class="mc-lbl">raise New — throw a NEW error</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">def</mark> charge(amount):
+<span class="t-cm"># set_age(30)  → returns 30, no exception</span></div></li><li><b>Step 4 — raise & re-raise</b><br><code>raise</code> throws. Bare <code>raise</code> continues the <b>same</b> error. <code>raise ... from ...</code> throws a <b>new</b> error and keeps the original as the cause. <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('raise-reraise')" title="Open draggable C# comparison window">C# Comparison</button><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Side by side — payment checkout</b> (amount rule, wrap bank error, log timeout, avoid <code>raise e</code>):</p><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1 · raise New — throw a NEW error</span><div class="io-split"><div class="io-in"><span class="io-lbl"># CODE</span><div class="step-pre"><mark class="hl-key">def</mark> charge(amount):
     <mark class="hl-key">if</mark> amount &lt;= 0:
         <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(
             "Payment amount must be greater than 0"
         )
     <mark class="hl-key">return</mark> charge_card(amount)
 
-charge(0)</div></div><p class="mc-tb-h"><b>Traceback / message</b> — one error, site is <code>raise</code> in <code>charge</code>:</p><div class="step-pre">Traceback (most recent call last):
+charge(0)</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize"></div><div class="io-out"><span class="io-lbl">Traceback / message — one error, site is raise in charge</span><div class="step-pre">Traceback (most recent call last):
   File "app.py", line 8, <mark class="hl-key">in</mark> &lt;module&gt;
     charge(0)
   File "app.py", line 4, <mark class="hl-key">in</mark> charge
     <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(
         "Payment amount must be greater than 0")
-<mark class="hl-key">ValueError</mark>: Payment amount must be greater than 0</div></div><div class="mc-col mc-good"><span class="mc-lbl">raise New from e — NEW + keep cause</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">Exception</mark>):
+<mark class="hl-key">ValueError</mark>: Payment amount must be greater than 0</div></div></div></div><div class="mc-col mc-good"><span class="mc-lbl">2 · raise New from e — NEW + keep cause</span><div class="io-split"><div class="io-in"><span class="io-lbl"># CODE</span><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">Exception</mark>):
     <mark class="hl-key">pass</mark>
 
 <mark class="hl-key">try</mark>:
     bank_charge(order_id)   <span class="t-cm"># SDK / gateway</span>
 <mark class="hl-key">except</mark> ConnectionError <mark class="hl-key">as</mark> e:
-    <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e</div></div><p class="mc-tb-h"><b>Traceback / message</b> — two blocks: bank cause, then API error.</p><div class="step-pre">Traceback (most recent call last):
+    <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e</div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize"></div><div class="io-out"><span class="io-lbl">Traceback / message — two blocks: bank cause, then API error</span><div class="step-pre">Traceback (most recent call last):
   File "app.py", line 6, <mark class="hl-key">in</mark> &lt;module&gt;
     bank_charge(order_id)
 ConnectionError: gateway unreachable
@@ -11391,23 +11429,23 @@ the following exception:
 Traceback (most recent call last):
   File "app.py", line 8, <mark class="hl-key">in</mark> &lt;module&gt;
     <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e
-PaymentError: Payment failed</div></div></div><div class="mc-row mc-align-tb"><div class="mc-col mc-good"><span class="mc-lbl">bare raise — SAME error continues</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">try</mark>:
+PaymentError: Payment failed</div></div></div></div></div><div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">3 · bare raise — SAME error continues</span><div class="io-split"><div class="io-in"><span class="io-lbl"># CODE</span><div class="step-pre"><mark class="hl-key">try</mark>:
     bank_charge(order_id)
 <mark class="hl-key">except</mark> TimeoutError:
     log_error()   <span class="t-cm"># log order id</span>
-    <mark class="hl-key">raise</mark>         <span class="t-cm"># SAME TimeoutError</span></div></div><p class="mc-tb-h"><b>Traceback / message</b> — <code>raise</code> line is <b>not</b> listed. Most recent frame is the real site: <code>bank_charge()</code>.</p><div class="step-pre">Traceback (most recent call last):
+    <mark class="hl-key">raise</mark>         <span class="t-cm"># SAME TimeoutError</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize"></div><div class="io-out"><span class="io-lbl">Traceback / message — raise line is not listed. Most recent frame: bank_charge()</span><div class="step-pre">Traceback (most recent call last):
   File "app.py", line 3, <mark class="hl-key">in</mark> &lt;module&gt;
     bank_charge(order_id)
-TimeoutError: payment gateway timed out</div></div><div class="mc-col mc-bad"><span class="mc-lbl">raise e — same type, NEW traceback</span><div class="mc-code"><div class="step-pre"><mark class="hl-key">try</mark>:
+TimeoutError: payment gateway timed out</div></div></div></div><div class="mc-col mc-bad"><span class="mc-lbl">4 · avoid raise e — same type, NEW traceback</span><div class="io-split"><div class="io-in"><span class="io-lbl"># CODE</span><div class="step-pre"><mark class="hl-key">try</mark>:
     bank_charge(order_id)
 <mark class="hl-key">except</mark> TimeoutError <mark class="hl-key">as</mark> e:
     log_error()
-    <mark class="hl-key">raise</mark> e    <span class="t-cm"># NOT the same as raise</span></div></div><p class="mc-tb-h"><b>Traceback / message</b> — same <code>TimeoutError</code>, but <b>most recent</b> frame is <code>raise e</code>.</p><div class="step-pre">Traceback (most recent call last):
+    <mark class="hl-key">raise</mark> e    <span class="t-cm"># NOT the same as raise</span></div></div><div class="io-split-divider" role="separator" aria-orientation="vertical" title="Drag to resize"></div><div class="io-out"><span class="io-lbl">Traceback / message — same TimeoutError, but most recent frame is raise e</span><div class="step-pre">Traceback (most recent call last):
   File "app.py", line 6, <mark class="hl-key">in</mark> &lt;module&gt;
     <mark class="hl-key">raise</mark> e
   File "app.py", line 3, <mark class="hl-key">in</mark> &lt;module&gt;
     bank_charge(order_id)
-TimeoutError: payment gateway timed out</div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Better realistic example — payment processing</b> (e-commerce checkout). Same four raise patterns, one story:</p><table class="data-tbl"><tr><th>Type</th><th>Realistic code</th><th>What the caller sees</th><th>Original cause kept?</th><th>When to use</th></tr><tr><td><b>raise New(...)</b></td><td><code>raise ValueError("Payment amount must be greater than 0")</code></td><td>Only the validation error</td><td>No</td><td>Your app detects a business-rule failure (amount is 0 or negative — nothing else threw first).</td></tr><tr><td><b>raise New from e</b></td><td><code>raise PaymentError("Payment failed") from e</code></td><td><code>PaymentError</code> + “caused by” the bank/SDK error</td><td>Yes (<code>__cause__</code>)</td><td>Convert a technical error (card gateway timeout, connection reset) into a meaningful business/API error.</td></tr><tr><td><b>raise</b> (bare)</td><td><code>except TimeoutError: log_error(); raise</code></td><td>Original <code>TimeoutError</code></td><td>Yes (same object, same traceback)</td><td>Log “payment timed out for order 1001”, then let the original error continue so the caller still sees <code>TimeoutError</code>.</td></tr><tr><td><b>raise e</b></td><td><code>except TimeoutError as e: raise e</code></td><td>Same error, but traceback is less clean (top line is <code>raise e</code>)</td><td>Partial — traceback changes</td><td>Avoid — use bare <code>raise</code>.</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>How to read the story:</b><br>• Cart amount <code>&lt;= 0</code> → you found the rule → <b>raise New</b> (<code>ValueError</code>).<br>• Bank SDK throws a low-level error → wrap for the API → <b>raise PaymentError(...) from e</b>.<br>• Gateway <code>TimeoutError</code> → log order id, then <b>bare raise</b> so ops still sees the real timeout.<br>• Don’t <code>raise e</code> — same timeout message, worse stack.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Pick in one line:</b> business rule → <b>raise New</b> · wrap SDK/bank error → <b>from e</b> · log then continue → <b>bare raise</b> · never <b>raise e</b>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>C# map:</b> <code>raise</code> ≈ <code>throw new ...</code> · bare <code>raise</code> ≈ <code>throw;</code> · <code>raise New from e</code> ≈ <code>throw new Exception("…", e)</code> (<code>InnerException</code>).</p></li></ul>
+TimeoutError: payment gateway timed out</div></div></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Better realistic example — payment processing</b> (e-commerce checkout). Same four raise patterns, one story — <b>ordered by preference</b>:</p><table class="data-tbl"><tr><th>Priority</th><th>Case</th><th>Realistic code</th><th>Error thrown to caller</th><th>Original cause kept?</th><th>Recommendation</th></tr><tr><td><b>1</b></td><td><b>New problem</b><br><code>raise New(...)</code></td><td><code>raise ValueError("Payment amount must be greater than 0")</code></td><td>Only the validation error<br><code>ValueError: Payment amount must be greater than 0</code></td><td>No</td><td>&#10004; <b>Very common</b> — new validation / business rule (nothing else threw first).</td></tr><tr><td><b>2</b></td><td><b>Wrap existing</b><br><code>raise New from e</code></td><td><code>raise PaymentError("Payment failed") from e</code></td><td><code>PaymentError: Payment failed</code> → original shown as cause</td><td>Yes (<code>__cause__</code>)</td><td>&#10004; <b>Best when changing type</b> — convert SDK/bank error into a meaningful API error.</td></tr><tr><td><b>3</b></td><td><b>Rethrow same</b><br><code>raise</code> (bare)</td><td><code>except TimeoutError: log_error(); raise</code></td><td>Original error, unchanged<br><code>TimeoutError: …</code></td><td>Yes (same object, same traceback)</td><td>&#10004; <b>Correct</b> — log order id, then let the same error continue.</td></tr><tr><td><b>4</b></td><td><b>Avoid</b><br><code>raise e</code></td><td><code>except TimeoutError as e: raise e</code></td><td>Same error, but traceback is less clean (top line is <code>raise e</code>)</td><td>Partial — traceback resets</td><td>&#9888; <b>Generally avoid</b> — use bare <code>raise</code> instead.</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Priority / preference (quick pick):</b> <button type="button" class="btn-csharp-pop" onclick="openCsharpWin('raise-reraise')" title="Open draggable C# comparison window">C# Comparison</button></p><table class="data-tbl"><tr><th>Priority</th><th>Situation</th><th>Preferred syntax</th><th>Error thrown to caller</th><th>Recommendation</th></tr><tr><td><b>1</b></td><td>Creating a <b>new validation / business error</b></td><td><code>raise ValueError(...)</code> or your own exception</td><td><code>ValueError: Invalid age</code></td><td>&#10004; Very common</td></tr><tr><td><b>2</b></td><td><b>Converting / wrapping</b> an existing low-level error</td><td><code>raise MyError(...) from e</code></td><td><code>PaymentError: Payment failed</code> → with the original error shown as the cause</td><td>&#10004; Best when changing exception type</td></tr><tr><td><b>3</b></td><td><b>Log and rethrow</b> the same error</td><td><code>raise</code></td><td>The original error, unchanged</td><td>&#10004; Correct</td></tr><tr><td><b>4</b></td><td><code>except … as e: raise e</code></td><td><code>raise e</code></td><td>The original error, but traceback information is less clean</td><td>&#9888; Generally avoid</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>How to read the story:</b><br>• Cart amount <code>&lt;= 0</code> → you found the rule → <b>Priority 1 — raise New</b> (<code>ValueError</code>).<br>• Bank SDK throws a low-level error → wrap for the API → <b>Priority 2 — raise PaymentError(...) from e</b>.<br>• Gateway <code>TimeoutError</code> → log order id, then <b>Priority 3 — bare raise</b> so ops still sees the real timeout.<br>• Don’t <code>raise e</code> (Priority 4 / avoid) — same timeout message, worse stack.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Pick in one line:</b> business rule → <b>raise New</b> · wrap SDK/bank error → <b>from e</b> · log then continue → <b>bare raise</b> · never <b>raise e</b>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>C# map:</b> <code>raise</code> ≈ <code>throw new ...</code> · bare <code>raise</code> ≈ <code>throw;</code> · <code>raise New from e</code> ≈ <code>throw new Exception("…", e)</code> (<code>InnerException</code>) · <code>raise e</code> ≈ <code>throw ex;</code> (also resets stack — avoid).</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>try / except / else / finally</b><br><b>except:</b> handle error.<br><b>else:</b> runs if <b>no</b> exception in try (not the same as loop else!).<br><b>finally:</b> always runs — cleanup.</div>
 <div class="keyword-box"><b>raise</b> = throw an exception. <b>raise ... from ...</b> = chain cause for debugging.<br><b>Custom Exception</b> = <code>class AppError(Exception): pass</code></div>
@@ -11481,12 +11519,31 @@ TimeoutError: payment gateway timed out</div></div></div><p style="font-size:12p
 <div class="quiz-box">
   <div class="quiz-q"><b>Q1.</b> <code>except Exception</code> vs bare <code>except:</code> — what extra does bare catch?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Bare <code>except:</code> also catches <code>SystemExit</code>, <code>KeyboardInterrupt</code>, and <code>GeneratorExit</code> (all <code>BaseException</code> subclasses).</div>
+      <div class="quiz-reveal">Bare <code>except:</code> also catches <code>SystemExit</code>, <code>KeyboardInterrupt</code>, and <code>GeneratorExit</code> (all <code>BaseException</code> subclasses).
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; except Exception — preferred</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    result = risky()
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
+    logger.warning("bad value: %s", e)
+<mark class="hl-key">except</mark> <mark class="hl-key">Exception</mark> <mark class="hl-key">as</mark> e:
+    logger.error("unexpected: %s", e)
+    <mark class="hl-key">raise</mark></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Catches:</b> normal app errors (<code>ValueError</code>, <code>OSError</code>, …).<br><b>Does <u>not</u> catch:</b> <code>KeyboardInterrupt</code>, <code>SystemExit</code>, <code>GeneratorExit</code> — so Ctrl+C and clean exit still work.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; bare except: — too broad</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    result = risky()
+<mark class="hl-key">except</mark>:          <span class="t-cm"># = except BaseException</span>
+    <mark class="hl-key">pass</mark>         <span class="t-cm"># swallows EVERYTHING</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Also catches:</b> <code>SystemExit</code>, <code>KeyboardInterrupt</code>, <code>GeneratorExit</code>.<br><b>Problem:</b> Ctrl+C / <code>sys.exit()</code> can be silently ignored — hard to shut down or debug.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q2.</b> <code>raise</code> vs <code>raise e</code> in an except block?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>raise</code> preserves the original traceback. <code>raise e</code> resets the traceback origin to the current line.</div>
+      <div class="quiz-reveal"><code>raise</code> preserves the original traceback. <code>raise e</code> resets the traceback origin to the current line.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; bare raise — keep original site</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    bank_charge(order_id)
+<mark class="hl-key">except</mark> TimeoutError:
+    log_error()
+    <mark class="hl-key">raise</mark>          <span class="t-cm"># SAME error + SAME traceback</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Caller sees:</b> original <code>TimeoutError</code>.<br><b>Traceback:</b> most recent frame is still <code>bank_charge()</code> — the real failure site.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; raise e — resets traceback</span><div class="step-pre"><mark class="hl-key">try</mark>:
+    bank_charge(order_id)
+<mark class="hl-key">except</mark> TimeoutError <mark class="hl-key">as</mark> e:
+    log_error()
+    <mark class="hl-key">raise</mark> e        <span class="t-cm"># same type, NEW traceback</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Caller sees:</b> same <code>TimeoutError</code> message.<br><b>Traceback:</b> most recent frame is <code>raise e</code> — original site is harder to spot.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q3.</b> <code>finally</code> block runs when?
@@ -11496,26 +11553,156 @@ TimeoutError: payment gateway timed out</div></div></div><p style="font-size:12p
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>except (TypeError, ValueError):</code> catches?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Either <code>TypeError</code> or <code>ValueError</code> &mdash; any of the listed exception types.</div>
+      <div class="quiz-reveal">Either <code>TypeError</code> or <code>ValueError</code> &mdash; any of the listed exception types.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Complete example — one handler, two types</span><div class="step-pre"><mark class="hl-key">def</mark> parse_qty(raw):
+    <mark class="hl-key">try</mark>:
+        <mark class="hl-key">return</mark> <mark class="hl-key">int</mark>(raw)          <span class="t-cm"># ValueError if not a number</span>
+    <mark class="hl-key">except</mark> (<mark class="hl-key">TypeError</mark>, <mark class="hl-key">ValueError</mark>) <mark class="hl-key">as</mark> e:
+        <span class="t-cm"># TypeError: int(None) / int([])</span>
+        <span class="t-cm"># ValueError: int("abc")</span>
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(f"bad qty: {raw!r}") <mark class="hl-key">from</mark> e
+
+<mark class="hl-key">print</mark>(parse_qty("3"))     <span class="t-cm"># 3</span>
+<span class="t-cm"># parse_qty("abc")        # ValueError: bad qty: 'abc'</span>
+<span class="t-cm"># parse_qty(None)         # ValueError: bad qty: None</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Meaning:</b> one <code>except</code> runs if <b>either</b> type is raised — same as two separate handlers with the same body.</p></div><div class="mc-col mc-good"><span class="mc-lbl">Same idea — two except blocks</span><div class="step-pre"><mark class="hl-key">def</mark> parse_qty(raw):
+    <mark class="hl-key">try</mark>:
+        <mark class="hl-key">return</mark> <mark class="hl-key">int</mark>(raw)
+    <mark class="hl-key">except</mark> <mark class="hl-key">TypeError</mark> <mark class="hl-key">as</mark> e:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(f"bad qty: {raw!r}") <mark class="hl-key">from</mark> e
+    <mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
+        <mark class="hl-key">raise</mark> <mark class="hl-key">ValueError</mark>(f"bad qty: {raw!r}") <mark class="hl-key">from</mark> e
+
+<span class="t-cm"># Tuple form is shorter when the fix is identical.</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Tip:</b> use <code>except (A, B):</code> when both errors need the <b>same</b> recovery. Split handlers when the fix differs.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q5.</b> Custom exception should inherit from?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>Exception</code> (not <code>BaseException</code>), so it&apos;s caught by <code>except Exception:</code> but not by bare <code>except:</code>.</div>
+      <div class="quiz-reveal"><code>Exception</code> (not <code>BaseException</code>), so it&apos;s caught by <code>except Exception:</code> but not by bare <code>except:</code>.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Inherit from Exception</span><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">Exception</mark>):
+    """Business / API failure — normal app error."""
+    <mark class="hl-key">pass</mark>
+
+<mark class="hl-key">def</mark> charge(amount):
+    <mark class="hl-key">if</mark> amount &lt;= 0:
+        <mark class="hl-key">raise</mark> PaymentError("amount must be &gt; 0")
+    <mark class="hl-key">return</mark> amount
+
+<mark class="hl-key">try</mark>:
+    charge(0)
+<mark class="hl-key">except</mark> PaymentError <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>("handled:", e)     <span class="t-cm"># handled: amount must be &gt; 0</span>
+<mark class="hl-key">except</mark> <mark class="hl-key">Exception</mark>:
+    <mark class="hl-key">print</mark>("other app error")</div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Why Exception:</b> your error is catchable by normal <code>except Exception</code> handlers. Ctrl+C / <code>sys.exit()</code> still bypass it.</p></div><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Inherit from BaseException</span><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">BaseException</mark>):
+    <mark class="hl-key">pass</mark>   <span class="t-cm"># WRONG for app errors</span>
+
+<mark class="hl-key">try</mark>:
+    <mark class="hl-key">raise</mark> PaymentError("fail")
+<mark class="hl-key">except</mark> <mark class="hl-key">Exception</mark>:
+    <mark class="hl-key">print</mark>("caught?")   <span class="t-cm"># NOT printed —</span>
+                       <span class="t-cm"># BaseException is above Exception</span>
+<mark class="hl-key">except</mark> <mark class="hl-key">BaseException</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>("only here:", <mark class="hl-key">type</mark>(e).<mark class="hl-key">__name__</mark>)
+
+<span class="t-cm"># Also: bare except: would catch it,</span>
+<span class="t-cm"># same bucket as KeyboardInterrupt / SystemExit.</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Rule:</b> app/custom errors → <code>Exception</code>. Leave <code>BaseException</code> for the interpreter (exit / interrupt).</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q6.</b> <code>raise NewError('msg') from original_err</code> does what?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Raises <code>NewError</code> while <b>chaining</b> the original exception, preserving both tracebacks in the output.</div>
+      <div class="quiz-reveal">Raises a <b>new</b> exception while <b>chaining</b> the original — both tracebacks stay in the output. Works with <b>built-in or custom</b> types.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) Built-in → built-in</span><div class="step-pre"><mark class="hl-key">def</mark> parse_qty(raw):
+    <mark class="hl-key">try</mark>:
+        <mark class="hl-key">return</mark> <mark class="hl-key">int</mark>(raw)                 <span class="t-cm"># may raise ValueError</span>
+    <mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
+        <span class="t-cm"># wrap with another built-in</span>
+        <mark class="hl-key">raise</mark> <mark class="hl-key">TypeError</mark>(
+            f"qty must be int-like, got {raw!r}"
+        ) <mark class="hl-key">from</mark> e
+
+<span class="t-cm"># parse_qty("abc")  → caller sees:</span>
+<span class="t-cm"># ValueError: invalid literal for int() ...</span>
+<span class="t-cm"># The above exception was the direct cause of</span>
+<span class="t-cm"># the following exception:</span>
+<span class="t-cm"># TypeError: qty must be int-like, got 'abc'</span>
+
+<mark class="hl-key">try</mark>:
+    parse_qty("abc")
+<mark class="hl-key">except</mark> <mark class="hl-key">TypeError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(e)                 <span class="t-cm"># qty must be int-like...</span>
+    <mark class="hl-key">print</mark>(e.<mark class="hl-key">__cause__</mark>)       <span class="t-cm"># invalid literal for int()...</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Point:</b> <code>from e</code> is <b>not</b> custom-only — any exception can wrap any other (here <code>ValueError</code> → <code>TypeError</code>).</p></div><div class="mc-col mc-good"><span class="mc-lbl">2) Built-in → custom (API wrap)</span><div class="step-pre"><mark class="hl-key">class</mark> PaymentError(<mark class="hl-key">Exception</mark>):
+    <mark class="hl-key">pass</mark>
+
+<mark class="hl-key">def</mark> bank_charge(order_id):
+    <mark class="hl-key">raise</mark> ConnectionError("gateway unreachable")
+
+<mark class="hl-key">def</mark> pay(order_id):
+    <mark class="hl-key">try</mark>:
+        bank_charge(order_id)
+    <mark class="hl-key">except</mark> ConnectionError <mark class="hl-key">as</mark> e:
+        <mark class="hl-key">raise</mark> PaymentError("Payment failed") <mark class="hl-key">from</mark> e
+
+<span class="t-cm"># pay(1001)  → caller sees:</span>
+<span class="t-cm"># ConnectionError: gateway unreachable</span>
+<span class="t-cm"># The above exception was the direct cause of</span>
+<span class="t-cm"># the following exception:</span>
+<span class="t-cm"># PaymentError: Payment failed</span>
+
+<mark class="hl-key">try</mark>:
+    pay(1001)
+<mark class="hl-key">except</mark> PaymentError <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(e)                 <span class="t-cm"># Payment failed</span>
+    <mark class="hl-key">print</mark>(<mark class="hl-key">repr</mark>(e.<mark class="hl-key">__cause__</mark>)) <span class="t-cm"># ConnectionError('gateway unreachable')</span>
+
+<span class="t-cm"># Suppress chain (rare): raise PaymentError("…") from None</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Point:</b> custom type is for a clear API/domain error. <b>C#:</b> <code>throw new PaymentException("…", e)</code> → <code>InnerException</code>.</p></div></div></div>
     </details>
   </div>
   <div class="quiz-q"><b>Q7.</b> What is exception chaining? How to suppress it?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal">Automatic when an exception is raised inside an except block. Suppress with <code>raise NewError() from None</code>.</div>
+      <div class="quiz-reveal">Chaining links a <b>new</b> error to the one you were handling. It happens automatically if you <code>raise</code> inside <code>except</code>. Suppress with <code>raise NewError(...) from None</code>.
+<div class="mc-row"><div class="mc-col mc-good"><span class="mc-lbl">1) Chaining on (keep context / cause)</span><div class="step-pre"><mark class="hl-key">def</mark> load_config(path):
+    <mark class="hl-key">try</mark>:
+        <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(path, encoding="utf-8") <mark class="hl-key">as</mark> f:
+            <mark class="hl-key">return</mark> f.read()
+    <mark class="hl-key">except</mark> <mark class="hl-key">FileNotFoundError</mark>:
+        <span class="t-cm"># raise inside except → chain is automatic</span>
+        <mark class="hl-key">raise</mark> <mark class="hl-key">RuntimeError</mark>(f"missing config: {path}")
+
+<span class="t-cm"># load_config("nope.ini")  → caller sees:</span>
+<span class="t-cm"># FileNotFoundError: [Errno 2] No such file ...</span>
+<span class="t-cm"># During handling of the above exception,</span>
+<span class="t-cm"># another exception occurred:</span>
+<span class="t-cm"># RuntimeError: missing config: nope.ini</span>
+
+<span class="t-cm"># Explicit cause (cleaner wording in traceback):</span>
+<mark class="hl-key">try</mark>:
+    <mark class="hl-key">int</mark>("abc")
+<mark class="hl-key">except</mark> <mark class="hl-key">ValueError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">raise</mark> <mark class="hl-key">TypeError</mark>("bad qty") <mark class="hl-key">from</mark> e
+<span class="t-cm"># → "The above exception was the direct cause..."</span>
+<span class="t-cm">#    e.__cause__ is the ValueError</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Remember:</b> raise-inside-except → <code>__context__</code> (automatic). <code>from e</code> → <code>__cause__</code> (explicit).</p></div><div class="mc-col mc-good"><span class="mc-lbl">2) Suppress chaining — from None</span><div class="step-pre"><mark class="hl-key">def</mark> load_config(path):
+    <mark class="hl-key">try</mark>:
+        <mark class="hl-key">with</mark> <mark class="hl-key">open</mark>(path, encoding="utf-8") <mark class="hl-key">as</mark> f:
+            <mark class="hl-key">return</mark> f.read()
+    <mark class="hl-key">except</mark> <mark class="hl-key">FileNotFoundError</mark>:
+        <span class="t-cm"># hide the FileNotFoundError from the caller</span>
+        <mark class="hl-key">raise</mark> <mark class="hl-key">RuntimeError</mark>(
+            f"missing config: {path}"
+        ) <mark class="hl-key">from</mark> <mark class="hl-key">None</mark>
+
+<span class="t-cm"># load_config("nope.ini")  → caller sees ONLY:</span>
+<span class="t-cm"># RuntimeError: missing config: nope.ini</span>
+<span class="t-cm"># (no FileNotFoundError block underneath)</span>
+
+<mark class="hl-key">try</mark>:
+    load_config("nope.ini")
+<mark class="hl-key">except</mark> <mark class="hl-key">RuntimeError</mark> <mark class="hl-key">as</mark> e:
+    <mark class="hl-key">print</mark>(e)              <span class="t-cm"># missing config: nope.ini</span>
+    <mark class="hl-key">print</mark>(e.<mark class="hl-key">__cause__</mark>)    <span class="t-cm"># None</span>
+    <mark class="hl-key">print</mark>(e.<mark class="hl-key">__context__</mark>)  <span class="t-cm"># None  (suppressed)</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>When:</b> you want a clean public error and the low-level detail would confuse callers. Prefer <code>from e</code> when debugging still matters.</p></div></div></div>
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why not use bare except?</p><p class="qa-a"><b>A:</b> It catches everything including <code>KeyboardInterrupt</code> and hides the real bug. Catch specific exceptions you can handle.</p><p class="qa-q"><b>Q:</b> What does raise from do?</p><p class="qa-a"><b>A:</b> Throws a <b>new</b> error and links the original as <code>__cause__</code> (C# <code>InnerException</code>). Bare <code>raise</code> is different — same error continues, traceback kept. Avoid <code>raise e</code> — it resets the traceback.</p><p class="qa-q"><b>Q:</b> When does else run in try/except?</p><p class="qa-a"><b>A:</b> Only when <code>try</code> finishes with <b>no</b> exception. Use it for success-only work so those lines are not covered by the same <code>except</code>. If parse fails, <code>else</code> is skipped; <code>finally</code> still runs.</p><p class="qa-q"><b>Q:</b> finally vs else?</p><p class="qa-a"><b>A:</b> <code>else</code> = success path only (keep <code>try</code> small). <code>finally</code> = always (close files, unlock, cleanup) — even after error or <code>return</code>.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Why not use bare except?</p><p class="qa-a"><b>A:</b> It catches everything including <code>KeyboardInterrupt</code> and hides the real bug. Catch specific exceptions you can handle.</p><p class="qa-q"><b>Q:</b> What does raise from do?</p><p class="qa-a"><b>A:</b> Throws a <b>new</b> error and links the original as <code>__cause__</code> (C# <code>InnerException</code>). Bare <code>raise</code> is different — same error continues, traceback kept. Avoid <code>raise e</code> — it resets the traceback.</p><p class="qa-q"><b>Q:</b> In what order should you prefer raise patterns?</p><p class="qa-a"><b>A:</b> <b>1</b> new business/validation → <code>raise New(...)</code>. <b>2</b> wrap low-level → <code>raise MyError(...) from e</code>. <b>3</b> log then continue → bare <code>raise</code>. <b>4</b> avoid <code>raise e</code> (traceback resets).</p><p class="qa-q"><b>Q:</b> When does else run in try/except?</p><p class="qa-a"><b>A:</b> Only when <code>try</code> finishes with <b>no</b> exception. Use it for success-only work so those lines are not covered by the same <code>except</code>. If parse fails, <code>else</code> is skipped; <code>finally</code> still runs.</p><p class="qa-q"><b>Q:</b> finally vs else?</p><p class="qa-a"><b>A:</b> <code>else</code> = success path only (keep <code>try</code> small). <code>finally</code> = always (close files, unlock, cleanup) — even after error or <code>return</code>.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
