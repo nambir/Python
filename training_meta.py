@@ -300,18 +300,21 @@ TRAINING_META = {
     },
     20: {
         "definition": _def(
-            "<b>Concurrency</b> runs overlapping work — threads share one process; "
-            "processes get separate memory.",
+            "Start from <b>cores</b>, then <b>process vs thread</b>, then the CPython <b>GIL</b>.",
             [
-                "<b>threading:</b> good for I/O · limited by the <b>GIL</b> for CPU-bound work · "
-                "use <code>Lock</code> against races.",
-                "<b>multiprocessing / futures:</b> "
-                "<code>ProcessPoolExecutor</code> for CPU · "
-                "<code>ThreadPoolExecutor</code> for I/O.",
-                "<b>Pick:</b> I/O wait → threads · heavy CPU math → processes.",
+                "<b>Process</b> = one app · <b>thread</b> = worker inside it · "
+                "3 apps → at least 3 processes.",
+                "<b>GIL:</b> one Python bytecode runner per process — I/O releases it.",
+                "<b>ThreadPoolExecutor</b> for I/O · <b>ProcessPoolExecutor</b> for CPU · "
+                "<code>Lock</code> for shared data.",
             ],
         ),
-        "interview": "The GIL allows only one thread to execute Python bytecode at a time — fine for I/O, bad for CPU-heavy math. threading.Thread plus Lock prevents race conditions. ProcessPoolExecutor for CPU parallelism; ThreadPoolExecutor for I/O.",
+        "interview": (
+            "Process vs thread: separate memory vs shared memory. "
+            "GIL is per CPython process — threads for I/O, processes for CPU math. "
+            "ThreadPool for downloads; ProcessPool for resize. "
+            "Three Python apps = three processes minimum."
+        ),
     },
     21: {
         "definition": _def(

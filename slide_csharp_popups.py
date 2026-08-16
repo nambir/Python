@@ -1248,6 +1248,110 @@ catch (JsonException e)
     )
 
 
+def _threading_gil_body() -> str:
+    return (
+        _diff_first(
+            "CPython has a <b>GIL</b> per process",
+            ".NET has <b>no GIL</b> — threads can run managed CPU in parallel",
+            "Key difference",
+        )
+        + "<p><b>GIL impact — purpose:</b> "
+        "I/O wait → threads OK · heavy Python CPU → processes. "
+        "C# has no GIL — CPU can use <code>Parallel</code> on threads.</p>"
+        + '<div class="mc-row">'
+        '<div class="mc-col mc-good"><span class="mc-lbl">I/O-bound (OK) — Python vs C#</span>'
+        + _py_cs(
+            "Python — ThreadPoolExecutor:",
+            """from concurrent.futures import ThreadPoolExecutor
+import urllib.request
+
+def download(url):
+    with urllib.request.urlopen(url, timeout=10) as r:
+        return r.read()
+
+urls = ["http://a/img1.jpg", "http://b/img2.jpg"]
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    images = list(pool.map(download, urls))
+# images → [bytes1, bytes2]""",
+            "C# — async Task.WhenAll:",
+            """using System.Net.Http;
+
+var urls = new[] { "http://a/img1.jpg", "http://b/img2.jpg" };
+
+var tasks = urls.Select(async u =>
+{
+    using var client = new HttpClient();
+    return await client.GetByteArrayAsync(u);
+});
+byte[][] images = await Task.WhenAll(tasks);
+// images → [bytes1, bytes2]""",
+        )
+        + "</div>"
+        '<div class="mc-col mc-good"><span class="mc-lbl">CPU-bound — Python vs C#</span>'
+        + _py_cs(
+            "Python — ProcessPoolExecutor (bypass GIL):",
+            """from concurrent.futures import ProcessPoolExecutor
+
+def heavy_resize(data):
+    # CPU pixel / math work here
+    return resized_bytes(data)
+
+if __name__ == "__main__":
+    with ProcessPoolExecutor(max_workers=4) as pool:
+        out = list(pool.map(heavy_resize, images))
+    # out → [resized1, resized2]
+    # each worker = own process + own GIL""",
+            "C# — Parallel.ForEach (no GIL):",
+            """using System.Threading.Tasks;
+
+// Same process — true parallel on cores
+Parallel.ForEach(images, img =>
+{
+    HeavyResize(img);   // CPU work
+});
+// Thread-pool threads run in parallel
+// (no need for separate processes for GIL)""",
+        )
+        + "</div>"
+        "</div>"
+        + '<table class="data-tbl csharp-pop-tbl">'
+        "<tr><th></th><th>Python (CPython)</th><th>C# (.NET)</th></tr>"
+        "<tr><td><b>I/O downloads</b></td>"
+        "<td><code>ThreadPoolExecutor</code> + <code>pool.map</code></td>"
+        "<td><code>async</code> + <code>Task.WhenAll</code></td></tr>"
+        "<tr><td><b>CPU resize</b></td>"
+        "<td><code>ProcessPoolExecutor</code> (own GIL each)</td>"
+        "<td><code>Parallel.ForEach</code> / thread pool</td></tr>"
+        "<tr><td><b>GIL</b></td>"
+        "<td>Yes — one bytecode runner per process</td>"
+        "<td>No GIL</td></tr>"
+        "<tr><td><b>I/O-bound</b></td>"
+        "<td class=\"cell-yes\">Threads OK</td>"
+        "<td class=\"cell-yes\">async / tasks OK</td></tr>"
+        "<tr><td><b>CPU-bound</b></td>"
+        "<td class=\"cell-no\">Threads not enough → processes</td>"
+        "<td class=\"cell-yes\">Parallel threads OK</td></tr>"
+        "<tr><td><b>Lock shared data</b></td>"
+        "<td><code>threading.Lock</code></td>"
+        "<td><code>lock</code> / <code>Interlocked</code></td></tr>"
+        "<tr><td><b>Spawn process</b></td>"
+        "<td><code>multiprocessing.Process</code></td>"
+        "<td><code>System.Diagnostics.Process</code></td></tr>"
+        "</table>"
+        + '<div class="callout" style="margin-top:10px">'
+        "<b>Side-by-side pick:</b><br>"
+        "• Download / wait → Python <code>ThreadPool</code> ≈ C# <code>async</code><br>"
+        "• Heavy resize → Python <code>ProcessPool</code> ≈ C# <code>Parallel.ForEach</code><br>"
+        "• Why different for CPU? Python GIL · C# has no GIL"
+        "</div>"
+        + _note(
+            "Same design: overlap I/O waits; for CPU, Python needs processes to bypass the GIL, "
+            "while C# can often keep CPU work on thread-pool threads."
+        )
+    )
+
+
 def _with_using_body() -> str:
     return (
         _py_cs(
@@ -2168,6 +2272,7 @@ _POPUP_BUILDERS: dict[str, tuple[str, Callable[[], str]]] = {
     "docstring-xml": ("C# Comparison — docstring vs /// summary", _docstring_body),
     "try-catch": ("C# Comparison — try/except vs try/catch", _try_catch_body),
     "raise-reraise": ("C# Comparison — raise / re-raise vs throw", _raise_reraise_body),
+    "threading-gil": ("C# Comparison — threading / GIL vs Task / Parallel", _threading_gil_body),
     "with-using": ("C# Comparison — with vs using", _with_using_body),
     "async-await": ("C# Comparison — async/await", _async_await_body),
     "venv-nuget": ("C# Comparison — venv + pip vs NuGet", _venv_nuget_body),

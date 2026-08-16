@@ -146,7 +146,9 @@ print(u.name)         # Anu</div>
 """,
     19: """
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>try / except / else / finally</b><br><b>except:</b> handle error.<br><b>else:</b> runs if <b>no</b> exception in try (not the same as loop else!).<br><b>finally:</b> always runs — cleanup.</div>
+<div class="keyword-box"><b>NameError</b> = name not defined · <b>TypeError</b> = wrong types · <b>ValueError</b> = bad value for type.</div>
+<div class="keyword-box"><b>try / except</b> = run risky code; catch by <b>specific</b> type — avoid bare <code>except:</code>.</div>
+<div class="keyword-box"><b>else</b> = runs if try OK · <b>finally</b> = always runs (cleanup).</div>
 <div class="keyword-box"><b>raise</b> = throw an exception. <b>raise ... from ...</b> = chain cause for debugging.<br><b>Custom Exception</b> = <code>class AppError(Exception): pass</code></div>
 """,
     24: """
@@ -167,8 +169,10 @@ print(u.name)         # Anu</div>
 """,
     20: """
 <h3>Python keywords — deeper look</h3>
-<div class="keyword-box"><b>GIL</b> (Global Interpreter Lock) = only one thread runs Python bytecode at a time in CPython.<br><b>Good for:</b> I/O (network, disk).<br><b>Bad for:</b> CPU-heavy math in threads — use <code>multiprocessing</code>.</div>
-<div class="keyword-box"><b>Lock</b> = mutex — only one thread enters critical section at a time.<br><div class="step-pre">with lock:\n    shared_counter += 1</div></div>
+<div class="keyword-box"><b>Process</b> = one running program (own memory).<br><b>Thread</b> = worker inside one process (shared memory).</div>
+<div class="keyword-box"><b>GIL impact:</b> <b>OK</b> = I/O wait (threads release GIL) · <b>not OK</b> = heavy Python CPU (use processes).</div>
+<div class="keyword-box"><b>ThreadPoolExecutor</b> = I/O pool · <b>ProcessPoolExecutor</b> = CPU pool (own GIL each).<br><div class="step-pre">with ThreadPoolExecutor() as pool:\n    list(pool.map(download, urls))</div></div>
+<div class="keyword-box"><b>Lock</b> = only one thread updates shared data at a time.<br><div class="step-pre">with lock:\n    shared_counter += 1</div></div>
 """,
     26: """
 <h3>Python keywords — deeper look</h3>

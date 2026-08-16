@@ -125,10 +125,11 @@ PRIMARY: dict[int, str] = {
         "This slide shows safe exception handling."
     ),
     20: (
-        "<b>Threading</b> lets one program do several things at once — useful while waiting on network or disk. "
-        "The <b>GIL</b> (<b>Global Interpreter Lock</b>) means only one thread runs Python bytecode at a time, "
-        "so threads rarely speed up CPU-heavy work. "
-        "This slide shows when threading helps and its limits."
+        "<b>Threading</b> and <b>processes</b> let programs overlap work. "
+        "A <b>process</b> is one running app; a <b>thread</b> is a worker inside it. "
+        "CPython's <b>GIL</b> limits Python bytecode to one thread per process — "
+        "threads help I/O; <code>ProcessPoolExecutor</code> helps CPU. "
+        "This slide builds from cores → process/thread → GIL → pools."
     ),
     21: (
         "<code>async</code> / <code>await</code> lets one thread juggle many waiting tasks (network, database) "

@@ -3,6 +3,78 @@
 from slide_csharp_popups import csharp_compare_btn
 from slide_io import io_split, side_by_side
 
+
+def _ex_error_diagram() -> str:
+    """Three-column NameError / TypeError / ValueError diagram (blue title, code, red message)."""
+    return (
+        '<div class="ex-row">'
+        '<div class="ex-card">'
+        '<div class="ex-title">NameError</div>'
+        '<div class="ex-code">z * 1</div>'
+        '<div class="ex-msg">NameError: name \'z\' is not defined</div>'
+        "</div>"
+        '<div class="ex-card">'
+        '<div class="ex-title">TypeError</div>'
+        '<div class="ex-code">10 + "Hello"</div>'
+        '<div class="ex-msg">TypeError: unsupported operand type(s) for +:<br>\'int\' and \'str\'</div>'
+        "</div>"
+        '<div class="ex-card">'
+        '<div class="ex-title">ValueError</div>'
+        '<div class="ex-code">int("Hello")</div>'
+        '<div class="ex-msg">ValueError: invalid literal for int()<br>with base 10: \'Hello\'</div>'
+        "</div>"
+        "</div>"
+    )
+
+
+def _ex_ladder_path(try_line: str, hit: str) -> str:
+    """Same try/except/else/finally ladder; yellow-highlight the path that runs."""
+
+    def block(lines: list[str], active: bool) -> str:
+        text = "\n".join(lines)
+        if active:
+            return f'<mark class="hl-path">{text}</mark>'
+        return text
+
+    name = block(
+        ['except NameError as err:', '    print("Name Error:", err)'],
+        hit == "NameError",
+    )
+    typ = block(
+        ['except TypeError as err:', '    print("Type Error:", err)'],
+        hit == "TypeError",
+    )
+    val = block(
+        ['except ValueError as err:', '    print("Value Error:", err)'],
+        hit == "ValueError",
+    )
+    exc = block(
+        ['except Exception as err:', '    print("Exception:", err)'],
+        hit == "Exception",
+    )
+    els = block(
+        ["else:", '    print("no error — success path")'],
+        hit == "else",
+    )
+    # finally always runs — highlight on every path
+    fin = block(
+        ["finally:", '    print("cleanup always")'],
+        True,
+    )
+    return (
+        '<div class="step-pre">'
+        "try:\n"
+        f"    {try_line}\n"
+        f"{name}\n"
+        f"{typ}\n"
+        f"{val}\n"
+        f"{exc}\n"
+        f"{els}\n"
+        f"{fin}"
+        "</div>"
+    )
+
+
 BEGINNER_CONTENT: dict[int, dict] = {
     1: {
         "steps": [
@@ -1487,7 +1559,156 @@ BEGINNER_CONTENT: dict[int, dict] = {
     19: {
         "steps": [
             {
-                "title": "Step 1 — try, except, else & finally",
+                "title": "Step 1 — Simplest try / except",
+                "body": (
+                    "<code>try</code> runs risky code. <code>except</code> runs if an error happens — "
+                    "the program can continue instead of crashing."
+                    + csharp_compare_btn("try-catch")
+                    + side_by_side(
+                        "def div(a, b):\n"
+                        "    try:\n"
+                        "        print(a / b)\n"
+                        "    except:\n"
+                        "        print(\"Something Went Wrong\")\n"
+                        "\n"
+                        "div(10, 5)\n"
+                        "div(10, 0)",
+                        "2.0\n"
+                        "Something Went Wrong",
+                        left_label="Code",
+                        right_label="Output",
+                    )
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<code>div(10, 5)</code> prints <code>2.0</code>. "
+                    "<code>div(10, 0)</code> hits divide-by-zero — "
+                    "<code>except</code> prints <code>Something Went Wrong</code> instead of crashing."
+                    "</p>"
+                    "<p class=\"step-result\">"
+                    "<b>Next steps:</b> learn error <b>types</b>, catch the right one, "
+                    "then add <code>else</code> / <code>finally</code>."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 2 — NameError, TypeError, ValueError",
+                "body": (
+                    "Each error has a <b>type name</b>. Read the message — it tells you what went wrong."
+                    + _ex_error_diagram()
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>NameError</b> = variable/name missing · "
+                    "<b>TypeError</b> = wrong types for the operation · "
+                    "<b>ValueError</b> = type OK, value not allowed."
+                    "</p>"
+                    "<p style=\"font-size:12px;margin:8px 0;line-height:1.45\">"
+                    "<b>Hierarchy</b> — all inherit from <code>Exception</code>:"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "BaseException\n"
+                    " └── Exception\n"
+                    "      ├── NameError\n"
+                    "      ├── TypeError\n"
+                    "      ├── ValueError\n"
+                    "      ├── ZeroDivisionError\n"
+                    "      └── FileNotFoundError"
+                    "</div>"
+                    "<p class=\"step-result\">"
+                    "<b>Rule:</b> catch the <b>specific</b> type you can handle."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 3 — Match the right except (not bare except)",
+                "body": (
+                    "Same ladder for every example: "
+                    "<code>try</code> → specific <code>except</code> → "
+                    "<code>except Exception</code> → <code>else</code> → <code>finally</code>. "
+                    "<mark class=\"hl-path\">Yellow</mark> = path that runs "
+                    "(<code>finally</code> is always yellow — it always runs)."
+                    + _ex_error_diagram()
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Side by side</b> — same ladder, different <code>try</code> line:"
+                    "</p>"
+                    '<div class="ex-row">'
+                    '<div class="ex-card">'
+                    '<div class="ex-title">Path → NameError</div>'
+                    + _ex_ladder_path("z * 1", "NameError")
+                    + '<p style="font-size:11px;margin:4px 0 0;line-height:1.35">'
+                    "Output:<br>"
+                    "<code>Name Error: name 'z' is not defined</code><br>"
+                    "<code>cleanup always</code>"
+                    "</p>"
+                    "</div>"
+                    '<div class="ex-card">'
+                    '<div class="ex-title">Path → TypeError</div>'
+                    + _ex_ladder_path('10 + "Hello"', "TypeError")
+                    + '<p style="font-size:11px;margin:4px 0 0;line-height:1.35">'
+                    "Output:<br>"
+                    "<code>Type Error: unsupported operand...</code><br>"
+                    "<code>cleanup always</code>"
+                    "</p>"
+                    "</div>"
+                    '<div class="ex-card">'
+                    '<div class="ex-title">Path → ValueError</div>'
+                    + _ex_ladder_path('int("Hello")', "ValueError")
+                    + '<p style="font-size:11px;margin:4px 0 0;line-height:1.35">'
+                    "Output:<br>"
+                    "<code>Value Error: invalid literal...</code><br>"
+                    "<code>cleanup always</code>"
+                    "</p>"
+                    "</div>"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:8px 0;line-height:1.45\">"
+                    "<b>Correct code</b> — no error → skips all <code>except</code> → "
+                    "goes to <code>else</code> → then <code>finally</code>:"
+                    "</p>"
+                    '<div class="ex-row ex-row-2">'
+                    '<div class="ex-card">'
+                    '<div class="ex-title">Correct → else (int works)</div>'
+                    + _ex_ladder_path('n = int("42")', "else")
+                    + '<p style="font-size:11px;margin:4px 0 0;line-height:1.35">'
+                    "<b>try</b> succeeds (<code>n = 42</code>) → "
+                    "no <code>except</code> · yellow <code>else</code> · yellow <code>finally</code>.<br>"
+                    "Output:<br>"
+                    "<code>no error — success path</code><br>"
+                    "<code>cleanup always</code>"
+                    "</p>"
+                    "</div>"
+                    '<div class="ex-card">'
+                    '<div class="ex-title">Path → except Exception (10 / 0)</div>'
+                    + _ex_ladder_path("10 / 0", "Exception")
+                    + '<p style="font-size:11px;margin:4px 0 0;line-height:1.35">'
+                    "<code>ZeroDivisionError</code> is not Name/Type/Value — "
+                    "hits <code>except Exception</code>. <code>else</code> skipped.<br>"
+                    "Output:<br>"
+                    "<code>Exception: division by zero</code><br>"
+                    "<code>cleanup always</code>"
+                    "</p>"
+                    "</div>"
+                    "</div>"
+                    '<table class="data-tbl">'
+                    "<tr><th>Block</th><th>When it runs</th></tr>"
+                    "<tr><td><code>except NameError / TypeError / ValueError</code></td>"
+                    "<td>Only that specific error</td></tr>"
+                    "<tr><td><code>except Exception</code></td>"
+                    "<td>Other exceptions not listed above "
+                    "(e.g. <code>ZeroDivisionError</code>)</td></tr>"
+                    "<tr><td><code>else</code></td>"
+                    "<td>Only if <code>try</code> had <b>no</b> exception "
+                    "(e.g. <code>int(\"42\")</code>)</td></tr>"
+                    "<tr><td><code>finally</code></td>"
+                    "<td><b>Always</b> — success or error (cleanup)</td></tr>"
+                    "</table>"
+                    "<p class=\"step-result\">"
+                    "<b>Rule:</b> yellow = path taken. "
+                    "Specific <code>except</code> first · "
+                    "<code>except Exception</code> next · "
+                    "<code>else</code> on success · "
+                    "<code>finally</code> always."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 4 — try, except, else & finally",
                 "body": (
                     "Handle errors gracefully. "
                     "<code>else</code> runs only if <code>try</code> succeeds. "
@@ -1666,11 +1887,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 ),
             },
             {
-                "title": "Step 2 — Built-in exception hierarchy",
-                "body": "All exceptions inherit from <code>BaseException</code>. Catch specific types, not everything.<div class=\"step-pre\">BaseException\n └── Exception\n      ├── ValueError\n      ├── TypeError\n      ├── FileNotFoundError\n      └── KeyError</div><p class=\"step-result\"><b>Rule:</b> catch the most specific exception you can handle.</p>",
-            },
-            {
-                "title": "Step 3 — Custom exceptions",
+                "title": "Step 5 — Custom exceptions",
                 "body": (
                     "Same <code>raise</code> / <code>except</code> machinery. "
                     "The difference is the <b>type name</b> and extra data — "
@@ -1817,7 +2034,7 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 ),
             },
             {
-                "title": "Step 4 — raise & re-raise",
+                "title": "Step 6 — raise & re-raise",
                 "body": (
                     "<code>raise</code> throws. Bare <code>raise</code> continues the "
                     "<b>same</b> error. <code>raise ... from ...</code> throws a "
@@ -2028,6 +2245,14 @@ BEGINNER_CONTENT: dict[int, dict] = {
             },
         ],
         "interview_qa": [
+            {
+                "q": "NameError vs TypeError vs ValueError?",
+                "a": (
+                    "<code>NameError</code> — name not defined (e.g. <code>z</code> never assigned). "
+                    "<code>TypeError</code> — wrong types for the operation (e.g. <code>10 + \"Hello\"</code>). "
+                    "<code>ValueError</code> — type OK, bad value (e.g. <code>int(\"Hello\")</code>)."
+                ),
+            },
             {"q": "Why not use bare except?", "a": "It catches everything including <code>KeyboardInterrupt</code> and hides the real bug. Catch specific exceptions you can handle."},
             {
                 "q": "What does raise from do?",
@@ -2285,27 +2510,418 @@ BEGINNER_CONTENT: dict[int, dict] = {
     20: {
         "steps": [
             {
-                "title": "Step 1 — threading.Thread & Lock",
-                "body": "Threads share memory within one process. Use <code>Lock</code> to prevent race conditions.<div class=\"step-pre\">import threading\n\ncounter = 0\nlock = threading.Lock()\n\ndef increment():\n    global counter\n    with lock:\n        counter += 1\n\nt = threading.Thread(target=increment)\nt.start()\nt.join()</div>",
+                "title": "Step 1 — CPU core (hardware)",
+                "body": (
+                    "Before threads: what runs code on your machine. "
+                    + csharp_compare_btn("threading-gil")
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Physical core</b> = one CPU unit on the chip that runs instructions.<br>"
+                    "<b>Logical CPU</b> = what Task Manager shows (may be 2× cores with hyperthreading).<br>"
+                    "<b>OS scheduler</b> = moves <b>threads</b> onto cores — switches very fast."
+                    "</p>"
+                    '<div class="step-pre">'
+                    "Example chip:\n"
+                    "  [Core1] [Core2] [Core3] [Core4]   ← physical cores\n"
+                    "  OS may show 8 logical CPUs\n"
+                    "\n"
+                    "Cores run work.\n"
+                    "The OS assigns threads to cores."
+                    "</div>"
+                ),
             },
             {
-                "title": "Step 2 — GIL",
-                "body": "Global Interpreter Lock — only one thread executes Python bytecode at a time in CPython.<table class=\"data-tbl\"><tr><th>Task type</th><th>Threads help?</th></tr><tr><td>I/O-bound (network, disk)</td><td class=\"cell-yes\"><span class=\"yn-yes\"></span>Yes</td></tr><tr><td>CPU-bound (math, parsing)</td><td class=\"cell-no\"><span class=\"yn-no\"></span>No — use multiprocessing</td></tr></table><p class=\"step-result\"><b>Why I/O works:</b> threads release the GIL while waiting on I/O.</p>",
+                "title": "Step 2 — Process vs thread",
+                "body": (
+                    "<b>Process</b> = one running program (own memory). "
+                    "<b>Thread</b> = one execution path inside that program (shared memory)."
+                    "<table class=\"data-tbl\">"
+                    "<tr><th></th><th>Process</th><th>Thread</th></tr>"
+                    "<tr><td><b>Memory</b></td><td>Separate</td><td>Shared in same process</td></tr>"
+                    "<tr><td><b>Start cost</b></td><td>Higher</td><td>Lower</td></tr>"
+                    "<tr><td><b>Example</b></td><td><code>python api.py</code></td>"
+                    "<td><code>threading.Thread(...)</code></td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>3 Python apps open:</b>"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "python api.py      → 1 process, 1 main thread (to start)\n"
+                    "python worker.py   → 1 process, 1 main thread\n"
+                    "python notebook    → 1 process, 1 main thread\n"
+                    "\n"
+                    "Minimum total: 3 processes, 3 threads"
+                    "</div>"
+                    '<div class="callout" style="margin-top:8px">'
+                    "<b>Quick picture (metaphor only)</b> — not literal, just to remember:<br>"
+                    "• <b>Process</b> = one whole app (separate building)<br>"
+                    "• <b>Thread</b> = one worker inside that app (same building, shared desk)<br>"
+                    "• <b>3 apps</b> = 3 buildings, each starts with one worker"
+                    "</div>"
+                ),
             },
             {
-                "title": "Step 3 — multiprocessing workaround",
-                "body": "Separate processes bypass the GIL — each has its own Python interpreter and memory.<div class=\"step-pre\">from multiprocessing import Process\n\ndef heavy(n):\n    print(sum(i*i for i in range(n)))\n\nif __name__ == \"__main__\":\n    p = Process(target=heavy, args=(1_000_000,))\n    p.start()\n    p.join()</div>",
+                "title": "Step 3 — CPython and the GIL",
+                "body": (
+                    "<b>GIL</b> (Global Interpreter Lock) = in CPython, only "
+                    "<b>one thread</b> runs <b>Python bytecode</b> at a time "
+                    "<b>per process</b>."
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "Not one thread for the whole PC — <b>one per Python process</b>. "
+                    "During <b>I/O wait</b> (network, disk), the GIL is often released "
+                    "so another thread can run."
+                    "</p>"
+                    '<div class="step-pre">'
+                    "One Python process:\n"
+                    "  Thread1, Thread2, Thread3, Thread4\n"
+                    "              ↓\n"
+                    "         [ GIL ]  ← one runs Python bytecode at a time\n"
+                    "\n"
+                    "Three separate Python apps = three processes = three GILs"
+                    "</div>"
+                    '<div class="callout" style="margin-top:8px">'
+                    "<b>Quick picture (metaphor only)</b><br>"
+                    "• One Python app = one <b>interpreter</b><br>"
+                    "• GIL = only one thread may execute Python instructions at a time in that interpreter<br>"
+                    "• Three apps = three interpreters — they can use different cores at the same time"
+                    "</div>"
+                ),
             },
             {
-                "title": "Step 4 — concurrent.futures",
-                "body": "High-level API for thread and process pools.<div class=\"step-pre\">from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor\n\nwith ThreadPoolExecutor(max_workers=4) as pool:\n    results = list(pool.map(fetch_url, urls))\n\nwith ProcessPoolExecutor() as pool:\n    results = list(pool.map(compute, big_jobs))</div>",
+                "title": "Step 4 — GIL impact: OK vs not OK",
+                "body": (
+                    "<b>Purpose of “GIL impact”:</b> decide if "
+                    "<b>threads in one process</b> help — or you need "
+                    "<b>separate processes</b>. "
+                    + csharp_compare_btn("threading-gil")
+                    + '<div class="mc-row">'
+                    '<div class="mc-col mc-good"><span class="mc-lbl">I/O-bound — OK for threads</span>'
+                    '<div class="step-pre">'
+                    "Examples: download, wait DB, read file\n"
+                    "\n"
+                    "While thread waits on network/disk:\n"
+                    "  → it releases the GIL\n"
+                    "  → another thread can run\n"
+                    "\n"
+                    "Result: waits overlap → faster overall\n"
+                    "Use: ThreadPoolExecutor / threading"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>OK</b> = threads help even with the GIL, because most time is "
+                    "<b>waiting</b>, not running Python bytecode."
+                    "</p>"
+                    "</div>"
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">CPU-bound — not OK for threads</span>'
+                    '<div class="step-pre">'
+                    "Examples: heavy math, image resize in Python\n"
+                    "\n"
+                    "Threads fight for the same GIL:\n"
+                    "  → only one runs Python at a time\n"
+                    "  → little/no speedup on multi-core\n"
+                    "\n"
+                    "Fix: separate processes (each has own GIL)\n"
+                    "Use: ProcessPoolExecutor / multiprocessing"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>not OK</b> = threads do not give true parallel Python CPU. "
+                    "Use <b>processes</b> to bypass the GIL."
+                    "</p>"
+                    "</div>"
+                    "</div>"
+                    '<table class="data-tbl">'
+                    "<tr><th></th><th>I/O-bound (OK)</th><th>CPU-bound (not OK)</th></tr>"
+                    "<tr><td><b>What the work does</b></td>"
+                    "<td>Waits on network / disk / DB</td>"
+                    "<td>Crunches numbers in Python</td></tr>"
+                    "<tr><td><b>GIL while waiting / working</b></td>"
+                    "<td>Released during wait</td>"
+                    "<td>Held during Python math</td></tr>"
+                    "<tr><td><b>Threads help?</b></td>"
+                    "<td class=\"cell-yes\">Yes</td>"
+                    "<td class=\"cell-no\">No (for speed)</td></tr>"
+                    "<tr><td><b>Use</b></td>"
+                    "<td><code>ThreadPoolExecutor</code></td>"
+                    "<td><code>ProcessPoolExecutor</code></td></tr>"
+                    "</table>"
+                    "<p class=\"step-result\">"
+                    "<b>One line:</b> waiting → threads OK · heavy Python CPU → processes."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 5 — “Threads fight for the GIL” — what actually happens",
+                "body": (
+                    "<b>No exception is raised.</b> Threads competing for the GIL just "
+                    "<b>take turns</b> — the cost is <b>time</b>, not an error. "
+                    "CPython drops the GIL about every <b>5 ms</b> "
+                    "(<code>sys.getswitchinterval()</code>), so CPU-bound threads "
+                    "interleave instead of running in parallel."
+                    '<div class="step-pre">'
+                    "4 CPU-bound threads, one process:\n"
+                    "  T1 ▓▓▓░░░░░░░░░\n"
+                    "  T2 ░░░▓▓▓░░░░░░   ← only one holds the GIL\n"
+                    "  T3 ░░░░░░▓▓▓░░░\n"
+                    "  T4 ░░░░░░░░░▓▓▓\n"
+                    "\n"
+                    "Work is serialized + switching overhead\n"
+                    "→ can be SLOWER than one thread. No error."
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>The real dangers are silent</b> — they do not look like the "
+                    "GIL at all:"
+                    "</p>"
+                    '<table class="data-tbl">'
+                    "<tr><th>Problem</th><th>What you actually see</th></tr>"
+                    "<tr><td><b>GIL contention</b></td>"
+                    "<td class=\"cell-yes\">No exception — just slow</td></tr>"
+                    "<tr><td><b>Race on shared data</b></td>"
+                    "<td class=\"cell-no\">No exception — a wrong number</td></tr>"
+                    "<tr><td><b>Deadlock</b> (two locks, opposite order)</td>"
+                    "<td class=\"cell-no\">No exception — hangs forever</td></tr>"
+                    "<tr><td>Re-acquiring a plain <code>Lock</code> in one thread</td>"
+                    "<td class=\"cell-no\">Hangs — use <code>RLock</code></td></tr>"
+                    "<tr><td>Starting the same thread twice</td>"
+                    "<td><code>RuntimeError</code>: threads can only be started once</td></tr>"
+                    "<tr><td><code>t.join()</code> on the current thread</td>"
+                    "<td><code>RuntimeError</code>: cannot join current thread</td></tr>"
+                    "</table>"
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">'
+                    "&#10060; Race — wrong result, no error</span>"
+                    '<div class="step-pre">'
+                    "from concurrent.futures import ThreadPoolExecutor\n"
+                    "\n"
+                    "counter = 0\n"
+                    "\n"
+                    "def add_one(x):\n"
+                    "    return x + 1\n"
+                    "\n"
+                    "def bump():\n"
+                    "    global counter\n"
+                    "    for _ in range(200_000):\n"
+                    "        counter = add_one(counter)  # read→call→write\n"
+                    "\n"
+                    "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "    for _ in range(4):\n"
+                    "        pool.submit(bump)\n"
+                    "\n"
+                    "print(counter)\n"
+                    "# 754453 ... 706011 ... 639330  (expected 800000)\n"
+                    "# different every run, nothing was raised"
+                    "</div></div>"
+                    '<div class="mc-col mc-good"><span class="mc-lbl">'
+                    "&#10004; Fix — a Lock, not a different pool</span>"
+                    '<div class="step-pre">'
+                    "from concurrent.futures import ThreadPoolExecutor\n"
+                    "import threading\n"
+                    "\n"
+                    "counter = 0\n"
+                    "lock = threading.Lock()\n"
+                    "\n"
+                    "def add_one(x):\n"
+                    "    return x + 1\n"
+                    "\n"
+                    "def bump():\n"
+                    "    global counter\n"
+                    "    for _ in range(200_000):\n"
+                    "        with lock:                  # whole update\n"
+                    "            counter = add_one(counter)\n"
+                    "\n"
+                    "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "    for _ in range(4):\n"
+                    "        pool.submit(bump)\n"
+                    "\n"
+                    "print(counter)   # always exactly 800000"
+                    "</div></div>"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Why <code>add_one()</code> and not plain <code>counter += 1</code>?</b> "
+                    "On CPython 3.12 the bare <code>+=</code> loop usually prints the "
+                    "<b>right</b> answer, because the GIL tends to switch at loop "
+                    "boundaries rather than mid-increment. The bug is still there — it "
+                    "just <b>hides</b>. Any call inside the read-modify-write window "
+                    "exposes it. <b>That is the scary part:</b> a race can pass every "
+                    "test on your machine and fail in production."
+                    "</p>"
+                    '<div class="callout" style="margin-top:8px">'
+                    "<b>Exceptions inside a thread do not reach <code>main</code>.</b><br>"
+                    "A raised error kills only <b>that</b> thread — Python prints it via "
+                    "<code>threading.excepthook</code> and <code>t.join()</code> still "
+                    "returns normally.<br>"
+                    "Pools are safer: the error is stored in the <code>Future</code> and "
+                    "<b>re-raised when you read the result</b>."
+                    "</div>"
+                    '<div class="step-pre">'
+                    "with ThreadPoolExecutor() as pool:\n"
+                    "    fut = pool.submit(risky)\n"
+                    "    fut.result()       # ← exception re-raised HERE\n"
+                    "\n"
+                    "# submit and never read result → swallowed silently\n"
+                    "# list(pool.map(...)) surfaces it while iterating"
+                    "</div>"
+                    "<p class=\"step-result\">"
+                    "<b>One line:</b> GIL contention costs speed, never an exception — "
+                    "races, deadlocks and swallowed thread errors are the real bugs."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 6 — Full code: ThreadPool + ProcessPool",
+                "body": (
+                    "Image resize service — full runnable pattern. "
+                    "Download = I/O (threads). Resize = CPU (processes). "
+                    + csharp_compare_btn("threading-gil")
+                    + "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>1) ThreadPoolExecutor — full download code</b> "
+                    "(GIL OK — network wait releases GIL):"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "from concurrent.futures import ThreadPoolExecutor\n"
+                    "import urllib.request\n"
+                    "\n"
+                    "def download(url):\n"
+                    "    with urllib.request.urlopen(url, timeout=10) as r:\n"
+                    "        return r.read()          # wait on network\n"
+                    "\n"
+                    "urls = [\n"
+                    "    \"http://a/img1.jpg\",\n"
+                    "    \"http://b/img2.jpg\",\n"
+                    "]\n"
+                    "\n"
+                    "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "    images = list(pool.map(download, urls))\n"
+                    "\n"
+                    "# OUTPUT\n"
+                    "# images → [bytes1, bytes2]  (downloaded concurrently)"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:8px 0;line-height:1.45\">"
+                    "<b>2) ProcessPoolExecutor — full resize code</b> "
+                    "(CPU — each worker process has its own GIL):"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "from concurrent.futures import (ProcessPoolExecutor,\n"
+                    "                                ThreadPoolExecutor)\n"
+                    "from PIL import Image\n"
+                    "import io\n"
+                    "\n"
+                    "def heavy_resize(data):        # data = one item from images\n"
+                    "    img = Image.open(io.BytesIO(data))\n"
+                    "    img = img.resize((200, 200))   # CPU pixel work\n"
+                    "    out = io.BytesIO()\n"
+                    "    img.save(out, format=\"JPEG\")\n"
+                    "    return out.getvalue()\n"
+                    "\n"
+                    "if __name__ == \"__main__\":\n"
+                    "    # 1) I/O first — threads. images = [bytes1, bytes2]\n"
+                    "    with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "        images = list(pool.map(download, urls))\n"
+                    "\n"
+                    "    # 2) then CPU — processes. Feed those bytes in.\n"
+                    "    with ProcessPoolExecutor(max_workers=4) as pool:\n"
+                    "        out = list(pool.map(heavy_resize, images))\n"
+                    "\n"
+                    "    # OUTPUT\n"
+                    "    # out → [resized1, resized2]  (CPU on multiple cores)"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>What is in <code>images</code>?</b> The list produced by block 1 — "
+                    "the <b>raw downloaded JPEG bytes</b>, one <code>bytes</code> object "
+                    "per URL. <code>pool.map</code> hands one item to each call, so "
+                    "<code>heavy_resize(data)</code> receives one image's bytes."
+                    "</p>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Why <code>if __name__ == \"__main__\"</code>?</b> "
+                    "On Windows, child processes re-import the module — "
+                    "the guard stops infinite spawn. Note the download now lives "
+                    "<b>inside</b> the guard too: at module level, all 4 children would "
+                    "re-run the downloads on import."
+                    "</p>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Why bytes and not an <code>Image</code> object?</b> Arguments are "
+                    "<b>pickled</b> and copied to the child process. Plain "
+                    "<code>bytes</code> pickle cleanly; open file handles and many "
+                    "library objects do not."
+                    "</p>"
+                    '<table class="data-tbl">'
+                    "<tr><th></th><th>ThreadPool</th><th>ProcessPool</th></tr>"
+                    "<tr><td><b>Job</b></td><td><code>download</code></td>"
+                    "<td><code>heavy_resize</code></td></tr>"
+                    "<tr><td><b>Bound</b></td><td>I/O</td><td>CPU</td></tr>"
+                    "<tr><td><b>GIL</b></td><td>OK (released while waiting)</td>"
+                    "<td>Bypassed (own GIL per process)</td></tr>"
+                    "<tr><td><b>Workers</b></td><td>Threads in one process</td>"
+                    "<td>Child processes</td></tr>"
+                    "</table>"
+                ),
+            },
+            {
+                "title": "Step 7 — Count processes/threads + Lock",
+                "body": (
+                    "<b>How many if you add pools?</b>"
+                    "<table class=\"data-tbl\">"
+                    "<tr><th>Setup</th><th>Processes</th><th>Threads</th></tr>"
+                    "<tr><td>3 apps, no pools</td><td><b>3</b></td>"
+                    "<td><b>3</b> main (one each)</td></tr>"
+                    "<tr><td>App1 + ThreadPool(4)</td><td>still <b>3</b> apps</td>"
+                    "<td>App1 ≈ <b>5</b> threads</td></tr>"
+                    "<tr><td>App2 + ProcessPool(4)</td>"
+                    "<td>App2 = <b>1 parent + 4 children</b></td>"
+                    "<td>each process has its own threads</td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Lock</b> — when threads share one variable, use "
+                    "<code>threading.Lock</code> so two threads don’t update it at the same time:"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "import threading\n"
+                    "lock = threading.Lock()\n"
+                    "\n"
+                    "with lock:\n"
+                    "    shared_counter += 1"
+                    "</div>"
+                    "<p class=\"step-result\">"
+                    "<b>Remember:</b> separate apps → separate processes · "
+                    "ThreadPool → more threads · ProcessPool → more <b>processes</b>."
+                    "</p>"
+                ),
             },
         ],
         "interview_qa": [
-            {"q": "What is the GIL?", "a": "A lock in CPython so only one thread executes Python bytecode at a time. I/O-bound tasks still benefit from threads; CPU-bound tasks need multiprocessing."},
-            {"q": "Thread vs process?", "a": "Thread: shared memory, lightweight, GIL-limited for CPU. Process: separate memory, heavier, true parallelism for CPU work."},
-            {"q": "Why if __name__ == \"__main__\" for multiprocessing?", "a": "On Windows, child processes re-import the module. Without the guard, code at module level runs again in each child — causing infinite spawn loops."},
-            {"q": "ThreadPoolExecutor vs manual threads?", "a": "Executor manages a pool, queues work, and returns futures. Cleaner than manually creating and joining many threads."},
+            {
+                "q": "What is a process vs a thread?",
+                "a": (
+                    "<b>Process</b> = one running program with its own memory. "
+                    "<b>Thread</b> = a worker inside that program; threads in the same process share memory."
+                ),
+            },
+            {
+                "q": "What is the GIL?",
+                "a": (
+                    "In CPython, only one thread runs Python bytecode at a time <b>per process</b>. "
+                    "I/O-bound work still benefits from threads. CPU-bound Python math needs "
+                    "<code>multiprocessing</code> / <code>ProcessPoolExecutor</code>."
+                ),
+            },
+            {
+                "q": "3 Python apps — how many processes?",
+                "a": (
+                    "At least <b>3</b> (one per app you started). "
+                    "<code>ProcessPoolExecutor</code> adds <b>child processes</b> on top of that."
+                ),
+            },
+            {
+                "q": "ThreadPool vs ProcessPool?",
+                "a": (
+                    "<code>ThreadPoolExecutor</code> for I/O (downloads, API calls). "
+                    "<code>ProcessPoolExecutor</code> for CPU-heavy Python work (resize, crunch numbers)."
+                ),
+            },
+            {
+                "q": "Why if __name__ == \"__main__\" for multiprocessing?",
+                "a": (
+                    "On Windows, child processes re-import the module. Without the guard, "
+                    "top-level code runs again in each child — can cause infinite spawn loops."
+                ),
+            },
         ],
     },
     26: {

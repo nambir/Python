@@ -11,6 +11,7 @@ from slide_scenarios import scenarios_for
 from slide_diagrams import diagram_for
 from slide_flowcharts import flowchart_for
 from slide_real_life import real_life_for
+from slide_visual_guides import visual_guide_for
 from slide_csharp_popups import csharp_compare_btn, render_csharp_popups
 from slide_code import _CODE_SNIPPETS, code, code_table, highlight_line, mark_important_in_step_pres, split_learn
 from slide_io import convert_input_output_pres
@@ -181,6 +182,70 @@ body.mc-row-dragging { cursor: col-resize; user-select: none; }
 .mc-bad  .mc-lbl { background: #fff5f5; color: #c53030; }
 .mc-good .mc-lbl { background: #f0fff4; color: #276749; }
 .mc-col .step-pre { margin: 0; border-radius: 0; border: none; border-top: 1px solid #e2e8f0; font-size: 11px; padding: 6px 8px; line-height: 1.5; }
+.ex-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 8px 0 10px;
+}
+.ex-row.ex-row-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.ex-row.ex-row-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.ex-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ex-title {
+  background: #2b6cb0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+.ex-code {
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 12px 10px;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  text-align: center;
+  color: #1a1a2e;
+}
+.ex-msg {
+  background: #c53030;
+  color: #fff;
+  border-radius: 4px;
+  padding: 10px 8px;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+  word-break: break-word;
+}
+.hl-path, mark.hl-path {
+  background: #fef08a;
+  color: #713f12;
+  padding: 1px 2px;
+  border-radius: 2px;
+  font-weight: 700;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.step-pre .hl-path, .step-pre mark.hl-path {
+  background: #fef08a;
+  color: #713f12;
+}
+@media (max-width: 900px) {
+  .ex-row, .ex-row.ex-row-2, .ex-row.ex-row-4 { grid-template-columns: 1fr; }
+}
 .io-split {
   display: grid;
   grid-template-columns: minmax(0, var(--io-left, 58%)) 10px minmax(0, 1fr);
@@ -276,7 +341,8 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 
 .tip { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
 .challenge { background: #e8f5e9; border-left: 3px solid #28a745; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
-.callout { background: #f0f7ff; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
+.callout { background: #f0f7ff; border-left: 3px solid #0066cc; padding: 10px 14px; border-radius: 6px; margin: 10px 0 12px; font-size: 13px; line-height: 1.55; color: #1a1a2e; }
+.callout b { color: #1a1a2e; }
 .keyword-box { background: #f8fafc; border-left: 3px solid #0066cc; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; line-height: 1.5; color: #1a1a2e; }
 .keyword-box .step-pre { margin-top: 6px; }
 
@@ -451,6 +517,396 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
   align-self: center; font-weight: 700; color: #94a3b8; font-size: 12px;
 }
 
+/* ── Rich build maps (all slides) + GIL aliases (slide 20) ── */
+.rich-diagram, .gil-diagram {
+  margin: 10px 0 14px; max-width: 760px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+  border: 1.5px solid #94a3b8; border-radius: 12px; padding: 14px 16px;
+}
+.rich-layer, .gil-layer { margin: 0; }
+.rich-layer-label, .gil-layer-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #64748b; margin-bottom: 6px;
+}
+.rich-chips, .gil-cores-row, .gil-threads {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.rich-chip, .gil-core, .gil-thread {
+  background: #1e293b; color: #e2e8f0; border-radius: 8px;
+  padding: 10px 14px; font-size: 12px; font-weight: 700; min-width: 72px; text-align: center;
+  box-shadow: 0 2px 0 #0f172a;
+}
+.gil-thread {
+  background: #e0f2fe; border: 1.5px solid #0284c7; color: #0c4a6e; box-shadow: none;
+  padding: 6px 10px; font-size: 11px; min-width: auto;
+}
+.rich-chip.rich-chip-active, .gil-thread-active {
+  background: #22c55e; border-color: #15803d; color: #fff; box-shadow: none;
+}
+.rich-chip-active span, .gil-thread-active span {
+  display: block; font-size: 9px; font-weight: 500; opacity: 0.9; margin-top: 2px;
+}
+.rich-caption, .gil-caption {
+  margin: 8px 0 0; font-size: 11px; color: #475569; text-align: center; line-height: 1.4;
+}
+.rich-out, .gil-caption-out { margin-top: 10px; font-weight: 600; color: #1e40af; }
+.rich-v-arrow, .gil-v-arrow {
+  text-align: center; color: #64748b; font-size: 20px; font-weight: 700; line-height: 1.2; margin: 4px 0;
+}
+.rich-box, .gil-process-box {
+  background: #fff; border: 2px solid #0066cc; border-radius: 10px; padding: 12px 14px;
+}
+.rich-box-title, .gil-process-title {
+  font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; text-align: center;
+}
+.rich-steps { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.rich-step {
+  display: flex; gap: 10px; align-items: baseline; background: #f8fafc;
+  border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px;
+}
+.rich-step b { font-size: 12px; color: #1a1a2e; min-width: 130px; }
+.rich-step span { font-size: 11px; color: #555; }
+.rich-gate, .gil-gil-gate {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  background: #7c2d12; color: #fff; border-radius: 10px; padding: 10px 16px;
+  max-width: 360px; margin: 10px auto 0; box-shadow: 0 2px 8px rgba(124, 45, 18, 0.3);
+}
+.rich-gate b, .gil-gil-gate b { font-size: 14px; letter-spacing: 0.06em; }
+.rich-gate span, .gil-gil-gate span { font-size: 10px; color: #fed7aa; text-align: center; line-height: 1.35; }
+.rich-choice-q, .gil-choice-q {
+  text-align: center; font-size: 13px; font-weight: 700; color: #155e75;
+  background: #ecfeff; border: 1.5px solid #0891b2; border-radius: 8px;
+  padding: 8px 12px; margin-bottom: 10px;
+}
+.rich-choice-row, .gil-choice-row {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: stretch;
+}
+.rich-choice-vs, .gil-choice-vs {
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: #94a3b8; font-size: 12px;
+}
+.rich-choice-card, .gil-choice-card {
+  background: #fff; border-radius: 10px; padding: 12px 12px 14px; text-align: center;
+  border: 2px solid #cbd5e1;
+}
+.rich-choice-card.rich-ok, .gil-choice-card.gil-ok { border-color: #16a34a; background: #f0fdf4; }
+.rich-choice-card.rich-notok, .gil-choice-card.gil-notok { border-color: #dc2626; background: #fef2f2; }
+.rich-badge, .gil-badge {
+  display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
+  border-radius: 999px; padding: 2px 8px; margin-bottom: 6px;
+}
+.rich-badge-ok, .gil-badge-ok { background: #16a34a; color: #fff; }
+.rich-badge-notok, .gil-badge-notok { background: #dc2626; color: #fff; }
+.rich-choice-card b, .gil-choice-card b { display: block; font-size: 13px; color: #1a1a2e; margin-bottom: 4px; }
+.rich-choice-card span, .gil-choice-card span { display: block; font-size: 11px; color: #555; margin-bottom: 8px; line-height: 1.35; }
+.rich-choice-card code, .gil-choice-card code {
+  display: inline-block; font-size: 11px; background: #1e293b; color: #e2e8f0;
+  padding: 4px 8px; border-radius: 6px; margin-bottom: 6px;
+}
+.rich-choice-card em, .gil-choice-card em { display: block; font-size: 10px; color: #64748b; font-style: normal; line-height: 1.35; }
+.rich-note, .gil-lock-note {
+  margin-top: 12px; background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 8px;
+  padding: 10px 12px; font-size: 12px; color: #78350f; line-height: 1.45; text-align: center;
+}
+.rich-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+.rich-tile {
+  background: #fff; border: 1.5px solid #0066cc; border-radius: 8px;
+  padding: 10px 12px; text-align: center;
+}
+.rich-tile b { display: block; font-size: 12px; color: #1a1a2e; margin-bottom: 4px; }
+.rich-tile span { display: block; font-size: 10px; color: #555; line-height: 1.35; }
+.rich-pipeline {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px;
+}
+.rich-pipeline.rich-cycle {
+  background: #faf5ff; border: 1px dashed #a855f7; border-radius: 12px; padding: 10px;
+}
+.rich-pipe-node, .rich-cycle-node {
+  background: #fff; border: 1.5px solid #0066cc; border-radius: 8px;
+  padding: 8px 12px; text-align: center; min-width: 88px;
+}
+.rich-cycle-node { border-color: #7c3aed; border-radius: 999px; }
+.rich-pipe-node b, .rich-cycle-node b { display: block; font-size: 12px; color: #1a1a2e; }
+.rich-pipe-node span, .rich-cycle-node span { display: block; font-size: 10px; color: #555; margin-top: 2px; }
+.rich-pipe-arrow { color: #64748b; font-weight: 700; font-size: 16px; }
+
+/* ── Threading & GIL Visual Guide (slide 20 — matches infographic) ── */
+.vg-title {
+  text-align: center; font-size: 18px; font-weight: 800; color: #0f172a;
+  margin: 0 0 14px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+}
+.vg-img-btn {
+  position: relative; border: 2px solid #0066cc; border-radius: 10px; padding: 3px;
+  background: #fff; cursor: pointer; line-height: 0; flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0, 102, 204, 0.25);
+}
+.vg-img-btn:hover { background: #eff6ff; border-color: #1d4ed8; }
+.vg-img-icon {
+  width: 48px; height: 32px; object-fit: cover; object-position: top center;
+  border-radius: 5px; display: block; background: #f8fafc;
+}
+.vg-img-expand {
+  position: absolute; right: -4px; bottom: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #0066cc; color: #fff; font-size: 11px; line-height: 18px;
+  text-align: center; border: 2px solid #fff; font-weight: 700;
+}
+.img-float-win {
+  width: min(1080px, 96vw) !important;
+  height: min(780px, 94vh) !important;
+  left: 28px; top: 36px;
+}
+.img-float-win .csharp-float-hdr {
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+}
+.img-float-win .csharp-float-hdr h4 { color: #1e40af; }
+.btn-img-fit {
+  border: 1px solid #93c5fd; border-radius: 4px; background: #fff;
+  color: #1e40af; font-size: 11px; font-weight: 700; padding: 3px 8px; cursor: pointer;
+}
+.btn-img-fit:hover { background: #dbeafe; }
+.csharp-float-body.csharp-float-body-img {
+  overflow-x: auto; overflow-y: auto; padding: 8px; background: #f1f5f9;
+  text-align: center;
+}
+.csharp-float-body-img img {
+  display: block; margin: 0 auto;
+  width: 100%; max-width: 100%; height: auto;
+  image-rendering: auto;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+  border-radius: 4px; background: #fff;
+}
+/* Optional: native pixels (does not scale with window) */
+.csharp-float-body-img.img-fullsize {
+  text-align: left;
+}
+.csharp-float-body-img.img-fullsize img {
+  width: var(--native-w, 1536px); max-width: none; height: auto;
+}
+
+/* ── Visual guide poster strip (under Definition) ── */
+.vguide-strip {
+  display: flex; align-items: center; gap: 14px;
+  margin: 10px 0 14px; padding: 10px 12px; max-width: 760px;
+  background: #f8fafc; border: 1.5px solid #94a3b8; border-radius: 10px;
+}
+.vguide-thumb {
+  position: relative; flex-shrink: 0; display: block; line-height: 0;
+  border: 2px solid #0066cc; border-radius: 8px; padding: 3px; background: #fff;
+  text-decoration: none; box-shadow: 0 1px 4px rgba(0, 102, 204, 0.2);
+}
+.vguide-thumb:hover { background: #eff6ff; border-color: #1d4ed8; }
+.vguide-thumb img {
+  display: block; width: 132px; height: auto; border-radius: 4px; background: #fff;
+}
+.vguide-expand {
+  position: absolute; right: -6px; bottom: -6px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #0066cc; color: #fff; font-size: 12px; line-height: 20px;
+  text-align: center; border: 2px solid #fff; font-weight: 700;
+}
+.vguide-txt { min-width: 0; }
+.vguide-txt b { display: block; font-size: 13px; color: #1e3a5f; margin-bottom: 3px; }
+.vguide-txt span { display: block; font-size: 11.5px; color: #475569; line-height: 1.45; }
+.btn-vguide-win {
+  margin-top: 7px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+  border: 1px solid #0066cc; border-radius: 5px; background: #eff6ff;
+  color: #1e40af; cursor: pointer;
+}
+.btn-vguide-win:hover { background: #dbeafe; }
+@media (max-width: 700px) {
+  .vguide-strip { flex-direction: column; align-items: flex-start; }
+}
+.vg-guide {
+  margin: 10px 0 16px; max-width: 920px;
+  background: #fff; border: 1.5px solid #cbd5e1; border-radius: 12px;
+  padding: 14px 16px 18px; font-size: 13px; color: #1a1a2e;
+}
+.vg-guide-float {
+  max-width: none; margin: 0; border: none; border-radius: 0; padding: 4px 6px 16px;
+  font-size: 13.5px; line-height: 1.5;
+}
+.vg-float-banner {
+  margin: 0 0 12px; padding: 8px 10px; text-align: center;
+  background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 8px;
+  color: #065f46; font-size: 12px; font-weight: 600;
+}
+.vg-guide-float .vg-sec-h { font-size: 15px; }
+.vg-guide-float .vg-lead { font-size: 13px; }
+.vg-guide-float .vg-tbl { font-size: 12px; }
+.vg-guide-float .vg-code pre { font-size: 12px; line-height: 1.45; }
+.vg-sec { margin-bottom: 16px; }
+.vg-sec-h {
+  font-size: 14px; font-weight: 800; color: #1e3a5f; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.vg-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%; background: #0066cc; color: #fff;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.vg-lead { margin: 0 0 8px; font-size: 12px; color: #475569; line-height: 1.45; }
+.vg-chip-box {
+  background: #eff6ff; border: 2px solid #3b82f6; border-radius: 10px; padding: 12px;
+}
+.vg-chip-title { font-weight: 700; text-align: center; margin-bottom: 10px; color: #1e40af; font-size: 13px; }
+.vg-phys-row, .vg-logic-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;
+}
+.vg-phys {
+  background: #bfdbfe; border: 1.5px solid #2563eb; border-radius: 8px;
+  padding: 8px; text-align: center; font-weight: 700; font-size: 11px; color: #1e3a8a;
+}
+.vg-phys small { font-weight: 500; opacity: 0.85; }
+.vg-logic-pair { display: flex; gap: 4px; justify-content: center; }
+.vg-logic {
+  background: #fef08a; border: 1.5px solid #ca8a04; border-radius: 6px;
+  padding: 6px 8px; font-size: 10px; font-weight: 700; color: #854d0e; flex: 1; text-align: center;
+}
+.vg-sched {
+  margin-top: 8px; background: #f3e8ff; border: 1.5px solid #9333ea; border-radius: 8px;
+  padding: 8px 12px; text-align: center;
+}
+.vg-sched b { display: block; color: #6b21a8; font-size: 12px; }
+.vg-sched span { font-size: 11px; color: #7e22ce; }
+.vg-tbl {
+  width: 100%; border-collapse: collapse; margin: 8px 0 10px; font-size: 11px;
+}
+.vg-tbl th, .vg-tbl td {
+  border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; vertical-align: top;
+}
+.vg-tbl th { background: #f1f5f9; color: #334155; font-weight: 700; }
+.vg-td-lab { font-weight: 800; white-space: nowrap; }
+.vg-lab-proc { background: #dbeafe; color: #1e40af; }
+.vg-lab-thr { background: #dcfce7; color: #166534; }
+.vg-tbl-num .vg-total td { background: #fff7ed; font-weight: 600; }
+.vg-tbl-sm { font-size: 10px; }
+.vg-two {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.vg-three {
+  display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr; gap: 10px; align-items: start;
+}
+.vg-panel {
+  background: #f8fafc; border: 1.5px solid #94a3b8; border-radius: 10px; padding: 10px;
+}
+.vg-panel-h {
+  font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 8px;
+  padding-bottom: 4px; border-bottom: 1px solid #e2e8f0;
+}
+.vg-h-io { color: #166534; border-bottom-color: #86efac; }
+.vg-h-cpu { color: #9a3412; border-bottom-color: #fdba74; }
+.vg-proc-box {
+  background: #eff6ff; border: 1.5px solid #3b82f6; border-radius: 8px; padding: 10px;
+}
+.vg-proc-box > b { color: #1e40af; }
+.vg-proc-box > span { font-size: 10px; color: #64748b; }
+.vg-main-thr {
+  margin: 8px 0; background: #22c55e; color: #fff; border-radius: 6px;
+  padding: 6px 10px; font-weight: 700; text-align: center; font-size: 11px;
+}
+.vg-thr-row, .vg-thr-ring {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0;
+}
+.vg-thr {
+  background: #dcfce7; border: 1.5px solid #16a34a; border-radius: 6px;
+  padding: 6px 8px; font-size: 10px; font-weight: 700; color: #14532d; text-align: center;
+}
+.vg-thr small { display: block; font-weight: 500; opacity: 0.85; }
+.vg-shared {
+  margin-top: 6px; font-size: 10px; color: #475569; text-align: center;
+  background: #fff; border-radius: 4px; padding: 4px;
+}
+.vg-apps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.vg-app {
+  background: #eff6ff; border: 1.5px solid #3b82f6; border-radius: 8px;
+  padding: 8px; text-align: center;
+}
+.vg-app b { display: block; font-size: 11px; color: #1e40af; }
+.vg-app code { display: block; font-size: 9px; margin: 4px 0; }
+.vg-app-proc {
+  background: #dbeafe; border-radius: 4px; padding: 4px; font-size: 10px; font-weight: 700; color: #1e3a8a;
+}
+.vg-app-proc small { display: block; font-weight: 500; }
+.vg-foot { margin: 8px 0 0; font-size: 11px; color: #475569; text-align: center; line-height: 1.4; }
+.vg-gil-center { text-align: center; }
+.vg-gil-lock {
+  display: inline-block; background: #dc2626; color: #fff; border-radius: 10px;
+  padding: 10px 18px; font-size: 14px; font-weight: 800; margin: 4px 0 8px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+}
+.vg-callout-y {
+  background: #fef9c3; border: 1.5px solid #ca8a04; border-radius: 8px;
+  padding: 8px 10px; font-size: 11px; color: #713f12; line-height: 1.4;
+}
+.vg-cores4 {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
+.vg-core-card {
+  background: #eff6ff; border: 1.5px solid #3b82f6; border-radius: 8px;
+  padding: 8px 6px; text-align: center;
+}
+.vg-core-card.vg-idle { background: #f1f5f9; border-color: #94a3b8; }
+.vg-core-lab { font-weight: 800; font-size: 11px; color: #1e40af; margin-bottom: 4px; }
+.vg-mini-proc { font-size: 9px; color: #334155; margin-bottom: 4px; }
+.vg-gil-sm {
+  background: #dc2626; color: #fff; border-radius: 4px; padding: 3px 4px;
+  font-size: 9px; font-weight: 800; margin-bottom: 4px;
+}
+.vg-runner {
+  background: #fff; border: 1px solid #93c5fd; border-radius: 4px;
+  padding: 3px; font-size: 8px; color: #1e40af;
+}
+.vg-idle-txt { font-size: 10px; color: #64748b; margin-top: 16px; font-weight: 600; }
+.vg-io { border-color: #16a34a; background: #f0fdf4; }
+.vg-cpu { border-color: #ea580c; background: #fff7ed; }
+.vg-ex { margin: 0 0 8px; font-size: 11px; color: #555; }
+.vg-timeline { display: flex; flex-direction: column; gap: 6px; }
+.vg-tl-row { display: flex; align-items: center; gap: 6px; }
+.vg-tl-row > span { font-weight: 800; font-size: 10px; width: 20px; color: #166534; }
+.vg-bar {
+  flex: 1; display: flex; border-radius: 4px; overflow: hidden; font-size: 9px; font-weight: 700;
+}
+.vg-bar i { font-style: normal; padding: 4px 2px; text-align: center; }
+.vg-req { background: #86efac; color: #14532d; flex: 1; }
+.vg-wait { background: #bbf7d0; color: #166534; flex: 2; }
+.vg-done { background: #22c55e; color: #fff; flex: 1; }
+.vg-parallel { display: flex; flex-direction: column; gap: 6px; }
+.vg-par { display: flex; align-items: center; gap: 6px; }
+.vg-par > span { font-weight: 800; font-size: 10px; width: 20px; color: #9a3412; }
+.vg-cpu-bar {
+  flex: 1; background: #f97316; color: #fff; border-radius: 4px;
+  padding: 5px; text-align: center; font-size: 10px; font-weight: 800;
+}
+.vg-code-col { display: flex; flex-direction: column; gap: 8px; }
+.vg-code {
+  border-radius: 8px; overflow: hidden; border: 1.5px solid #64748b;
+}
+.vg-code-io { border-color: #16a34a; }
+.vg-code-cpu { border-color: #ea580c; }
+.vg-code-lab {
+  font-size: 10px; font-weight: 800; padding: 4px 8px; color: #fff;
+}
+.vg-code-io .vg-code-lab { background: #16a34a; }
+.vg-code-cpu .vg-code-lab { background: #ea580c; }
+.vg-code pre {
+  margin: 0; padding: 8px 10px; background: #0f172a; color: #e2e8f0;
+  font-size: 10px; line-height: 1.4; overflow-x: auto; white-space: pre;
+  font-family: Consolas, "Courier New", monospace;
+}
+.vg-pick ul { margin: 0 0 0 16px; padding: 0; }
+.vg-pick li { margin-bottom: 8px; font-size: 11px; line-height: 1.4; color: #334155; }
+@media (max-width: 900px) {
+  .vg-two, .vg-three, .vg-cores4, .vg-apps3, .vg-phys-row, .vg-logic-row {
+    grid-template-columns: 1fr;
+  }
+  .vg-logic-row { grid-template-columns: 1fr 1fr; }
+}
+
 .real-life {
   margin: 10px 0 12px; padding: 10px 12px;
   background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 0 6px 6px 0;
@@ -550,6 +1006,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   .nav-section-5 .nav-links { column-count: 1; }
   .flow-compare, .cdiag-compare { grid-template-columns: 1fr; }
   .cdiag-compare-vs { display: none; }
+  .rich-choice-row, .gil-choice-row { grid-template-columns: 1fr; }
+  .rich-choice-vs, .gil-choice-vs { display: none; }
   .panel-code { position: static; }
   .vs-editor { max-height: 50vh; }
   .nav-bar { padding: 0 16px; }
@@ -619,6 +1077,9 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .csharp-float-body {
   padding: 14px 16px 22px; font-size: 12px; font-weight: 400; line-height: 1.5; color: #1a1a2e;
   overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0;
+}
+.csharp-float-body.csharp-float-body-img {
+  overflow-x: auto; overflow-y: auto; padding: 8px; background: #f1f5f9; text-align: center;
 }
 .csharp-float-resize {
   position: absolute; right: 0; bottom: 0; width: 28px; height: 28px;
@@ -1085,6 +1546,29 @@ function closeCsharpPop(id) { closeCsharpWin(id); }
 function closeAllCsharpWins() {
   document.querySelectorAll('.csharp-float-win.open').forEach(el => el.classList.remove('open'));
 }
+
+function openImgPop(id) {
+  openCsharpWin(id === 'gil-guide' ? 'gil-guide-img' : id);
+}
+function closeImgPop(id) {
+  closeCsharpWin(id === 'gil-guide' ? 'gil-guide-img' : id);
+}
+function toggleImgFloatFit(btn) {
+  const win = btn.closest('.csharp-float-win');
+  if (!win) return;
+  const body = win.querySelector('.csharp-float-body-img');
+  if (!body) return;
+  const full = body.classList.toggle('img-fullsize');
+  /* Fit (default) = scales with window; 100% = fixed native pixels */
+  btn.textContent = full ? '100%' : 'Fit';
+  btn.title = full
+    ? 'Native size (fixed) — scroll to pan'
+    : 'Image fits the window and resizes with it';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  closeAllCsharpWins();
+});
 
 function initCsharpFloatWindows() {
   document.querySelectorAll('.csharp-float-win').forEach(win => {
@@ -1640,17 +2124,18 @@ def topic_intro(n):
         )
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><div class="def-block">{meta["definition"]}</div>')
-        # Decision flowchart sits right under Definition (all week slides)
-        parts.append(flowchart_for(n))
-        # Diagram sits after flowchart, then glossary and real-life example
+        # Poster thumbnail, then the build map (Slide 20 reference layout)
+        parts.append(visual_guide_for(n))
         if n == 1:
             parts.append(python_vs_csharp_flow())
         parts.append(diagram_for(n))
+        parts.append(flowchart_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
     else:
-        parts.append(flowchart_for(n))
+        parts.append(visual_guide_for(n))
         parts.append(diagram_for(n))
+        parts.append(flowchart_for(n))
         parts.append(glossary_for(n))
         parts.append(real_life_for(n))
     steps = beginner.get("steps", [])
@@ -5715,7 +6200,7 @@ except RuntimeError as e:
 '''),
 
 (20, "Threading &amp; GIL", '''
-<div class="callout"><b>GIL:</b> Global Interpreter Lock — only one thread runs Python bytecode at a time. Good for I/O-bound tasks; use multiprocessing for CPU-bound work.</div>
+<div class="callout"><b>Build order:</b> CPU core → process vs thread → CPython GIL (per process) → I/O vs CPU → ThreadPool / ProcessPool. Metaphor boxes on the slide are pictures only — steps use exact terms.</div>
 ''' + code('''import threading
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import time
