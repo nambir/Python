@@ -45,14 +45,30 @@ VISUAL_GUIDES: dict[int, tuple[str, str, int]] = {
     35: ("images/slide-35-csharp-vs-python.png", "C# vs Python Reference", 1536),
 }
 
+# Extra posters rendered below the main guide, in order.
+EXTRA_GUIDES: dict[int, list[tuple[str, str, int]]] = {
+    20: [
+        (
+            "images/slide-20-threading-full.jpg",
+            "Threading & GIL &mdash; Cores, Processes & Pools",
+            1536,
+        ),
+    ],
+}
+
 
 def visual_guide_for(n: int) -> str:
-    """Thumbnail strip + detached float window for slide n (empty if none)."""
+    """Thumbnail strips + detached float windows for slide n (empty if none)."""
     entry = VISUAL_GUIDES.get(n)
     if not entry:
         return ""
-    src, label, native_w = entry
-    win_id = f"vguide-{n}"
+    blocks = [_guide_block(f"vguide-{n}", *entry)]
+    for i, extra in enumerate(EXTRA_GUIDES.get(n, []), start=2):
+        blocks.append(_guide_block(f"vguide-{n}-{i}", *extra))
+    return "".join(blocks)
+
+
+def _guide_block(win_id: str, src: str, label: str, native_w: int) -> str:
     title = f"{label} &ndash; Visual Guide"
     return f'''
 <div class="vguide-strip">

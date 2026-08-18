@@ -6239,6 +6239,51 @@ print(results)
 
 # CPU-bound heavy math → use ProcessPoolExecutor instead''') + '''
 
+<h3>Purposes of <code>if __name__ == "__main__"</code></h3>
+<div class="callout"><b>It asks one question:</b> &ldquo;am I the program being run, or am I a module being imported?&rdquo; Python sets <code>__name__</code>; the guard only reads it. Guarding <code>ProcessPoolExecutor</code> (row 4) is the one case where leaving it out is a <b>bug</b> &mdash; the step-by-step above walks through that failure. The other rows are what make a file reusable.</div>
+<table class="data-tbl">
+<tr><th>#</th><th>Purpose</th><th>What goes wrong without it</th><th>Where the code goes</th></tr>
+<tr><td>1</td><td><b>One file, two roles</b> &mdash; importable module <i>and</i> runnable script</td><td>Importing the file executes its entire program body</td><td><code>if __name__ == "__main__": demo()</code></td></tr>
+<tr><td>2</td><td><b>Program entry point</b> &mdash; CLI, <code>argparse</code>, <code>sys.argv</code></td><td>Startup logic runs at import time, before the caller is ready</td><td><code>main()</code> called from the guard</td></tr>
+<tr><td>3</td><td><b>Test-friendly imports</b> &mdash; <code>pytest</code> imports modules to collect tests</td><td>Collection runs your program: slow imports, log files written, ports bound</td><td>Setup inside <code>main()</code>, not at module level</td></tr>
+<tr><td>4</td><td><b>Multiprocessing / <code>ProcessPoolExecutor</code></b> &mdash; <b>mandatory</b> on Windows &amp; macOS (<code>spawn</code>)</td><td>Each child re-imports the file and re-runs the pool: <code>RuntimeError</code> in the child, then <code>BrokenProcessPool</code> in the parent</td><td>Create pools inside the guard</td></tr>
+<tr><td>5</td><td><b>Self-demo / smoke test</b> at the bottom of a module</td><td>Nothing breaks &mdash; this one is a benefit you gain, not a bug you avoid</td><td><code>python module1.py</code> to try that module alone</td></tr>
+<tr><td>6</td><td><b><code>python -m package</code></b> support through <code>__main__.py</code></td><td>No runnable package entry point &mdash; this is how <code>python -m pytest</code> and <code>python -m http.server</code> work</td><td>Guard inside the package&rsquo;s <code>__main__.py</code></td></tr>
+<tr><td>7</td><td><b>Servers that import your app module</b> &mdash; uvicorn reloader and workers</td><td>Each worker import starts another server inside itself</td><td><code>uvicorn.run(app)</code> inside the guard</td></tr>
+<tr><td>8</td><td><b>Frozen executables</b> (PyInstaller)</td><td>Runaway process spawning when the <code>.exe</code> starts</td><td><code>multiprocessing.freeze_support()</code> first inside the guard</td></tr>
+</table>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>What <code>__name__</code> holds, by how the file is used:</b></p>
+<table class="data-tbl">
+<tr><th>How the file is used</th><th><code>__name__</code> is</th><th>Guarded block runs?</th></tr>
+<tr><td><code>python module1.py</code> &mdash; you launched it</td><td><code>"__main__"</code></td><td>&#10004; yes</td></tr>
+<tr><td><code>from module1 import add</code> &mdash; imported</td><td><code>"module1"</code></td><td>&#10060; no</td></tr>
+<tr><td>re-imported inside a multiprocessing child</td><td><code>"__mp_main__"</code></td><td>&#10060; no</td></tr>
+<tr><td><code>python -m mypkg</code> &mdash; the package&rsquo;s <code>__main__.py</code></td><td><code>"__main__"</code></td><td>&#10004; yes</td></tr>
+</table>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Purpose 1 in your own workspace</b> &mdash; <code>MyModules/index.py</code> does <code>from module1 import add</code>, so every top-level line of <code>module1.py</code> runs during that import:</p>
+<div class="mc-row">
+  <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; module1.py &mdash; demo at module level</span><div class="step-pre">message = "hello sir"
+
+def add(x, y):
+    return x + y
+
+print(add(1, 2))        # program body, unguarded
+
+# python module1.py  → 3
+# python index.py    → 3   ← leaked from the import
+#                      3   ← index.py's own line</div></div>
+  <div class="mc-col mc-good"><span class="mc-lbl">&#10004; module1.py &mdash; demo guarded</span><div class="step-pre">message = "hello sir"
+
+def add(x, y):
+    return x + y
+
+if __name__ == "__main__":
+    print(add(1, 2))    # only when run directly
+
+# python module1.py  → 3
+# python index.py    → 3   ← just index.py's own line</div></div>
+</div>
+<div class="callout"><b>Rule of thumb:</b> a module should <b>define</b> things when imported and <b>do</b> things only when run. Anything that prints, writes, connects, listens or spawns belongs inside the guard &mdash; usually as a one-line <code>main()</code> call.</div>
 
 <h3>Common mistakes</h3>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; using threads for CPU-bound tasks (GIL blocks parallelism)</span><span class="mistake-desc">The GIL allows only one thread to execute Python bytecode at a time. Threads do <b>not</b> speed up CPU-bound work.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">from threading import Thread

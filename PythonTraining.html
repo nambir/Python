@@ -13405,6 +13405,40 @@ except ValidationError:
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
 </div>
 
+<div class="vguide-strip">
+  <a class="vguide-thumb" href="images/slide-20-threading-full.jpg" target="_blank" rel="noopener noreferrer"
+    title="Open the full-size poster in a new tab">
+    <img src="images/slide-20-threading-full.jpg" alt="Threading & GIL &mdash; Cores, Processes & Pools visual guide poster" loading="lazy" decoding="async">
+    <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
+  </a>
+  <div class="vguide-txt">
+    <b>Visual guide &mdash; Threading & GIL &mdash; Cores, Processes & Pools</b>
+    <span>One-page poster: 6 build steps with diagrams, tables and code.
+      Click the thumbnail to open it full size in a new tab.</span>
+    <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-20-2')">
+      Open in resizable window
+    </button>
+  </div>
+</div>
+<div class="csharp-float-win img-float-win" id="csharp-win-vguide-20-2" role="dialog"
+  aria-labelledby="csharp-win-title-vguide-20-2">
+  <div class="csharp-float-hdr">
+    <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
+    <h4 id="csharp-win-title-vguide-20-2">Threading & GIL &mdash; Cores, Processes & Pools &ndash; Visual Guide</h4>
+    <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
+      title="Image fits the window (scales when you resize)">Fit</button>
+    <button type="button" class="csharp-float-close"
+      onclick="closeCsharpWin('vguide-20-2')" aria-label="Close">&times;</button>
+  </div>
+  <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
+    <a href="images/slide-20-threading-full.jpg" target="_blank" rel="noopener noreferrer"
+      title="Open full-size image in a new tab">
+      <img src="images/slide-20-threading-full.jpg" alt="Threading & GIL &mdash; Cores, Processes & Pools visual guide poster" loading="lazy" decoding="async">
+    </a>
+  </div>
+  <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
+</div>
+
 <div class="vg-guide">
   <div class="vg-title">Threading &amp; GIL (CPython) – Visual Guide</div>
 
@@ -13864,11 +13898,139 @@ urls = [
         out = <mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(heavy_resize, images))
 
     <mark class="hl-key"># OUTPUT</mark>
-    <span class="t-cm"># out → [resized1, resized2]  (CPU on multiple cores)</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What is in <code>images</code>?</b> The list produced by block 1 — the <b>raw downloaded JPEG bytes</b>, one <code>bytes</code> object per URL. <code>pool.map</code> hands one item to each call, so <code>heavy_resize(data)</code> receives one image's bytes.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why <code>if __name__ == "__main__"</code>?</b> On Windows, child processes re-import the module — the guard stops infinite spawn. Note the download now lives <b>inside</b> the guard too: at module level, all 4 children would re-run the downloads on import.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why bytes and not an <code>Image</code> object?</b> Arguments are <b>pickled</b> and copied to the child process. Plain <code>bytes</code> pickle cleanly; open file handles and many library objects do not.</p><table class="data-tbl"><tr><th></th><th>ThreadPool</th><th>ProcessPool</th></tr><tr><td><b>Job</b></td><td><code>download</code></td><td><code>heavy_resize</code></td></tr><tr><td><b>Bound</b></td><td>I/O</td><td>CPU</td></tr><tr><td><b>GIL</b></td><td>OK (released while waiting)</td><td>Bypassed (own GIL per process)</td></tr><tr><td><b>Workers</b></td><td>Threads in one process</td><td>Child processes</td></tr></table></li><li><b>Step 7 — Count processes/threads + Lock</b><br><b>How many if you add pools?</b><table class="data-tbl"><tr><th>Setup</th><th>Processes</th><th>Threads</th></tr><tr><td>3 apps, no pools</td><td><b>3</b></td><td><b>3</b> main (one each)</td></tr><tr><td>App1 + ThreadPool(4)</td><td>still <b>3</b> apps</td><td>App1 ≈ <b>5</b> threads</td></tr><tr><td>App2 + ProcessPool(4)</td><td>App2 = <b>1 parent + 4 children</b></td><td>each process has its own threads</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Lock</b> — when threads share one variable, use <code>threading.Lock</code> so two threads don’t update it at the same time:</p><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
+    <span class="t-cm"># out → [resized1, resized2]  (CPU on multiple cores)</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>What is in <code>images</code>?</b> The list produced by block 1 — the <b>raw downloaded JPEG bytes</b>, one <code>bytes</code> object per URL. <code>pool.map</code> hands one item to each call, so <code>heavy_resize(data)</code> receives one image's bytes.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why <code>if __name__ == "__main__"</code>?</b> On Windows, child processes re-import the module — the guard stops infinite spawn. Note the download now lives <b>inside</b> the guard too: at module level, all 4 children would re-run the downloads on import.</p><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>Side by side — same pool, one line moved.</b> A child process starts by <b>importing your file</b>, so every top-level statement runs again inside that child.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; No guard &mdash; pool at module level</span><div class="step-pre"><span class="t-cm"># job.py</span>
+<mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
+
+<mark class="hl-key">def</mark> work(n):
+    <mark class="hl-key">return</mark> n * n
+
+<mark class="hl-key">print</mark>("loading job.py")      <span class="t-cm"># side effect</span>
+<mark class="hl-key">with</mark> ProcessPoolExecutor(4) <mark class="hl-key">as</mark> pool:
+    <mark class="hl-key">print</mark>(<mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(work, [1, 2, 3, 4])))
+
+<mark class="hl-key"># OUTPUT (Windows / macOS)</mark>
+<span class="t-cm"># loading job.py        ← you</span>
+<span class="t-cm"># loading job.py        ← child re-import!</span>
+<span class="t-cm"># RuntimeError: An attempt has been made to</span>
+<span class="t-cm">#   start a new process before the current</span>
+<span class="t-cm">#   process has finished its bootstrapping</span>
+<span class="t-cm">#   phase     ← raised inside the child</span>
+<span class="t-cm"># BrokenProcessPool: A process in the process</span>
+<span class="t-cm">#   pool was terminated abruptly</span>
+<span class="t-cm">#             ← how your script finally dies</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Guarded &mdash; pool inside <code>__main__</code></span><div class="step-pre"><span class="t-cm"># job.py</span>
+<mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
+
+<mark class="hl-key">def</mark> work(n):
+    <mark class="hl-key">return</mark> n * n
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">print</mark>("loading job.py")  <span class="t-cm"># runs once</span>
+    <mark class="hl-key">with</mark> ProcessPoolExecutor(4) <mark class="hl-key">as</mark> pool:
+        <mark class="hl-key">print</mark>(<mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(work, [1, 2, 3, 4])))
+
+<mark class="hl-key"># OUTPUT</mark>
+<span class="t-cm"># loading job.py</span>
+<span class="t-cm"># [1, 4, 9, 16]</span>
+<span class="t-cm">#   ← each worker re-imports job.py to get</span>
+<span class="t-cm">#     work(), skips the guard, then runs work()</span></div></div></div><div class="callout" style="margin-top:8px"><b>What <code>__name__</code> actually holds.</b> In the process <b>you</b> launched (<code>python job.py</code>) it is <code>"__main__"</code>, so the guarded block runs. In each child process the same file is imported under the name <code>"__mp_main__"</code> — so <code>__name__ == "__main__"</code> is <code>False</code>, the guarded block is skipped, and only <code>import</code>/<code>def</code>/<code>class</code> lines execute.</div><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>“Children import defs only, then run <code>work()</code>” — the life of one worker.</b> A worker is a <b>brand-new, empty</b> <code>python.exe</code>: it has none of your functions, so it has to load your file before it can run anything.</p><ul class="learn-steps" style="margin:4px 0 8px"><li><b>1. Parent sends a name, not code.</b> <code>pool.map(work, [1, 2, 3, 4])</code> pickles the <b>reference</b> <code>__mp_main__.work</code> plus each argument. The body of <code>work</code> is never shipped.</li><li><b>2. Windows starts a fresh interpreter</b> per worker (<code>spawn</code>) — empty memory, no <code>work</code> yet.</li><li><b>3. The worker imports your file — “defs only”.</b> It runs <code>job.py</code> top to bottom under the name <code>__mp_main__</code>. The <code>import</code> lines and <code>def work</code> execute, so <code>work</code> now exists. The <code>if __name__ == "__main__"</code> block is <b>skipped</b>, so the prints, the downloads and the pool itself do not re-run.</li><li><b>4. Then it runs <code>work()</code>.</b> The worker resolves the pickled name in the module it just imported, calls <code>work(1)</code>, and pickles the return value back to the parent.</li></ul><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>See it yourself — real console output, without vs with the guard.</b> One <code>print</code> at module level (fires on every import) and one inside <code>work</code> (fires only when a task runs). Same 2-worker pool in both columns:</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; No guard &mdash; nothing gets done</span><div class="step-pre"><mark class="hl-key">import</mark> os
+<mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
+
+<mark class="hl-key">print</mark>(f"[import] __name__={__name__!r} "
+      f"pid={os.getpid()}")
+
+<mark class="hl-key">def</mark> work(n):
+    <mark class="hl-key">return</mark> f"[task] n={n} pid={os.getpid()}"
+
+<mark class="hl-key">with</mark> ProcessPoolExecutor(2) <mark class="hl-key">as</mark> pool:      <span class="t-cm"># module level</span>
+    <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> pool.<mark class="hl-key">map</mark>(work, [1, 2]):
+        <mark class="hl-key">print</mark>(line)
+
+<mark class="hl-key"># OUTPUT (Windows)</mark>
+<span class="t-cm"># [import] __name__='__main__'    pid=29760  ← you</span>
+<span class="t-cm"># [import] __name__='__mp_main__' pid=68316  ← worker 1</span>
+<span class="t-cm"># RuntimeError: An attempt has been made to start</span>
+<span class="t-cm">#   a new process before the current process has</span>
+<span class="t-cm">#   finished its bootstrapping phase</span>
+<span class="t-cm">#            ← worker 1 re-ran the pool and died</span>
+<span class="t-cm"># [import] __name__='__mp_main__' pid=32564  ← worker 2</span>
+<span class="t-cm"># RuntimeError: ...same crash in worker 2</span>
+<span class="t-cm"># BrokenProcessPool: A process in the process pool</span>
+<span class="t-cm">#   was terminated abruptly while the future was</span>
+<span class="t-cm">#   running or pending</span>
+<span class="t-cm">#            ← what YOUR script finally dies with</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># NOT ONE [task] line → zero work done</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Guarded &mdash; both items processed</span><div class="step-pre"><mark class="hl-key">import</mark> os
+<mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
+
+<mark class="hl-key">print</mark>(f"[import] __name__={__name__!r} "
+      f"pid={os.getpid()}")
+
+<mark class="hl-key">def</mark> work(n):
+    <mark class="hl-key">return</mark> f"[task] n={n} pid={os.getpid()}"
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":               <span class="t-cm"># guarded</span>
+    <mark class="hl-key">with</mark> ProcessPoolExecutor(2) <mark class="hl-key">as</mark> pool:
+        <mark class="hl-key">for</mark> line <mark class="hl-key">in</mark> pool.<mark class="hl-key">map</mark>(work, [1, 2]):
+            <mark class="hl-key">print</mark>(line)
+
+<mark class="hl-key"># OUTPUT (Windows)</mark>
+<span class="t-cm"># [import] __name__='__main__'    pid=748    ← you</span>
+<span class="t-cm"># [import] __name__='__mp_main__' pid=47364  ← worker 1</span>
+<span class="t-cm"># [import] __name__='__mp_main__' pid=31248  ← worker 2</span>
+<span class="t-cm">#            ← each worker imported defs only</span>
+<span class="t-cm"># [task] n=1 pid=47364</span>
+<span class="t-cm"># [task] n=2 pid=47364</span>
+<span class="t-cm">#            ← work() ran in a worker process</span>
+<span class="t-cm">#</span>
+<span class="t-cm"># no error, exit code 0</span></div></div></div><div class="callout" style="margin-top:4px"><b>The surprise in that output:</b> <code>[import]</code> prints <b>3 times in both columns</b>. The guard does <b>not</b> stop the re-import — the worker always re-imports your file. What the guard stops is the <b>re-run of your program body</b>. Without it, the child re-runs <code>ProcessPoolExecutor(...)</code> itself, tries to spawn grandchildren mid-import, and is killed; the parent then reports <code>BrokenProcessPool</code>.</div><table class="data-tbl"><tr><th>In the output above</th><th>&#10060; No guard</th><th>&#10004; Guarded</th></tr><tr><td><code>[import]</code> lines (the re-import)</td><td>3 — you + 2 workers</td><td>3 — you + 2 workers (<b>same</b>)</td></tr><tr><td>Pool created inside the child?</td><td>yes → <code>RuntimeError</code></td><td>no — guard skips it</td></tr><tr><td><code>[task]</code> lines (actual work)</td><td><b>0</b></td><td><b>2</b>, on worker pids</td></tr><tr><td>How the script ends</td><td><code>BrokenProcessPool</code>, exit code 1</td><td>clean, exit code 0</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45">Note the pids in the guarded run: every <code>[task]</code> line shows a <b>worker</b> pid, never yours — the real work happens in the children. Both items landed on worker 1 here simply because it was free again before the second item was handed out.</p><div class="callout" style="margin-top:4px"><b>Consequence of “a name, not code”.</b> The worker must be able to find <code>work</code> after importing your file, so the target must be a <b>top-level</b> <code>def</code>. A <code>lambda</code>, a function nested inside another function, or an instance method of an unpicklable object fails with <code>PicklingError: Can't pickle &lt;function &lt;lambda&gt;&gt;: attribute lookup &lt;lambda&gt; on __main__ failed</code> — pickle looked for the name and there was nothing to find.</div><table class="data-tbl"><tr><th>Behaviour</th><th>&#10060; Without guard</th><th>&#10004; With guard</th></tr><tr><td><b>What each child re-runs on import</b></td><td>every top-level line — prints, downloads, and the <code>ProcessPoolExecutor</code> itself</td><td>only <code>import</code> and <code>def</code>/<code>class</code></td></tr><tr><td><b>Starting the pool</b></td><td><code>RuntimeError</code> in each child, then <code>BrokenProcessPool</code> in the parent (runaway spawn in a frozen <code>.exe</code>)</td><td>starts cleanly</td></tr><tr><td><b>Side effects</b> (downloads, DB writes, logs)</td><td>repeated once per child — 4 workers = 4 extra downloads</td><td>run once, in the parent</td></tr><tr><td><b>Windows / macOS</b> (<code>spawn</code> start method)</td><td>broken</td><td>works</td></tr><tr><td><b>Linux</b> (<code>fork</code> start method)</td><td>often appears to work — hides the bug until you ship to Windows</td><td>works, and stays portable</td></tr><tr><td><b><code>import job</code> from a test or another module</b></td><td>the pool spins up during the import</td><td>nothing runs — you import, then call what you need</td></tr><tr><td><b>Threads only</b> (no <code>ProcessPool</code>)</td><td>guard not required — threads share the process, no re-import</td><td>harmless, and still the habit to keep</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Benefit in one sentence:</b> the guard separates <b>“this file is being imported”</b> from <b>“this program is starting”</b> — child processes get your functions without re-running your program. C# gets this for free: <code>static void Main()</code> is the entry point, and a new process never re-imports your assembly.</p><div class="callout" style="margin-top:4px"><b>Not only for pools.</b> The guard asks one question — <i>“am I the program being run, or am I being imported?”</i> — and pools are just the case where getting it wrong <b>crashes</b>. The three you will use daily:<br>1. <b>One file, two roles</b> — importable module <i>and</i> runnable script, so <code>import job</code> does not execute your program.<br>2. <b>Entry point</b> — <code>main()</code>, argparse and <code>sys.argv</code> live in the guard, not at module level.<br>3. <b>Test-friendly imports</b> — <code>pytest</code> imports your module to collect tests; without the guard, collection runs your program.<br><span style="font-size:11px">Full list — including <code>python -m</code>, uvicorn workers and frozen <code>.exe</code> files — in <b>“Purposes of <code>if __name__ == "__main__"</code>”</b> further down this slide.</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why bytes and not an <code>Image</code> object?</b> Arguments are <b>pickled</b> and copied to the child process. Plain <code>bytes</code> pickle cleanly; open file handles and many library objects do not.</p><table class="data-tbl"><tr><th></th><th>ThreadPool</th><th>ProcessPool</th></tr><tr><td><b>Job</b></td><td><code>download</code></td><td><code>heavy_resize</code></td></tr><tr><td><b>Bound</b></td><td>I/O</td><td>CPU</td></tr><tr><td><b>GIL</b></td><td>OK (released while waiting)</td><td>Bypassed (own GIL per process)</td></tr><tr><td><b>Workers</b></td><td>Threads in one process</td><td>Child processes</td></tr></table></li><li><b>Step 7 — Count processes/threads + Lock</b><br><b>How many if you add pools?</b><div class="callout"><b>Two rules do all the counting.</b><br><b>1.</b> Every command you launch — <code>python api.py</code> — is <b>one process</b>, and a process always starts with <b>exactly one thread</b>, its <code>MainThread</code>. So <b>3 apps = 3 processes = 3 threads</b>. That is where the “3” comes from: you counted the commands, not anything Python did.<br><b>2.</b> A <b>ThreadPool adds threads inside</b> the process it was created in (process count unchanged). A <b>ProcessPool adds whole new processes</b>, and each of those brings its own <code>MainThread</code> and its own GIL.</div><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Count it step by step.</b> Say you launched <code>python api.py</code> (App1), <code>python worker.py</code> (App2) and <code>python notebook.py</code> (App3). Running totals for the whole machine:</p><table class="data-tbl"><tr><th>Step</th><th>App1</th><th>App2</th><th>App3</th><th>Total processes</th><th>Total threads</th></tr><tr><td><b>a.</b> 3 apps, no pools</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td><b>3</b></td><td><b>3</b></td></tr><tr><td><b>b.</b> App1 adds <code>ThreadPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · <b>5</b> threads<br>(1 main + 4 workers)</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>still <b>3</b><br>(threads are not processes)</td><td><b>7</b> = 5 + 1 + 1</td></tr><tr><td><b>c.</b> App2 also adds <code>ProcessPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · 5 threads</td><td><b>5</b> procs · <b>7</b> threads<br>parent: 3 · each child: 1</td><td>1 proc · 1 thread</td><td><b>7</b> = 1 + 5 + 1</td><td><b>13</b> = 5 + 7 + 1</td></tr></table><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Measured on Windows / Python 3.12</b> — one app, printing <code>threading.enumerate()</code> at each stage:</p><div class="step-pre">1. at start                    pid=48900 threads=1
+   ['MainThread']
+
+2. inside ThreadPool(4)        pid=48900 threads=5
+   ['MainThread', 'ThreadPoolExecutor-0_0',
+    'ThreadPoolExecutor-0_1', 'ThreadPoolExecutor-0_2',
+    'ThreadPoolExecutor-0_3']      ← 1 main + 4 workers
+
+3. after ThreadPool closed     pid=48900 threads=1
+   ['MainThread']                 ← workers are gone
+
+4. inside ProcessPool(4)       pid=48900 threads=3
+   ['MainThread', 'QueueFeederThread', 'Thread-1']
+   child processes: 4 [31428, 42412, 16184, 64140]
+   each child: threads=1 ['MainThread']</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Where App2’s 7 threads come from.</b> The 4 children are separate <code>python.exe</code> processes, each doing your work on its single <code>MainThread</code> — that is 4. The parent has 3: its <code>MainThread</code> plus two helpers Python created for you — <code>QueueFeederThread</code> pickles arguments and writes them into the pipe, and the executor’s manager thread reads results back and completes your <code>Future</code> objects. 4 + 3 = 7.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why the old table said “≈ 5”.</b> <code>max_workers=4</code> is a <b>ceiling</b>, not a reservation — <code>ThreadPoolExecutor</code> creates one thread per submitted task until it hits the ceiling. Submit only 2 tasks and you measure <b>3</b> threads (<code>['MainThread', 'ThreadPoolExecutor-0_0', 'ThreadPoolExecutor-0_1']</code>). Leave the <code>with</code> block and you are back to 1. Libraries can also add their own threads, so treat 5 as “main + up to 4”.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Sanity check in Task Manager:</b> step <b>c</b> shows <b>7</b> <code>python.exe</code> entries — App1, App3, App2’s parent and App2’s 4 children. Threads never appear there as separate entries; they are inside one entry, which is exactly the difference between the two columns.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Lock</b> — when threads share one variable, use <code>threading.Lock</code> so two threads don’t update it at the same time:</p><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
 lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
 
 <mark class="hl-key">with</mark> lock:
-    shared_counter += 1</div><p class="step-result"><b>Remember:</b> separate apps → separate processes · ThreadPool → more threads · ProcessPool → more <b>processes</b>.</p></li></ul>
+    shared_counter += 1</div><p class="step-result"><b>Remember:</b> separate apps → separate processes · ThreadPool → more threads · ProcessPool → more <b>processes</b>.</p></li><li><b>Step 8 — threading.Thread vs ThreadPoolExecutor</b><br>Both run <b>threads</b> in <b>one process</b>, so the GIL rules from Step 3 are identical — good for I/O, no help for CPU. The difference is <b>who does the bookkeeping</b>: with <code>threading.Thread</code> you create, start, join and collect results yourself; <code>ThreadPoolExecutor</code> is a managed pool that hands you <b>return values</b>.<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">threading.Thread &mdash; manual, no return value</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
+
+results = []                  <span class="t-cm"># shared state</span>
+
+<mark class="hl-key">def</mark> fetch(url):
+    results.append(download(url))   <span class="t-cm"># can't return</span>
+
+threads = [<mark class="hl-key">threading</mark>.<mark class="hl-key">Thread</mark>(target=fetch, args=(u,))
+           <mark class="hl-key">for</mark> u <mark class="hl-key">in</mark> urls]     <span class="t-cm"># 1 thread per URL</span>
+<mark class="hl-key">for</mark> t <mark class="hl-key">in</mark> threads:
+    t.start()
+<mark class="hl-key">for</mark> t <mark class="hl-key">in</mark> threads:
+    t.join()                  <span class="t-cm"># forget this → results</span>
+                              <span class="t-cm"># is still incomplete</span>
+<mark class="hl-key">print</mark>(results)                <span class="t-cm"># completion order,</span>
+                              <span class="t-cm"># not URL order</span>
+<span class="t-cm"># an error inside fetch: that thread dies, the</span>
+<span class="t-cm"># traceback is printed, join() still looks fine</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">ThreadPoolExecutor &mdash; managed, returns values</span><div class="step-pre"><mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ThreadPoolExecutor
+
+<mark class="hl-key">def</mark> fetch(url):
+    <mark class="hl-key">return</mark> download(url)      <span class="t-cm"># just return</span>
+
+<mark class="hl-key">with</mark> ThreadPoolExecutor(max_workers=4) <mark class="hl-key">as</mark> pool:
+    results = <mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(fetch, urls))
+    <span class="t-cm"># 4 threads reused for 100 URLs</span>
+<span class="t-cm"># leaving the with block joins everything</span>
+
+<mark class="hl-key">print</mark>(results)                <span class="t-cm"># same order as urls</span>
+
+<span class="t-cm"># an error inside fetch is stored in the Future</span>
+<span class="t-cm"># and re-raised where you read the result</span></div></div></div><table class="data-tbl"><tr><th></th><th><code>threading.Thread</code></th><th><code>ThreadPoolExecutor</code></th></tr><tr><td><b>Threads created</b></td><td>one per task — 100 tasks = <b>100 threads</b>, each with its own stack</td><td><code>max_workers</code> at most, <b>reused</b> for every task</td></tr><tr><td><b>Getting a result</b></td><td>no return value — append to a shared <code>list</code> or <code>queue.Queue</code></td><td><code>return</code> it: <code>future.result()</code> or <code>pool.map(...)</code></td></tr><tr><td><b>Result order</b></td><td>whatever finishes first</td><td><code>map</code> keeps <b>input order</b>; <code>as_completed</code> gives finish order when you want it</td></tr><tr><td><b>Errors</b></td><td>kill that thread only — printed via <code>threading.excepthook</code>, and <code>join()</code> still returns normally, so bugs pass silently</td><td>stored in the <code>Future</code> and <b>re-raised</b> when you read <code>.result()</code></td></tr><tr><td><b>Waiting</b></td><td>you <code>.join()</code> every thread yourself</td><td>the <code>with</code> block joins on exit</td></tr><tr><td><b>Timeout / cancel</b></td><td>nothing built in</td><td><code>result(timeout=5)</code>, <code>future.cancel()</code></td></tr><tr><td><b>Best for</b></td><td>one <b>long-lived</b> background thread — a listener loop, a poller, a <code>daemon=True</code> helper that runs for the life of the app</td><td><b>batches of short tasks</b> that return values — downloads, API calls, DB reads</td></tr></table><div class="callout"><b>Rule of thumb:</b> if the work has an <b>end and a result</b>, use the pool. If it is a <b>service that keeps running</b>, use <code>threading.Thread(daemon=True)</code> — a pool expects tasks to finish, and its <code>with</code> block will not exit until they do.</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Same idea in C#:</b> <code>new Thread(...).Start()</code> is the manual version; <code>Task.Run</code> hands work to the managed <code>ThreadPool</code>, and <code>await Task.WhenAll(tasks)</code> is the <code>pool.map</code> equivalent that gives you the results back.</p><p class="step-result"><b>One line:</b> <code>Thread</code> = you run a thread · <code>ThreadPoolExecutor</code> = you submit work and get results, errors included.</p></li></ul>
 <h3>Python keywords — deeper look</h3>
 <div class="keyword-box"><b>Process</b> = one running program (own memory).<br><b>Thread</b> = worker inside one process (shared memory).</div>
 <div class="keyword-box"><b>GIL impact:</b> <b>OK</b> = I/O wait (threads release GIL) · <b>not OK</b> = heavy Python CPU (use processes).</div>
@@ -13891,6 +14053,51 @@ lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
 <div class="callout"><b>Build order:</b> CPU core → process vs thread → CPython GIL (per process) → I/O vs CPU → ThreadPool / ProcessPool. Metaphor boxes on the slide are pictures only — steps use exact terms.</div>
 
 
+<h3>Purposes of <code>if __name__ == "__main__"</code></h3>
+<div class="callout"><b>It asks one question:</b> &ldquo;am I the program being run, or am I a module being imported?&rdquo; Python sets <code>__name__</code>; the guard only reads it. Guarding <code>ProcessPoolExecutor</code> (row 4) is the one case where leaving it out is a <b>bug</b> &mdash; the step-by-step above walks through that failure. The other rows are what make a file reusable.</div>
+<table class="data-tbl">
+<tr><th>#</th><th>Purpose</th><th>What goes wrong without it</th><th>Where the code goes</th></tr>
+<tr><td>1</td><td><b>One file, two roles</b> &mdash; importable module <i>and</i> runnable script</td><td>Importing the file executes its entire program body</td><td><code>if __name__ == "__main__": demo()</code></td></tr>
+<tr><td>2</td><td><b>Program entry point</b> &mdash; CLI, <code>argparse</code>, <code>sys.argv</code></td><td>Startup logic runs at import time, before the caller is ready</td><td><code>main()</code> called from the guard</td></tr>
+<tr><td>3</td><td><b>Test-friendly imports</b> &mdash; <code>pytest</code> imports modules to collect tests</td><td>Collection runs your program: slow imports, log files written, ports bound</td><td>Setup inside <code>main()</code>, not at module level</td></tr>
+<tr><td>4</td><td><b>Multiprocessing / <code>ProcessPoolExecutor</code></b> &mdash; <b>mandatory</b> on Windows &amp; macOS (<code>spawn</code>)</td><td>Each child re-imports the file and re-runs the pool: <code>RuntimeError</code> in the child, then <code>BrokenProcessPool</code> in the parent</td><td>Create pools inside the guard</td></tr>
+<tr><td>5</td><td><b>Self-demo / smoke test</b> at the bottom of a module</td><td>Nothing breaks &mdash; this one is a benefit you gain, not a bug you avoid</td><td><code>python module1.py</code> to try that module alone</td></tr>
+<tr><td>6</td><td><b><code>python -m package</code></b> support through <code>__main__.py</code></td><td>No runnable package entry point &mdash; this is how <code>python -m pytest</code> and <code>python -m http.server</code> work</td><td>Guard inside the package&rsquo;s <code>__main__.py</code></td></tr>
+<tr><td>7</td><td><b>Servers that import your app module</b> &mdash; uvicorn reloader and workers</td><td>Each worker import starts another server inside itself</td><td><code>uvicorn.run(app)</code> inside the guard</td></tr>
+<tr><td>8</td><td><b>Frozen executables</b> (PyInstaller)</td><td>Runaway process spawning when the <code>.exe</code> starts</td><td><code>multiprocessing.freeze_support()</code> first inside the guard</td></tr>
+</table>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>What <code>__name__</code> holds, by how the file is used:</b></p>
+<table class="data-tbl">
+<tr><th>How the file is used</th><th><code>__name__</code> is</th><th>Guarded block runs?</th></tr>
+<tr><td><code>python module1.py</code> &mdash; you launched it</td><td><code>"__main__"</code></td><td>&#10004; yes</td></tr>
+<tr><td><code>from module1 import add</code> &mdash; imported</td><td><code>"module1"</code></td><td>&#10060; no</td></tr>
+<tr><td>re-imported inside a multiprocessing child</td><td><code>"__mp_main__"</code></td><td>&#10060; no</td></tr>
+<tr><td><code>python -m mypkg</code> &mdash; the package&rsquo;s <code>__main__.py</code></td><td><code>"__main__"</code></td><td>&#10004; yes</td></tr>
+</table>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Purpose 1 in your own workspace</b> &mdash; <code>MyModules/index.py</code> does <code>from module1 import add</code>, so every top-level line of <code>module1.py</code> runs during that import:</p>
+<div class="mc-row">
+  <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; module1.py &mdash; demo at module level</span><div class="step-pre">message = "hello sir"
+
+<mark class="hl-key">def</mark> add(x, y):
+    <mark class="hl-key">return</mark> x + y
+
+<mark class="hl-key">print</mark>(add(1, 2))        <span class="t-cm"># program body, unguarded</span>
+
+<span class="t-cm"># python module1.py  → 3</span>
+<span class="t-cm"># python index.py    → 3   ← leaked from the import</span>
+<span class="t-cm">#                      3   ← index.py's own line</span></div></div>
+  <div class="mc-col mc-good"><span class="mc-lbl">&#10004; module1.py &mdash; demo guarded</span><div class="step-pre">message = "hello sir"
+
+<mark class="hl-key">def</mark> add(x, y):
+    <mark class="hl-key">return</mark> x + y
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">print</mark>(add(1, 2))    <span class="t-cm"># only when run directly</span>
+
+<span class="t-cm"># python module1.py  → 3</span>
+<span class="t-cm"># python index.py    → 3   ← just index.py's own line</span></div></div>
+</div>
+<div class="callout"><b>Rule of thumb:</b> a module should <b>define</b> things when imported and <b>do</b> things only when run. Anything that prints, writes, connects, listens or spawns belongs inside the guard &mdash; usually as a one-line <code>main()</code> call.</div>
 
 <h3>Common mistakes</h3>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; using threads for CPU-bound tasks (GIL blocks parallelism)</span><span class="mistake-desc">The GIL allows only one thread to execute Python bytecode at a time. Threads do <b>not</b> speed up CPU-bound work.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">from</mark> <mark class="hl-key">threading</mark> <mark class="hl-key">import</mark> <mark class="hl-key">Thread</mark>
@@ -14004,7 +14211,7 @@ lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is a process vs a thread?</p><p class="qa-a"><b>A:</b> <b>Process</b> = one running program with its own memory. <b>Thread</b> = a worker inside that program; threads in the same process share memory.</p><p class="qa-q"><b>Q:</b> What is the GIL?</p><p class="qa-a"><b>A:</b> In CPython, only one thread runs Python bytecode at a time <b>per process</b>. I/O-bound work still benefits from threads. CPU-bound Python math needs <code>multiprocessing</code> / <code>ProcessPoolExecutor</code>.</p><p class="qa-q"><b>Q:</b> 3 Python apps — how many processes?</p><p class="qa-a"><b>A:</b> At least <b>3</b> (one per app you started). <code>ProcessPoolExecutor</code> adds <b>child processes</b> on top of that.</p><p class="qa-q"><b>Q:</b> ThreadPool vs ProcessPool?</p><p class="qa-a"><b>A:</b> <code>ThreadPoolExecutor</code> for I/O (downloads, API calls). <code>ProcessPoolExecutor</code> for CPU-heavy Python work (resize, crunch numbers).</p><p class="qa-q"><b>Q:</b> Why if __name__ == "__main__" for multiprocessing?</p><p class="qa-a"><b>A:</b> On Windows, child processes re-import the module. Without the guard, top-level code runs again in each child — can cause infinite spawn loops.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is a process vs a thread?</p><p class="qa-a"><b>A:</b> <b>Process</b> = one running program with its own memory. <b>Thread</b> = a worker inside that program; threads in the same process share memory.</p><p class="qa-q"><b>Q:</b> What is the GIL?</p><p class="qa-a"><b>A:</b> In CPython, only one thread runs Python bytecode at a time <b>per process</b>. I/O-bound work still benefits from threads. CPU-bound Python math needs <code>multiprocessing</code> / <code>ProcessPoolExecutor</code>.</p><p class="qa-q"><b>Q:</b> 3 Python apps — how many processes?</p><p class="qa-a"><b>A:</b> At least <b>3</b> (one per app you started). <code>ProcessPoolExecutor</code> adds <b>child processes</b> on top of that.</p><p class="qa-q"><b>Q:</b> ThreadPool vs ProcessPool?</p><p class="qa-a"><b>A:</b> <code>ThreadPoolExecutor</code> for I/O (downloads, API calls). <code>ProcessPoolExecutor</code> for CPU-heavy Python work (resize, crunch numbers).</p><p class="qa-q"><b>Q:</b> threading.Thread vs ThreadPoolExecutor?</p><p class="qa-a"><b>A:</b> Both are threads in one process, so the GIL applies equally. <code>Thread</code> is manual — one thread per task, no return value, and you <code>join()</code> them yourself; an error just kills that thread. <code>ThreadPoolExecutor</code> reuses a fixed number of workers, returns values through <code>Future</code>/<code>map</code>, joins on <code>with</code> exit, and <b>re-raises</b> errors when you read the result. Use <code>Thread</code> for a long-lived background service, the pool for batches of short tasks.</p><p class="qa-q"><b>Q:</b> Why if __name__ == "__main__" for multiprocessing?</p><p class="qa-a"><b>A:</b> On Windows, child processes re-import the module. Without the guard, top-level code runs again in each child — can cause infinite spawn loops.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
