@@ -6444,6 +6444,15 @@ asyncio.run(main())
 # - asyncio.run() starts the event loop
 # - Use async for I/O (HTTP, DB), not CPU-heavy math''') + '''
 <div class="tip">Use async for I/O-bound concurrency (HTTP, DB, files). Do not use for CPU-heavy work — use multiprocessing instead.</div>
+<div class="callout"><b><code>async with</code> — the async twin of <code>with</code>.</b> Async resources (an <code>aiohttp.ClientSession</code>, an async DB session, <code>asyncio.Lock</code>) need cleanup that itself has to <code>await</code>, so they implement <code>__aenter__</code>/<code>__aexit__</code> instead of <code>__enter__</code>/<code>__exit__</code> and you write <code>async with</code>:
+<div class="step-pre">async with aiohttp.ClientSession() as session:      # __aenter__
+    async with session.get(url) as resp:            # nested is normal
+        data = await resp.json()
+# __aexit__ awaited here — connections returned to the pool
+
+async with lock:            # asyncio.Lock, not threading.Lock
+    shared += 1</div>
+Same promise as <code>with</code>: the cleanup runs even if the body raises. Using plain <code>with</code> on an async resource fails with <code>TypeError: 'ClientSession' object does not support the context manager protocol</code>. The protocol and the full use-case list are on <b>Slide 26 &mdash; Context Manager</b>.</div>
 
 
 <h3>Common mistakes</h3>
@@ -6997,6 +7006,7 @@ csv_file = root / "pandas" / "titanic.csv"
 print(csv_file.exists())
 print(list(Path("Projects").glob("*.py")))  # all .py files''') + '''
 
+<div class="callout"><b>Why every example uses <code>with open(...)</code>:</b> <code>with</code> is the context-manager protocol &mdash; <code>__exit__</code> closes the handle even if the body raises, so you never leak a file descriptor. Two consequences to remember: the file is <b>closed after the block</b>, so never <code>return f</code> from inside one (reading it later gives <code>ValueError: I/O operation on closed file.</code>), and you can open several at once with <code>with open(a) as src, open(b, "w") as dst:</code>. The protocol itself, plus <code>ExitStack</code> and the full list of use cases, is on <b>Slide 26 &mdash; Context Manager</b>.</div>
 
 <h3>Common mistakes</h3>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; opening files without <code>with</code></span><span class="mistake-desc">Without <code>with</code>, the file stays open if an exception occurs before the explicit <code>.close()</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">f = open("data.txt")
@@ -7120,6 +7130,81 @@ class Managed:
 with Managed() as m:
     print("  working")''') + '''
 
+<h3>What <code>with</code> actually does</h3>
+<div class="callout"><b>One promise:</b> <code>with</code> guarantees a <b>pair</b> &mdash; setup, then cleanup &mdash; and the cleanup runs even if the body raises, <code>return</code>s or <code>break</code>s. Everything below is a variation on that one promise.</div>
+<div class="mc-row">
+  <div class="mc-col mc-good"><span class="mc-lbl">What you write</span><div class="step-pre">with open("f.txt") as f:
+    data = f.read()
+    process(data)          # may raise</div></div>
+  <div class="mc-col mc-bad"><span class="mc-lbl">What Python runs (the <code>try/finally</code> you skipped)</span><div class="step-pre">mgr = open("f.txt")
+f = type(mgr).__enter__(mgr)
+try:
+    data = f.read()
+    process(data)
+except:
+    # __exit__ is TOLD about the exception:
+    # returns True  → swallow it
+    # returns False → re-raise it
+    if not type(mgr).__exit__(mgr, *sys.exc_info()):
+        raise
+else:
+    type(mgr).__exit__(mgr, None, None, None)</div></div>
+</div>
+<p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Three details that explain most behaviour:</b> the methods are looked up on the <b>type</b>, not the instance (so patching an attribute on the object does nothing); <code>__exit__</code> <b>receives the exception</b>, which is how a transaction decides commit vs rollback; and the <code>as</code> name holds whatever <code>__enter__</code> <b>returns</b> &mdash; often <code>self</code>, but not always (<code>session.begin()</code> and <code>lock</code> hand back something else or nothing useful).</p>
+
+<h3>When to use <code>with</code> &mdash; use cases</h3>
+<div class="callout"><b>The signal to look for:</b> a <b>strict pair</b> &mdash; acquire/release, open/close, begin/commit-or-rollback, set/restore, start/stop, patch/unpatch. If the second half must happen <b>even when the body fails</b>, that is a <code>with</code>.</div>
+<table class="data-tbl">
+<tr><th>Use case</th><th>Example</th><th>What <code>__exit__</code> does for you</th></tr>
+<tr><td><b>Files &amp; archives</b></td><td><code>with open(p, encoding="utf-8") as f:</code> &middot; <code>zipfile.ZipFile</code> &middot; <code>tarfile.open</code></td><td>Closes the handle &mdash; no leaked file descriptors <i>(Slide 25)</i></td></tr>
+<tr><td><b>Locks</b></td><td><code>with lock:</code> &mdash; <code>Lock</code>, <code>RLock</code>, <code>Semaphore</code></td><td>Releases the lock even if the body raises &mdash; this is how you avoid a deadlock <i>(Slide 20)</i></td></tr>
+<tr><td><b>Thread &amp; process pools</b></td><td><code>with ThreadPoolExecutor(4) as pool:</code></td><td>Calls <code>shutdown(wait=True)</code> &mdash; waits for the tasks, then the worker threads are gone <i>(Slide 20, Step 7)</i></td></tr>
+<tr><td><b>Connections</b></td><td>sockets &middot; <code>subprocess.Popen</code> &middot; HTTP sessions &middot; DB cursors</td><td>Closes the connection, reaps the child process</td></tr>
+<tr><td><b>DB transactions</b></td><td><code>with session.begin():</code> (SQLAlchemy)</td><td><b>Commits</b> on success, <b>rolls back</b> on exception &mdash; it knows which, because <code>__exit__</code> was told <i>(Slide 28)</i></td></tr>
+<tr><td><b>Temporary state</b></td><td><code>tempfile.TemporaryDirectory()</code> &middot; <code>decimal.localcontext()</code> &middot; <code>warnings.catch_warnings()</code> &middot; <code>contextlib.chdir()</code> (3.11+)</td><td>Restores the old state / deletes the temp files</td></tr>
+<tr><td><b>Tests</b></td><td><code>with pytest.raises(ValueError):</code> &middot; <code>with mock.patch("app.api") as m:</code></td><td>Un-patches even when the assertion fails, so one test cannot leak into the next <i>(Slide 23)</i></td></tr>
+<tr><td><b><code>contextlib</code> helpers</b></td><td><code>suppress(FileNotFoundError)</code> &middot; <code>redirect_stdout(buf)</code> &middot; <code>closing(obj)</code></td><td>Ready-made managers &mdash; nothing to write yourself</td></tr>
+<tr><td><b>Timing / instrumentation</b></td><td>your own <code>with timer("load"):</code> (left panel)</td><td>Stops the clock and logs it, even on error</td></tr>
+<tr><td><b>Async resources</b></td><td><code>async with aiohttp.ClientSession() as s:</code> &middot; <code>async with lock:</code></td><td>Same contract, via <code>__aenter__</code>/<code>__aexit__</code> <i>(Slide 21)</i></td></tr>
+</table>
+
+<h3>Several resources at once</h3>
+<div class="step-pre"># two managers on one line — src is still closed if opening dst fails
+with open("in.csv") as src, open("out.csv", "w") as dst:
+    dst.write(src.read())
+
+# Python 3.10+ — parenthesised, one per line
+with (
+    open("in.csv") as src,
+    open("out.csv", "w") as dst,
+):
+    dst.write(src.read())
+
+# number of resources known only at runtime → ExitStack
+from contextlib import ExitStack
+
+with ExitStack() as stack:
+    files = [stack.enter_context(open(p)) for p in paths]
+    merge(files)
+# every file closes on the way out, in reverse order</div>
+
+<h3>Gotchas &amp; when <i>not</i> to use it</h3>
+<table class="data-tbl">
+<tr><th>Trap</th><th>What you see</th><th>Do this instead</th></tr>
+<tr><td>Returning the resource out of the block</td><td><code>ValueError: I/O operation on closed file.</code></td><td>Return the <b>data</b>, or let the caller own the <code>with</code></td></tr>
+<tr><td>Expecting <code>with</code> to create a scope</td><td>The <code>as</code> name still exists after the block &mdash; just closed</td><td>Nothing to fix; simply do not use it afterwards</td></tr>
+<tr><td>The resource must outlive the block</td><td>A DB engine, connection pool or background service has no natural end</td><td>Build it at startup, close it at shutdown (or keep an <code>ExitStack</code> for app lifetime)</td></tr>
+<tr><td>The object is not a context manager</td><td><code>TypeError: 'Plain' object does not support the context manager protocol</code></td><td><code>contextlib.closing(obj)</code>, or plain <code>try/finally</code></td></tr>
+<tr><td><code>__exit__</code> returning <code>True</code> &ldquo;to be safe&rdquo;</td><td>Every error in the block disappears silently</td><td>Return <code>False</code>/<code>None</code>; suppress only chosen types &mdash; see Mistake 1 below</td></tr>
+</table>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>C# equivalent</b> &mdash; same idea, different keyword:</p>
+<table class="data-tbl">
+<tr><th>Python</th><th>C#</th></tr>
+<tr><td><code>with obj as x:</code> &mdash; <code>__enter__</code> / <code>__exit__</code></td><td><code>using</code> / <code>using var</code> &mdash; <code>IDisposable.Dispose()</code></td></tr>
+<tr><td><code>async with obj:</code> &mdash; <code>__aenter__</code> / <code>__aexit__</code></td><td><code>await using</code> &mdash; <code>IAsyncDisposable</code></td></tr>
+<tr><td><code>with lock:</code></td><td><code>lock (obj) { ... }</code></td></tr>
+<tr><td><code>@contextmanager</code> generator</td><td>a small <code>IDisposable</code> class, or <code>try/finally</code> inline</td></tr>
+</table>
 
 <h3>Common mistakes</h3>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 1 &mdash; <code>__exit__</code> returning <code>True</code> suppresses ALL exceptions</span><span class="mistake-desc">If <code>__exit__</code> returns <code>True</code>, any exception raised in the <code>with</code> block is silently swallowed.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">class SuppressAll:
