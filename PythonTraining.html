@@ -13855,7 +13855,33 @@ lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
     <mark class="hl-key">for</mark> _ <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(4):
         pool.submit(bump)
 
-<mark class="hl-key">print</mark>(counter)   <span class="t-cm"># always exactly 800000</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why <code>add_one()</code> and not plain <code>counter += 1</code>?</b> On CPython 3.12 the bare <code>+=</code> loop usually prints the <b>right</b> answer, because the GIL tends to switch at loop boundaries rather than mid-increment. The bug is still there — it just <b>hides</b>. Any call inside the read-modify-write window exposes it. <b>That is the scary part:</b> a race can pass every test on your machine and fail in production.</p><div class="callout" style="margin-top:8px"><b>Exceptions inside a thread do not reach <code>main</code>.</b><br>A raised error kills only <b>that</b> thread — Python prints it via <code>threading.excepthook</code> and <code>t.join()</code> still returns normally.<br>Pools are safer: the error is stored in the <code>Future</code> and <b>re-raised when you read the result</b>.</div><div class="step-pre"><mark class="hl-key">with</mark> ThreadPoolExecutor() <mark class="hl-key">as</mark> pool:
+<mark class="hl-key">print</mark>(counter)   <span class="t-cm"># always exactly 800000</span></div></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Rule:</b> put the lock <b>where you write shared data</b> (the read → modify → write), <b>not</b> where you <code>pool.submit(...)</code>. Submit only queues work — workers race later.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Wrong lock — around submit</span><div class="step-pre">lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
+
+<mark class="hl-key">def</mark> bump():
+    <mark class="hl-key">global</mark> counter
+    <mark class="hl-key">for</mark> _ <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(200_000):
+        counter = add_one(counter)  <span class="t-cm"># STILL a race</span>
+
+<mark class="hl-key">with</mark> ThreadPoolExecutor(max_workers=4) <mark class="hl-key">as</mark> pool:
+    <mark class="hl-key">for</mark> _ <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(4):
+        <mark class="hl-key">with</mark> lock:           <span class="t-cm"># only protects enqueue</span>
+            pool.submit(bump)
+
+<mark class="hl-key">print</mark>(counter)
+<span class="t-cm"># still wrong / different every run</span>
+<span class="t-cm"># lock released before bump() runs on workers</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Why wrong:</b> <code>submit</code> returns immediately. The lock covers only “put job in queue,” not the later writes to <code>counter</code>.</p></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Proper lock — around the write</span><div class="step-pre">lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
+
+<mark class="hl-key">def</mark> bump():
+    <mark class="hl-key">global</mark> counter
+    <mark class="hl-key">for</mark> _ <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(200_000):
+        <mark class="hl-key">with</mark> lock:           <span class="t-cm"># protect the write</span>
+            counter = add_one(counter)
+
+<mark class="hl-key">with</mark> ThreadPoolExecutor(max_workers=4) <mark class="hl-key">as</mark> pool:
+    <mark class="hl-key">for</mark> _ <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(4):
+        pool.submit(bump)   <span class="t-cm"># no lock here</span>
+
+<mark class="hl-key">print</mark>(counter)   <span class="t-cm"># always exactly 800000</span></div><p style="font-size:11px;margin:6px 8px;line-height:1.4"><b>Why right:</b> each worker locks only for the shared update. Lock lives next to the data write, on the thread that does it.</p></div></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why <code>add_one()</code> and not plain <code>counter += 1</code>?</b> On CPython 3.12 the bare <code>+=</code> loop usually prints the <b>right</b> answer, because the GIL tends to switch at loop boundaries rather than mid-increment. The bug is still there — it just <b>hides</b>. Any call inside the read-modify-write window exposes it. <b>That is the scary part:</b> a race can pass every test on your machine and fail in production.</p><div class="callout" style="margin-top:8px"><b>Exceptions inside a thread do not reach <code>main</code>.</b><br>A raised error kills only <b>that</b> thread — Python prints it via <code>threading.excepthook</code> and <code>t.join()</code> still returns normally.<br>Pools are safer: the error is stored in the <code>Future</code> and <b>re-raised when you read the result</b>.</div><div class="step-pre"><mark class="hl-key">with</mark> ThreadPoolExecutor() <mark class="hl-key">as</mark> pool:
     fut = pool.submit(risky)
     fut.result()       <span class="t-cm"># ← exception re-raised HERE</span>
 

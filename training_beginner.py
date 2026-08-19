@@ -2734,6 +2734,62 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "</div></div>"
                     "</div>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "<b>Rule:</b> put the lock <b>where you write shared data</b> "
+                    "(the read → modify → write), <b>not</b> where you "
+                    "<code>pool.submit(...)</code>. Submit only queues work — "
+                    "workers race later."
+                    "</p>"
+                    '<div class="mc-row">'
+                    '<div class="mc-col mc-bad"><span class="mc-lbl">'
+                    "&#10060; Wrong lock — around submit</span>"
+                    '<div class="step-pre">'
+                    "lock = threading.Lock()\n"
+                    "\n"
+                    "def bump():\n"
+                    "    global counter\n"
+                    "    for _ in range(200_000):\n"
+                    "        counter = add_one(counter)  # STILL a race\n"
+                    "\n"
+                    "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "    for _ in range(4):\n"
+                    "        with lock:           # only protects enqueue\n"
+                    "            pool.submit(bump)\n"
+                    "\n"
+                    "print(counter)\n"
+                    "# still wrong / different every run\n"
+                    "# lock released before bump() runs on workers"
+                    "</div>"
+                    '<p style="font-size:11px;margin:6px 8px;line-height:1.4">'
+                    "<b>Why wrong:</b> <code>submit</code> returns immediately. "
+                    "The lock covers only “put job in queue,” not the later "
+                    "writes to <code>counter</code>."
+                    "</p>"
+                    "</div>"
+                    '<div class="mc-col mc-good"><span class="mc-lbl">'
+                    "&#10004; Proper lock — around the write</span>"
+                    '<div class="step-pre">'
+                    "lock = threading.Lock()\n"
+                    "\n"
+                    "def bump():\n"
+                    "    global counter\n"
+                    "    for _ in range(200_000):\n"
+                    "        with lock:           # protect the write\n"
+                    "            counter = add_one(counter)\n"
+                    "\n"
+                    "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+                    "    for _ in range(4):\n"
+                    "        pool.submit(bump)   # no lock here\n"
+                    "\n"
+                    "print(counter)   # always exactly 800000"
+                    "</div>"
+                    '<p style="font-size:11px;margin:6px 8px;line-height:1.4">'
+                    "<b>Why right:</b> each worker locks only for the shared "
+                    "update. Lock lives next to the data write, on the thread "
+                    "that does it."
+                    "</p>"
+                    "</div>"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
                     "<b>Why <code>add_one()</code> and not plain <code>counter += 1</code>?</b> "
                     "On CPython 3.12 the bare <code>+=</code> loop usually prints the "
                     "<b>right</b> answer, because the GIL tends to switch at loop "
@@ -3348,6 +3404,14 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<code>with</code> exit, and <b>re-raises</b> errors when you read the "
                     "result. Use <code>Thread</code> for a long-lived background service, the "
                     "pool for batches of short tasks."
+                ),
+            },
+            {
+                "q": "Where do you put the Lock — around submit or around the write?",
+                "a": (
+                    "Around the <b>shared write</b> (read→modify→write) inside the worker. "
+                    "<code>with lock: pool.submit(bump)</code> only protects enqueueing — "
+                    "<code>bump()</code> still races later. Lock where you touch shared data."
                 ),
             },
             {
