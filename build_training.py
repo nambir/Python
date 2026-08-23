@@ -104,7 +104,7 @@ body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .py-output {
   margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
   background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
-  line-height: 1.45; white-space: pre-wrap; max-height: 180px; overflow: auto;
+  line-height: 1.45; white-space: pre-wrap; max-height: 280px; overflow: auto;
 }
 .py-output.err { color: #fecaca; }
 .py-highlight { border-top: 1px solid #e2e8f0; padding: 4px 10px 8px; background: #fafafa; }
@@ -188,8 +188,20 @@ body.mc-row-dragging { cursor: col-resize; user-select: none; }
   gap: 10px;
   margin: 8px 0 10px;
 }
-.ex-row.ex-row-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.ex-row.ex-row-3cmp {
+  align-items: stretch;
+  margin: 8px 0 10px;
+}
+.ex-row.ex-row-3cmp .mc-col {
+  border: 1.5px solid #64748b;
+  display: flex;
+  flex-direction: column;
+}
+.ex-row.ex-row-3cmp .mc-lbl { background: #e2e8f0; color: #1e293b; }
+.ex-row.ex-row-3cmp .mc-col-async .mc-lbl { background: #ecfeff; color: #155e75; }
+.ex-row.ex-row-3cmp .mc-col-pool .mc-lbl { background: #f0fff4; color: #276749; }
+@media (max-width: 720px) {
+  .ex-row.ex-row-3cmp { grid-template-columns: 1fr; }
 }
 .ex-row.ex-row-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -686,6 +698,53 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 }
 .csharp-float-body-img.img-fullsize img {
   width: var(--native-w, 1536px); max-width: none; height: auto;
+}
+
+/* ── Spawn: without vs with __main__ (slide 20) ── */
+.spawn-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin: 8px 0 12px; max-width: 760px;
+}
+.spawn-col {
+  background: #fff; border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.spawn-col-bad { border: 1.5px solid #e53e3e; }
+.spawn-col-good { border: 1.5px solid #28a745; }
+.spawn-col-h {
+  font-size: 12px; font-weight: 800; padding: 6px 10px; text-align: center;
+}
+.spawn-col-bad .spawn-col-h { background: #fff5f5; color: #c53030; }
+.spawn-col-good .spawn-col-h { background: #f0fff4; color: #276749; }
+.spawn-col-body { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 4px; }
+.spawn-box {
+  border-radius: 7px; padding: 7px 8px; font-size: 11px; line-height: 1.4; color: #1e293b;
+  border: 1px solid #e2e8f0; background: #f8fafc;
+}
+.spawn-box b { display: block; font-size: 11px; margin-bottom: 2px; }
+.spawn-box span { display: block; color: #475569; }
+.spawn-box code { font-size: 10px; }
+.spawn-you { background: #eff6ff; border-color: #93c5fd; }
+.spawn-you b { color: #1e40af; }
+.spawn-empty { background: #f1f5f9; border-style: dashed; color: #64748b; }
+.spawn-import { background: #fefce8; border-color: #facc15; }
+.spawn-crash { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+.spawn-crash b { color: #b91c1c; }
+.spawn-skip { background: #ecfdf5; border-color: #34d399; }
+.spawn-skip b { color: #047857; }
+.spawn-ok { background: #f0fdf4; border-color: #4ade80; }
+.spawn-ok b { color: #166534; }
+.spawn-arrow {
+  text-align: center; color: #94a3b8; font-size: 13px; font-weight: 700; line-height: 1;
+}
+.spawn-end {
+  margin-top: 4px; font-size: 11px; font-weight: 700; text-align: center;
+  border-radius: 6px; padding: 6px 8px;
+}
+.spawn-end-bad { background: #7f1d1d; color: #fecaca; }
+.spawn-end-good { background: #14532d; color: #bbf7d0; }
+@media (max-width: 640px) {
+  .spawn-compare { grid-template-columns: 1fr; }
 }
 
 /* ── Visual guide poster strip (under Definition) ── */
@@ -1786,6 +1845,31 @@ function resetPlayground(btn) {
   if (out) { out.hidden = true; out.textContent = ''; out.classList.remove('err'); }
   if (status) status.textContent = '';
 }
+function pyodideBrowserHint(code) {
+  const usesProc = /\\b(ProcessPoolExecutor|multiprocessing)\\b/.test(code);
+  const usesThr = /\\b(threading\\.Thread|ThreadPoolExecutor)\\b/.test(code);
+  if (!usesProc && !usesThr) return '';
+  const bits = [];
+  if (usesThr) bits.push('threading.Thread / ThreadPoolExecutor (OS threads)');
+  if (usesProc) bits.push('ProcessPoolExecutor / multiprocessing (child processes)');
+  return (
+    'The in-browser runner is Pyodide (one WebAssembly thread). It cannot start:\\n  • ' +
+    bits.join('\\n  • ') +
+    '\\n\\nThis is the same idea as the slide: threads and processes are OS objects, ' +
+    'not just Python syntax. Save the snippet and run it locally:\\n\\n  python yourfile.py\\n'
+  );
+}
+function formatPyodideError(err) {
+  const raw = (err && (err.message || err.toString())) ? String(err.message || err) : String(err);
+  const lines = raw.split(/\\r?\\n/);
+  const keep = lines.filter((ln) =>
+    !ln.includes('/_pyodide/') &&
+    !ln.includes('pyodide.asm') &&
+    !(ln.trim() === 'Traceback (most recent call last):')
+  );
+  const body = (keep.length ? keep : lines).join('\\n').trim();
+  return body;
+}
 async function runPlayground(btn) {
   const box = btn.closest('.code-playground');
   if (!box) return;
@@ -1822,7 +1906,12 @@ async function runPlayground(btn) {
     } catch (err) {
       out.classList.add('err');
       const printed = (stdout.join('') + stderr.join('')).replace(/\\n$/, '');
-      out.textContent = (printed ? printed + '\\n' : '') + String(err);
+      const hint = pyodideBrowserHint(ed.value);
+      const msg = formatPyodideError(err);
+      const looksOs = /can'?t start new thread|No module named '_posixsubprocess'|NotImplementedError|BrokenProcessPool|bootstrapping phase/i.test(msg);
+      out.textContent = (printed ? printed + '\\n' : '') +
+        (hint && looksOs ? hint + '\\n---\\n' : '') +
+        msg;
       if (status) status.textContent = 'Error';
     }
   } catch (err) {
@@ -6201,7 +6290,9 @@ except RuntimeError as e:
 
 (20, "Threading &amp; GIL", '''
 <div class="callout"><b>Build order:</b> CPU core → process vs thread → CPython GIL (per process) → I/O vs CPU → ThreadPool / ProcessPool. Metaphor boxes on the slide are pictures only — steps use exact terms.</div>
-''' + code('''import threading
+''' + code('''# Browser Run uses Pyodide (one WASM thread) — Thread/Process pools
+# need a real OS. Click Run to see that; or save and: python this_file.py
+import threading
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import time
 
@@ -6302,7 +6393,47 @@ def crunch(n):
 
 with Pool(2) as p:
     results = p.map(crunch, [10**7, 10**7])
-# Truly parallel — each process has its own GIL</div></div></div><span class="mistake-note">&#128161; Use <code>threading</code> for I/O-bound tasks (network, file, DB). Use <code>multiprocessing</code> or <code>concurrent.futures.ProcessPoolExecutor</code> for CPU-bound work.</span></div>
+# Truly parallel — each process has its own GIL</div></div></div><span class="mistake-note">&#128161; Use <code>threading</code> for I/O-bound tasks (network, file, DB). Use <code>multiprocessing.Pool</code> <em>or</em> <code>concurrent.futures.ProcessPoolExecutor</code> for CPU-bound work — same idea (child processes, own GIL, pickle, <code>if __name__ == "__main__"</code>). They are two APIs, not two kinds of parallelism.</span>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b><code>Pool</code> vs <code>ProcessPoolExecutor</code> — why both exist.</b> <code>multiprocessing.Pool</code> came first (Python 2.6, 2008). Python 3.2 added <code>concurrent.futures</code> (PEP 3148) so <b>threads and processes share one interface</b> (<code>submit</code> / <code>map</code> / <code>Future</code>) — the same split you already saw with <code>Thread</code> vs <code>ThreadPoolExecutor</code>. <code>ProcessPoolExecutor</code> is implemented <em>on top of</em> <code>multiprocessing</code>; it does not replace the OS-level process model.</p>
+<div class="mc-row">
+  <div class="mc-col mc-bad"><span class="mc-lbl">multiprocessing.Pool &mdash; older API</span><div class="step-pre">from multiprocessing import Pool
+
+def crunch(n):
+    return sum(i**2 for i in range(n))
+
+if __name__ == "__main__":
+    with Pool(2) as p:
+        results = p.map(crunch, [10**7, 10**7])
+        # map returns a list
+    print(results)
+
+# same jobs, 2 child processes, own GIL each</div></div>
+  <div class="mc-col mc-good"><span class="mc-lbl">ProcessPoolExecutor &mdash; same jobs, Future API</span><div class="step-pre">from concurrent.futures import ProcessPoolExecutor
+
+def crunch(n):
+    return sum(i**2 for i in range(n))
+
+if __name__ == "__main__":
+    with ProcessPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(crunch, [10**7, 10**7]))
+        # map returns an iterator → list()
+    print(results)
+
+# swap ProcessPoolExecutor → ThreadPoolExecutor
+# for I/O; call style stays the same</div></div>
+</div>
+<table class="data-tbl">
+<tr><th></th><th><code>multiprocessing.Pool</code></th><th><code>ProcessPoolExecutor</code></th></tr>
+<tr><td><b>Since</b></td><td>Python 2.6 (older, still fully supported)</td><td>Python 3.2 — sibling of <code>ThreadPoolExecutor</code></td></tr>
+<tr><td><b>Call style</b></td><td><code>p.map(fn, xs)</code> / <code>apply_async</code> / <code>imap_unordered</code> / <code>starmap</code></td><td><code>pool.map(fn, xs)</code> or <code>fut = pool.submit(fn, x)</code> then <code>fut.result()</code></td></tr>
+<tr><td><b>Return value</b></td><td><code>map</code> returns a <code>list</code></td><td><code>map</code> returns an iterator; <code>submit</code> returns a <code>Future</code></td></tr>
+<tr><td><b>Errors</b></td><td>raised while iterating / from <code>get()</code></td><td>stored on the <code>Future</code>, <b>re-raised</b> at <code>.result()</code> (same as the thread pool)</td></tr>
+<tr><td><b>Switch I/O &harr; CPU</b></td><td>different module and method names</td><td>change the class name only: <code>ThreadPoolExecutor</code> &harr; <code>ProcessPoolExecutor</code></td></tr>
+<tr><td><b>Shutdown</b></td><td><code>close()</code> + <code>join()</code>, or <code>with Pool()</code> (3.3+)</td><td><code>with</code> calls <code>shutdown(wait=True)</code></td></tr>
+<tr><td><b>Use when</b></td><td>you need <code>imap_unordered</code>, <code>starmap</code>, <code>maxtasksperchild</code></td><td>new code, mixed thread/process pools, <code>as_completed</code> / timeouts / cancel</td></tr>
+</table>
+<p style="font-size:12px;margin:6px 0 10px;line-height:1.45"><b>Same constraints:</b> top-level <code>def</code> (pickle), <code>if __name__ == "__main__"</code> on Windows/macOS. Prefer <code>ProcessPoolExecutor</code> for new work so it matches the <code>ThreadPoolExecutor</code> you already use; keep <code>Pool</code> when you read older samples (including the Fix box above).</p>
+</div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; shared mutable state without a <code>Lock</code></span><span class="mistake-desc">Two threads incrementing a shared counter without a lock produce a race condition &mdash; the result is non-deterministic.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre">import threading
 counter = 0
 
@@ -6483,14 +6614,40 @@ async def slow_fetch():
     async with httpx.AsyncClient() as client:
         resp = await client.get("https://api.example.com")
     return resp.json()</div></div></div><span class="mistake-note">&#128161; Use async-native libraries: <code>httpx</code> or <code>aiohttp</code> (not <code>requests</code>), <code>asyncio.sleep()</code> (not <code>time.sleep()</code>), async DB drivers.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; <code>asyncio.run()</code> inside an already running event loop</span><span class="mistake-desc">In Jupyter notebooks and some frameworks, an event loop is already running. Calling <code>asyncio.run()</code> raises <code>RuntimeError</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"># In Jupyter notebook:
-async def main(): return "done"
-asyncio.run(main())
-# RuntimeError: This event loop is already running</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre"># In Jupyter — use await directly:
-result = await main()   # no asyncio.run() needed
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; <code>asyncio.run()</code> inside an already running event loop</span><span class="mistake-desc"><b>What <code>asyncio.run()</code> actually does.</b> It is the <em>outermost</em> on-switch: create a <b>new</b> event loop, run one coroutine until it finishes, then <b>close</b> that loop. Python allows only <b>one running loop per thread</b>. If a loop is already turning (Jupyter, FastAPI, pytest-asyncio), a second <code>run()</code> is illegal &mdash; hence <code>RuntimeError: This event loop is already running</code>. The coroutine itself is fine; you used the wrong way to <em>start</em> it.</span>
+<p style="font-size:12px;margin:8px 0 6px;line-height:1.45"><b>Who already owns the loop?</b></p>
+<table class="data-tbl">
+<tr><th>Where you are</th><th>Loop already running?</th><th>How you start work</th></tr>
+<tr><td><code>python app.py</code> script</td><td>No &mdash; you are the entry point</td><td><code>asyncio.run(main())</code> once, at the bottom (usually under <code>if __name__ == "__main__"</code>)</td></tr>
+<tr><td>Jupyter / IPython cell</td><td>Yes &mdash; the kernel started a loop so cells can <code>await</code></td><td><code>result = await main()</code> in the cell. Do <b>not</b> call <code>asyncio.run()</code></td></tr>
+<tr><td>FastAPI / Starlette route</td><td>Yes &mdash; uvicorn owns the loop</td><td>Write <code>async def</code> routes and <code>await</code> inside them. Never <code>asyncio.run()</code> inside a request</td></tr>
+<tr><td>Sync Django / Flask view</td><td>Usually no loop on that worker thread</td><td>Do not nest <code>asyncio.run()</code> if you later add an async stack. Prefer <code>ThreadPoolExecutor</code> for blocking <code>requests</code>, or an async view</td></tr>
+</table>
+<p style="font-size:12px;margin:6px 0 6px;line-height:1.45"><b>Why Jupyter looks like a script but is not.</b> A <code>.py</code> file starts with no loop. A notebook kernel is a long-lived process that already called something like <code>asyncio.run</code> (or nest_asyncio / a built-in runner) so that <code>await</code> works at the top of a cell. Your cell is <em>inside</em> that loop &mdash; the same situation as a FastAPI handler.</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug &mdash; second on-switch</span><div class="step-pre"># Jupyter cell (loop already running)
+async def main():
+    return "done"
 
-# In scripts:
-asyncio.run(main())     # correct for script entry point</div></div></div><span class="mistake-note">&#128161; In Jupyter, use <code>await</code> directly in cells. In FastAPI, define route handlers as <code>async def</code> and the framework manages the loop.</span></div>
+asyncio.run(main())
+# RuntimeError: This event loop is already running
+#   asyncio.run() tried to create loop #2
+
+# Same bug in FastAPI:
+@app.get("/customers/{id}")
+async def dashboard(id: int):
+    return asyncio.run(getCustomerInfo(id))  # crash</div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix &mdash; join the loop that exists</span><div class="step-pre"># Jupyter cell — you are already inside the loop
+result = await main()     # no asyncio.run()
+
+# FastAPI — the framework awaits your handler
+@app.get("/customers/{id}")
+async def dashboard(id: int):
+    return await getCustomerInfo(id)
+
+# Script entry point — you own the process
+if __name__ == "__main__":
+    asyncio.run(main())   # only here</div></div></div>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Related mistakes people mix up.</b> Forgetting <code>await</code> (Mistake 1) gives a coroutine object and a <code>RuntimeWarning</code> &mdash; the body never ran. Calling <code>asyncio.run()</code> twice in the <em>same</em> script, one after the other, is legal: the first <code>run()</code> starts and <b>closes</b> the loop, then the second creates a fresh one. The crash is only when the first loop is <b>still running</b>.</p>
+<span class="mistake-note">&#128161; Rule: <code>asyncio.run()</code> = process entry point, once. Everywhere else, <code>await</code> the coroutine on the loop that is already there. Do not install <code>nest_asyncio</code> as a habit &mdash; it hides the design (one loop per thread).</span></div>
 <h3>Before &rarr; After (Pythonic)</h3>
 <div class="before-after">
   <div class="ba-col ba-bad"><div class="ba-label">&#10060; Blocking in async context</div><div class="step-pre">import time
@@ -6527,7 +6684,95 @@ async def process_items(items):
   </div>
   <div class="quiz-q"><b>Q3.</b> How to run a coroutine from synchronous code?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>asyncio.run(coroutine())</code> &mdash; creates an event loop, runs the coroutine, and closes the loop.</div>
+      <div class="quiz-reveal">
+        <p style="margin:0 0 8px;line-height:1.45"><code>asyncio.run(coro)</code> &mdash; only from <b>sync</b> code that does <b>not</b> already have a running loop. It creates a loop, runs the coroutine to the end, then closes the loop. From inside <code>async def</code> you just <code>await</code>.</p>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Sync code &mdash; calling the coroutine is not enough</span><div class="step-pre">import asyncio
+
+async def getCustomerInfo(cid):
+    await asyncio.sleep(0.2)      # stand-in for HTTP
+    return {"id": cid, "name": "Leanne"}
+
+# ordinary def / script / __main__  ← sync world
+def report():
+    c = getCustomerInfo(1)        # forgot run/await
+    print(c)
+    # &lt;coroutine object getCustomerInfo at 0x...&gt;
+    # RuntimeWarning: coroutine was never awaited
+
+# report()  → no customer data, nothing ran</div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Sync code &mdash; asyncio.run() is the bridge</span><div class="step-pre">import asyncio
+
+async def getCustomerInfo(cid):
+    await asyncio.sleep(0.2)
+    return {"id": cid, "name": "Leanne"}
+
+def report():                     # still a plain def
+    customer = asyncio.run(getCustomerInfo(1))
+    print(customer)
+    # {'id': 1, 'name': 'Leanne'}
+
+if __name__ == "__main__":
+    report()                      # process entry — no loop yet</div></div>
+        </div>
+        <div class="mc-row" style="margin-top:8px">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Already inside async &mdash; do not run() again</span><div class="step-pre">async def dashboard(cid):
+    # we are ALREADY on the loop
+    return asyncio.run(getCustomerInfo(cid))
+    # RuntimeError: This event loop is already running
+
+# Jupyter cell (kernel loop is on):
+# asyncio.run(getCustomerInfo(1))   # same crash</div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Already inside async &mdash; just await</span><div class="step-pre">async def dashboard(cid):
+    return await getCustomerInfo(cid)
+
+# FastAPI
+# @app.get("/customers/{cid}")
+# async def route(cid: int):
+#     return await getCustomerInfo(cid)
+
+# Jupyter cell
+# customer = await getCustomerInfo(1)</div></div>
+        </div>
+        <table class="data-tbl" style="margin-top:8px">
+          <tr><th>You are in</th><th>How to run <code>getCustomerInfo</code></th><th>What happens</th></tr>
+          <tr><td>plain <code>def</code> / <code>python app.py</code></td><td><code>asyncio.run(getCustomerInfo(1))</code></td><td>new loop → run → close; you get the <code>return</code> value</td></tr>
+          <tr><td><code>async def</code> (FastAPI, another coroutine)</td><td><code>await getCustomerInfo(1)</code></td><td>same loop; pause this task until the HTTP finishes</td></tr>
+          <tr><td>Jupyter cell</td><td><code>await getCustomerInfo(1)</code></td><td>kernel loop already running — no <code>run()</code></td></tr>
+        </table>
+        <p style="margin:10px 0 4px;line-height:1.45"><b><code>asyncio.run(Get_Customer_Sync)</code> &mdash; that call is wrong.</b>
+        <code>run()</code> needs a <b>coroutine object</b> (the result of calling an <code>async def</code>).
+        <code>Get_Customer_Sync</code> is a plain function, and even an <code>async def</code> must be
+        <b>called</b>: <code>run(fn)</code> is not <code>run(fn(1))</code>.</p>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; These three all fail</span><div class="step-pre">asyncio.run(Get_Customer_Sync)
+# TypeError: a coroutine was expected, got &lt;function ...&gt;
+#   you passed the function, never called it
+
+asyncio.run(Get_Customer_Sync())
+# TypeError: Get_Customer_Sync() missing 1 arg
+#   and if it is a sync def, still not a coroutine
+
+def Get_Customer_Sync(cid):
+    return {"id": cid}
+
+asyncio.run(Get_Customer_Sync(1))
+# TypeError: a coroutine was expected, got {'id': 1}</div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Sync facade &mdash; run() is inside the wrapper</span><div class="step-pre">async def getCustomerInfo(cid):     # async world
+    await asyncio.sleep(0.2)
+    return {"id": cid, "name": "Leanne"}
+
+def Get_Customer_Sync(cid):         # sync world (C# style name)
+    return asyncio.run(getCustomerInfo(cid))
+
+if __name__ == "__main__":
+    print(Get_Customer_Sync(1))
+    # {'id': 1, 'name': 'Leanne'}
+
+# callers stay sync: no await, no async def
+# do NOT also asyncio.run(Get_Customer_Sync) — wrapper is not a coro</div></div>
+        </div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>time.sleep()</code> vs <code>asyncio.sleep()</code> in async code?

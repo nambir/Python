@@ -2973,6 +2973,61 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "pickled name in the module it just imported, calls "
                     "<code>work(1)</code>, and pickles the return value back to the parent.</li>"
                     "</ul>"
+                    "<p style=\"font-size:12px;margin:8px 0 4px;line-height:1.45\">"
+                    "<b>Same 4 steps, side by side.</b> Left: the child’s import re-runs the "
+                    "pool. Right: the child still imports (step 3), but the guard skips the "
+                    "pool, so step 4 can run."
+                    "</p>"
+                    '<div class="spawn-compare">'
+                    '<div class="spawn-col spawn-col-bad">'
+                    '<div class="spawn-col-h">&#10060; Without <code>if __name__ == "__main__"</code></div>'
+                    '<div class="spawn-col-body">'
+                    '<div class="spawn-box spawn-you"><b>YOU &mdash; python job.py</b>'
+                    "<span><code>__name__ = \"__main__\"</code> &middot; creates "
+                    "<code>ProcessPoolExecutor(2)</code> &middot; pickles the name "
+                    "<code>work</code> + args <code>[1, 2]</code></span></div>"
+                    '<div class="spawn-arrow">&darr; spawn empty python.exe</div>'
+                    '<div class="spawn-box spawn-empty"><b>WORKER &mdash; empty memory</b>'
+                    "<span>brand-new interpreter &middot; no <code>work</code> yet</span></div>"
+                    '<div class="spawn-arrow">&darr; re-imports job.py as <code>__mp_main__</code></div>'
+                    '<div class="spawn-box spawn-import"><b>3. Import &mdash; EVERY top-level line</b>'
+                    "<span><code>def work</code> runs &middot; then "
+                    "<code>ProcessPoolExecutor(2)</code> runs AGAIN inside the child</span></div>"
+                    '<div class="spawn-arrow">&darr; child tries to spawn grandchildren</div>'
+                    '<div class="spawn-box spawn-crash"><b>CRASH in the child</b>'
+                    "<span><code>RuntimeError</code>: bootstrapping phase not finished"
+                    "</span></div>"
+                    '<div class="spawn-arrow">&darr; worker process is killed</div>'
+                    '<div class="spawn-box spawn-crash"><b>Parent sees the death</b>'
+                    "<span><code>BrokenProcessPool</code> &middot; exit code 1</span></div>"
+                    '<div class="spawn-end spawn-end-bad">'
+                    "Step 4 never happens &mdash; <code>work()</code> is never called"
+                    "</div>"
+                    "</div></div>"
+                    '<div class="spawn-col spawn-col-good">'
+                    '<div class="spawn-col-h">&#10004; With <code>if __name__ == "__main__"</code></div>'
+                    '<div class="spawn-col-body">'
+                    '<div class="spawn-box spawn-you"><b>YOU &mdash; python job.py</b>'
+                    "<span><code>__name__ = \"__main__\"</code> &middot; guard is True &middot; "
+                    "creates the pool &middot; pickles the name <code>work</code> + args"
+                    "</span></div>"
+                    '<div class="spawn-arrow">&darr; spawn empty python.exe</div>'
+                    '<div class="spawn-box spawn-empty"><b>WORKER &mdash; empty memory</b>'
+                    "<span>brand-new interpreter &middot; no <code>work</code> yet "
+                    "(same as the left)</span></div>"
+                    '<div class="spawn-arrow">&darr; re-imports job.py as <code>__mp_main__</code></div>'
+                    '<div class="spawn-box spawn-skip"><b>3. Import &mdash; defs only</b>'
+                    "<span><code>__name__ = \"__mp_main__\"</code> &middot; "
+                    "<code>def work</code> runs &middot; guard is False, so the pool is "
+                    "<b>skipped</b></span></div>"
+                    '<div class="spawn-arrow">&darr; look up the pickled name</div>'
+                    '<div class="spawn-box spawn-ok"><b>4. Run <code>work(1)</code></b>'
+                    "<span>result pickled back to you &middot; "
+                    "<code>[task] n=1 pid=&hellip;</code></span></div>"
+                    '<div class="spawn-end spawn-end-good">'
+                    "Both columns import. Only this column reaches step 4."
+                    "</div>"
+                    "</div></div></div>"
                     "<p style=\"font-size:12px;margin:10px 0 4px;line-height:1.45\">"
                     "<b>See it yourself — real console output, without vs with the guard.</b> "
                     "One <code>print</code> at module level (fires on every import) and one "
@@ -3188,6 +3243,45 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "<td><b>7</b> = 1 + 5 + 1</td>"
                     "<td><b>13</b> = 5 + 7 + 1</td></tr>"
                     "</table>"
+                    '<div class="callout" style="margin-top:8px">'
+                    "<b>That App2 cell unpacked — "
+                    "<code>5 procs · 7 threads</code> / "
+                    "<code>parent: 3 · each child: 1</code>.</b> "
+                    "App2 was one <code>python worker.py</code>. "
+                    "<code>ProcessPoolExecutor(4)</code> does <b>not</b> add 4 threads inside "
+                    "that process. It starts <b>4 extra <code>python.exe</code></b> workers."
+                    "</div>"
+                    "<table class=\"data-tbl\">"
+                    "<tr><th>Where</th><th>Processes</th><th>Threads</th>"
+                    "<th>What they are</th></tr>"
+                    "<tr><td><b>Parent</b> (the App2 you launched)</td>"
+                    "<td>1</td><td><b>3</b></td>"
+                    "<td><code>MainThread</code> — your code<br>"
+                    "<code>QueueFeederThread</code> — pickles args into the pipe<br>"
+                    "<code>Thread-1</code> — reads results, completes "
+                    "<code>Future</code>s<br>"
+                    "These 2 extras are plumbing, not <code>work()</code></td></tr>"
+                    "<tr><td>Child 1</td><td>1</td><td>1</td>"
+                    "<td>its own <code>MainThread</code> — this is where "
+                    "<code>work()</code> runs</td></tr>"
+                    "<tr><td>Child 2</td><td>1</td><td>1</td>"
+                    "<td>same</td></tr>"
+                    "<tr><td>Child 3</td><td>1</td><td>1</td>"
+                    "<td>same</td></tr>"
+                    "<tr><td>Child 4</td><td>1</td><td>1</td>"
+                    "<td>same</td></tr>"
+                    "<tr><td><b>App2 total</b></td>"
+                    "<td><b>5</b> = 1 + 4</td>"
+                    "<td><b>7</b> = 3 + 4×1</td>"
+                    "<td>Task Manager shows <b>5</b> <code>python.exe</code> entries "
+                    "for App2, not 1</td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
+                    "The four workers do <b>not</b> join App2’s original process. Each is a "
+                    "new process, so it starts with one <code>MainThread</code> and its own "
+                    "GIL. That is why the shorthand is "
+                    "<b>parent: 3 · each child: 1</b>."
+                    "</p>"
                     "<p style=\"font-size:12px;margin:8px 0 4px;line-height:1.45\">"
                     "<b>Measured on Windows / Python 3.12</b> — one app, printing "
                     "<code>threading.enumerate()</code> at each stage:"
@@ -3210,13 +3304,9 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "   each child: threads=1 ['MainThread']"
                     "</div>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
-                    "<b>Where App2’s 7 threads come from.</b> The 4 children are separate "
-                    "<code>python.exe</code> processes, each doing your work on its single "
-                    "<code>MainThread</code> — that is 4. The parent has 3: its "
-                    "<code>MainThread</code> plus two helpers Python created for you — "
-                    "<code>QueueFeederThread</code> pickles arguments and writes them into the "
-                    "pipe, and the executor’s manager thread reads results back and completes "
-                    "your <code>Future</code> objects. 4 + 3 = 7."
+                    "The measured dump below is that same App2 parent: "
+                    "<code>threads=3</code> plus <code>child processes: 4</code>, each "
+                    "<code>threads=1</code>."
                     "</p>"
                     "<p style=\"font-size:12px;margin:6px 0;line-height:1.45\">"
                     "<b>Why the old table said “≈ 5”.</b> <code>max_workers=4</code> is a "
@@ -3270,6 +3360,60 @@ BEGINNER_CONTENT: dict[int, dict] = {
                     "create, start, join and collect results yourself; "
                     "<code>ThreadPoolExecutor</code> is a managed pool that hands you "
                     "<b>return values</b>."
+                    "<p style=\"font-size:12px;margin:8px 0 6px;line-height:1.45\">"
+                    "<b>A normal Python function already returns a result.</b> "
+                    "If you write <code>return x</code>, the caller gets <code>x</code>. "
+                    "If you write nothing, Python still returns <code>None</code>. "
+                    "That is not a Thread vs pool thing — it is how <b>every</b> "
+                    "<code>def</code> works."
+                    "</p>"
+                    '<div class="step-pre">'
+                    "def fetch(url):\n"
+                    "    return download(url)     # always legal\n"
+                    "\n"
+                    "value = fetch(url)           # caller receives the return\n"
+                    "print(value)"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:8px 0 4px;line-height:1.45\">"
+                    "<b>Why the left column appends instead.</b> "
+                    "<code>threading.Thread</code> (Python 2, 2001) was modelled on OS / Java "
+                    "threads: <code>target</code> is a <b>void procedure</b> — "
+                    "<code>t.start()</code> calls <code>target(*args)</code> on the new thread "
+                    "and <b>throws the return value away</b>. There is no "
+                    "<code>t.result()</code>. So the old pattern was: write into something "
+                    "both threads can see."
+                    "</p>"
+                    '<div class="step-pre">'
+                    "# what Thread.start() does, simplified\n"
+                    "def _bootstrap():\n"
+                    "    result = target(*args)    # fetch DID return\n"
+                    "    # …and then result is discarded. nothing stores it.\n"
+                    "\n"
+                    "# so people invented a mailbox the function can see:\n"
+                    "results = []                 # 1) shared list  (order = finish order)\n"
+                    "q = queue.Queue()            # 2) Queue        (thread-safe mailbox)\n"
+                    "self.answer = None           # 3) object field you set yourself"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:8px 0 4px;line-height:1.45\">"
+                    "<b>How the pool developed.</b> Python 3.2 added "
+                    "<code>concurrent.futures</code> (PEP 3148) — the same idea as Java’s "
+                    "<code>Future</code> / C#’s <code>Task&lt;T&gt;</code>. The pool still "
+                    "calls your function, but it <b>keeps</b> the return value:"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "fut = pool.submit(fetch, url)   # wraps the call\n"
+                    "# inside the worker, roughly:\n"
+                    "#   fut._result = fetch(url)    # return is stored, not dropped\n"
+                    "print(fut.result())             # wait + give it back (or re-raise)\n"
+                    "\n"
+                    "list(pool.map(fetch, urls))     # submit all, collect in input order"
+                    "</div>"
+                    "<p style=\"font-size:12px;margin:6px 0 8px;line-height:1.45\">"
+                    "So: <b>develop the function with <code>return</code></b> — that is the "
+                    "Python way. Append to <code>results</code> only when the API you are "
+                    "calling (<code>Thread.target</code>) will not hand the return back. "
+                    "Prefer the pool when the work has an end and a result."
+                    "</p>"
                     '<div class="mc-row">'
                     '<div class="mc-col mc-bad">'
                     '<span class="mc-lbl">threading.Thread &mdash; manual, no return value</span>'
@@ -3452,16 +3596,353 @@ BEGINNER_CONTENT: dict[int, dict] = {
                 "body": "<code>async def</code> defines a coroutine. <code>await</code> pauses until that operation completes — only inside <code>async def</code>.<div class=\"step-pre\">async def fetch(url):\n    await asyncio.sleep(0.5)   # simulate I/O\n    return f\"data from {url}\"\n\nasync def main():\n    result = await fetch(\"api/users\")\n    print(result)</div>",
             },
             {
-                "title": "Step 3 — asyncio.gather & asyncio.run",
+                "title": "Step 3 — getCustomerInfo(): Thread vs ThreadPool vs async",
+                "body": (
+                    "Same method name, same real API — "
+                    "<code>https://jsonplaceholder.typicode.com/users/{id}</code> "
+                    "(public fake users; no API key). Fetch customers "
+                    "<code>1, 2, 3</code> three ways. All three are <b>I/O-bound</b> "
+                    "(waiting on HTTP). None of them help CPU-heavy math."
+                    "<p style=\"font-size:12px;margin:6px 0 4px;line-height:1.45\">"
+                    "<code>getCustomerInfo(customer_id)</code> returns "
+                    "<code>{\"id\", \"name\"}</code> from that JSON. "
+                    "Thread columns use the stdlib (<code>urllib</code>). "
+                    "Async needs <code>pip install aiohttp</code> so the wait can "
+                    "<code>await</code> instead of blocking the loop."
+                    "</p>"
+                    '<div class="ex-row ex-row-3cmp">'
+                    '<div class="mc-col">'
+                    '<span class="mc-lbl">1. threading.Thread</span>'
+                    '<div class="step-pre">'
+                    "import json, urllib.request, threading\n"
+                    "\n"
+                    "API = \"https://jsonplaceholder.typicode.com/users/{}\"\n"
+                    "\n"
+                    "def getCustomerInfo(customer_id):\n"
+                    "    url = API.format(customer_id)\n"
+                    "    with urllib.request.urlopen(url, timeout=10) as r:\n"
+                    "        data = json.loads(r.read().decode())\n"
+                    "    return {\"id\": data[\"id\"], \"name\": data[\"name\"]}\n"
+                    "\n"
+                    "ids = [1, 2, 3]\n"
+                    "results = []              # mailbox — Thread\n"
+                    "                          # discards return values\n"
+                    "\n"
+                    "def worker(cid):\n"
+                    "    results.append(getCustomerInfo(cid))\n"
+                    "\n"
+                    "threads = [\n"
+                    "    threading.Thread(target=worker, args=(i,))\n"
+                    "    for i in ids\n"
+                    "]                         # 3 threads, 3 tasks\n"
+                    "for t in threads: t.start()\n"
+                    "for t in threads: t.join()\n"
+                    "print(results)            # finish order"
+                    "</div></div>"
+                    '<div class="mc-col mc-col-pool">'
+                    '<span class="mc-lbl">2. ThreadPoolExecutor</span>'
+                    '<div class="step-pre">'
+                    "import json, urllib.request\n"
+                    "from concurrent.futures import ThreadPoolExecutor\n"
+                    "\n"
+                    "API = \"https://jsonplaceholder.typicode.com/users/{}\"\n"
+                    "\n"
+                    "def getCustomerInfo(customer_id):\n"
+                    "    url = API.format(customer_id)\n"
+                    "    with urllib.request.urlopen(url, timeout=10) as r:\n"
+                    "        data = json.loads(r.read().decode())\n"
+                    "    return {\"id\": data[\"id\"], \"name\": data[\"name\"]}\n"
+                    "\n"
+                    "ids = [1, 2, 3]\n"
+                    "with ThreadPoolExecutor(max_workers=3) as pool:\n"
+                    "    results = list(pool.map(\n"
+                    "        getCustomerInfo, ids))\n"
+                    "    # return is kept; map preserves ids order\n"
+                    "print(results)\n"
+                    "\n"
+                    "# 3 workers reused if you later pass 100 ids\n"
+                    "# stdlib only — no extra package"
+                    "</div></div>"
+                    '<div class="mc-col mc-col-async">'
+                    '<span class="mc-lbl">3. async / await (aiohttp)</span>'
+                    '<div class="step-pre">'
+                    "import aiohttp, asyncio\n"
+                    "\n"
+                    "API = \"https://jsonplaceholder.typicode.com/users/{}\"\n"
+                    "\n"
+                    "async def getCustomerInfo(customer_id):\n"
+                    "    url = API.format(customer_id)\n"
+                    "    async with aiohttp.ClientSession() as s:\n"
+                    "        async with s.get(url) as r:\n"
+                    "            data = await r.json()\n"
+                    "    return {\"id\": data[\"id\"], \"name\": data[\"name\"]}\n"
+                    "\n"
+                    "async def main():\n"
+                    "    results = await asyncio.gather(\n"
+                    "        getCustomerInfo(1),\n"
+                    "        getCustomerInfo(2),\n"
+                    "        getCustomerInfo(3),\n"
+                    "    )                      # 1 thread, 3 waits overlap\n"
+                    "    print(results)\n"
+                    "\n"
+                    "asyncio.run(main())\n"
+                    "# pip install aiohttp"
+                    "</div></div></div>"
+                    "<p style=\"font-size:12px;margin:6px 0 4px;line-height:1.45\">"
+                    "<b>Same output shape</b> (names from JSONPlaceholder):"
+                    "</p>"
+                    '<div class="step-pre">'
+                    "[{'id': 1, 'name': 'Leanne Graham'},\n"
+                    " {'id': 2, 'name': 'Ervin Howell'},\n"
+                    " {'id': 3, 'name': 'Clementine Bauch'}]\n"
+                    "# Thread column: same dicts, possibly shuffled"
+                    "</div>"
+                    '<table class="data-tbl">'
+                    "<tr><th></th><th><code>threading.Thread</code></th>"
+                    "<th><code>ThreadPoolExecutor</code></th>"
+                    "<th><code>async def</code> + <code>await</code></th></tr>"
+                    "<tr><td><b>What is running</b></td>"
+                    "<td>3 OS threads in <b>one process</b></td>"
+                    "<td>up to 3 OS threads, <b>reused</b></td>"
+                    "<td><b>1 thread</b> — the event loop switches at "
+                    "<code>await</code></td></tr>"
+                    "<tr><td><b>How <code>getCustomerInfo</code> is written</b></td>"
+                    "<td>plain <code>def</code>; return discarded unless you append</td>"
+                    "<td>plain <code>def</code>; <code>return</code> kept as a "
+                    "<code>Future</code></td>"
+                    "<td><code>async def</code>; must <code>await</code> HTTP</td></tr>"
+                    "<tr><td><b>HTTP library</b></td>"
+                    "<td><code>urllib</code> / <code>requests</code> (blocking)</td>"
+                    "<td>same blocking libraries</td>"
+                    "<td>need <code>aiohttp</code> / <code>httpx</code> "
+                    "(<code>AsyncClient</code>) — <code>requests.get</code> would "
+                    "<b>freeze the loop</b></td></tr>"
+                    "<tr><td><b>Overlap of the 3 calls</b></td>"
+                    "<td>yes — GIL released during network wait</td>"
+                    "<td>yes — same</td>"
+                    "<td>yes — at each <code>await</code>, no extra threads</td></tr>"
+                    "<tr><td><b>When to use</b></td>"
+                    "<td>one <b>long-lived</b> background worker "
+                    "(listener, poller, <code>daemon=True</code>)</td>"
+                    "<td><b>a batch</b> of HTTP/file/DB calls; stdlib; easy switch "
+                    "to <code>ProcessPoolExecutor</code> for CPU</td>"
+                    "<td><b>many</b> concurrent connections (hundreds+) on one "
+                    "thread — FastAPI, websockets, chatty APIs</td></tr>"
+                    "<tr><td><b>When not to</b></td>"
+                    "<td>100 tasks = 100 threads (stacks, overhead)</td>"
+                    "<td>tens of thousands of sockets — threads still cost RAM</td>"
+                    "<td>CPU-heavy work, or a blocking library with no async port — "
+                    "use a thread pool (or <code>asyncio.to_thread</code>)</td></tr>"
+                    "<tr><td><b>C# cousin</b></td>"
+                    "<td><code>new Thread(...).Start()</code></td>"
+                    "<td><code>Task.Run</code> / <code>Task.WhenAll</code></td>"
+                    "<td><code>async Task</code> + <code>HttpClient</code> + "
+                    "<code>await Task.WhenAll</code></td></tr>"
+                    "</table>"
+                    "<p style=\"font-size:12px;margin:10px 0 4px;line-height:1.45\">"
+                    "<b>Six interview scenarios — one row each.</b> "
+                    "For every job: does Thread / ThreadPool / async "
+                    "<b>suit</b> it or <b>create a problem</b>?"
+                    "</p>"
+                    '<table class="data-tbl">'
+                    "<tr><th>Scenario</th>"
+                    "<th><code>threading.Thread</code></th>"
+                    "<th><code>ThreadPoolExecutor</code></th>"
+                    "<th><code>async def</code></th></tr>"
+                    "<tr><td><b>1. Three "
+                    "<code>getCustomerInfo</code> calls</b><br>"
+                    "JSONPlaceholder users 1–3 (the demo above)</td>"
+                    "<td><b>Suits, but clumsy.</b> 3 threads overlap the HTTP wait. "
+                    "Problem: you need a shared <code>results</code> list; order is finish "
+                    "order; an error in one thread can look like <code>join()</code> "
+                    "succeeded. Fine only as a throwaway script.</td>"
+                    "<td><b>Suits — usual pick for this size.</b> Same overlap, "
+                    "<code>return</code> kept, <code>map</code> preserves id order, "
+                    "errors re-raise at <code>.result()</code>. No extra package.</td>"
+                    "<td><b>Suits if the app is already async.</b> Same overlap on 1 "
+                    "thread. Problem if you only have <code>requests</code>: you must add "
+                    "<code>aiohttp</code>/<code>httpx</code> or you freeze the loop. "
+                    "Overkill for a 10-line script.</td></tr>"
+                    "<tr><td><b>2. Heartbeat in a Windows service</b><br>"
+                    "Ping <code>/health</code> every 30s until the process stops</td>"
+                    "<td><b>Suits — this is the Thread case.</b> "
+                    "<code>Thread(target=loop, daemon=True)</code> lives as long as the "
+                    "service. No result list, no batch.</td>"
+                    "<td><b>Problem.</b> A pool expects tasks that <b>end</b>. "
+                    "<code>with ThreadPoolExecutor(...) as pool:</code> will not leave the "
+                    "block while the ping loop is still running, so shutdown hangs.</td>"
+                    "<td><b>Suits only inside an async service</b> "
+                    "(<code>async def heartbeat():</code> + "
+                    "<code>await asyncio.sleep(30)</code>). Problem as a bolt-on in a "
+                    "sync Windows service — you would start a whole event loop for one "
+                    "ping.</td></tr>"
+                    "<tr><td><b>3. Log tail / folder watch</b><br>"
+                    "Block on <code>readline</code> or a file-system event until shutdown</td>"
+                    "<td><b>Suits.</b> One long-lived thread blocked on I/O; GIL released "
+                    "while waiting. Nothing to <code>map</code>.</td>"
+                    "<td><b>Problem.</b> Same as the heartbeat: the worker never "
+                    "returns, so the pool cannot drain. You would also waste a worker "
+                    "slot that should be for short jobs.</td>"
+                    "<td><b>Awkward / often a problem.</b> Classic "
+                    "<code>readline</code> is blocking. You need an async file API or "
+                    "<code>asyncio.to_thread</code> — extra machinery for one watcher. "
+                    "Thread is the honest fit.</td></tr>"
+                    "<tr><td><b>4. Nightly CRM export</b><br>"
+                    "<code>getCustomerInfo</code> for 200 account IDs, write a CSV</td>"
+                    "<td><b>Creates a problem.</b> 200 threads = 200 stacks, start/join "
+                    "boilerplate, finish-order list, silent per-thread errors. Works on a "
+                    "quiet night, fails under load or in review.</td>"
+                    "<td><b>Suits — default answer.</b> "
+                    "<code>max_workers=8</code> reused across 200 IDs; results in id "
+                    "order; keep <code>requests</code>. If a later step renders PDFs "
+                    "(CPU), swap the class to <code>ProcessPoolExecutor</code>.</td>"
+                    "<td><b>Suits if the job runner is already "
+                    "<code>asyncio</code>.</b> 200 <code>await</code>s on one thread is "
+                    "cheap. Problem: do not mix in blocking "
+                    "<code>requests.get</code> — that serializes the whole export.</td></tr>"
+                    "<tr><td><b>5. Order confirmation fan-out</b><br>"
+                    "One order: payment + inventory + shipping (3–8 blocking APIs)</td>"
+                    "<td><b>Suits but noisy.</b> 3–8 threads work. Problem: mailbox list, "
+                    "manual join, easy to forget one call’s error and still email "
+                    "“confirmed”.</td>"
+                    "<td><b>Suits — usual pick in a "
+                    "<code>requests</code> codebase.</b> "
+                    "<code>pool.map</code> / three <code>submit</code>s; fail the order "
+                    "if any <code>Future</code> raises. Small batch, not 200 threads.</td>"
+                    "<td><b>Suits in FastAPI / aiohttp.</b> "
+                    "<code>asyncio.gather(pay, stock, ship)</code>. Problem in a sync "
+                    "Django view: you must not call <code>asyncio.run</code> per request "
+                    "if a loop is already running; prefer the pool there.</td></tr>"
+                    "<tr><td><b>6. FastAPI dashboard / 500 WebSockets</b><br>"
+                    "Each GET awaits 6 APIs; or 500 browsers stay connected</td>"
+                    "<td><b>Creates a serious problem.</b> Hundreds of users × 6 waits = "
+                    "thousands of threads (RAM, context switches). WebSockets: one Thread "
+                    "per browser will not survive.</td>"
+                    "<td><b>Suits a few concurrent users; problem at scale.</b> "
+                    "A pool of 32 workers cannot hold 500 open sockets. Fine as "
+                    "<code>asyncio.to_thread(requests.get)</code> for one blocking "
+                    "library, not as the server model.</td>"
+                    "<td><b>Suits — this is why async exists.</b> One thread, thousands "
+                    "of waits. Dashboard: "
+                    "<code>await gather(customer, orders, loyalty, ...)</code>. "
+                    "Hub: each socket is an <code>await</code>, not a thread.</td></tr>"
+                    "</table>"
+                    "<h3 style=\"margin-top:12px\">Decision flowchart — which of the three?</h3>"
+                    "<p class=\"fc-kid-hint\">Start at the top. "
+                    "<b>YES</b> = take the box on the right and stop. "
+                    "<b>NO</b> = go down. The six scenarios above land on these boxes.</p>"
+                    '<div class="fc-wrap slide-fc">'
+                    '<div class="fc">'
+                    '<div class="fc-start">I have overlapping I/O'
+                    "<small>HTTP, files, sockets — not “run faster on two CPU cores”</small>"
+                    "</div>"
+                    '<div class="fc-arrow"></div>'
+                    '<div class="fc-node">'
+                    '<div class="fc-q-box">Is the slow part CPU-heavy Python '
+                    "(math, image resize, huge parse)?</div>"
+                    '<div class="fc-branch">'
+                    '<div class="fc-spacer"></div>'
+                    '<div class="fc-mid"><div class="fc-arrow tall"></div>'
+                    '<span class="fc-arrow-lbl">NO</span></div>'
+                    '<div class="fc-yes"><span class="fc-side yes">YES</span>'
+                    '<div class="fc-h right"></div>'
+                    '<div class="fc-use key"><b>ProcessPoolExecutor</b>'
+                    '<span class="fc-desc">Not Thread / pool / async. '
+                    "Each child has its own GIL. None of the six I/O scenarios above.</span>"
+                    "<code>with ProcessPoolExecutor() as p:</code>"
+                    "</div></div></div></div>"
+                    '<div class="fc-node">'
+                    '<div class="fc-q-box">Does the work never finish? '
+                    "(heartbeat, log tail, folder watch)</div>"
+                    '<div class="fc-branch">'
+                    '<div class="fc-spacer"></div>'
+                    '<div class="fc-mid"><div class="fc-arrow tall"></div>'
+                    '<span class="fc-arrow-lbl">NO</span></div>'
+                    '<div class="fc-yes"><span class="fc-side yes">YES</span>'
+                    '<div class="fc-h right"></div>'
+                    '<div class="fc-use dd"><b>threading.Thread</b>'
+                    '<span class="fc-desc">Scenarios 2 and 3. A pool '
+                    "<code>with</code> hangs because the task has no end.</span>"
+                    "<code>Thread(target=loop, daemon=True)</code>"
+                    "</div></div></div></div>"
+                    '<div class="fc-node">'
+                    '<div class="fc-q-box">Hundreds of connections at once, '
+                    "or the app is already FastAPI / aiohttp?</div>"
+                    '<div class="fc-branch">'
+                    '<div class="fc-spacer"></div>'
+                    '<div class="fc-mid"><div class="fc-arrow tall"></div>'
+                    '<span class="fc-arrow-lbl">NO</span></div>'
+                    '<div class="fc-yes"><span class="fc-side yes">YES</span>'
+                    '<div class="fc-h right"></div>'
+                    '<div class="fc-use cm"><b>async def + await</b>'
+                    '<span class="fc-desc">Scenario 6 (dashboard / 500 WebSockets). '
+                    "Also 1 or 5 if the service is already async.</span>"
+                    "<code>await asyncio.gather(...)</code>"
+                    "</div></div></div></div>"
+                    '<div class="fc-node">'
+                    '<div class="fc-q-box">A batch that ends and returns results? '
+                    "(3–200 getCustomerInfo, order fan-out)</div>"
+                    '<div class="fc-branch">'
+                    '<div class="fc-spacer"></div>'
+                    '<div class="fc-mid"><div class="fc-arrow tall"></div>'
+                    '<span class="fc-arrow-lbl">NO</span></div>'
+                    '<div class="fc-yes"><span class="fc-side yes">YES</span>'
+                    '<div class="fc-h right"></div>'
+                    '<div class="fc-use dict"><b>ThreadPoolExecutor</b>'
+                    '<span class="fc-desc">Scenarios 1, 4 and 5 in a '
+                    "<code>requests</code> / urllib app. Keep <code>return</code>, "
+                    "id order, errors re-raise.</span>"
+                    "<code>list(pool.map(getCustomerInfo, ids))</code>"
+                    "</div></div></div></div>"
+                    '<div class="fc-arrow"></div>'
+                    '<div class="fc-use dict fc-end">'
+                    "<b>Default: ThreadPoolExecutor</b>"
+                    '<span class="fc-desc">A handful of I/O jobs with a result list. '
+                    "Use a raw Thread only for one long-lived worker. "
+                    "Use async only when the process is already a many-connection server."
+                    "</span>"
+                    "<code>with ThreadPoolExecutor(max_workers=8) as pool:</code>"
+                    "</div>"
+                    "</div></div>"
+                    "<p style=\"font-size:12px;margin:6px 0 4px;line-height:1.45\">"
+                    "<b>Say in an interview (30 seconds):</b> "
+                    "“All three overlap I/O. I use a <b>raw Thread</b> for a service that "
+                    "<i>never finishes</i> — heartbeat or log tail. I use "
+                    "<b>ThreadPoolExecutor</b> for a <i>batch with a result list</i> — "
+                    "200 <code>getCustomerInfo</code> calls or payment+inventory+shipping "
+                    "— especially if we already have <code>requests</code>. I use "
+                    "<b>async</b> when the process is a server with "
+                    "<i>many connections at once</i> — FastAPI dashboard or WebSockets. "
+                    "The 3-customer demo fits all three; the choice is scale and whether "
+                    "the work has an end.”"
+                    "</p>"
+                    '<div class="callout">'
+                    "<b>Rule of thumb for <code>getCustomerInfo</code>.</b> "
+                    "One or two calls: a plain <code>def</code> is enough. "
+                    "A handful of URLs: <code>ThreadPoolExecutor</code>. "
+                    "A service that talks to many APIs at once (this is the FastAPI "
+                    "path): <code>async def getCustomerInfo</code>. "
+                    "Heavy JSON crunching after the download: "
+                    "<code>ProcessPoolExecutor</code>, not async."
+                    "</div>"
+                    "<p class=\"step-result\">"
+                    "<b>One line:</b> Thread = you run a thread · "
+                    "ThreadPool = you submit work and get returns · "
+                    "async = one thread, overlap the waits."
+                    "</p>"
+                ),
+            },
+            {
+                "title": "Step 4 — asyncio.gather & asyncio.run",
                 "body": "<code>gather</code> runs multiple coroutines concurrently. <code>run</code> is the entry point.<div class=\"step-pre\">async def main():\n    results = await asyncio.gather(\n        fetch(\"/a\"),\n        fetch(\"/b\"),\n        fetch(\"/c\"),\n    )\n    print(results)\n\nasyncio.run(main())</div>",
             },
             {
-                "title": "Step 4 — Async context managers & iterators",
+                "title": "Step 5 — Async context managers & iterators",
                 "body": "Async versions of <code>with</code> and <code>for</code> for non-blocking I/O resources.<div class=\"step-pre\">class AsyncResource:\n    async def __aenter__(self):\n        await connect()\n        return self\n    async def __aexit__(self, *args):\n        await disconnect()\n\nasync def main():\n    async with AsyncResource() as r:\n        async for item in r.stream():\n            process(item)</div>",
             },
         ],
         "interview_qa": [
-            {"q": "async vs threading?", "a": "Threading uses OS threads and the GIL. Async uses one thread and cooperatively switches during awaits — great for many concurrent I/O connections."},
+            {"q": "Walk through six real jobs: Thread vs pool vs async — suit or problem?", "a": "3× <code>getCustomerInfo</code>: all work; pool is the tidy pick. Heartbeat / log tail: Thread suits; a pool <code>with</code> hangs because the task never ends. 200-ID CRM export: raw Thread is a problem (200 stacks); pool is the default; async suits an asyncio runner only. Order fan-out (3–8 APIs): pool in a <code>requests</code> app; async in FastAPI. Dashboard / 500 WebSockets: Thread and a small pool blow RAM — async is the point."},
             {"q": "Can you use time.sleep in async code?", "a": "No — it blocks the whole event loop. Use <code>await asyncio.sleep()</code> instead."},
             {"q": "When NOT to use async?", "a": "CPU-heavy work blocks the loop. Use threads, multiprocessing, or run CPU work in <code>asyncio.to_thread()</code>."},
             {"q": "What does asyncio.gather do?", "a": "Runs multiple coroutines concurrently and returns results in order. If one fails, others may still complete depending on options."},

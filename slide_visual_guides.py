@@ -47,6 +47,13 @@ VISUAL_GUIDES: dict[int, tuple[str, str, int]] = {
 
 # Extra posters rendered below the main guide, in order.
 EXTRA_GUIDES: dict[int, list[tuple[str, str, int]]] = {
+    5: [
+        (
+            "images/slide-05-collections.png",
+            "Collections &mdash; list, tuple, set, dict",
+            1536,
+        ),
+    ],
     20: [
         (
             "images/slide-20-threading-full.jpg",

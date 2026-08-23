@@ -81,7 +81,7 @@ body.py-height-dragging { cursor: ns-resize; user-select: none; }
 .py-output {
   margin: 0; padding: 8px 12px; border-top: 1px solid #e2e8f0;
   background: #0f172a; color: #e2e8f0; font-family: Consolas, monospace; font-size: 12px;
-  line-height: 1.45; white-space: pre-wrap; max-height: 180px; overflow: auto;
+  line-height: 1.45; white-space: pre-wrap; max-height: 280px; overflow: auto;
 }
 .py-output.err { color: #fecaca; }
 .py-highlight { border-top: 1px solid #e2e8f0; padding: 4px 10px 8px; background: #fafafa; }
@@ -165,8 +165,20 @@ body.mc-row-dragging { cursor: col-resize; user-select: none; }
   gap: 10px;
   margin: 8px 0 10px;
 }
-.ex-row.ex-row-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.ex-row.ex-row-3cmp {
+  align-items: stretch;
+  margin: 8px 0 10px;
+}
+.ex-row.ex-row-3cmp .mc-col {
+  border: 1.5px solid #64748b;
+  display: flex;
+  flex-direction: column;
+}
+.ex-row.ex-row-3cmp .mc-lbl { background: #e2e8f0; color: #1e293b; }
+.ex-row.ex-row-3cmp .mc-col-async .mc-lbl { background: #ecfeff; color: #155e75; }
+.ex-row.ex-row-3cmp .mc-col-pool .mc-lbl { background: #f0fff4; color: #276749; }
+@media (max-width: 720px) {
+  .ex-row.ex-row-3cmp { grid-template-columns: 1fr; }
 }
 .ex-row.ex-row-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -663,6 +675,53 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 }
 .csharp-float-body-img.img-fullsize img {
   width: var(--native-w, 1536px); max-width: none; height: auto;
+}
+
+/* ── Spawn: without vs with __main__ (slide 20) ── */
+.spawn-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin: 8px 0 12px; max-width: 760px;
+}
+.spawn-col {
+  background: #fff; border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.spawn-col-bad { border: 1.5px solid #e53e3e; }
+.spawn-col-good { border: 1.5px solid #28a745; }
+.spawn-col-h {
+  font-size: 12px; font-weight: 800; padding: 6px 10px; text-align: center;
+}
+.spawn-col-bad .spawn-col-h { background: #fff5f5; color: #c53030; }
+.spawn-col-good .spawn-col-h { background: #f0fff4; color: #276749; }
+.spawn-col-body { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 4px; }
+.spawn-box {
+  border-radius: 7px; padding: 7px 8px; font-size: 11px; line-height: 1.4; color: #1e293b;
+  border: 1px solid #e2e8f0; background: #f8fafc;
+}
+.spawn-box b { display: block; font-size: 11px; margin-bottom: 2px; }
+.spawn-box span { display: block; color: #475569; }
+.spawn-box code { font-size: 10px; }
+.spawn-you { background: #eff6ff; border-color: #93c5fd; }
+.spawn-you b { color: #1e40af; }
+.spawn-empty { background: #f1f5f9; border-style: dashed; color: #64748b; }
+.spawn-import { background: #fefce8; border-color: #facc15; }
+.spawn-crash { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+.spawn-crash b { color: #b91c1c; }
+.spawn-skip { background: #ecfdf5; border-color: #34d399; }
+.spawn-skip b { color: #047857; }
+.spawn-ok { background: #f0fdf4; border-color: #4ade80; }
+.spawn-ok b { color: #166534; }
+.spawn-arrow {
+  text-align: center; color: #94a3b8; font-size: 13px; font-weight: 700; line-height: 1;
+}
+.spawn-end {
+  margin-top: 4px; font-size: 11px; font-weight: 700; text-align: center;
+  border-radius: 6px; padding: 6px 8px;
+}
+.spawn-end-bad { background: #7f1d1d; color: #fecaca; }
+.spawn-end-good { background: #14532d; color: #bbf7d0; }
+@media (max-width: 640px) {
+  .spawn-compare { grid-template-columns: 1fr; }
 }
 
 /* ── Visual guide poster strip (under Definition) ── */
@@ -3073,6 +3132,40 @@ import this   # PEP 20 — run in REPL once
     <a href="images/slide-05-datatypes.png" target="_blank" rel="noopener noreferrer"
       title="Open full-size image in a new tab">
       <img src="images/slide-05-datatypes.png" alt="Python Datatypes visual guide poster" loading="lazy" decoding="async">
+    </a>
+  </div>
+  <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
+</div>
+
+<div class="vguide-strip">
+  <a class="vguide-thumb" href="images/slide-05-collections.png" target="_blank" rel="noopener noreferrer"
+    title="Open the full-size poster in a new tab">
+    <img src="images/slide-05-collections.png" alt="Collections &mdash; list, tuple, set, dict visual guide poster" loading="lazy" decoding="async">
+    <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
+  </a>
+  <div class="vguide-txt">
+    <b>Visual guide &mdash; Collections &mdash; list, tuple, set, dict</b>
+    <span>One-page poster: 6 build steps with diagrams, tables and code.
+      Click the thumbnail to open it full size in a new tab.</span>
+    <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-5-2')">
+      Open in resizable window
+    </button>
+  </div>
+</div>
+<div class="csharp-float-win img-float-win" id="csharp-win-vguide-5-2" role="dialog"
+  aria-labelledby="csharp-win-title-vguide-5-2">
+  <div class="csharp-float-hdr">
+    <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
+    <h4 id="csharp-win-title-vguide-5-2">Collections &mdash; list, tuple, set, dict &ndash; Visual Guide</h4>
+    <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
+      title="Image fits the window (scales when you resize)">Fit</button>
+    <button type="button" class="csharp-float-close"
+      onclick="closeCsharpWin('vguide-5-2')" aria-label="Close">&times;</button>
+  </div>
+  <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
+    <a href="images/slide-05-collections.png" target="_blank" rel="noopener noreferrer"
+      title="Open full-size image in a new tab">
+      <img src="images/slide-05-collections.png" alt="Collections &mdash; list, tuple, set, dict visual guide poster" loading="lazy" decoding="async">
     </a>
   </div>
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
@@ -13958,7 +14051,7 @@ urls = [
 <span class="t-cm"># loading job.py</span>
 <span class="t-cm"># [1, 4, 9, 16]</span>
 <span class="t-cm">#   ← each worker re-imports job.py to get</span>
-<span class="t-cm">#     work(), skips the guard, then runs work()</span></div></div></div><div class="callout" style="margin-top:8px"><b>What <code>__name__</code> actually holds.</b> In the process <b>you</b> launched (<code>python job.py</code>) it is <code>"__main__"</code>, so the guarded block runs. In each child process the same file is imported under the name <code>"__mp_main__"</code> — so <code>__name__ == "__main__"</code> is <code>False</code>, the guarded block is skipped, and only <code>import</code>/<code>def</code>/<code>class</code> lines execute.</div><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>“Children import defs only, then run <code>work()</code>” — the life of one worker.</b> A worker is a <b>brand-new, empty</b> <code>python.exe</code>: it has none of your functions, so it has to load your file before it can run anything.</p><ul class="learn-steps" style="margin:4px 0 8px"><li><b>1. Parent sends a name, not code.</b> <code>pool.map(work, [1, 2, 3, 4])</code> pickles the <b>reference</b> <code>__mp_main__.work</code> plus each argument. The body of <code>work</code> is never shipped.</li><li><b>2. Windows starts a fresh interpreter</b> per worker (<code>spawn</code>) — empty memory, no <code>work</code> yet.</li><li><b>3. The worker imports your file — “defs only”.</b> It runs <code>job.py</code> top to bottom under the name <code>__mp_main__</code>. The <code>import</code> lines and <code>def work</code> execute, so <code>work</code> now exists. The <code>if __name__ == "__main__"</code> block is <b>skipped</b>, so the prints, the downloads and the pool itself do not re-run.</li><li><b>4. Then it runs <code>work()</code>.</b> The worker resolves the pickled name in the module it just imported, calls <code>work(1)</code>, and pickles the return value back to the parent.</li></ul><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>See it yourself — real console output, without vs with the guard.</b> One <code>print</code> at module level (fires on every import) and one inside <code>work</code> (fires only when a task runs). Same 2-worker pool in both columns:</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; No guard &mdash; nothing gets done</span><div class="step-pre"><mark class="hl-key">import</mark> os
+<span class="t-cm">#     work(), skips the guard, then runs work()</span></div></div></div><div class="callout" style="margin-top:8px"><b>What <code>__name__</code> actually holds.</b> In the process <b>you</b> launched (<code>python job.py</code>) it is <code>"__main__"</code>, so the guarded block runs. In each child process the same file is imported under the name <code>"__mp_main__"</code> — so <code>__name__ == "__main__"</code> is <code>False</code>, the guarded block is skipped, and only <code>import</code>/<code>def</code>/<code>class</code> lines execute.</div><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>“Children import defs only, then run <code>work()</code>” — the life of one worker.</b> A worker is a <b>brand-new, empty</b> <code>python.exe</code>: it has none of your functions, so it has to load your file before it can run anything.</p><ul class="learn-steps" style="margin:4px 0 8px"><li><b>1. Parent sends a name, not code.</b> <code>pool.map(work, [1, 2, 3, 4])</code> pickles the <b>reference</b> <code>__mp_main__.work</code> plus each argument. The body of <code>work</code> is never shipped.</li><li><b>2. Windows starts a fresh interpreter</b> per worker (<code>spawn</code>) — empty memory, no <code>work</code> yet.</li><li><b>3. The worker imports your file — “defs only”.</b> It runs <code>job.py</code> top to bottom under the name <code>__mp_main__</code>. The <code>import</code> lines and <code>def work</code> execute, so <code>work</code> now exists. The <code>if __name__ == "__main__"</code> block is <b>skipped</b>, so the prints, the downloads and the pool itself do not re-run.</li><li><b>4. Then it runs <code>work()</code>.</b> The worker resolves the pickled name in the module it just imported, calls <code>work(1)</code>, and pickles the return value back to the parent.</li></ul><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Same 4 steps, side by side.</b> Left: the child’s import re-runs the pool. Right: the child still imports (step 3), but the guard skips the pool, so step 4 can run.</p><div class="spawn-compare"><div class="spawn-col spawn-col-bad"><div class="spawn-col-h">&#10060; Without <code>if __name__ == "__main__"</code></div><div class="spawn-col-body"><div class="spawn-box spawn-you"><b>YOU &mdash; python job.py</b><span><code>__name__ = "__main__"</code> &middot; creates <code>ProcessPoolExecutor(2)</code> &middot; pickles the name <code>work</code> + args <code>[1, 2]</code></span></div><div class="spawn-arrow">&darr; spawn empty python.exe</div><div class="spawn-box spawn-empty"><b>WORKER &mdash; empty memory</b><span>brand-new interpreter &middot; no <code>work</code> yet</span></div><div class="spawn-arrow">&darr; re-imports job.py as <code>__mp_main__</code></div><div class="spawn-box spawn-import"><b>3. Import &mdash; EVERY top-level line</b><span><code>def work</code> runs &middot; then <code>ProcessPoolExecutor(2)</code> runs AGAIN inside the child</span></div><div class="spawn-arrow">&darr; child tries to spawn grandchildren</div><div class="spawn-box spawn-crash"><b>CRASH in the child</b><span><code>RuntimeError</code>: bootstrapping phase not finished</span></div><div class="spawn-arrow">&darr; worker process is killed</div><div class="spawn-box spawn-crash"><b>Parent sees the death</b><span><code>BrokenProcessPool</code> &middot; exit code 1</span></div><div class="spawn-end spawn-end-bad">Step 4 never happens &mdash; <code>work()</code> is never called</div></div></div><div class="spawn-col spawn-col-good"><div class="spawn-col-h">&#10004; With <code>if __name__ == "__main__"</code></div><div class="spawn-col-body"><div class="spawn-box spawn-you"><b>YOU &mdash; python job.py</b><span><code>__name__ = "__main__"</code> &middot; guard is True &middot; creates the pool &middot; pickles the name <code>work</code> + args</span></div><div class="spawn-arrow">&darr; spawn empty python.exe</div><div class="spawn-box spawn-empty"><b>WORKER &mdash; empty memory</b><span>brand-new interpreter &middot; no <code>work</code> yet (same as the left)</span></div><div class="spawn-arrow">&darr; re-imports job.py as <code>__mp_main__</code></div><div class="spawn-box spawn-skip"><b>3. Import &mdash; defs only</b><span><code>__name__ = "__mp_main__"</code> &middot; <code>def work</code> runs &middot; guard is False, so the pool is <b>skipped</b></span></div><div class="spawn-arrow">&darr; look up the pickled name</div><div class="spawn-box spawn-ok"><b>4. Run <code>work(1)</code></b><span>result pickled back to you &middot; <code>[task] n=1 pid=&hellip;</code></span></div><div class="spawn-end spawn-end-good">Both columns import. Only this column reaches step 4.</div></div></div></div><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>See it yourself — real console output, without vs with the guard.</b> One <code>print</code> at module level (fires on every import) and one inside <code>work</code> (fires only when a task runs). Same 2-worker pool in both columns:</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; No guard &mdash; nothing gets done</span><div class="step-pre"><mark class="hl-key">import</mark> os
 <mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
 
 <mark class="hl-key">print</mark>(f"[import] __name__={__name__!r} "
@@ -14008,7 +14101,7 @@ urls = [
 <span class="t-cm"># [task] n=2 pid=47364</span>
 <span class="t-cm">#            ← work() ran in a worker process</span>
 <span class="t-cm">#</span>
-<span class="t-cm"># no error, exit code 0</span></div></div></div><div class="callout" style="margin-top:4px"><b>The surprise in that output:</b> <code>[import]</code> prints <b>3 times in both columns</b>. The guard does <b>not</b> stop the re-import — the worker always re-imports your file. What the guard stops is the <b>re-run of your program body</b>. Without it, the child re-runs <code>ProcessPoolExecutor(...)</code> itself, tries to spawn grandchildren mid-import, and is killed; the parent then reports <code>BrokenProcessPool</code>.</div><table class="data-tbl"><tr><th>In the output above</th><th>&#10060; No guard</th><th>&#10004; Guarded</th></tr><tr><td><code>[import]</code> lines (the re-import)</td><td>3 — you + 2 workers</td><td>3 — you + 2 workers (<b>same</b>)</td></tr><tr><td>Pool created inside the child?</td><td>yes → <code>RuntimeError</code></td><td>no — guard skips it</td></tr><tr><td><code>[task]</code> lines (actual work)</td><td><b>0</b></td><td><b>2</b>, on worker pids</td></tr><tr><td>How the script ends</td><td><code>BrokenProcessPool</code>, exit code 1</td><td>clean, exit code 0</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45">Note the pids in the guarded run: every <code>[task]</code> line shows a <b>worker</b> pid, never yours — the real work happens in the children. Both items landed on worker 1 here simply because it was free again before the second item was handed out.</p><div class="callout" style="margin-top:4px"><b>Consequence of “a name, not code”.</b> The worker must be able to find <code>work</code> after importing your file, so the target must be a <b>top-level</b> <code>def</code>. A <code>lambda</code>, a function nested inside another function, or an instance method of an unpicklable object fails with <code>PicklingError: Can't pickle &lt;function &lt;lambda&gt;&gt;: attribute lookup &lt;lambda&gt; on __main__ failed</code> — pickle looked for the name and there was nothing to find.</div><table class="data-tbl"><tr><th>Behaviour</th><th>&#10060; Without guard</th><th>&#10004; With guard</th></tr><tr><td><b>What each child re-runs on import</b></td><td>every top-level line — prints, downloads, and the <code>ProcessPoolExecutor</code> itself</td><td>only <code>import</code> and <code>def</code>/<code>class</code></td></tr><tr><td><b>Starting the pool</b></td><td><code>RuntimeError</code> in each child, then <code>BrokenProcessPool</code> in the parent (runaway spawn in a frozen <code>.exe</code>)</td><td>starts cleanly</td></tr><tr><td><b>Side effects</b> (downloads, DB writes, logs)</td><td>repeated once per child — 4 workers = 4 extra downloads</td><td>run once, in the parent</td></tr><tr><td><b>Windows / macOS</b> (<code>spawn</code> start method)</td><td>broken</td><td>works</td></tr><tr><td><b>Linux</b> (<code>fork</code> start method)</td><td>often appears to work — hides the bug until you ship to Windows</td><td>works, and stays portable</td></tr><tr><td><b><code>import job</code> from a test or another module</b></td><td>the pool spins up during the import</td><td>nothing runs — you import, then call what you need</td></tr><tr><td><b>Threads only</b> (no <code>ProcessPool</code>)</td><td>guard not required — threads share the process, no re-import</td><td>harmless, and still the habit to keep</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Benefit in one sentence:</b> the guard separates <b>“this file is being imported”</b> from <b>“this program is starting”</b> — child processes get your functions without re-running your program. C# gets this for free: <code>static void Main()</code> is the entry point, and a new process never re-imports your assembly.</p><div class="callout" style="margin-top:4px"><b>Not only for pools.</b> The guard asks one question — <i>“am I the program being run, or am I being imported?”</i> — and pools are just the case where getting it wrong <b>crashes</b>. The three you will use daily:<br>1. <b>One file, two roles</b> — importable module <i>and</i> runnable script, so <code>import job</code> does not execute your program.<br>2. <b>Entry point</b> — <code>main()</code>, argparse and <code>sys.argv</code> live in the guard, not at module level.<br>3. <b>Test-friendly imports</b> — <code>pytest</code> imports your module to collect tests; without the guard, collection runs your program.<br><span style="font-size:11px">Full list — including <code>python -m</code>, uvicorn workers and frozen <code>.exe</code> files — in <b>“Purposes of <code>if __name__ == "__main__"</code>”</b> further down this slide.</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why bytes and not an <code>Image</code> object?</b> Arguments are <b>pickled</b> and copied to the child process. Plain <code>bytes</code> pickle cleanly; open file handles and many library objects do not.</p><table class="data-tbl"><tr><th></th><th>ThreadPool</th><th>ProcessPool</th></tr><tr><td><b>Job</b></td><td><code>download</code></td><td><code>heavy_resize</code></td></tr><tr><td><b>Bound</b></td><td>I/O</td><td>CPU</td></tr><tr><td><b>GIL</b></td><td>OK (released while waiting)</td><td>Bypassed (own GIL per process)</td></tr><tr><td><b>Workers</b></td><td>Threads in one process</td><td>Child processes</td></tr></table></li><li><b>Step 7 — Count processes/threads + Lock</b><br><b>How many if you add pools?</b><div class="callout"><b>Two rules do all the counting.</b><br><b>1.</b> Every command you launch — <code>python api.py</code> — is <b>one process</b>, and a process always starts with <b>exactly one thread</b>, its <code>MainThread</code>. So <b>3 apps = 3 processes = 3 threads</b>. That is where the “3” comes from: you counted the commands, not anything Python did.<br><b>2.</b> A <b>ThreadPool adds threads inside</b> the process it was created in (process count unchanged). A <b>ProcessPool adds whole new processes</b>, and each of those brings its own <code>MainThread</code> and its own GIL.</div><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Count it step by step.</b> Say you launched <code>python api.py</code> (App1), <code>python worker.py</code> (App2) and <code>python notebook.py</code> (App3). Running totals for the whole machine:</p><table class="data-tbl"><tr><th>Step</th><th>App1</th><th>App2</th><th>App3</th><th>Total processes</th><th>Total threads</th></tr><tr><td><b>a.</b> 3 apps, no pools</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td><b>3</b></td><td><b>3</b></td></tr><tr><td><b>b.</b> App1 adds <code>ThreadPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · <b>5</b> threads<br>(1 main + 4 workers)</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>still <b>3</b><br>(threads are not processes)</td><td><b>7</b> = 5 + 1 + 1</td></tr><tr><td><b>c.</b> App2 also adds <code>ProcessPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · 5 threads</td><td><b>5</b> procs · <b>7</b> threads<br>parent: 3 · each child: 1</td><td>1 proc · 1 thread</td><td><b>7</b> = 1 + 5 + 1</td><td><b>13</b> = 5 + 7 + 1</td></tr></table><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Measured on Windows / Python 3.12</b> — one app, printing <code>threading.enumerate()</code> at each stage:</p><div class="step-pre">1. at start                    pid=48900 threads=1
+<span class="t-cm"># no error, exit code 0</span></div></div></div><div class="callout" style="margin-top:4px"><b>The surprise in that output:</b> <code>[import]</code> prints <b>3 times in both columns</b>. The guard does <b>not</b> stop the re-import — the worker always re-imports your file. What the guard stops is the <b>re-run of your program body</b>. Without it, the child re-runs <code>ProcessPoolExecutor(...)</code> itself, tries to spawn grandchildren mid-import, and is killed; the parent then reports <code>BrokenProcessPool</code>.</div><table class="data-tbl"><tr><th>In the output above</th><th>&#10060; No guard</th><th>&#10004; Guarded</th></tr><tr><td><code>[import]</code> lines (the re-import)</td><td>3 — you + 2 workers</td><td>3 — you + 2 workers (<b>same</b>)</td></tr><tr><td>Pool created inside the child?</td><td>yes → <code>RuntimeError</code></td><td>no — guard skips it</td></tr><tr><td><code>[task]</code> lines (actual work)</td><td><b>0</b></td><td><b>2</b>, on worker pids</td></tr><tr><td>How the script ends</td><td><code>BrokenProcessPool</code>, exit code 1</td><td>clean, exit code 0</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45">Note the pids in the guarded run: every <code>[task]</code> line shows a <b>worker</b> pid, never yours — the real work happens in the children. Both items landed on worker 1 here simply because it was free again before the second item was handed out.</p><div class="callout" style="margin-top:4px"><b>Consequence of “a name, not code”.</b> The worker must be able to find <code>work</code> after importing your file, so the target must be a <b>top-level</b> <code>def</code>. A <code>lambda</code>, a function nested inside another function, or an instance method of an unpicklable object fails with <code>PicklingError: Can't pickle &lt;function &lt;lambda&gt;&gt;: attribute lookup &lt;lambda&gt; on __main__ failed</code> — pickle looked for the name and there was nothing to find.</div><table class="data-tbl"><tr><th>Behaviour</th><th>&#10060; Without guard</th><th>&#10004; With guard</th></tr><tr><td><b>What each child re-runs on import</b></td><td>every top-level line — prints, downloads, and the <code>ProcessPoolExecutor</code> itself</td><td>only <code>import</code> and <code>def</code>/<code>class</code></td></tr><tr><td><b>Starting the pool</b></td><td><code>RuntimeError</code> in each child, then <code>BrokenProcessPool</code> in the parent (runaway spawn in a frozen <code>.exe</code>)</td><td>starts cleanly</td></tr><tr><td><b>Side effects</b> (downloads, DB writes, logs)</td><td>repeated once per child — 4 workers = 4 extra downloads</td><td>run once, in the parent</td></tr><tr><td><b>Windows / macOS</b> (<code>spawn</code> start method)</td><td>broken</td><td>works</td></tr><tr><td><b>Linux</b> (<code>fork</code> start method)</td><td>often appears to work — hides the bug until you ship to Windows</td><td>works, and stays portable</td></tr><tr><td><b><code>import job</code> from a test or another module</b></td><td>the pool spins up during the import</td><td>nothing runs — you import, then call what you need</td></tr><tr><td><b>Threads only</b> (no <code>ProcessPool</code>)</td><td>guard not required — threads share the process, no re-import</td><td>harmless, and still the habit to keep</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Benefit in one sentence:</b> the guard separates <b>“this file is being imported”</b> from <b>“this program is starting”</b> — child processes get your functions without re-running your program. C# gets this for free: <code>static void Main()</code> is the entry point, and a new process never re-imports your assembly.</p><div class="callout" style="margin-top:4px"><b>Not only for pools.</b> The guard asks one question — <i>“am I the program being run, or am I being imported?”</i> — and pools are just the case where getting it wrong <b>crashes</b>. The three you will use daily:<br>1. <b>One file, two roles</b> — importable module <i>and</i> runnable script, so <code>import job</code> does not execute your program.<br>2. <b>Entry point</b> — <code>main()</code>, argparse and <code>sys.argv</code> live in the guard, not at module level.<br>3. <b>Test-friendly imports</b> — <code>pytest</code> imports your module to collect tests; without the guard, collection runs your program.<br><span style="font-size:11px">Full list — including <code>python -m</code>, uvicorn workers and frozen <code>.exe</code> files — in <b>“Purposes of <code>if __name__ == "__main__"</code>”</b> further down this slide.</span></div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why bytes and not an <code>Image</code> object?</b> Arguments are <b>pickled</b> and copied to the child process. Plain <code>bytes</code> pickle cleanly; open file handles and many library objects do not.</p><table class="data-tbl"><tr><th></th><th>ThreadPool</th><th>ProcessPool</th></tr><tr><td><b>Job</b></td><td><code>download</code></td><td><code>heavy_resize</code></td></tr><tr><td><b>Bound</b></td><td>I/O</td><td>CPU</td></tr><tr><td><b>GIL</b></td><td>OK (released while waiting)</td><td>Bypassed (own GIL per process)</td></tr><tr><td><b>Workers</b></td><td>Threads in one process</td><td>Child processes</td></tr></table></li><li><b>Step 7 — Count processes/threads + Lock</b><br><b>How many if you add pools?</b><div class="callout"><b>Two rules do all the counting.</b><br><b>1.</b> Every command you launch — <code>python api.py</code> — is <b>one process</b>, and a process always starts with <b>exactly one thread</b>, its <code>MainThread</code>. So <b>3 apps = 3 processes = 3 threads</b>. That is where the “3” comes from: you counted the commands, not anything Python did.<br><b>2.</b> A <b>ThreadPool adds threads inside</b> the process it was created in (process count unchanged). A <b>ProcessPool adds whole new processes</b>, and each of those brings its own <code>MainThread</code> and its own GIL.</div><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Count it step by step.</b> Say you launched <code>python api.py</code> (App1), <code>python worker.py</code> (App2) and <code>python notebook.py</code> (App3). Running totals for the whole machine:</p><table class="data-tbl"><tr><th>Step</th><th>App1</th><th>App2</th><th>App3</th><th>Total processes</th><th>Total threads</th></tr><tr><td><b>a.</b> 3 apps, no pools</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td><b>3</b></td><td><b>3</b></td></tr><tr><td><b>b.</b> App1 adds <code>ThreadPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · <b>5</b> threads<br>(1 main + 4 workers)</td><td>1 proc · 1 thread</td><td>1 proc · 1 thread</td><td>still <b>3</b><br>(threads are not processes)</td><td><b>7</b> = 5 + 1 + 1</td></tr><tr><td><b>c.</b> App2 also adds <code>ProcessPoolExecutor(4)</code>, 4 tasks running</td><td>1 proc · 5 threads</td><td><b>5</b> procs · <b>7</b> threads<br>parent: 3 · each child: 1</td><td>1 proc · 1 thread</td><td><b>7</b> = 1 + 5 + 1</td><td><b>13</b> = 5 + 7 + 1</td></tr></table><div class="callout" style="margin-top:8px"><b>That App2 cell unpacked — <code>5 procs · 7 threads</code> / <code>parent: 3 · each child: 1</code>.</b> App2 was one <code>python worker.py</code>. <code>ProcessPoolExecutor(4)</code> does <b>not</b> add 4 threads inside that process. It starts <b>4 extra <code>python.exe</code></b> workers.</div><table class="data-tbl"><tr><th>Where</th><th>Processes</th><th>Threads</th><th>What they are</th></tr><tr><td><b>Parent</b> (the App2 you launched)</td><td>1</td><td><b>3</b></td><td><code>MainThread</code> — your code<br><code>QueueFeederThread</code> — pickles args into the pipe<br><code>Thread-1</code> — reads results, completes <code>Future</code>s<br>These 2 extras are plumbing, not <code>work()</code></td></tr><tr><td>Child 1</td><td>1</td><td>1</td><td>its own <code>MainThread</code> — this is where <code>work()</code> runs</td></tr><tr><td>Child 2</td><td>1</td><td>1</td><td>same</td></tr><tr><td>Child 3</td><td>1</td><td>1</td><td>same</td></tr><tr><td>Child 4</td><td>1</td><td>1</td><td>same</td></tr><tr><td><b>App2 total</b></td><td><b>5</b> = 1 + 4</td><td><b>7</b> = 3 + 4×1</td><td>Task Manager shows <b>5</b> <code>python.exe</code> entries for App2, not 1</td></tr></table><p style="font-size:12px;margin:6px 0;line-height:1.45">The four workers do <b>not</b> join App2’s original process. Each is a new process, so it starts with one <code>MainThread</code> and its own GIL. That is why the shorthand is <b>parent: 3 · each child: 1</b>.</p><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Measured on Windows / Python 3.12</b> — one app, printing <code>threading.enumerate()</code> at each stage:</p><div class="step-pre">1. at start                    pid=48900 threads=1
    ['MainThread']
 
 2. inside ThreadPool(4)        pid=48900 threads=5
@@ -14022,11 +14115,28 @@ urls = [
 4. inside ProcessPool(4)       pid=48900 threads=3
    ['MainThread', 'QueueFeederThread', 'Thread-1']
    child processes: 4 [31428, 42412, 16184, 64140]
-   each child: threads=1 ['MainThread']</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Where App2’s 7 threads come from.</b> The 4 children are separate <code>python.exe</code> processes, each doing your work on its single <code>MainThread</code> — that is 4. The parent has 3: its <code>MainThread</code> plus two helpers Python created for you — <code>QueueFeederThread</code> pickles arguments and writes them into the pipe, and the executor’s manager thread reads results back and completes your <code>Future</code> objects. 4 + 3 = 7.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why the old table said “≈ 5”.</b> <code>max_workers=4</code> is a <b>ceiling</b>, not a reservation — <code>ThreadPoolExecutor</code> creates one thread per submitted task until it hits the ceiling. Submit only 2 tasks and you measure <b>3</b> threads (<code>['MainThread', 'ThreadPoolExecutor-0_0', 'ThreadPoolExecutor-0_1']</code>). Leave the <code>with</code> block and you are back to 1. Libraries can also add their own threads, so treat 5 as “main + up to 4”.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Sanity check in Task Manager:</b> step <b>c</b> shows <b>7</b> <code>python.exe</code> entries — App1, App3, App2’s parent and App2’s 4 children. Threads never appear there as separate entries; they are inside one entry, which is exactly the difference between the two columns.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Lock</b> — when threads share one variable, use <code>threading.Lock</code> so two threads don’t update it at the same time:</p><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
+   each child: threads=1 ['MainThread']</div><p style="font-size:12px;margin:6px 0;line-height:1.45">The measured dump below is that same App2 parent: <code>threads=3</code> plus <code>child processes: 4</code>, each <code>threads=1</code>.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Why the old table said “≈ 5”.</b> <code>max_workers=4</code> is a <b>ceiling</b>, not a reservation — <code>ThreadPoolExecutor</code> creates one thread per submitted task until it hits the ceiling. Submit only 2 tasks and you measure <b>3</b> threads (<code>['MainThread', 'ThreadPoolExecutor-0_0', 'ThreadPoolExecutor-0_1']</code>). Leave the <code>with</code> block and you are back to 1. Libraries can also add their own threads, so treat 5 as “main + up to 4”.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Sanity check in Task Manager:</b> step <b>c</b> shows <b>7</b> <code>python.exe</code> entries — App1, App3, App2’s parent and App2’s 4 children. Threads never appear there as separate entries; they are inside one entry, which is exactly the difference between the two columns.</p><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Lock</b> — when threads share one variable, use <code>threading.Lock</code> so two threads don’t update it at the same time:</p><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
 lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
 
 <mark class="hl-key">with</mark> lock:
-    shared_counter += 1</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Both <code>with</code> blocks on this slide are context managers.</b> <code>with lock:</code> releases the lock in <code>__exit__</code>, so an exception inside the block cannot leave it held — that is how you avoid a deadlock. Leaving <code>with ThreadPoolExecutor(...)</code> calls <code>shutdown(wait=True)</code>, which is exactly why the measured thread count above drops back to 1 after the block. Full protocol and use cases on <b>Slide 26 — Context Manager</b>.</p><p class="step-result"><b>Remember:</b> separate apps → separate processes · ThreadPool → more threads · ProcessPool → more <b>processes</b>.</p></li><li><b>Step 8 — threading.Thread vs ThreadPoolExecutor</b><br>Both run <b>threads</b> in <b>one process</b>, so the GIL rules from Step 3 are identical — good for I/O, no help for CPU. The difference is <b>who does the bookkeeping</b>: with <code>threading.Thread</code> you create, start, join and collect results yourself; <code>ThreadPoolExecutor</code> is a managed pool that hands you <b>return values</b>.<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">threading.Thread &mdash; manual, no return value</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
+    shared_counter += 1</div><p style="font-size:12px;margin:6px 0;line-height:1.45"><b>Both <code>with</code> blocks on this slide are context managers.</b> <code>with lock:</code> releases the lock in <code>__exit__</code>, so an exception inside the block cannot leave it held — that is how you avoid a deadlock. Leaving <code>with ThreadPoolExecutor(...)</code> calls <code>shutdown(wait=True)</code>, which is exactly why the measured thread count above drops back to 1 after the block. Full protocol and use cases on <b>Slide 26 — Context Manager</b>.</p><p class="step-result"><b>Remember:</b> separate apps → separate processes · ThreadPool → more threads · ProcessPool → more <b>processes</b>.</p></li><li><b>Step 8 — threading.Thread vs ThreadPoolExecutor</b><br>Both run <b>threads</b> in <b>one process</b>, so the GIL rules from Step 3 are identical — good for I/O, no help for CPU. The difference is <b>who does the bookkeeping</b>: with <code>threading.Thread</code> you create, start, join and collect results yourself; <code>ThreadPoolExecutor</code> is a managed pool that hands you <b>return values</b>.<p style="font-size:12px;margin:8px 0 6px;line-height:1.45"><b>A normal Python function already returns a result.</b> If you write <code>return x</code>, the caller gets <code>x</code>. If you write nothing, Python still returns <code>None</code>. That is not a Thread vs pool thing — it is how <b>every</b> <code>def</code> works.</p><div class="step-pre"><mark class="hl-key">def</mark> fetch(url):
+    <mark class="hl-key">return</mark> download(url)     <span class="t-cm"># always legal</span>
+
+value = fetch(url)           <span class="t-cm"># caller receives the return</span>
+<mark class="hl-key">print</mark>(value)</div><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Why the left column appends instead.</b> <code>threading.Thread</code> (Python 2, 2001) was modelled on OS / Java threads: <code>target</code> is a <b>void procedure</b> — <code>t.start()</code> calls <code>target(*args)</code> on the new thread and <b>throws the return value away</b>. There is no <code>t.result()</code>. So the old pattern was: write into something both threads can see.</p><div class="step-pre"><span class="t-cm"># what Thread.start() does, simplified</span>
+<mark class="hl-key">def</mark> _bootstrap():
+    result = target(*args)    <span class="t-cm"># fetch DID return</span>
+    <span class="t-cm"># …and then result is discarded. nothing stores it.</span>
+
+<span class="t-cm"># so people invented a mailbox the function can see:</span>
+results = []                 <span class="t-cm"># 1) shared list  (order = finish order)</span>
+q = queue.<mark class="hl-key">Queue</mark>()            <span class="t-cm"># 2) Queue        (thread-safe mailbox)</span>
+self.answer = <mark class="hl-key">None</mark>           <span class="t-cm"># 3) object field you set yourself</span></div><p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>How the pool developed.</b> Python 3.2 added <code>concurrent.futures</code> (PEP 3148) — the same idea as Java’s <code>Future</code> / C#’s <code>Task&lt;T&gt;</code>. The pool still calls your function, but it <b>keeps</b> the return value:</p><div class="step-pre">fut = pool.submit(fetch, url)   <span class="t-cm"># wraps the call</span>
+<span class="t-cm"># inside the worker, roughly:</span>
+<span class="t-cm">#   fut._result = fetch(url)    # return is stored, not dropped</span>
+<mark class="hl-key">print</mark>(fut.result())             <span class="t-cm"># wait + give it back (or re-raise)</span>
+
+<mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(fetch, urls))     <span class="t-cm"># submit all, collect in input order</span></div><p style="font-size:12px;margin:6px 0 8px;line-height:1.45">So: <b>develop the function with <code>return</code></b> — that is the Python way. Append to <code>results</code> only when the API you are calling (<code>Thread.target</code>) will not hand the return back. Prefer the pool when the work has an end and a result.</p><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">threading.Thread &mdash; manual, no return value</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
 
 results = []                  <span class="t-cm"># shared state</span>
 
@@ -14142,7 +14252,47 @@ t1.join(); t2.join()
 
 <mark class="hl-key">with</mark> <mark class="hl-key">Pool</mark>(2) <mark class="hl-key">as</mark> p:
     results = p.<mark class="hl-key">map</mark>(crunch, [10**7, 10**7])
-<span class="t-cm"># Truly parallel — each process has its own GIL</span></div></div></div><span class="mistake-note">&#128161; Use <code>threading</code> for I/O-bound tasks (network, file, DB). Use <code>multiprocessing</code> or <code>concurrent.futures.ProcessPoolExecutor</code> for CPU-bound work.</span></div>
+<span class="t-cm"># Truly parallel — each process has its own GIL</span></div></div></div><span class="mistake-note">&#128161; Use <code>threading</code> for I/O-bound tasks (network, file, DB). Use <code>multiprocessing.Pool</code> <em>or</em> <code>concurrent.futures.ProcessPoolExecutor</code> for CPU-bound work — same idea (child processes, own GIL, pickle, <code>if __name__ == "__main__"</code>). They are two APIs, not two kinds of parallelism.</span>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b><code>Pool</code> vs <code>ProcessPoolExecutor</code> — why both exist.</b> <code>multiprocessing.Pool</code> came first (Python 2.6, 2008). Python 3.2 added <code>concurrent.futures</code> (PEP 3148) so <b>threads and processes share one interface</b> (<code>submit</code> / <code>map</code> / <code>Future</code>) — the same split you already saw with <code>Thread</code> vs <code>ThreadPoolExecutor</code>. <code>ProcessPoolExecutor</code> is implemented <em>on top of</em> <code>multiprocessing</code>; it does not replace the OS-level process model.</p>
+<div class="mc-row">
+  <div class="mc-col mc-bad"><span class="mc-lbl">multiprocessing.Pool &mdash; older API</span><div class="step-pre"><mark class="hl-key">from</mark> multiprocessing <mark class="hl-key">import</mark> <mark class="hl-key">Pool</mark>
+
+<mark class="hl-key">def</mark> crunch(n):
+    <mark class="hl-key">return</mark> <mark class="hl-key">sum</mark>(i**2 <mark class="hl-key">for</mark> i <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(n))
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">with</mark> <mark class="hl-key">Pool</mark>(2) <mark class="hl-key">as</mark> p:
+        results = p.<mark class="hl-key">map</mark>(crunch, [10**7, 10**7])
+        <span class="t-cm"># map returns a list</span>
+    <mark class="hl-key">print</mark>(results)
+
+<span class="t-cm"># same jobs, 2 child processes, own GIL each</span></div></div>
+  <div class="mc-col mc-good"><span class="mc-lbl">ProcessPoolExecutor &mdash; same jobs, Future API</span><div class="step-pre"><mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ProcessPoolExecutor
+
+<mark class="hl-key">def</mark> crunch(n):
+    <mark class="hl-key">return</mark> <mark class="hl-key">sum</mark>(i**2 <mark class="hl-key">for</mark> i <mark class="hl-key">in</mark> <mark class="hl-key">range</mark>(n))
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">with</mark> ProcessPoolExecutor(max_workers=2) <mark class="hl-key">as</mark> pool:
+        results = <mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(crunch, [10**7, 10**7]))
+        <span class="t-cm"># map returns an iterator → list()</span>
+    <mark class="hl-key">print</mark>(results)
+
+<span class="t-cm"># swap ProcessPoolExecutor → ThreadPoolExecutor</span>
+<span class="t-cm"># for I/O; call style stays the same</span></div></div>
+</div>
+<table class="data-tbl">
+<tr><th></th><th><code>multiprocessing.Pool</code></th><th><code>ProcessPoolExecutor</code></th></tr>
+<tr><td><b>Since</b></td><td>Python 2.6 (older, still fully supported)</td><td>Python 3.2 — sibling of <code>ThreadPoolExecutor</code></td></tr>
+<tr><td><b>Call style</b></td><td><code>p.map(fn, xs)</code> / <code>apply_async</code> / <code>imap_unordered</code> / <code>starmap</code></td><td><code>pool.map(fn, xs)</code> or <code>fut = pool.submit(fn, x)</code> then <code>fut.result()</code></td></tr>
+<tr><td><b>Return value</b></td><td><code>map</code> returns a <code>list</code></td><td><code>map</code> returns an iterator; <code>submit</code> returns a <code>Future</code></td></tr>
+<tr><td><b>Errors</b></td><td>raised while iterating / from <code>get()</code></td><td>stored on the <code>Future</code>, <b>re-raised</b> at <code>.result()</code> (same as the thread pool)</td></tr>
+<tr><td><b>Switch I/O &harr; CPU</b></td><td>different module and method names</td><td>change the class name only: <code>ThreadPoolExecutor</code> &harr; <code>ProcessPoolExecutor</code></td></tr>
+<tr><td><b>Shutdown</b></td><td><code>close()</code> + <code>join()</code>, or <code>with Pool()</code> (3.3+)</td><td><code>with</code> calls <code>shutdown(wait=True)</code></td></tr>
+<tr><td><b>Use when</b></td><td>you need <code>imap_unordered</code>, <code>starmap</code>, <code>maxtasksperchild</code></td><td>new code, mixed thread/process pools, <code>as_completed</code> / timeouts / cancel</td></tr>
+</table>
+<p style="font-size:12px;margin:6px 0 10px;line-height:1.45"><b>Same constraints:</b> top-level <code>def</code> (pickle), <code>if __name__ == "__main__"</code> on Windows/macOS. Prefer <code>ProcessPoolExecutor</code> for new work so it matches the <code>ThreadPoolExecutor</code> you already use; keep <code>Pool</code> when you read older samples (including the Fix box above).</p>
+</div>
 <div class="mistake-box"><span class="mistake-title">&#10060; Mistake 2 &mdash; shared mutable state without a <code>Lock</code></span><span class="mistake-desc">Two threads incrementing a shared counter without a lock produce a race condition &mdash; the result is non-deterministic.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">threading</mark>
 counter = 0
 
@@ -14237,7 +14387,7 @@ lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is a process vs a thread?</p><p class="qa-a"><b>A:</b> <b>Process</b> = one running program with its own memory. <b>Thread</b> = a worker inside that program; threads in the same process share memory.</p><p class="qa-q"><b>Q:</b> What is the GIL?</p><p class="qa-a"><b>A:</b> In CPython, only one thread runs Python bytecode at a time <b>per process</b>. I/O-bound work still benefits from threads. CPU-bound Python math needs <code>multiprocessing</code> / <code>ProcessPoolExecutor</code>.</p><p class="qa-q"><b>Q:</b> 3 Python apps — how many processes?</p><p class="qa-a"><b>A:</b> At least <b>3</b> (one per app you started). <code>ProcessPoolExecutor</code> adds <b>child processes</b> on top of that.</p><p class="qa-q"><b>Q:</b> ThreadPool vs ProcessPool?</p><p class="qa-a"><b>A:</b> <code>ThreadPoolExecutor</code> for I/O (downloads, API calls). <code>ProcessPoolExecutor</code> for CPU-heavy Python work (resize, crunch numbers).</p><p class="qa-q"><b>Q:</b> threading.Thread vs ThreadPoolExecutor?</p><p class="qa-a"><b>A:</b> Both are threads in one process, so the GIL applies equally. <code>Thread</code> is manual — one thread per task, no return value, and you <code>join()</code> them yourself; an error just kills that thread. <code>ThreadPoolExecutor</code> reuses a fixed number of workers, returns values through <code>Future</code>/<code>map</code>, joins on <code>with</code> exit, and <b>re-raises</b> errors when you read the result. Use <code>Thread</code> for a long-lived background service, the pool for batches of short tasks.</p><p class="qa-q"><b>Q:</b> Why if __name__ == "__main__" for multiprocessing?</p><p class="qa-a"><b>A:</b> On Windows, child processes re-import the module. Without the guard, top-level code runs again in each child — can cause infinite spawn loops.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> What is a process vs a thread?</p><p class="qa-a"><b>A:</b> <b>Process</b> = one running program with its own memory. <b>Thread</b> = a worker inside that program; threads in the same process share memory.</p><p class="qa-q"><b>Q:</b> What is the GIL?</p><p class="qa-a"><b>A:</b> In CPython, only one thread runs Python bytecode at a time <b>per process</b>. I/O-bound work still benefits from threads. CPU-bound Python math needs <code>multiprocessing</code> / <code>ProcessPoolExecutor</code>.</p><p class="qa-q"><b>Q:</b> 3 Python apps — how many processes?</p><p class="qa-a"><b>A:</b> At least <b>3</b> (one per app you started). <code>ProcessPoolExecutor</code> adds <b>child processes</b> on top of that.</p><p class="qa-q"><b>Q:</b> ThreadPool vs ProcessPool?</p><p class="qa-a"><b>A:</b> <code>ThreadPoolExecutor</code> for I/O (downloads, API calls). <code>ProcessPoolExecutor</code> for CPU-heavy Python work (resize, crunch numbers).</p><p class="qa-q"><b>Q:</b> threading.Thread vs ThreadPoolExecutor?</p><p class="qa-a"><b>A:</b> Both are threads in one process, so the GIL applies equally. <code>Thread</code> is manual — one thread per task, no return value, and you <code>join()</code> them yourself; an error just kills that thread. <code>ThreadPoolExecutor</code> reuses a fixed number of workers, returns values through <code>Future</code>/<code>map</code>, joins on <code>with</code> exit, and <b>re-raises</b> errors when you read the result. Use <code>Thread</code> for a long-lived background service, the pool for batches of short tasks.</p><p class="qa-q"><b>Q:</b> Where do you put the Lock — around submit or around the write?</p><p class="qa-a"><b>A:</b> Around the <b>shared write</b> (read→modify→write) inside the worker. <code>with lock: pool.submit(bump)</code> only protects enqueueing — <code>bump()</code> still races later. Lock where you touch shared data.</p><p class="qa-q"><b>Q:</b> Why if __name__ == "__main__" for multiprocessing?</p><p class="qa-a"><b>A:</b> On Windows, child processes re-import the module. Without the guard, top-level code runs again in each child — can cause infinite spawn loops.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -14253,7 +14403,9 @@ lock = <mark class="hl-key">threading</mark>.<mark class="hl-key">Lock</mark>()
       </div>
     </div>
     <div class="split-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
-    <div class="panel-code"><div class="code-playground" data-lang="python"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false">import threading
+    <div class="panel-code"><div class="code-playground" data-lang="python"><div class="code-toolbar"><span class="code-toolbar-label">Code editor</span><button type="button" class="btn-run-py" onclick="runPlayground(this)">&#9654; Run</button><button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button><span class="py-status"></span></div><div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div><textarea class="py-editor" spellcheck="false"># Browser Run uses Pyodide (one WASM thread) — Thread/Process pools
+# need a real OS. Click Run to see that; or save and: python this_file.py
+import threading
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import time
 
@@ -14290,43 +14442,45 @@ with ThreadPoolExecutor(max_workers=4) as pool:
 print(results)
 
 # CPU-bound heavy math → use ProcessPoolExecutor instead</textarea><pre class="py-output" hidden></pre><details class="py-highlight" open><summary>Syntax-colored view</summary><div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div><div class="vs-editor"><table class="vs-code"><tbody>
-<tr><td class="gutter">1</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">threading</span></td></tr>
-<tr><td class="gutter">2</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">concurrent</span><span class="t-op">.</span><span class="t-id">futures</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ProcessPoolExecutor</span></td></tr>
-<tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
-<tr><td class="gutter">4</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">5</td><td class="src"><span class="t-cm"># ── GIL: only one thread runs Python bytecode at a time ──</span></td></tr>
-<tr><td class="gutter">6</td><td class="src"><span class="t-cm"># Good for I/O-bound (network, disk) | Bad for CPU-bound (math)</span></td></tr>
-<tr><td class="gutter">7</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">8</td><td class="src"><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span></td></tr>
-<tr><td class="gutter">9</td><td class="src"><span class="t-id">lock</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">threading</span><span class="t-op">.</span><span class="t-id">Lock</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">10</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">11</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">unsafe_increment</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">global</span><span class="t-op"> </span><span class="t-id">counter</span></td></tr>
-<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># race condition without lock</span></td></tr>
-<tr><td class="gutter">14</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">15</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">safe_increment</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">global</span><span class="t-op"> </span><span class="t-id">counter</span></td></tr>
-<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">lock</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># only one thread at a time</span></td></tr>
-<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
-<tr><td class="gutter">19</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">20</td><td class="src"><span class="t-cm"># ── THREADS: lightweight, shared memory ──</span></td></tr>
-<tr><td class="gutter">21</td><td class="src"><span class="t-id">threads</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">threading</span><span class="t-op">.</span><span class="t-id">Thread</span><span class="t-op">(</span><span class="t-id">target</span><span class="t-op">=</span><span class="t-id">safe_increment</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">_</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">100</span><span class="t-op">)</span><span class="t-op">]</span></td></tr>
-<tr><td class="gutter">22</td><td class="src"><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">threads</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op">.</span><span class="t-id">start</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">1</td><td class="src"><span class="t-cm"># Browser Run uses Pyodide (one WASM thread) — Thread/Process pools</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-cm"># need a real OS. Click Run to see that; or save and: python this_file.py</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">threading</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">from</span><span class="t-op"> </span><span class="t-id">concurrent</span><span class="t-op">.</span><span class="t-id">futures</span><span class="t-op"> </span><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">ProcessPoolExecutor</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">import</span><span class="t-op"> </span><span class="t-id">time</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-cm"># ── GIL: only one thread runs Python bytecode at a time ──</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-cm"># Good for I/O-bound (network, disk) | Bad for CPU-bound (math)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-id">lock</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">threading</span><span class="t-op">.</span><span class="t-id">Lock</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">12</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">unsafe_increment</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">global</span><span class="t-op"> </span><span class="t-id">counter</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># race condition without lock</span></td></tr>
+<tr><td class="gutter">16</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">safe_increment</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">global</span><span class="t-op"> </span><span class="t-id">counter</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">lock</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># only one thread at a time</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">21</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-cm"># ── THREADS: lightweight, shared memory ──</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-id">threads</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-op">[</span><span class="t-id">threading</span><span class="t-op">.</span><span class="t-id">Thread</span><span class="t-op">(</span><span class="t-id">target</span><span class="t-op">=</span><span class="t-id">safe_increment</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">_</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">100</span><span class="t-op">)</span><span class="t-op">]</span></td></tr>
 <tr><td class="gutter">24</td><td class="src"><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">threads</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op">.</span><span class="t-id">join</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># wait for all to finish</span></td></tr>
-<tr><td class="gutter">26</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;Counter:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 100</span></td></tr>
-<tr><td class="gutter">27</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">28</td><td class="src"><span class="t-cm"># ── ThreadPoolExecutor: pool for I/O tasks ──</span></td></tr>
-<tr><td class="gutter">29</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">fetch</span><span class="t-op">(</span><span class="t-id">url_id</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">time</span><span class="t-op">.</span><span class="t-id">sleep</span><span class="t-op">(</span><span class="t-num">0.1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># simulate network I/O</span></td></tr>
-<tr><td class="gutter">31</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-str">&quot;data-{url_id}&quot;</span></td></tr>
-<tr><td class="gutter">32</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">33</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">(</span><span class="t-id">max_workers</span><span class="t-op">=</span><span class="t-num">4</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">pool</span><span class="t-op">:</span></td></tr>
-<tr><td class="gutter">34</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">results</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">pool</span><span class="t-op">.</span><span class="t-bi">map</span><span class="t-op">(</span><span class="t-id">fetch</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">8</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">35</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">results</span><span class="t-op">)</span></td></tr>
-<tr><td class="gutter">36</td><td class="src">&#160;</td></tr>
-<tr><td class="gutter">37</td><td class="src"><span class="t-cm"># CPU-bound heavy math → use ProcessPoolExecutor instead</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op">.</span><span class="t-id">start</span><span class="t-op">(</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-kw">for</span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op"> </span><span class="t-kw">in</span><span class="t-op"> </span><span class="t-id">threads</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">t</span><span class="t-op">.</span><span class="t-id">join</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># wait for all to finish</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-str">&quot;Counter:&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">counter</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># 100</span></td></tr>
+<tr><td class="gutter">29</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-cm"># ── ThreadPoolExecutor: pool for I/O tasks ──</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-kw">def</span><span class="t-op"> </span><span class="t-id">fetch</span><span class="t-op">(</span><span class="t-id">url_id</span><span class="t-op">)</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">32</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">time</span><span class="t-op">.</span><span class="t-id">sleep</span><span class="t-op">(</span><span class="t-num">0.1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm"># simulate network I/O</span></td></tr>
+<tr><td class="gutter">33</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-id">f</span><span class="t-str">&quot;data-{url_id}&quot;</span></td></tr>
+<tr><td class="gutter">34</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">35</td><td class="src"><span class="t-kw">with</span><span class="t-op"> </span><span class="t-id">ThreadPoolExecutor</span><span class="t-op">(</span><span class="t-id">max_workers</span><span class="t-op">=</span><span class="t-num">4</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">as</span><span class="t-op"> </span><span class="t-id">pool</span><span class="t-op">:</span></td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">results</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-bi">list</span><span class="t-op">(</span><span class="t-id">pool</span><span class="t-op">.</span><span class="t-bi">map</span><span class="t-op">(</span><span class="t-id">fetch</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-bi">range</span><span class="t-op">(</span><span class="t-num">8</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">37</td><td class="src"><span class="t-bi">print</span><span class="t-op">(</span><span class="t-id">results</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">38</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">39</td><td class="src"><span class="t-cm"># CPU-bound heavy math → use ProcessPoolExecutor instead</span></td></tr>
 </tbody></table></div></details></div></div>
   </div>
 </div>
@@ -14541,7 +14695,72 @@ results → ['email ok', 'sms ok', 'push ok']</div></div></div></div><h3>Step-by
 
 <mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main():
     result = <mark class="hl-key">await</mark> fetch("api/users")
-    <mark class="hl-key">print</mark>(result)</div></li><li><b>Step 3 — asyncio.gather & asyncio.run</b><br><code>gather</code> runs multiple coroutines concurrently. <code>run</code> is the entry point.<div class="step-pre"><mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main():
+    <mark class="hl-key">print</mark>(result)</div></li><li><b>Step 3 — getCustomerInfo(): Thread vs ThreadPool vs async</b><br>Same method name, same real API — <code>https://jsonplaceholder.typicode.com/users/{id}</code> (public fake users; no API key). Fetch customers <code>1, 2, 3</code> three ways. All three are <b>I/O-bound</b> (waiting on HTTP). None of them help CPU-heavy math.<p style="font-size:12px;margin:6px 0 4px;line-height:1.45"><code>getCustomerInfo(customer_id)</code> returns <code>{"id", "name"}</code> from that JSON. Thread columns use the stdlib (<code>urllib</code>). Async needs <code>pip install aiohttp</code> so the wait can <code>await</code> instead of blocking the loop.</p><div class="ex-row ex-row-3cmp"><div class="mc-col"><span class="mc-lbl">1. threading.Thread</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">json</mark>, urllib.request, <mark class="hl-key">threading</mark>
+
+API = "https://jsonplaceholder.typicode.com/users/{}"
+
+<mark class="hl-key">def</mark> getCustomerInfo(customer_id):
+    url = API.<mark class="hl-key">format</mark>(customer_id)
+    <mark class="hl-key">with</mark> urllib.request.urlopen(url, timeout=10) <mark class="hl-key">as</mark> r:
+        data = <mark class="hl-key">json</mark>.<mark class="hl-key">loads</mark>(r.read().decode())
+    <mark class="hl-key">return</mark> {"id": data["id"], "name": data["name"]}
+
+ids = [1, 2, 3]
+results = []              <span class="t-cm"># mailbox — Thread</span>
+                          <span class="t-cm"># discards return values</span>
+
+<mark class="hl-key">def</mark> worker(cid):
+    results.append(getCustomerInfo(cid))
+
+threads = [
+    <mark class="hl-key">threading</mark>.<mark class="hl-key">Thread</mark>(target=worker, args=(i,))
+    <mark class="hl-key">for</mark> i <mark class="hl-key">in</mark> ids
+]                         <span class="t-cm"># 3 threads, 3 tasks</span>
+<mark class="hl-key">for</mark> t <mark class="hl-key">in</mark> threads: t.start()
+<mark class="hl-key">for</mark> t <mark class="hl-key">in</mark> threads: t.join()
+<mark class="hl-key">print</mark>(results)            <span class="t-cm"># finish order</span></div></div><div class="mc-col mc-col-pool"><span class="mc-lbl">2. ThreadPoolExecutor</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">json</mark>, urllib.request
+<mark class="hl-key">from</mark> concurrent.futures <mark class="hl-key">import</mark> ThreadPoolExecutor
+
+API = "https://jsonplaceholder.typicode.com/users/{}"
+
+<mark class="hl-key">def</mark> getCustomerInfo(customer_id):
+    url = API.<mark class="hl-key">format</mark>(customer_id)
+    <mark class="hl-key">with</mark> urllib.request.urlopen(url, timeout=10) <mark class="hl-key">as</mark> r:
+        data = <mark class="hl-key">json</mark>.<mark class="hl-key">loads</mark>(r.read().decode())
+    <mark class="hl-key">return</mark> {"id": data["id"], "name": data["name"]}
+
+ids = [1, 2, 3]
+<mark class="hl-key">with</mark> ThreadPoolExecutor(max_workers=3) <mark class="hl-key">as</mark> pool:
+    results = <mark class="hl-key">list</mark>(pool.<mark class="hl-key">map</mark>(
+        getCustomerInfo, ids))
+    <span class="t-cm"># return is kept; map preserves ids order</span>
+<mark class="hl-key">print</mark>(results)
+
+<span class="t-cm"># 3 workers reused if you later pass 100 ids</span>
+<span class="t-cm"># stdlib only — no extra package</span></div></div><div class="mc-col mc-col-async"><span class="mc-lbl">3. async / await (aiohttp)</span><div class="step-pre"><mark class="hl-key">import</mark> aiohttp, <mark class="hl-key">asyncio</mark>
+
+API = "https://jsonplaceholder.typicode.com/users/{}"
+
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> getCustomerInfo(customer_id):
+    url = API.<mark class="hl-key">format</mark>(customer_id)
+    <mark class="hl-key">async</mark> <mark class="hl-key">with</mark> aiohttp.ClientSession() <mark class="hl-key">as</mark> s:
+        <mark class="hl-key">async</mark> <mark class="hl-key">with</mark> s.get(url) <mark class="hl-key">as</mark> r:
+            data = <mark class="hl-key">await</mark> r.<mark class="hl-key">json</mark>()
+    <mark class="hl-key">return</mark> {"id": data["id"], "name": data["name"]}
+
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main():
+    results = <mark class="hl-key">await</mark> <mark class="hl-key">asyncio</mark>.<mark class="hl-key">gather</mark>(
+        getCustomerInfo(1),
+        getCustomerInfo(2),
+        getCustomerInfo(3),
+    )                      <span class="t-cm"># 1 thread, 3 waits overlap</span>
+    <mark class="hl-key">print</mark>(results)
+
+<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())
+<span class="t-cm"># pip install aiohttp</span></div></div></div><p style="font-size:12px;margin:6px 0 4px;line-height:1.45"><b>Same output shape</b> (names from JSONPlaceholder):</p><div class="step-pre">[{'id': 1, 'name': 'Leanne Graham'},
+ {'id': 2, 'name': 'Ervin Howell'},
+ {'id': 3, 'name': 'Clementine Bauch'}]
+<span class="t-cm"># Thread column: same dicts, possibly shuffled</span></div><table class="data-tbl"><tr><th></th><th><code>threading.Thread</code></th><th><code>ThreadPoolExecutor</code></th><th><code>async def</code> + <code>await</code></th></tr><tr><td><b>What is running</b></td><td>3 OS threads in <b>one process</b></td><td>up to 3 OS threads, <b>reused</b></td><td><b>1 thread</b> — the event loop switches at <code>await</code></td></tr><tr><td><b>How <code>getCustomerInfo</code> is written</b></td><td>plain <code>def</code>; return discarded unless you append</td><td>plain <code>def</code>; <code>return</code> kept as a <code>Future</code></td><td><code>async def</code>; must <code>await</code> HTTP</td></tr><tr><td><b>HTTP library</b></td><td><code>urllib</code> / <code>requests</code> (blocking)</td><td>same blocking libraries</td><td>need <code>aiohttp</code> / <code>httpx</code> (<code>AsyncClient</code>) — <code>requests.get</code> would <b>freeze the loop</b></td></tr><tr><td><b>Overlap of the 3 calls</b></td><td>yes — GIL released during network wait</td><td>yes — same</td><td>yes — at each <code>await</code>, no extra threads</td></tr><tr><td><b>When to use</b></td><td>one <b>long-lived</b> background worker (listener, poller, <code>daemon=True</code>)</td><td><b>a batch</b> of HTTP/file/DB calls; stdlib; easy switch to <code>ProcessPoolExecutor</code> for CPU</td><td><b>many</b> concurrent connections (hundreds+) on one thread — FastAPI, websockets, chatty APIs</td></tr><tr><td><b>When not to</b></td><td>100 tasks = 100 threads (stacks, overhead)</td><td>tens of thousands of sockets — threads still cost RAM</td><td>CPU-heavy work, or a blocking library with no async port — use a thread pool (or <code>asyncio.to_thread</code>)</td></tr><tr><td><b>C# cousin</b></td><td><code>new Thread(...).Start()</code></td><td><code>Task.Run</code> / <code>Task.WhenAll</code></td><td><code>async Task</code> + <code>HttpClient</code> + <code>await Task.WhenAll</code></td></tr></table><p style="font-size:12px;margin:10px 0 4px;line-height:1.45"><b>Six interview scenarios — one row each.</b> For every job: does Thread / ThreadPool / async <b>suit</b> it or <b>create a problem</b>?</p><table class="data-tbl"><tr><th>Scenario</th><th><code>threading.Thread</code></th><th><code>ThreadPoolExecutor</code></th><th><code>async def</code></th></tr><tr><td><b>1. Three <code>getCustomerInfo</code> calls</b><br>JSONPlaceholder users 1–3 (the demo above)</td><td><b>Suits, but clumsy.</b> 3 threads overlap the HTTP wait. Problem: you need a shared <code>results</code> list; order is finish order; an error in one thread can look like <code>join()</code> succeeded. Fine only as a throwaway script.</td><td><b>Suits — usual pick for this size.</b> Same overlap, <code>return</code> kept, <code>map</code> preserves id order, errors re-raise at <code>.result()</code>. No extra package.</td><td><b>Suits if the app is already async.</b> Same overlap on 1 thread. Problem if you only have <code>requests</code>: you must add <code>aiohttp</code>/<code>httpx</code> or you freeze the loop. Overkill for a 10-line script.</td></tr><tr><td><b>2. Heartbeat in a Windows service</b><br>Ping <code>/health</code> every 30s until the process stops</td><td><b>Suits — this is the Thread case.</b> <code>Thread(target=loop, daemon=True)</code> lives as long as the service. No result list, no batch.</td><td><b>Problem.</b> A pool expects tasks that <b>end</b>. <code>with ThreadPoolExecutor(...) as pool:</code> will not leave the block while the ping loop is still running, so shutdown hangs.</td><td><b>Suits only inside an async service</b> (<code>async def heartbeat():</code> + <code>await asyncio.sleep(30)</code>). Problem as a bolt-on in a sync Windows service — you would start a whole event loop for one ping.</td></tr><tr><td><b>3. Log tail / folder watch</b><br>Block on <code>readline</code> or a file-system event until shutdown</td><td><b>Suits.</b> One long-lived thread blocked on I/O; GIL released while waiting. Nothing to <code>map</code>.</td><td><b>Problem.</b> Same as the heartbeat: the worker never returns, so the pool cannot drain. You would also waste a worker slot that should be for short jobs.</td><td><b>Awkward / often a problem.</b> Classic <code>readline</code> is blocking. You need an async file API or <code>asyncio.to_thread</code> — extra machinery for one watcher. Thread is the honest fit.</td></tr><tr><td><b>4. Nightly CRM export</b><br><code>getCustomerInfo</code> for 200 account IDs, write a CSV</td><td><b>Creates a problem.</b> 200 threads = 200 stacks, start/join boilerplate, finish-order list, silent per-thread errors. Works on a quiet night, fails under load or in review.</td><td><b>Suits — default answer.</b> <code>max_workers=8</code> reused across 200 IDs; results in id order; keep <code>requests</code>. If a later step renders PDFs (CPU), swap the class to <code>ProcessPoolExecutor</code>.</td><td><b>Suits if the job runner is already <code>asyncio</code>.</b> 200 <code>await</code>s on one thread is cheap. Problem: do not mix in blocking <code>requests.get</code> — that serializes the whole export.</td></tr><tr><td><b>5. Order confirmation fan-out</b><br>One order: payment + inventory + shipping (3–8 blocking APIs)</td><td><b>Suits but noisy.</b> 3–8 threads work. Problem: mailbox list, manual join, easy to forget one call’s error and still email “confirmed”.</td><td><b>Suits — usual pick in a <code>requests</code> codebase.</b> <code>pool.map</code> / three <code>submit</code>s; fail the order if any <code>Future</code> raises. Small batch, not 200 threads.</td><td><b>Suits in FastAPI / aiohttp.</b> <code>asyncio.gather(pay, stock, ship)</code>. Problem in a sync Django view: you must not call <code>asyncio.run</code> per request if a loop is already running; prefer the pool there.</td></tr><tr><td><b>6. FastAPI dashboard / 500 WebSockets</b><br>Each GET awaits 6 APIs; or 500 browsers stay connected</td><td><b>Creates a serious problem.</b> Hundreds of users × 6 waits = thousands of threads (RAM, context switches). WebSockets: one Thread per browser will not survive.</td><td><b>Suits a few concurrent users; problem at scale.</b> A pool of 32 workers cannot hold 500 open sockets. Fine as <code>asyncio.to_thread(requests.get)</code> for one blocking library, not as the server model.</td><td><b>Suits — this is why async exists.</b> One thread, thousands of waits. Dashboard: <code>await gather(customer, orders, loyalty, ...)</code>. Hub: each socket is an <code>await</code>, not a thread.</td></tr></table><h3 style="margin-top:12px">Decision flowchart — which of the three?</h3><p class="fc-kid-hint">Start at the top. <b>YES</b> = take the box on the right and stop. <b>NO</b> = go down. The six scenarios above land on these boxes.</p><div class="fc-wrap slide-fc"><div class="fc"><div class="fc-start">I have overlapping I/O<small>HTTP, files, sockets — not “run faster on two CPU cores”</small></div><div class="fc-arrow"></div><div class="fc-node"><div class="fc-q-box">Is the slow part CPU-heavy Python (math, image resize, huge parse)?</div><div class="fc-branch"><div class="fc-spacer"></div><div class="fc-mid"><div class="fc-arrow tall"></div><span class="fc-arrow-lbl">NO</span></div><div class="fc-yes"><span class="fc-side yes">YES</span><div class="fc-h right"></div><div class="fc-use key"><b>ProcessPoolExecutor</b><span class="fc-desc">Not Thread / pool / async. Each child has its own GIL. None of the six I/O scenarios above.</span><code>with ProcessPoolExecutor() as p:</code></div></div></div></div><div class="fc-node"><div class="fc-q-box">Does the work never finish? (heartbeat, log tail, folder watch)</div><div class="fc-branch"><div class="fc-spacer"></div><div class="fc-mid"><div class="fc-arrow tall"></div><span class="fc-arrow-lbl">NO</span></div><div class="fc-yes"><span class="fc-side yes">YES</span><div class="fc-h right"></div><div class="fc-use dd"><b>threading.Thread</b><span class="fc-desc">Scenarios 2 and 3. A pool <code>with</code> hangs because the task has no end.</span><code>Thread(target=loop, daemon=True)</code></div></div></div></div><div class="fc-node"><div class="fc-q-box">Hundreds of connections at once, or the app is already FastAPI / aiohttp?</div><div class="fc-branch"><div class="fc-spacer"></div><div class="fc-mid"><div class="fc-arrow tall"></div><span class="fc-arrow-lbl">NO</span></div><div class="fc-yes"><span class="fc-side yes">YES</span><div class="fc-h right"></div><div class="fc-use cm"><b>async def + await</b><span class="fc-desc">Scenario 6 (dashboard / 500 WebSockets). Also 1 or 5 if the service is already async.</span><code>await asyncio.gather(...)</code></div></div></div></div><div class="fc-node"><div class="fc-q-box">A batch that ends and returns results? (3–200 getCustomerInfo, order fan-out)</div><div class="fc-branch"><div class="fc-spacer"></div><div class="fc-mid"><div class="fc-arrow tall"></div><span class="fc-arrow-lbl">NO</span></div><div class="fc-yes"><span class="fc-side yes">YES</span><div class="fc-h right"></div><div class="fc-use dict"><b>ThreadPoolExecutor</b><span class="fc-desc">Scenarios 1, 4 and 5 in a <code>requests</code> / urllib app. Keep <code>return</code>, id order, errors re-raise.</span><code>list(pool.map(getCustomerInfo, ids))</code></div></div></div></div><div class="fc-arrow"></div><div class="fc-use dict fc-end"><b>Default: ThreadPoolExecutor</b><span class="fc-desc">A handful of I/O jobs with a result list. Use a raw Thread only for one long-lived worker. Use async only when the process is already a many-connection server.</span><code>with ThreadPoolExecutor(max_workers=8) as pool:</code></div></div></div><p style="font-size:12px;margin:6px 0 4px;line-height:1.45"><b>Say in an interview (30 seconds):</b> “All three overlap I/O. I use a <b>raw Thread</b> for a service that <i>never finishes</i> — heartbeat or log tail. I use <b>ThreadPoolExecutor</b> for a <i>batch with a result list</i> — 200 <code>getCustomerInfo</code> calls or payment+inventory+shipping — especially if we already have <code>requests</code>. I use <b>async</b> when the process is a server with <i>many connections at once</i> — FastAPI dashboard or WebSockets. The 3-customer demo fits all three; the choice is scale and whether the work has an end.”</p><div class="callout"><b>Rule of thumb for <code>getCustomerInfo</code>.</b> One or two calls: a plain <code>def</code> is enough. A handful of URLs: <code>ThreadPoolExecutor</code>. A service that talks to many APIs at once (this is the FastAPI path): <code>async def getCustomerInfo</code>. Heavy JSON crunching after the download: <code>ProcessPoolExecutor</code>, not async.</div><p class="step-result"><b>One line:</b> Thread = you run a thread · ThreadPool = you submit work and get returns · async = one thread, overlap the waits.</p></li><li><b>Step 4 — asyncio.gather & asyncio.run</b><br><code>gather</code> runs multiple coroutines concurrently. <code>run</code> is the entry point.<div class="step-pre"><mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main():
     results = <mark class="hl-key">await</mark> <mark class="hl-key">asyncio</mark>.<mark class="hl-key">gather</mark>(
         fetch("/a"),
         fetch("/b"),
@@ -14549,7 +14768,7 @@ results → ['email ok', 'sms ok', 'push ok']</div></div></div></div><h3>Step-by
     )
     <mark class="hl-key">print</mark>(results)
 
-<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())</div></li><li><b>Step 4 — Async context managers & iterators</b><br>Async versions of <code>with</code> and <code>for</code> for non-blocking I/O resources.<div class="step-pre"><mark class="hl-key">class</mark> AsyncResource:
+<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())</div></li><li><b>Step 5 — Async context managers & iterators</b><br>Async versions of <code>with</code> and <code>for</code> for non-blocking I/O resources.<div class="step-pre"><mark class="hl-key">class</mark> AsyncResource:
     <mark class="hl-key">async</mark> <mark class="hl-key">def</mark> <mark class="hl-key">__aenter__</mark>(self):
         <mark class="hl-key">await</mark> connect()
         <mark class="hl-key">return</mark> self
@@ -14616,14 +14835,40 @@ result = fetch()   <span class="t-cm"># coroutine object — not executed!</span
     <mark class="hl-key">async</mark> <mark class="hl-key">with</mark> httpx.AsyncClient() <mark class="hl-key">as</mark> client:
         resp = <mark class="hl-key">await</mark> client.get("https://api.example.com")
     <mark class="hl-key">return</mark> resp.<mark class="hl-key">json</mark>()</div></div></div><span class="mistake-note">&#128161; Use async-native libraries: <code>httpx</code> or <code>aiohttp</code> (not <code>requests</code>), <code>asyncio.sleep()</code> (not <code>time.sleep()</code>), async DB drivers.</span></div>
-<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; <code>asyncio.run()</code> inside an already running event loop</span><span class="mistake-desc">In Jupyter notebooks and some frameworks, an event loop is already running. Calling <code>asyncio.run()</code> raises <code>RuntimeError</code>.</span><div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug</span><div class="step-pre"><span class="t-cm"># In Jupyter notebook:</span>
-<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main(): <mark class="hl-key">return</mark> "done"
-<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())
-<span class="t-cm"># RuntimeError: This event loop is already running</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix</span><div class="step-pre"><span class="t-cm"># In Jupyter — use await directly:</span>
-result = <mark class="hl-key">await</mark> main()   <span class="t-cm"># no asyncio.run() needed</span>
+<div class="mistake-box"><span class="mistake-title">&#10060; Mistake 3 &mdash; <code>asyncio.run()</code> inside an already running event loop</span><span class="mistake-desc"><b>What <code>asyncio.run()</code> actually does.</b> It is the <em>outermost</em> on-switch: create a <b>new</b> event loop, run one coroutine until it finishes, then <b>close</b> that loop. Python allows only <b>one running loop per thread</b>. If a loop is already turning (Jupyter, FastAPI, pytest-asyncio), a second <code>run()</code> is illegal &mdash; hence <code>RuntimeError: This event loop is already running</code>. The coroutine itself is fine; you used the wrong way to <em>start</em> it.</span>
+<p style="font-size:12px;margin:8px 0 6px;line-height:1.45"><b>Who already owns the loop?</b></p>
+<table class="data-tbl">
+<tr><th>Where you are</th><th>Loop already running?</th><th>How you start work</th></tr>
+<tr><td><code>python app.py</code> script</td><td>No &mdash; you are the entry point</td><td><code>asyncio.run(main())</code> once, at the bottom (usually under <code>if __name__ == "__main__"</code>)</td></tr>
+<tr><td>Jupyter / IPython cell</td><td>Yes &mdash; the kernel started a loop so cells can <code>await</code></td><td><code>result = await main()</code> in the cell. Do <b>not</b> call <code>asyncio.run()</code></td></tr>
+<tr><td>FastAPI / Starlette route</td><td>Yes &mdash; uvicorn owns the loop</td><td>Write <code>async def</code> routes and <code>await</code> inside them. Never <code>asyncio.run()</code> inside a request</td></tr>
+<tr><td>Sync Django / Flask view</td><td>Usually no loop on that worker thread</td><td>Do not nest <code>asyncio.run()</code> if you later add an async stack. Prefer <code>ThreadPoolExecutor</code> for blocking <code>requests</code>, or an async view</td></tr>
+</table>
+<p style="font-size:12px;margin:6px 0 6px;line-height:1.45"><b>Why Jupyter looks like a script but is not.</b> A <code>.py</code> file starts with no loop. A notebook kernel is a long-lived process that already called something like <code>asyncio.run</code> (or nest_asyncio / a built-in runner) so that <code>await</code> works at the top of a cell. Your cell is <em>inside</em> that loop &mdash; the same situation as a FastAPI handler.</p>
+<div class="mc-row"><div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Bug &mdash; second on-switch</span><div class="step-pre"><span class="t-cm"># Jupyter cell (loop already running)</span>
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> main():
+    <mark class="hl-key">return</mark> "done"
 
-<span class="t-cm"># In scripts:</span>
-<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())     <span class="t-cm"># correct for script entry point</span></div></div></div><span class="mistake-note">&#128161; In Jupyter, use <code>await</code> directly in cells. In FastAPI, define route handlers as <code>async def</code> and the framework manages the loop.</span></div>
+<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())
+<span class="t-cm"># RuntimeError: This event loop is already running</span>
+<span class="t-cm">#   asyncio.run() tried to create loop #2</span>
+
+<span class="t-cm"># Same bug in FastAPI:</span>
+<mark class="hl-key">@app</mark>.get("/customers/{id}")
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> dashboard(<mark class="hl-key">id</mark>: <mark class="hl-key">int</mark>):
+    <mark class="hl-key">return</mark> <mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(getCustomerInfo(<mark class="hl-key">id</mark>))  <span class="t-cm"># crash</span></div></div><div class="mc-col mc-good"><span class="mc-lbl">&#10004; Fix &mdash; join the loop that exists</span><div class="step-pre"><span class="t-cm"># Jupyter cell — you are already inside the loop</span>
+result = <mark class="hl-key">await</mark> main()     <span class="t-cm"># no asyncio.run()</span>
+
+<span class="t-cm"># FastAPI — the framework awaits your handler</span>
+<mark class="hl-key">@app</mark>.get("/customers/{id}")
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> dashboard(<mark class="hl-key">id</mark>: <mark class="hl-key">int</mark>):
+    <mark class="hl-key">return</mark> <mark class="hl-key">await</mark> getCustomerInfo(<mark class="hl-key">id</mark>)
+
+<span class="t-cm"># Script entry point — you own the process</span>
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(main())   <span class="t-cm"># only here</span></div></div></div>
+<p style="font-size:12px;margin:8px 0 4px;line-height:1.45"><b>Related mistakes people mix up.</b> Forgetting <code>await</code> (Mistake 1) gives a coroutine object and a <code>RuntimeWarning</code> &mdash; the body never ran. Calling <code>asyncio.run()</code> twice in the <em>same</em> script, one after the other, is legal: the first <code>run()</code> starts and <b>closes</b> the loop, then the second creates a fresh one. The crash is only when the first loop is <b>still running</b>.</p>
+<span class="mistake-note">&#128161; Rule: <code>asyncio.run()</code> = process entry point, once. Everywhere else, <code>await</code> the coroutine on the loop that is already there. Do not install <code>nest_asyncio</code> as a habit &mdash; it hides the design (one loop per thread).</span></div>
 <h3>Before &rarr; After (Pythonic)</h3>
 <div class="before-after">
   <div class="ba-col ba-bad"><div class="ba-label">&#10060; Blocking in async context</div><div class="step-pre"><mark class="hl-key">import</mark> time
@@ -14660,7 +14905,95 @@ result = <mark class="hl-key">await</mark> main()   <span class="t-cm"># no asyn
   </div>
   <div class="quiz-q"><b>Q3.</b> How to run a coroutine from synchronous code?
     <details class="quiz-ans"><summary>Show answer</summary>
-      <div class="quiz-reveal"><code>asyncio.run(coroutine())</code> &mdash; creates an event loop, runs the coroutine, and closes the loop.</div>
+      <div class="quiz-reveal">
+        <p style="margin:0 0 8px;line-height:1.45"><code>asyncio.run(coro)</code> &mdash; only from <b>sync</b> code that does <b>not</b> already have a running loop. It creates a loop, runs the coroutine to the end, then closes the loop. From inside <code>async def</code> you just <code>await</code>.</p>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Sync code &mdash; calling the coroutine is not enough</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">asyncio</mark>
+
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> getCustomerInfo(cid):
+    <mark class="hl-key">await</mark> <mark class="hl-key">asyncio</mark>.sleep(0.2)      <span class="t-cm"># stand-in for HTTP</span>
+    <mark class="hl-key">return</mark> {"id": cid, "name": "Leanne"}
+
+<span class="t-cm"># ordinary def / script / __main__  ← sync world</span>
+<mark class="hl-key">def</mark> report():
+    c = getCustomerInfo(1)        <span class="t-cm"># forgot run/await</span>
+    <mark class="hl-key">print</mark>(c)
+    <span class="t-cm"># &lt;coroutine object getCustomerInfo at 0x...&gt;</span>
+    <span class="t-cm"># RuntimeWarning: coroutine was never awaited</span>
+
+<span class="t-cm"># report()  → no customer data, nothing ran</span></div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Sync code &mdash; asyncio.run() is the bridge</span><div class="step-pre"><mark class="hl-key">import</mark> <mark class="hl-key">asyncio</mark>
+
+<mark class="hl-key">async</mark> <mark class="hl-key">def</mark> getCustomerInfo(cid):
+    <mark class="hl-key">await</mark> <mark class="hl-key">asyncio</mark>.sleep(0.2)
+    <mark class="hl-key">return</mark> {"id": cid, "name": "Leanne"}
+
+<mark class="hl-key">def</mark> report():                     <span class="t-cm"># still a plain def</span>
+    customer = <mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(getCustomerInfo(1))
+    <mark class="hl-key">print</mark>(customer)
+    <span class="t-cm"># {'id': 1, 'name': 'Leanne'}</span>
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    report()                      <span class="t-cm"># process entry — no loop yet</span></div></div>
+        </div>
+        <div class="mc-row" style="margin-top:8px">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; Already inside async &mdash; do not run() again</span><div class="step-pre"><mark class="hl-key">async</mark> <mark class="hl-key">def</mark> dashboard(cid):
+    <span class="t-cm"># we are ALREADY on the loop</span>
+    <mark class="hl-key">return</mark> <mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(getCustomerInfo(cid))
+    <span class="t-cm"># RuntimeError: This event loop is already running</span>
+
+<span class="t-cm"># Jupyter cell (kernel loop is on):</span>
+<span class="t-cm"># asyncio.run(getCustomerInfo(1))   # same crash</span></div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Already inside async &mdash; just await</span><div class="step-pre"><mark class="hl-key">async</mark> <mark class="hl-key">def</mark> dashboard(cid):
+    <mark class="hl-key">return</mark> <mark class="hl-key">await</mark> getCustomerInfo(cid)
+
+<span class="t-cm"># FastAPI</span>
+<span class="t-cm"># @app.get("/customers/{cid}")</span>
+<span class="t-cm"># async def route(cid: int):</span>
+<span class="t-cm">#     return await getCustomerInfo(cid)</span>
+
+<span class="t-cm"># Jupyter cell</span>
+<span class="t-cm"># customer = await getCustomerInfo(1)</span></div></div>
+        </div>
+        <table class="data-tbl" style="margin-top:8px">
+          <tr><th>You are in</th><th>How to run <code>getCustomerInfo</code></th><th>What happens</th></tr>
+          <tr><td>plain <code>def</code> / <code>python app.py</code></td><td><code>asyncio.run(getCustomerInfo(1))</code></td><td>new loop → run → close; you get the <code>return</code> value</td></tr>
+          <tr><td><code>async def</code> (FastAPI, another coroutine)</td><td><code>await getCustomerInfo(1)</code></td><td>same loop; pause this task until the HTTP finishes</td></tr>
+          <tr><td>Jupyter cell</td><td><code>await getCustomerInfo(1)</code></td><td>kernel loop already running — no <code>run()</code></td></tr>
+        </table>
+        <p style="margin:10px 0 4px;line-height:1.45"><b><code>asyncio.run(Get_Customer_Sync)</code> &mdash; that call is wrong.</b>
+        <code>run()</code> needs a <b>coroutine object</b> (the result of calling an <code>async def</code>).
+        <code>Get_Customer_Sync</code> is a plain function, and even an <code>async def</code> must be
+        <b>called</b>: <code>run(fn)</code> is not <code>run(fn(1))</code>.</p>
+        <div class="mc-row">
+          <div class="mc-col mc-bad"><span class="mc-lbl">&#10060; These three all fail</span><div class="step-pre"><mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(Get_Customer_Sync)
+<span class="t-cm"># TypeError: a coroutine was expected, got &lt;function ...&gt;</span>
+<span class="t-cm">#   you passed the function, never called it</span>
+
+<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(Get_Customer_Sync())
+<span class="t-cm"># TypeError: Get_Customer_Sync() missing 1 arg</span>
+<span class="t-cm">#   and if it is a sync def, still not a coroutine</span>
+
+<mark class="hl-key">def</mark> Get_Customer_Sync(cid):
+    <mark class="hl-key">return</mark> {"id": cid}
+
+<mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(Get_Customer_Sync(1))
+<span class="t-cm"># TypeError: a coroutine was expected, got {'id': 1}</span></div></div>
+          <div class="mc-col mc-good"><span class="mc-lbl">&#10004; Sync facade &mdash; run() is inside the wrapper</span><div class="step-pre"><mark class="hl-key">async</mark> <mark class="hl-key">def</mark> getCustomerInfo(cid):     <span class="t-cm"># async world</span>
+    <mark class="hl-key">await</mark> <mark class="hl-key">asyncio</mark>.sleep(0.2)
+    <mark class="hl-key">return</mark> {"id": cid, "name": "Leanne"}
+
+<mark class="hl-key">def</mark> Get_Customer_Sync(cid):         <span class="t-cm"># sync world (C# style name)</span>
+    <mark class="hl-key">return</mark> <mark class="hl-key">asyncio</mark>.<mark class="hl-key">run</mark>(getCustomerInfo(cid))
+
+<mark class="hl-key">if</mark> <mark class="hl-key">__name__</mark> == "__main__":
+    <mark class="hl-key">print</mark>(Get_Customer_Sync(1))
+    <span class="t-cm"># {'id': 1, 'name': 'Leanne'}</span>
+
+<span class="t-cm"># callers stay sync: no await, no async def</span>
+<span class="t-cm"># do NOT also asyncio.run(Get_Customer_Sync) — wrapper is not a coro</span></div></div>
+        </div>
+      </div>
     </details>
   </div>
   <div class="quiz-q"><b>Q4.</b> <code>time.sleep()</code> vs <code>asyncio.sleep()</code> in async code?
@@ -14684,7 +15017,7 @@ result = <mark class="hl-key">await</mark> main()   <span class="t-cm"># no asyn
     </details>
   </div>
 </div>
-<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> async vs threading?</p><p class="qa-a"><b>A:</b> Threading uses OS threads and the GIL. Async uses one thread and cooperatively switches during awaits — great for many concurrent I/O connections.</p><p class="qa-q"><b>Q:</b> Can you use time.sleep in async code?</p><p class="qa-a"><b>A:</b> No — it blocks the whole event loop. Use <code>await asyncio.sleep()</code> instead.</p><p class="qa-q"><b>Q:</b> When NOT to use async?</p><p class="qa-a"><b>A:</b> CPU-heavy work blocks the loop. Use threads, multiprocessing, or run CPU work in <code>asyncio.to_thread()</code>.</p><p class="qa-q"><b>Q:</b> What does asyncio.gather do?</p><p class="qa-a"><b>A:</b> Runs multiple coroutines concurrently and returns results in order. If one fails, others may still complete depending on options.</p></div>
+<div class="interview-box"><b>Interview — questions &amp; answers</b><p class="qa-q"><b>Q:</b> Walk through six real jobs: Thread vs pool vs async — suit or problem?</p><p class="qa-a"><b>A:</b> 3× <code>getCustomerInfo</code>: all work; pool is the tidy pick. Heartbeat / log tail: Thread suits; a pool <code>with</code> hangs because the task never ends. 200-ID CRM export: raw Thread is a problem (200 stacks); pool is the default; async suits an asyncio runner only. Order fan-out (3–8 APIs): pool in a <code>requests</code> app; async in FastAPI. Dashboard / 500 WebSockets: Thread and a small pool blow RAM — async is the point.</p><p class="qa-q"><b>Q:</b> Can you use time.sleep in async code?</p><p class="qa-a"><b>A:</b> No — it blocks the whole event loop. Use <code>await asyncio.sleep()</code> instead.</p><p class="qa-q"><b>Q:</b> When NOT to use async?</p><p class="qa-a"><b>A:</b> CPU-heavy work blocks the loop. Use threads, multiprocessing, or run CPU work in <code>asyncio.to_thread()</code>.</p><p class="qa-q"><b>Q:</b> What does asyncio.gather do?</p><p class="qa-a"><b>A:</b> Runs multiple coroutines concurrently and returns results in order. If one fails, others may still complete depending on options.</p></div>
       <div class="panel-practice">
         <h3>Practice</h3>
         
@@ -22128,6 +22461,31 @@ function resetPlayground(btn) {
   if (out) { out.hidden = true; out.textContent = ''; out.classList.remove('err'); }
   if (status) status.textContent = '';
 }
+function pyodideBrowserHint(code) {
+  const usesProc = /\b(ProcessPoolExecutor|multiprocessing)\b/.test(code);
+  const usesThr = /\b(threading\.Thread|ThreadPoolExecutor)\b/.test(code);
+  if (!usesProc && !usesThr) return '';
+  const bits = [];
+  if (usesThr) bits.push('threading.Thread / ThreadPoolExecutor (OS threads)');
+  if (usesProc) bits.push('ProcessPoolExecutor / multiprocessing (child processes)');
+  return (
+    'The in-browser runner is Pyodide (one WebAssembly thread). It cannot start:\n  • ' +
+    bits.join('\n  • ') +
+    '\n\nThis is the same idea as the slide: threads and processes are OS objects, ' +
+    'not just Python syntax. Save the snippet and run it locally:\n\n  python yourfile.py\n'
+  );
+}
+function formatPyodideError(err) {
+  const raw = (err && (err.message || err.toString())) ? String(err.message || err) : String(err);
+  const lines = raw.split(/\r?\n/);
+  const keep = lines.filter((ln) =>
+    !ln.includes('/_pyodide/') &&
+    !ln.includes('pyodide.asm') &&
+    !(ln.trim() === 'Traceback (most recent call last):')
+  );
+  const body = (keep.length ? keep : lines).join('\n').trim();
+  return body;
+}
 async function runPlayground(btn) {
   const box = btn.closest('.code-playground');
   if (!box) return;
@@ -22164,7 +22522,12 @@ async function runPlayground(btn) {
     } catch (err) {
       out.classList.add('err');
       const printed = (stdout.join('') + stderr.join('')).replace(/\n$/, '');
-      out.textContent = (printed ? printed + '\n' : '') + String(err);
+      const hint = pyodideBrowserHint(ed.value);
+      const msg = formatPyodideError(err);
+      const looksOs = /can'?t start new thread|No module named '_posixsubprocess'|NotImplementedError|BrokenProcessPool|bootstrapping phase/i.test(msg);
+      out.textContent = (printed ? printed + '\n' : '') +
+        (hint && looksOs ? hint + '\n---\n' : '') +
+        msg;
       if (status) status.textContent = 'Error';
     }
   } catch (err) {
