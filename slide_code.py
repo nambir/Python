@@ -165,6 +165,38 @@ def vs_editor(
     if not playground:
         return highlighted
     src = html.escape(text)
+    if lang not in ("python", "csharp"):
+        labels = {
+            "typescript": "TypeScript",
+            "javascript": "JavaScript",
+            "sql": "SQL",
+            "yaml": "YAML",
+            "dockerfile": "Dockerfile",
+        }
+        label = labels.get(lang, lang.upper())
+        exp = (expected or "").rstrip("\n")
+        exp_attr = html.escape(exp, quote=True)
+        exp_html = html.escape(exp) if exp else "(read the comments — this sample is not executed in the browser)"
+        out_hidden = "" if exp else " hidden"
+        return (
+            f'<div class="code-playground" data-lang="{html.escape(lang)}">'
+            '<div class="code-toolbar">'
+            f'<span class="code-toolbar-label">Code editor ({html.escape(label)})</span>'
+            '<button type="button" class="btn-run-py" onclick="showExpectedOutput(this)" title="Show expected notes">&#9654; Expected</button>'
+            '<button type="button" class="btn-reset-py" onclick="resetPlayground(this)">Reset</button>'
+            '<button type="button" class="btn-reset-py" onclick="copyPlayground(this)">Copy</button>'
+            f'<span class="py-status">{html.escape(label)} sample — explain it, do not only read it</span>'
+            "</div>"
+            '<div class="py-resize-top" title="Drag up/down to resize editor height" role="separator" aria-orientation="horizontal"></div>'
+            f'<textarea class="py-editor" spellcheck="false" data-lang="{html.escape(lang)}" data-expected="{exp_attr}">{src}</textarea>'
+            f'<div class="py-output-label" style="font-size:11px;font-weight:700;padding:4px 10px;background:#f0fdf4;color:#166534;border-top:1px solid #bbf7d0">OUTPUT (expected)</div>'
+            f'<pre class="py-output"{out_hidden} data-expected="1">{exp_html}</pre>'
+            '<details class="py-highlight" open><summary>Syntax-colored view</summary>'
+            '<div class="py-resize-top" title="Drag up/down to resize syntax view" role="separator" aria-orientation="horizontal"></div>'
+            f"{highlighted}"
+            "</details>"
+            "</div>"
+        )
     if lang == "python":
         # Editable + runnable panel (Pyodide wired in the HTML page)
         return (

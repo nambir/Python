@@ -10,6 +10,10 @@ python Dotnet/build_dotnet_training.py
 
 Open: `http://localhost:8765/Dotnet/DotnetTraining.html`
 
+Visual posters are generated into `Dotnet/images/` on each build (Python-style thumbnail under Definition).
+
+D01–D60 = skill matrix. **D61–D72** = PDF gaps (OOP pack, SOLID story, Repository/UoW, CQRS, Saga, EF mapping, large payloads, SSO, 12-point architecture talk, events vs REST, global exceptions, five-question drill).
+
 ---
 
 ## Source files (one job each)

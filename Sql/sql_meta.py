@@ -1,0 +1,3 @@
+from Sql.sql_assemble import MODULE_MAP, SECTIONS, SUBTOPICS, TRAINING_META
+
+__all__ = ["MODULE_MAP", "SECTIONS", "SUBTOPICS", "TRAINING_META"]

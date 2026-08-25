@@ -780,6 +780,10 @@ table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: to
 @media (max-width: 700px) {
   .vguide-strip { flex-direction: column; align-items: flex-start; }
 }
+.vguide-thumb img[src$=".svg"] {
+  width: 220px; height: 146px; object-fit: cover; object-position: top left;
+  background: #ffffff;
+}
 .vg-guide {
   margin: 10px 0 16px; max-width: 920px;
   background: #fff; border: 1.5px solid #cbd5e1; border-radius: 12px;
@@ -1039,6 +1043,7 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
 .nav-section-4 { grid-column: span 3; }
 .nav-section-5 { grid-column: span 6; }
 .nav-section-6 { grid-column: span 3; }
+.nav-section-7 { grid-column: span 3; }
 .nav-section-1 .nav-links,
 .nav-section-3 .nav-links,
 .nav-section-5 .nav-links { column-count: 2; column-gap: 24px; }

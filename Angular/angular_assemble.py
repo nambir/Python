@@ -1,0 +1,14 @@
+"""Build TRAINING_META / CONTENT / BEGINNER / nav maps from the Angular catalog."""
+
+from Angular.angular_catalog import AREA_TITLES, SKILLS
+from interview_track import build_from_skills
+
+_BUILT = build_from_skills(SKILLS, AREA_TITLES)
+TRAINING_META = _BUILT["TRAINING_META"]
+CONTENT = _BUILT["CONTENT"]
+BEGINNER_CONTENT = _BUILT["BEGINNER_CONTENT"]
+MODULE_MAP = _BUILT["MODULE_MAP"]
+SUBTOPICS = _BUILT["SUBTOPICS"]
+SECTIONS = _BUILT["SECTIONS"]
+FLOWS = _BUILT["FLOWS"]
+DIAGRAMS = _BUILT["DIAGRAMS"]

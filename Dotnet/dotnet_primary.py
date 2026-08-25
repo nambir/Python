@@ -378,6 +378,56 @@ PRIMARY: dict[str, str] = {
         "Ready counts from your tracker: ~75 unique tickets / 50+ Resolved, ~170 tests, "
         "Cap $2,410→$2,480, and SignalR design → adapter delivery."
     ),
+    "D61": (
+        "<b>OOP</b> here is a <b>scenario pack</b>, not four dictionary definitions. "
+        "Interviewers name one keyword (interface vs abstract, sealed, record, var vs dynamic) "
+        "and expects where it showed up in TAS/TASNX or a similar service."
+    ),
+    "D62": (
+        "<b>SOLID</b> is a change story: problem → class/interface that changed → "
+        "how the next variant can be added without editing working code. "
+        "OCP + DIP are the ones they probe most."
+    ),
+    "D63": (
+        "A <b>repository</b> names an intention-revealing query. A <b>unit of work</b> is one "
+        "business commit. In EF Core, <code>DbContext.SaveChanges</code> already is the unit of work."
+    ),
+    "D64": (
+        "<b>CQRS</b> means separate write commands from read queries — possibly different models. "
+        "It is not “we registered MediatR.” Be ready to say when it would be unnecessary."
+    ),
+    "D65": (
+        "A <b>saga</b> coordinates Order → Payment → Inventory → Shipment across services. "
+        "SQL rollback cannot span those databases; you publish <b>compensating</b> actions."
+    ),
+    "D66": (
+        "<b>Code First</b> vs <b>Database First</b>, Fluent API mappings, and calling a stored "
+        "procedure with <code>FromSqlInterpolated</code> — plus wrapping related writes in a transaction."
+    ),
+    "D67": (
+        "Large files should not hop every microservice or sit on a queue. "
+        "Store the object, put a <b>reference</b> (key/URI/checksum) on the event, process async."
+    ),
+    "D68": (
+        "The API <b>validates tokens</b> from an identity provider (OIDC / IdentityServer / Cognito). "
+        "<b>IAM</b> is for AWS resources (ECS task roles), not the Angular user’s password."
+    ),
+    "D69": (
+        "A rehearsed <b>5–7 minute</b> architecture talk covering twelve beats, "
+        "with two or three services you can draw and a clear personal contribution."
+    ),
+    "D70": (
+        "<b>REST</b> when the user is waiting; <b>events</b> when others must react after a commit. "
+        "Large event payloads follow the object-reference pattern."
+    ),
+    "D71": (
+        "Global exception <b>middleware</b> logs with a trace id and returns a stable error body. "
+        "After the controller returns, middleware <b>does run again</b> as the pipeline unwinds."
+    ),
+    "D72": (
+        "For every resume technology: <b>What / Where / Why / How / What problem</b>. "
+        "If any answer is empty, do not mention that technology."
+    ),
 }
 
 

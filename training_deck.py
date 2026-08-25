@@ -513,8 +513,129 @@ document.addEventListener('pointerup', () => {{
   pyHeightDrag = null;
 }});
 
+let csharpDrag = {{ active: false, win: null, startX: 0, startY: 0, origLeft: 0, origTop: 0 }};
+let csharpResize = {{ active: false, win: null, startX: 0, startY: 0, origW: 0, origH: 0 }};
+function bringCsharpWinToFront(win) {{
+  document.querySelectorAll('.csharp-float-win.open').forEach(w => {{ w.style.zIndex = '2000'; }});
+  win.style.zIndex = '2010';
+}}
+function centerCsharpWin(win) {{
+  const w = win.offsetWidth || 720;
+  const h = win.offsetHeight || 480;
+  win.style.left = Math.max(12, (window.innerWidth - w) / 2) + 'px';
+  win.style.top = Math.max(12, (window.innerHeight - h) / 2) + 'px';
+}}
+function openCsharpWin(id) {{
+  const el = document.getElementById('csharp-win-' + id);
+  if (!el) return;
+  el.classList.add('open');
+  bringCsharpWinToFront(el);
+  if (!el.dataset.positioned) {{
+    centerCsharpWin(el);
+    el.dataset.positioned = '1';
+  }}
+}}
+function closeCsharpWin(id) {{
+  const el = document.getElementById('csharp-win-' + id);
+  if (el) el.classList.remove('open');
+}}
+function closeAllCsharpWins() {{
+  document.querySelectorAll('.csharp-float-win.open').forEach(el => el.classList.remove('open'));
+}}
+function toggleImgFloatFit(btn) {{
+  const win = btn.closest('.csharp-float-win');
+  if (!win) return;
+  const body = win.querySelector('.csharp-float-body-img');
+  if (!body) return;
+  const full = body.classList.toggle('img-fullsize');
+  btn.textContent = full ? '100%' : 'Fit';
+}}
+function initCsharpFloatWindows() {{
+  document.querySelectorAll('.csharp-float-win').forEach(win => {{
+    if (win.dataset.csharpInit === '1') return;
+    win.dataset.csharpInit = '1';
+    const hdr = win.querySelector('.csharp-float-hdr');
+    if (hdr) {{
+      hdr.addEventListener('pointerdown', (e) => {{
+        if (e.button !== 0) return;
+        if (e.target.closest('.csharp-float-close')) return;
+        if (e.target.closest('.csharp-float-resize')) return;
+        bringCsharpWinToFront(win);
+        csharpDrag.active = true;
+        csharpDrag.win = win;
+        const rect = win.getBoundingClientRect();
+        csharpDrag.startX = e.clientX;
+        csharpDrag.startY = e.clientY;
+        csharpDrag.origLeft = rect.left;
+        csharpDrag.origTop = rect.top;
+        win.classList.add('dragging');
+        try {{ hdr.setPointerCapture(e.pointerId); }} catch (_) {{}}
+        e.preventDefault();
+      }});
+    }}
+    const handle = win.querySelector('.csharp-float-resize');
+    if (handle) {{
+      handle.addEventListener('pointerdown', (e) => {{
+        if (e.button !== 0) return;
+        bringCsharpWinToFront(win);
+        csharpResize.active = true;
+        csharpResize.win = win;
+        const rect = win.getBoundingClientRect();
+        csharpResize.startX = e.clientX;
+        csharpResize.startY = e.clientY;
+        csharpResize.origW = rect.width;
+        csharpResize.origH = rect.height;
+        win.classList.add('resizing');
+        try {{ handle.setPointerCapture(e.pointerId); }} catch (_) {{}}
+        e.preventDefault();
+        e.stopPropagation();
+      }});
+    }}
+  }});
+  document.addEventListener('pointermove', (e) => {{
+    if (csharpDrag.active && csharpDrag.win) {{
+      const win = csharpDrag.win;
+      const dx = e.clientX - csharpDrag.startX;
+      const dy = e.clientY - csharpDrag.startY;
+      const w = win.offsetWidth;
+      const h = win.offsetHeight;
+      const left = Math.min(Math.max(0, csharpDrag.origLeft + dx), Math.max(0, window.innerWidth - w));
+      const top = Math.min(Math.max(0, csharpDrag.origTop + dy), Math.max(0, window.innerHeight - h));
+      win.style.left = left + 'px';
+      win.style.top = top + 'px';
+      return;
+    }}
+    if (csharpResize.active && csharpResize.win) {{
+      const win = csharpResize.win;
+      const dx = e.clientX - csharpResize.startX;
+      const dy = e.clientY - csharpResize.startY;
+      const rect = win.getBoundingClientRect();
+      const maxW = Math.max(360, window.innerWidth - rect.left - 8);
+      const maxH = Math.max(240, window.innerHeight - rect.top - 8);
+      win.style.width = Math.min(Math.max(360, csharpResize.origW + dx), maxW) + 'px';
+      win.style.height = Math.min(Math.max(240, csharpResize.origH + dy), maxH) + 'px';
+      win.style.maxWidth = 'none';
+      win.style.maxHeight = 'none';
+    }}
+  }});
+  const endCsharpPointer = () => {{
+    if (csharpDrag.win) csharpDrag.win.classList.remove('dragging');
+    if (csharpResize.win) csharpResize.win.classList.remove('resizing');
+    csharpDrag.active = false;
+    csharpDrag.win = null;
+    csharpResize.active = false;
+    csharpResize.win = null;
+  }};
+  document.addEventListener('pointerup', endCsharpPointer);
+  document.addEventListener('pointercancel', endCsharpPointer);
+}}
+document.addEventListener('keydown', (e) => {{
+  if (e.key === 'Escape') closeAllCsharpWins();
+}});
+
 document.addEventListener('DOMContentLoaded', () => {{
   try {{ initAudioPlayers(); }} catch (err) {{ console.warn('audio init', err); }}
+  try {{ initCsharpFloatWindows(); }} catch (err) {{ console.warn('vguide init', err); }}
   try {{
     document.querySelectorAll('.py-editor').forEach(ed => {{
       ed.dataset.original = ed.value;
@@ -569,6 +690,7 @@ def topic_intro(
     extra_blocks: list[str] | None = None,
     flowchart_fn=None,
     diagram_fn=None,
+    visual_guide_fn=None,
 ) -> str:
     parts: list[str] = []
     if meta.get("primary"):
@@ -577,6 +699,10 @@ def topic_intro(
         )
     if meta.get("definition"):
         parts.append(f'<h3>Definition</h3><div class="def-block">{meta["definition"]}</div>')
+        if visual_guide_fn:
+            vg = visual_guide_fn(n)
+            if vg:
+                parts.append(vg)
         if flowchart_fn:
             fc = flowchart_fn(n)
             if fc:
@@ -585,6 +711,10 @@ def topic_intro(
             dg = diagram_fn(n)
             if dg:
                 parts.append(dg)
+    elif visual_guide_fn:
+        vg = visual_guide_fn(n)
+        if vg:
+            parts.append(vg)
     for block in extra_blocks or []:
         parts.append(block)
     steps = beginner.get("steps", [])
@@ -627,6 +757,7 @@ def render_slide(
     code_lang: str = "python",
     flowchart_fn=None,
     diagram_fn=None,
+    visual_guide_fn=None,
 ) -> str:
     notes_html, codes_html = split_learn(learn, lang=code_lang)
     notes_html = extra_left + notes_html + interview_box(n, meta=meta, beginner=beginner)
@@ -644,7 +775,7 @@ def render_slide(
 <div class="slide-body">
   <div class="{split_cls}">
     <div class="panel-left">
-      {topic_intro(n, meta=meta, beginner=beginner, flowchart_fn=flowchart_fn, diagram_fn=diagram_fn)}
+      {topic_intro(n, meta=meta, beginner=beginner, flowchart_fn=flowchart_fn, diagram_fn=diagram_fn, visual_guide_fn=visual_guide_fn)}
       {notes_html}
       <div class="panel-practice">
         <h3>Practice</h3>
@@ -695,6 +826,8 @@ def build_nav(
         spans = [6, 6]
     elif n_sec == 3:
         spans = [4, 4, 4]
+    elif n_sec == 7:
+        spans = [3, 3, 3, 3, 4, 5, 3]
     elif use_css_spans:
         spans = [None] * n_sec
     else:
@@ -741,6 +874,7 @@ def build_deck(
     extra_left_for: dict[int, str] | None = None,
     flowchart_fn=None,
     diagram_fn=None,
+    visual_guide_fn=None,
 ) -> None:
     titles = {n: t for n, t, _, _ in content}
     slides = [build_nav(cfg=cfg, titles=titles, sections=sections, subtopics=subtopics, nav_intro=nav_intro)]
@@ -759,6 +893,7 @@ def build_deck(
                 code_lang=code_lang,
                 flowchart_fn=flowchart_fn,
                 diagram_fn=diagram_fn,
+                visual_guide_fn=visual_guide_fn,
             )
         )
 

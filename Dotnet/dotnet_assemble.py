@@ -18,7 +18,7 @@ from Dotnet.dotnet_mydotnet import answer_for
 from Dotnet.dotnet_primary import primary_for
 from Dotnet import dotnet_rich as rich
 
-# Slide number = index in SKILLS (1-based): D01→1 … D60→60
+# Slide number = index in SKILLS (1-based): D01→1 … D72→72
 SLIDE_BY_ID = {s["id"]: i for i, s in enumerate(SKILLS, 1)}
 ID_BY_SLIDE = {i: s["id"] for i, s in enumerate(SKILLS, 1)}
 
