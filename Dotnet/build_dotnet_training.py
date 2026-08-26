@@ -13,7 +13,8 @@ from Dotnet.dotnet_content import CONTENT
 from Dotnet.dotnet_diagrams import diagram_for
 from Dotnet.dotnet_flowcharts import flowchart_for
 from Dotnet.dotnet_meta import MODULE_MAP, SECTIONS, SUBTOPICS, TRAINING_META
-from track_visual_guides import make_visual_guide_fn, write_svg_posters
+from Dotnet.dotnet_posters import write_dotnet_posters
+from track_visual_guides import make_visual_guide_fn
 from training_deck import DeckConfig, build_deck
 
 DOTNET_DIR = Path(__file__).resolve().parent
@@ -21,7 +22,7 @@ TOTAL_SLIDES = len(CONTENT)
 
 
 def main() -> None:
-    posters = write_svg_posters(SKILLS, DOTNET_DIR / "images", track="dotnet")
+    posters = write_dotnet_posters(DOTNET_DIR / "images")
     cfg = DeckConfig(
         title=".NET Training — Skill Depth (D01–D72)",
         total_slides=TOTAL_SLIDES,

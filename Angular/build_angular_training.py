@@ -8,12 +8,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from Angular.angular_beginner import BEGINNER_CONTENT
-from Angular.angular_catalog import SKILLS
 from Angular.angular_content import CONTENT
 from Angular.angular_diagrams import diagram_for
 from Angular.angular_flowcharts import flowchart_for
 from Angular.angular_meta import MODULE_MAP, SECTIONS, SUBTOPICS, TRAINING_META
-from track_visual_guides import make_visual_guide_fn, write_svg_posters
+from Angular.angular_posters import write_angular_posters
+from track_visual_guides import make_visual_guide_fn
 from training_deck import DeckConfig, build_deck
 
 ANGULAR_DIR = Path(__file__).resolve().parent
@@ -21,7 +21,7 @@ TOTAL_SLIDES = len(CONTENT)
 
 
 def main() -> None:
-    posters = write_svg_posters(SKILLS, ANGULAR_DIR / "images", track="angular")
+    posters = write_angular_posters(ANGULAR_DIR / "images")
     cfg = DeckConfig(
         title="Angular Training — Interview",
         total_slides=TOTAL_SLIDES,

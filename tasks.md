@@ -4,22 +4,29 @@ Source: `ClientInterviewExpectations.pdf` (29 pages). Pattern: edit catalog → 
 
 ---
 
-## Visual guides — Python Logging standard
+## Visual guides — match Python PNG quality
 
-Python posters (`images/slide-22-logging.png`, Threading & GIL, …) are the quality bar:
+Contract: `visual_guide_requirements.md` (written from every Python `images/slide-*.png`).
+Shared drawing primitives: `poster_lib.py` (fill-height, visible arrow shafts, 13px body, 3-col footer).
 
-- White dense infographic, numbered color panels
-- **Each panel is a different visual** (compare table, level bars, code + sample line, architecture flow, good vs bad code, practice + C#)
-- Topic-specific diagrams — not the same 4 pastel boxes on every slide
+- [x] Requirements written from Python posters (3+2+1, unique diagrams, 3-col C# footer)
+- [x] AWS W01–W16 hand-authored (`AWS/aws_posters.py`)
+- [x] Angular A01–A14 hand-authored (`Angular/angular_posters.py`)
+- [x] SQL S01–S14 hand-authored (`Sql/sql_posters.py`)
+- [x] .NET D01–D72 hand-authored (`Dotnet/dotnet_posters_p1.py`–`p3.py`)
 
-Engine: `track_poster_engine.py` + `track_poster_plans.py`. Output: SVG in each track `images/`.
+Python PNGs are the quality bar — do not regenerate Python posters from this engine.
 
-### Shared engine
+Rebuild:
 
-- [x] Logging-style 3×2 / 2×3 / hero+panel chrome
-- [x] Widgets: table, levels, code+output, flow, good/bad code, triple, checklist, stack, nested, join, metrics, decision
-- [x] Unique 6-widget mix per slide id (hero diagram from `HERO`)
-- [x] Rebuild all four HTML decks
+```powershell
+python Angular/build_angular_training.py
+python Sql/build_sql_training.py
+python AWS/build_aws_training.py
+python Dotnet/build_dotnet_training.py
+```
+
+Hard-refresh SVGs (`Ctrl+F5`).
 
 ### Angular (A01–A14)
 

@@ -1536,7 +1536,8 @@ table.data-tbl, .ref-table { width: 100%; border-collapse: collapse; margin: 8px
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Joins</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-1')">
       Open in resizable window
     </button>
@@ -1679,14 +1680,15 @@ LEFT JOIN dbo.Shipment s
     <div class="panel-left">
       <div class="callout"><b>What this primarily describes:</b> <b>Subquery vs CTE</b> — When a subquery is enough, when a CTE is clearer, derived tables.</div><h3>Definition</h3><div class="def-block">A subquery is a query inside another. A <b>CTE</b> (WITH name AS (...)) names that result so the outer query reads like steps. EXISTS often beats IN + DISTINCT for existence checks.<ul style="margin:6px 0 8px 18px;font-size:12px;line-height:1.5"><li><b>Subquery:</b> Scalar or IN list — fine when short.</li><li><b>CTE:</b> Reusable named step, easier to test and to add a second consumer in the same batch.</li><li><b>EXISTS:</b> Stop at the first match — good for “has any payment”.</li><li><b>Not magic:</b> A CTE is not automatically faster. The optimizer may treat it like a subquery.</li></ul></div>
 <div class="vguide-strip">
-  <a class="vguide-thumb" href="images/slide-02-subquery-vs-cte.svg" target="_blank" rel="noopener noreferrer"
+  <a class="vguide-thumb" href="images/slide-02-subquery-vs-cte-vs-exists.svg" target="_blank" rel="noopener noreferrer"
     title="Open the full-size poster in a new tab">
-    <img src="images/slide-02-subquery-vs-cte.svg" alt="Subquery vs CTE visual guide poster" loading="lazy" decoding="async">
+    <img src="images/slide-02-subquery-vs-cte-vs-exists.svg" alt="Subquery vs CTE vs EXISTS visual guide poster" loading="lazy" decoding="async">
     <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
   </a>
   <div class="vguide-txt">
-    <b>Visual guide &mdash; Subquery vs CTE</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <b>Visual guide &mdash; Subquery vs CTE vs EXISTS</b>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-2')">
       Open in resizable window
     </button>
@@ -1696,16 +1698,16 @@ LEFT JOIN dbo.Shipment s
   aria-labelledby="csharp-win-title-vguide-2">
   <div class="csharp-float-hdr">
     <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
-    <h4 id="csharp-win-title-vguide-2">Subquery vs CTE &ndash; Visual Guide</h4>
+    <h4 id="csharp-win-title-vguide-2">Subquery vs CTE vs EXISTS &ndash; Visual Guide</h4>
     <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
       title="Image fits the window (scales when you resize)">Fit</button>
     <button type="button" class="csharp-float-close"
       onclick="closeCsharpWin('vguide-2')" aria-label="Close">&times;</button>
   </div>
   <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
-    <a href="images/slide-02-subquery-vs-cte.svg" target="_blank" rel="noopener noreferrer"
+    <a href="images/slide-02-subquery-vs-cte-vs-exists.svg" target="_blank" rel="noopener noreferrer"
       title="Open full-size image in a new tab">
-      <img src="images/slide-02-subquery-vs-cte.svg" alt="Subquery vs CTE visual guide poster" loading="lazy" decoding="async">
+      <img src="images/slide-02-subquery-vs-cte-vs-exists.svg" alt="Subquery vs CTE vs EXISTS visual guide poster" loading="lazy" decoding="async">
     </a>
   </div>
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
@@ -1844,7 +1846,8 @@ LEFT JOIN LatestBeat b ON b.DeviceId = d.Id;</textarea><div class="py-output-lab
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Temp Table vs Table Variable</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-3')">
       Open in resizable window
     </button>
@@ -1996,7 +1999,8 @@ CREATE CLUSTERED INDEX IX_Active ON #Active(Id);</textarea><div class="py-output
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Stored Procedures</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-4')">
       Open in resizable window
     </button>
@@ -2156,7 +2160,8 @@ END</textarea><div class="py-output-label" style="font-size:11px;font-weight:700
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Functions</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-5')">
       Open in resizable window
     </button>
@@ -2301,12 +2306,13 @@ AS RETURN
 <div class="vguide-strip">
   <a class="vguide-thumb" href="images/slide-06-indexes-clustered-nonclustered-pk.svg" target="_blank" rel="noopener noreferrer"
     title="Open the full-size poster in a new tab">
-    <img src="images/slide-06-indexes-clustered-nonclustered-pk.svg" alt="Indexes: Clustered, Nonclustered, PK visual guide poster" loading="lazy" decoding="async">
+    <img src="images/slide-06-indexes-clustered-nonclustered-pk.svg" alt="Indexes Clustered Nonclustered PK visual guide poster" loading="lazy" decoding="async">
     <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
   </a>
   <div class="vguide-txt">
-    <b>Visual guide &mdash; Indexes: Clustered, Nonclustered, PK</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <b>Visual guide &mdash; Indexes Clustered Nonclustered PK</b>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-6')">
       Open in resizable window
     </button>
@@ -2316,7 +2322,7 @@ AS RETURN
   aria-labelledby="csharp-win-title-vguide-6">
   <div class="csharp-float-hdr">
     <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
-    <h4 id="csharp-win-title-vguide-6">Indexes: Clustered, Nonclustered, PK &ndash; Visual Guide</h4>
+    <h4 id="csharp-win-title-vguide-6">Indexes Clustered Nonclustered PK &ndash; Visual Guide</h4>
     <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
       title="Image fits the window (scales when you resize)">Fit</button>
     <button type="button" class="csharp-float-close"
@@ -2325,7 +2331,7 @@ AS RETURN
   <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
     <a href="images/slide-06-indexes-clustered-nonclustered-pk.svg" target="_blank" rel="noopener noreferrer"
       title="Open full-size image in a new tab">
-      <img src="images/slide-06-indexes-clustered-nonclustered-pk.svg" alt="Indexes: Clustered, Nonclustered, PK visual guide poster" loading="lazy" decoding="async">
+      <img src="images/slide-06-indexes-clustered-nonclustered-pk.svg" alt="Indexes Clustered Nonclustered PK visual guide poster" loading="lazy" decoding="async">
     </a>
   </div>
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
@@ -2458,7 +2464,8 @@ CREATE NONCLUSTERED INDEX IX_Orders_Customer
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Views</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-7')">
       Open in resizable window
     </button>
@@ -2605,12 +2612,13 @@ JOIN dbo.Customer c ON c.Id = d.CustomerId;</textarea><div class="py-output-labe
 <div class="vguide-strip">
   <a class="vguide-thumb" href="images/slide-08-transactions-commit-and-rollback.svg" target="_blank" rel="noopener noreferrer"
     title="Open the full-size poster in a new tab">
-    <img src="images/slide-08-transactions-commit-and-rollback.svg" alt="Transactions: Commit and Rollback visual guide poster" loading="lazy" decoding="async">
+    <img src="images/slide-08-transactions-commit-and-rollback.svg" alt="Transactions Commit and Rollback visual guide poster" loading="lazy" decoding="async">
     <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
   </a>
   <div class="vguide-txt">
-    <b>Visual guide &mdash; Transactions: Commit and Rollback</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <b>Visual guide &mdash; Transactions Commit and Rollback</b>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-8')">
       Open in resizable window
     </button>
@@ -2620,7 +2628,7 @@ JOIN dbo.Customer c ON c.Id = d.CustomerId;</textarea><div class="py-output-labe
   aria-labelledby="csharp-win-title-vguide-8">
   <div class="csharp-float-hdr">
     <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
-    <h4 id="csharp-win-title-vguide-8">Transactions: Commit and Rollback &ndash; Visual Guide</h4>
+    <h4 id="csharp-win-title-vguide-8">Transactions Commit and Rollback &ndash; Visual Guide</h4>
     <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
       title="Image fits the window (scales when you resize)">Fit</button>
     <button type="button" class="csharp-float-close"
@@ -2629,7 +2637,7 @@ JOIN dbo.Customer c ON c.Id = d.CustomerId;</textarea><div class="py-output-labe
   <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
     <a href="images/slide-08-transactions-commit-and-rollback.svg" target="_blank" rel="noopener noreferrer"
       title="Open full-size image in a new tab">
-      <img src="images/slide-08-transactions-commit-and-rollback.svg" alt="Transactions: Commit and Rollback visual guide poster" loading="lazy" decoding="async">
+      <img src="images/slide-08-transactions-commit-and-rollback.svg" alt="Transactions Commit and Rollback visual guide poster" loading="lazy" decoding="async">
     </a>
   </div>
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
@@ -2772,7 +2780,8 @@ END CATCH</textarea><div class="py-output-label" style="font-size:11px;font-weig
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Slow Stored Procedure Playbook</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-9')">
       Open in resizable window
     </button>
@@ -2924,12 +2933,13 @@ END CATCH</textarea><div class="py-output-label" style="font-size:11px;font-weig
 <div class="vguide-strip">
   <a class="vguide-thumb" href="images/slide-10-scans-seeks-and-parameter-sniffing.svg" target="_blank" rel="noopener noreferrer"
     title="Open the full-size poster in a new tab">
-    <img src="images/slide-10-scans-seeks-and-parameter-sniffing.svg" alt="Scans, Seeks, and Parameter Sniffing visual guide poster" loading="lazy" decoding="async">
+    <img src="images/slide-10-scans-seeks-and-parameter-sniffing.svg" alt="Scans Seeks and Parameter Sniffing visual guide poster" loading="lazy" decoding="async">
     <span class="vguide-expand" aria-hidden="true">&#x26F6;</span>
   </a>
   <div class="vguide-txt">
-    <b>Visual guide &mdash; Scans, Seeks, and Parameter Sniffing</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <b>Visual guide &mdash; Scans Seeks and Parameter Sniffing</b>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-10')">
       Open in resizable window
     </button>
@@ -2939,7 +2949,7 @@ END CATCH</textarea><div class="py-output-label" style="font-size:11px;font-weig
   aria-labelledby="csharp-win-title-vguide-10">
   <div class="csharp-float-hdr">
     <span class="csharp-float-drag" aria-hidden="true">&#8942;&#8942;</span>
-    <h4 id="csharp-win-title-vguide-10">Scans, Seeks, and Parameter Sniffing &ndash; Visual Guide</h4>
+    <h4 id="csharp-win-title-vguide-10">Scans Seeks and Parameter Sniffing &ndash; Visual Guide</h4>
     <button type="button" class="btn-img-fit" onclick="toggleImgFloatFit(this)"
       title="Image fits the window (scales when you resize)">Fit</button>
     <button type="button" class="csharp-float-close"
@@ -2948,7 +2958,7 @@ END CATCH</textarea><div class="py-output-label" style="font-size:11px;font-weig
   <div class="csharp-float-body csharp-float-body-img" style="--native-w:1536px">
     <a href="images/slide-10-scans-seeks-and-parameter-sniffing.svg" target="_blank" rel="noopener noreferrer"
       title="Open full-size image in a new tab">
-      <img src="images/slide-10-scans-seeks-and-parameter-sniffing.svg" alt="Scans, Seeks, and Parameter Sniffing visual guide poster" loading="lazy" decoding="async">
+      <img src="images/slide-10-scans-seeks-and-parameter-sniffing.svg" alt="Scans Seeks and Parameter Sniffing visual guide poster" loading="lazy" decoding="async">
     </a>
   </div>
   <div class="csharp-float-resize" title="Drag to resize" aria-hidden="true"></div>
@@ -3079,7 +3089,8 @@ WHERE YEAR(CreatedAt) = 2026</textarea><div class="py-output-label" style="font-
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Isolation Levels and Deadlocks</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-11')">
       Open in resizable window
     </button>
@@ -3229,7 +3240,8 @@ COMMIT;</textarea><div class="py-output-label" style="font-size:11px;font-weight
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; DB Deploy and Rollback</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-12')">
       Open in resizable window
     </button>
@@ -3379,7 +3391,8 @@ UPDATE dbo.Orders SET Amount = Amt WHERE Amount IS NULL;
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; Replicas and Database-per-Service</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-13')">
       Open in resizable window
     </button>
@@ -3527,7 +3540,8 @@ UPDATE dbo.Orders SET Amount = Amt WHERE Amount IS NULL;
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; SQL Five-Question Drill</b>
-    <span>One-page poster: mixed diagrams, tables and code (Python Logging standard). Click the thumbnail for full size.</span>
+    <span>One-page poster in the Python Visual Guide style: timelines, tables, code, C# map.
+      Click the thumbnail to open full size.</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('vguide-14')">
       Open in resizable window
     </button>

@@ -8,12 +8,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from Sql.sql_beginner import BEGINNER_CONTENT
-from Sql.sql_catalog import SKILLS
 from Sql.sql_content import CONTENT
 from Sql.sql_diagrams import diagram_for
 from Sql.sql_flowcharts import flowchart_for
 from Sql.sql_meta import MODULE_MAP, SECTIONS, SUBTOPICS, TRAINING_META
-from track_visual_guides import make_visual_guide_fn, write_svg_posters
+from Sql.sql_posters import write_sql_posters
+from track_visual_guides import make_visual_guide_fn
 from training_deck import DeckConfig, build_deck
 
 SQL_DIR = Path(__file__).resolve().parent
@@ -21,7 +21,7 @@ TOTAL_SLIDES = len(CONTENT)
 
 
 def main() -> None:
-    posters = write_svg_posters(SKILLS, SQL_DIR / "images", track="sql")
+    posters = write_sql_posters(SQL_DIR / "images")
     cfg = DeckConfig(
         title="SQL Training — Interview",
         total_slides=TOTAL_SLIDES,

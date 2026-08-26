@@ -13,7 +13,8 @@ from AWS.aws_content import CONTENT
 from AWS.aws_diagrams import diagram_for
 from AWS.aws_flowcharts import flowchart_for
 from AWS.aws_meta import MODULE_MAP, SECTIONS, SUBTOPICS, TRAINING_META
-from track_visual_guides import make_visual_guide_fn, write_svg_posters
+from AWS.aws_posters import write_aws_posters
+from track_visual_guides import make_visual_guide_fn
 from training_deck import DeckConfig, build_deck
 
 AWS_DIR = Path(__file__).resolve().parent
@@ -21,7 +22,7 @@ TOTAL_SLIDES = len(CONTENT)
 
 
 def main() -> None:
-    posters = write_svg_posters(SKILLS, AWS_DIR / "images", track="aws")
+    posters = write_aws_posters(AWS_DIR / "images")
     cfg = DeckConfig(
         title="AWS Training — Interview",
         total_slides=TOTAL_SLIDES,
