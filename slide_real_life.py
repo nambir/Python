@@ -14,7 +14,9 @@ REAL_LIFE: dict[int, str] = {
         "<code>sync_orders()</code> only when you execute this file.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run this block only when the file is executed, not imported\n"
         'if __name__ == "__main__":\n'
+        "    # start the nightly order sync\n"
         "    sync_orders()\n"
         "\n"
         "# OUTPUT\n"
@@ -25,6 +27,7 @@ REAL_LIFE: dict[int, str] = {
         "that list is what the loop walks through.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# pull the latest orders from the API\n"
         "orders = fetch_from_api()\n"
         "\n"
         "# OUTPUT\n"
@@ -34,10 +37,14 @@ REAL_LIFE: dict[int, str] = {
         "Only <code>NEW</code> orders go to the database; others are skipped.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# walk each order from the API response\n"
         "for order in orders:\n"
+        "    # NEW orders are the ones we persist\n"
         '    if order["status"] == "NEW":\n'
+        "        # write this order to the database\n"
         "        save_to_db(order)\n"
         "    else:\n"
+        "        # already processed — do not save again\n"
         "        skip(order)\n"
         "\n"
         "# OUTPUT\n"
@@ -60,6 +67,7 @@ REAL_LIFE: dict[int, str] = {
         "Confirms CPython is on your PATH before you open any project.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# check CPython is on PATH\n"
         "python --version\n"
         "\n"
         "# OUTPUT\n"
@@ -69,6 +77,7 @@ REAL_LIFE: dict[int, str] = {
         "Package installer must work so you can install project dependencies.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# confirm pip can install packages\n"
         "pip --version\n"
         "\n"
         "# OUTPUT\n"
@@ -78,6 +87,7 @@ REAL_LIFE: dict[int, str] = {
         "In Cursor: Select Interpreter → Python 3.12, then run the team setup script.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run the team setup check script\n"
         "python Projects/00_windows_setup.py\n"
         "\n"
         "# OUTPUT\n"
@@ -100,6 +110,7 @@ REAL_LIFE: dict[int, str] = {
         "Run a small kata to cement datatypes from slide 5.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run a short datatypes kata\n"
         "python Projects/01_datatypes.py\n"
         "\n"
         "# OUTPUT\n"
@@ -109,6 +120,7 @@ REAL_LIFE: dict[int, str] = {
         "Move into the full codebase and run a collections module.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run a collections demo from the real repo\n"
         "python Python-Set2/pythonBasics/MyCollections/mylist.py\n"
         "\n"
         "# OUTPUT\n"
@@ -122,10 +134,13 @@ REAL_LIFE: dict[int, str] = {
         "Every public function gets a one-line docstring so reviewers and tools know what it does.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# public helper — reviewers expect a docstring\n"
         "def calc_gst(amount):\n"
         '    """Return 18% GST for the given amount."""\n'
+        "    # 18% of the given amount\n"
         "    return amount * 0.18\n"
         "\n"
+        "# call it with a sample invoice amount\n"
         "calc_gst(1000)\n"
         "\n"
         "# OUTPUT\n"
@@ -135,6 +150,7 @@ REAL_LIFE: dict[int, str] = {
         "Automated style check runs on every pull request before merge.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# lint the repo for PEP 8 issues\n"
         "ruff check .\n"
         "\n"
         "# OUTPUT\n"
@@ -157,7 +173,9 @@ REAL_LIFE: dict[int, str] = {
         "A shopping cart is a list of dicts; you can add items after checkout starts.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# start with two items in the cart\n"
         'cart = [{"sku": "A1", "qty": 2}, {"sku": "B2", "qty": 1}]\n'
+        "# add a third item after checkout starts\n"
         'cart.append({"sku": "C3", "qty": 3})\n'
         "\n"
         "# OUTPUT\n"
@@ -167,6 +185,7 @@ REAL_LIFE: dict[int, str] = {
         "Coordinates should not change accidentally — a tuple has no <code>append</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# fixed GPS coordinates — tuple cannot grow\n"
         "delivery_pin = (12.97, 80.22)\n"
         "\n"
         "# OUTPUT\n"
@@ -176,6 +195,7 @@ REAL_LIFE: dict[int, str] = {
         "One list can hold an int id, a string status, and a nested list of vendors.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# one list holds id, status, and nested vendors\n"
         'order = [101, "SHIPPED", ["Google", "Amazon"]]\n'
         "\n"
         "# OUTPUT\n"
@@ -201,9 +221,12 @@ REAL_LIFE: dict[int, str] = {
         "<code>currency</code> a <code>str</code>; mypy checks callers match.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# Decimal is the safe type for money\n"
         "from decimal import Decimal\n"
         "\n"
+        "# amount must be Decimal; currency a str; returns a receipt\n"
         "def charge(amount: Decimal, currency: str) -> str:\n"
+        "    # build a human-readable charge line\n"
         '    return f"Charged {amount} {currency}"\n'
         "\n"
         "# OUTPUT\n"
@@ -213,7 +236,9 @@ REAL_LIFE: dict[int, str] = {
         "Passing a string and an int swaps the expected types; Python still runs, mypy does not.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# wrong types on purpose — Python still runs\n"
         'result = charge("100", 91)\n'
+        "# prints the receipt even though types are swapped\n"
         "print(result)\n"
         "\n"
         "# OUTPUT (python app.py — hints ignored)\n"
@@ -221,6 +246,7 @@ REAL_LIFE: dict[int, str] = {
         "</div>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# static check — mypy does not execute the file\n"
         "mypy app.py\n"
         "\n"
         "# OUTPUT (mypy — not executed)\n"
@@ -232,6 +258,7 @@ REAL_LIFE: dict[int, str] = {
         "Use <code>Decimal(\"100.00\")</code> for money; mypy passes and Python prints the receipt.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# correct types — Decimal for money, str for currency\n"
         'charge(Decimal("100.00"), "INR")\n'
         "\n"
         "# OUTPUT\n"
@@ -273,9 +300,13 @@ REAL_LIFE: dict[int, str] = {
         "<code>*</code> gives the line total; <code>//</code> gives whole pages when packing items.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# number of items on the invoice\n"
         "qty = 3\n"
+        "# unit price in rupees\n"
         "price = 250\n"
+        "# line total = qty times price\n"
         "total = qty * price\n"
+        "# whole pages when packing 25 items, 10 per page\n"
         "pages = 25 // 10\n"
         "\n"
         "# OUTPUT\n"
@@ -286,12 +317,18 @@ REAL_LIFE: dict[int, str] = {
         "Check whether a value is empty (<code>None</code>) or has a real customer name.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# empty status — no value yet\n"
         "status = None\n"
+        "# is None is the right empty check\n"
         "if status is None:\n"
+        '    # show pending when status is missing\n'
         '    print("pending")\n'
         "\n"
+        "# a real customer name is present\n"
         'customer = "Ravi"\n'
+        "# is not None means we have a value\n"
         "if customer is not None:\n"
+        '    # print the bill-to name\n'
         '    print("bill to", customer)\n'
         "\n"
         "# OUTPUT\n"
@@ -302,8 +339,11 @@ REAL_LIFE: dict[int, str] = {
         "See if a tax code is in the allowed list before applying it.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# allowed tax codes for this invoice\n"
         'tax_codes = ["GST", "CGST"]\n'
+        "# membership test before applying tax\n"
         'if "GST" in tax_codes:\n'
+        "    # GST is allowed — apply it\n"
         '    print("apply GST")\n'
         "\n"
         "# OUTPUT\n"
@@ -313,8 +353,11 @@ REAL_LIFE: dict[int, str] = {
         "Count items once and use the count in the same condition — no double <code>len()</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# three invoice lines\n"
         'items = ["Pen", "Notebook", "Bag"]\n'
+        "# assign count inside the if — no second len()\n"
         "if (count := len(items)) >= 3:\n"
+        "    # reuse count in the message\n"
         '    print(f"Bulk order: {count} lines")\n'
         "\n"
         "# OUTPUT\n"
@@ -334,11 +377,17 @@ REAL_LIFE: dict[int, str] = {
         "If a row has no <code>id</code>, jump to the next row without processing.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# sample CSV rows — first has a blank id\n"
         'rows = [{"id": "", "country": "IN"}, {"id": "42", "country": "IN"}]\n'
+        "# rows that pass the id check\n"
         "processed = []\n"
+        "# walk each imported row\n"
         "for row in rows:\n"
+        "    # skip rows with a missing id\n"
         '    if not row.get("id"):\n'
+        "        # jump to the next row\n"
         "        continue\n"
+        "    # keep rows that have an id\n"
         "    processed.append(row)\n"
         "\n"
         "# OUTPUT\n"
@@ -348,9 +397,13 @@ REAL_LIFE: dict[int, str] = {
         "Protect the job from running forever on a huge file.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# enumerate gives a 0-based row index\n"
         "for i, row in enumerate(reader):\n"
+        "    # stop after 10,000 rows\n"
         "    if i >= 10000:\n"
+        "        # exit the loop early\n"
         "        break\n"
+        "    # handle this CSV row\n"
         "    process(row)\n"
         "\n"
         "# OUTPUT\n"
@@ -360,12 +413,18 @@ REAL_LIFE: dict[int, str] = {
         "Pick the right tax function based on the country column.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# one imported row with a country code\n"
         'row = {"country": "IN"}\n'
+        "# India uses GST\n"
         'if row["country"] == "IN":\n'
+        "    # apply Indian tax rules\n"
         "    apply_in_tax(row)\n"
+        "# United States uses a different tax\n"
         'elif row["country"] == "US":\n'
+        "    # apply US tax rules\n"
         "    apply_us_tax(row)\n"
         "else:\n"
+        "    # fallback when country is unknown\n"
         "    apply_default_tax(row)\n"
         "\n"
         "# OUTPUT\n"
@@ -375,7 +434,9 @@ REAL_LIFE: dict[int, str] = {
         "Placeholder so the file parses while the coupon logic is still being written.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# stub — coupon logic comes later\n"
         "def apply_coupon():\n"
+        "    # do nothing yet so the file still parses\n"
         "    pass\n"
         "\n"
         "# OUTPUT\n"
@@ -389,11 +450,17 @@ REAL_LIFE: dict[int, str] = {
         "Classic four-line loop: zip gross and tax, keep positive gross only.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# gross pay per employee (0 = skip)\n"
         "gross = [50000, 0, 60000]\n"
+        "# matching tax amounts\n"
         "taxes = [5000, 0, 6000]\n"
+        "# collect net pay here\n"
         "net = []\n"
+        "# pair each gross with its tax\n"
         "for g, tax in zip(gross, taxes):\n"
+        "    # ignore zero-gross rows\n"
         "    if g > 0:\n"
+        "        # net = gross minus tax\n"
         "        net.append(g - tax)\n"
         "\n"
         "# OUTPUT\n"
@@ -403,6 +470,7 @@ REAL_LIFE: dict[int, str] = {
         "Reads like a formula: subtract tax for each pair where gross &gt; 0.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# same net list in one comprehension\n"
         "net = [g - tax for g, tax in zip(gross, taxes) if g > 0]\n"
         "\n"
         "# OUTPUT\n"
@@ -412,8 +480,11 @@ REAL_LIFE: dict[int, str] = {
         "For a million-line CSV, build results lazily — only one row in memory at a time.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# generator — one parsed row per yield\n"
         "def parse_lines(f):\n"
+        "    # walk the file without loading it all\n"
         "    for line in f:\n"
+        "        # pause and hand back one parsed row\n"
         "        yield parse(line)\n"
         "\n"
         "# use:\n"
@@ -432,9 +503,12 @@ REAL_LIFE: dict[int, str] = {
         "Same amount in always gives the same GST out — no hidden state.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# pure function — same amount always same GST\n"
         "def calc_gst(amount):\n"
+        "    # 18% of the invoice amount\n"
         "    return amount * 0.18\n"
         "\n"
+        "# sample call with 1000\n"
         "calc_gst(1000)\n"
         "\n"
         "# OUTPUT\n"
@@ -444,12 +518,18 @@ REAL_LIFE: dict[int, str] = {
         "The report builder does not hard-code GST — it calls whatever tax function you give it.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# tax_fn is passed in — not hard-coded\n"
         "def build_report(amounts, tax_fn):\n"
+        "    # collect one dict per invoice amount\n"
         "    rows = []\n"
+        "    # walk each amount\n"
         "    for amount in amounts:\n"
-        "        rows.append({\"amount\": amount, \"gst\": tax_fn(amount)})\n"
+        "        # call the injected tax function\n"
+        '        rows.append({"amount": amount, "gst": tax_fn(amount)})\n'
+        "    # hand back the report list\n"
         "    return rows\n"
         "\n"
+        "# GST applied to two invoice lines\n"
         "build_report([100, 200], calc_gst)\n"
         "\n"
         "# OUTPUT\n"
@@ -459,6 +539,7 @@ REAL_LIFE: dict[int, str] = {
         "Two invoice lines → one report list ready for PDF or email.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# two lines → one report list\n"
         "report = build_report([100, 200], calc_gst)\n"
         "\n"
         "# OUTPUT\n"
@@ -474,7 +555,9 @@ REAL_LIFE: dict[int, str] = {
         "Empty <code>''</code> stays — strip only cleans spaces, it does not drop items.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# raw lines including spaces and an empty string\n"
         "lines = [\"  A  \", \"\", \"  B  \"]\n"
+        "# strip every item; list() forces the lazy map\n"
         "cleaned = list(map(str.strip, lines))\n"
         "\n"
         "# OUTPUT\n"
@@ -485,10 +568,14 @@ REAL_LIFE: dict[int, str] = {
         "where your test says <b>True</b>. Skip the rest.</p>"
         '<div class="step-pre">'
         "# INPUT — keep even numbers\n"
+        "# True when n is even\n"
         "def is_even(n):\n"
-        "    return n % 2 == 0   # True for 2, 4, 6...\n"
+        "    # True for 2, 4, 6...\n"
+        "    return n % 2 == 0\n"
         "\n"
+        "# sample numbers to filter\n"
         "nums = [1, 2, 3, 4, 5, 6]\n"
+        "# keep only items where is_even is True\n"
         "evens = list(filter(is_even, nums))\n"
         "\n"
         "# OUTPUT\n"
@@ -498,10 +585,14 @@ REAL_LIFE: dict[int, str] = {
         "The test can be any rule. Here: keep only readings above 100.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# True when temperature is above 100\n"
         "def has_fever(temp):\n"
+        "    # keep readings over 100\n"
         "    return temp > 100\n"
         "\n"
+        "# sample body temperatures\n"
         "temps = [98.6, 99.1, 101.2, 100.5]\n"
+        "# keep only fever readings\n"
         "fever = list(filter(has_fever, temps))\n"
         "\n"
         "# OUTPUT\n"
@@ -524,10 +615,12 @@ REAL_LIFE: dict[int, str] = {
         "and returns the <b>original dict</b> (not just the number).</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# two sale dicts — laptop vs mouse\n"
         "sales = [\n"
         '    {"item": "Laptop", "amount": 50000},\n'
         '    {"item": "Mouse", "amount": 800},\n'
         "]\n"
+        "# pick the dict with the highest amount\n"
         "top = max(sales, key=lambda r: r[\"amount\"])\n"
         "\n"
         "# OUTPUT\n"
@@ -539,9 +632,13 @@ REAL_LIFE: dict[int, str] = {
         "(common CSV-style pattern).</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# column names from the CSV header\n"
         'headers = ["name", "qty"]\n'
+        "# one data row as a list\n"
         'row = ["Pen", "12"]\n'
+        "# pairs by position: 1st with 1st, 2nd with 2nd\n"
         "pairs = list(zip(headers, row))\n"
+        "# same pairs turned into a dict\n"
         "record = dict(zip(headers, row))\n"
         "\n"
         "# OUTPUT\n"
@@ -553,10 +650,12 @@ REAL_LIFE: dict[int, str] = {
         "That turns rows into columns (handy for averages per field).</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# two rows of (sys, dia, temp)\n"
         "readings = [\n"
         "    (120, 80, 98.6),\n"
         "    (115, 75, 99.1),\n"
         "]\n"
+        "# * unpacks rows so zip turns them into columns\n"
         "sys_list, dia_list, temps = zip(*readings)\n"
         "\n"
         "# OUTPUT\n"
@@ -586,9 +685,13 @@ REAL_LIFE: dict[int, str] = {
         "appears (like counting colored chips for a pie chart). Use <code>print</code> to see the result.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# Counter tallies how often each value appears\n"
         "from collections import Counter\n"
+        "# ticket statuses for the pie chart\n"
         'statuses = ["open", "open", "closed", "open"]\n'
+        "# count each status\n"
         "pie = Counter(statuses)\n"
+        "# show the tally\n"
         "print(pie)\n"
         "\n"
         "# OUTPUT\n"
@@ -601,10 +704,15 @@ REAL_LIFE: dict[int, str] = {
         "See <b>Common mistakes</b> below for without vs with comparison and the <b>one trap</b>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# auto-creates a list for missing keys\n"
         "from collections import defaultdict\n"
+        "# group ticket ids by person\n"
         "by_assignee = defaultdict(list)\n"
-        'by_assignee["Ravi"].append(101)   # first touch → creates []\n'
+        "# first touch → creates []\n"
+        'by_assignee["Ravi"].append(101)\n'
+        "# add Anu's ticket\n"
         'by_assignee["Anu"].append(102)\n'
+        "# dict() is just for a readable print\n"
         "print(dict(by_assignee))\n"
         "\n"
         "# OUTPUT\n"
@@ -617,10 +725,15 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">1) deque() — no max</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# deque is a fast queue (both ends)\n"
         "from collections import deque\n"
-        "chat = deque()            # grows freely\n"
+        "# grows freely\n"
+        "chat = deque()\n"
+        "# add a message at the right\n"
         'chat.append("hi")\n'
+        "# add another message\n"
         'chat.append("ticket #42")\n'
+        "# list() for a readable print\n"
         "print(list(chat))\n"
         "\n"
         "# OUTPUT\n"
@@ -629,11 +742,17 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">2) deque(maxlen=…) — rolling</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# deque is a fast queue (both ends)\n"
         "from collections import deque\n"
-        "chat = deque(maxlen=2)    # keep last 2 only\n"
+        "# keep last 2 only\n"
+        "chat = deque(maxlen=2)\n"
+        "# first message\n"
         'chat.append("hi")\n'
+        "# second message — buffer is now full\n"
         'chat.append("ticket #42")\n'
-        'chat.append("bye")      # "hi" dropped\n'
+        '# "hi" dropped\n'
+        'chat.append("bye")\n'
+        "# list() for a readable print\n"
         "print(list(chat))\n"
         "\n"
         "# OUTPUT\n"
@@ -645,9 +764,13 @@ REAL_LIFE: dict[int, str] = {
         "Fixed fields like a mini struct — access with <code>t.id</code> and <code>t.status</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# namedtuple is a lightweight record type\n"
         "from collections import namedtuple\n"
+        "# factory: fields id and status\n"
         'Ticket = namedtuple("Ticket", "id status")\n'
+        "# one ticket instance\n"
         't = Ticket(101, "open")\n'
+        "# prints Ticket(id=101, status='open')\n"
         "print(t)\n"
         "\n"
         "# OUTPUT\n"
@@ -672,11 +795,14 @@ REAL_LIFE: dict[int, str] = {
         "Storing every parsed JSON in a global dict makes RAM climb all night.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# empty dict that lives for the whole process — never cleared\n"
         "cache = {}\n"
         "\n"
         "def process(order_id, huge_json):\n"
+        "    # pin this payload in RAM; nothing ever deletes the key\n"
         "    cache[order_id] = huge_json\n"
         "\n"
+        "# two jobs — cache now holds both huge blobs\n"
         "process(1, {\"lines\": 5000})\n"
         "process(2, {\"lines\": 5000})\n"
         "\n"
@@ -687,9 +813,12 @@ REAL_LIFE: dict[int, str] = {
         "Read one line at a time; file closes when the block exits — no waiting for garbage collection.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# generator: one line per ask — not a full list in RAM\n"
         "def export_orders(path):\n"
+        "    # auto-close the file when the block exits\n"
         "    with open(path, encoding=\"utf-8\") as f:\n"
         "        for line in f:\n"
+        "            # pause here; caller gets one line, RAM stays flat\n"
         "            yield line\n"
         "\n"
         "# OUTPUT\n"
@@ -706,13 +835,18 @@ REAL_LIFE: dict[int, str] = {
         "<code>Anu@Co.COM</code> and <code>anu@co.com</code> become the same stored value.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# Pydantic model, Field rules, and custom validators\n"
         "from pydantic import BaseModel, Field, field_validator\n"
         "\n"
+        "# schema for the create-user JSON body\n"
         "class UserCreate(BaseModel):\n"
         "    email: str\n"
-        "    age: int = Field(ge=18)   # built-in rule: age &gt;= 18\n"
+        "    # built-in rule: age >= 18\n"
+        "    age: int = Field(ge=18)\n"
         "\n"
-        "    @field_validator(\"email\")   # custom rule for email only\n"
+        "    # custom rule for email only\n"
+        "    @field_validator(\"email\")\n"
+        "    # Pydantic calls this on the class (no instance yet)\n"
         "    @classmethod\n"
         "    def lower_email(cls, v):\n"
         "        # PURPOSE: clean / normalize the value (not reject it)\n"
@@ -740,10 +874,13 @@ REAL_LIFE: dict[int, str] = {
         "To <b>reject</b>, <code>raise ValueError(\"...\")</code>.</p>"
         '<div class="step-pre">'
         "# INPUT — two validators on the same field\n"
+        "# same model — two email validators run top → bottom\n"
         "class UserCreate(BaseModel):\n"
         "    email: str\n"
+        "    # built-in door rule: reject age under 18\n"
         "    age: int = Field(ge=18)\n"
         "\n"
+        "    # first email rule: reject if missing @\n"
         "    @field_validator(\"email\")\n"
         "    @classmethod\n"
         "    def must_have_at(cls, v):\n"
@@ -751,18 +888,23 @@ REAL_LIFE: dict[int, str] = {
         "            raise ValueError(\"email must contain @\")\n"
         "        return v\n"
         "\n"
+        "    # second email rule: runs after must_have_at\n"
         "    @field_validator(\"email\")\n"
         "    @classmethod\n"
         "    def lower_email(cls, v):\n"
-        "        return v.lower()     # runs after must_have_at\n"
+        "        return v.lower()\n"
         "\n"
+        "# valid body — both validators run automatically\n"
         'ok = UserCreate.model_validate({"email": "Anu@Co.COM", "age": 25})\n'
-        "print(ok.email)           # anu@co.com  (auto: both validators)\n"
+        "# stored value is lowercased (anu@co.com)\n"
+        "print(ok.email)\n"
         "\n"
         "try:\n"
+        "    # \"bad\" has no @ — must_have_at raises\n"
         '    UserCreate.model_validate({"email": "bad", "age": 25})\n'
         "except ValidationError as e:\n"
-        "    print(e.errors())      # must_have_at failed → 422 in FastAPI\n"
+        "    # FastAPI turns this into HTTP 422\n"
+        "    print(e.errors())\n"
         "\n"
         "# OUTPUT\n"
         "anu@co.com\n"
@@ -776,11 +918,14 @@ REAL_LIFE: dict[int, str] = {
         "String <code>\"25\"</code> becomes int <code>25</code>; email is lowercased by the validator.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# age is a string here — Pydantic will coerce it to int\n"
         'body = {"email": "Anu@Co.COM", "age": "25"}\n'
+        "# runs Field + lower_email; stores the cleaned model\n"
         "user = UserCreate.model_validate(body)\n"
         "print(user.email)\n"
         "print(user.age)\n"
-        "print(user)                 # full model\n"
+        "# dump the whole validated model\n"
+        "print(user)\n"
         "\n"
         "# OUTPUT\n"
         "anu@co.com                  # lower_email ran → lowercased\n"
@@ -795,15 +940,18 @@ REAL_LIFE: dict[int, str] = {
         "This is <mark class=\"hl-key\">not</mark> 400 from your own <code>if</code> checks — the framework does it for you.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# ValidationError is what FastAPI maps to HTTP 422\n"
         "from pydantic import ValidationError\n"
         "\n"
+        "# age 15 fails Field(ge=18)\n"
         'bad = {"email": "x@y.com", "age": 15}\n'
         "try:\n"
         "    UserCreate.model_validate(bad)\n"
         "    print(\"ok\")\n"
         "except ValidationError as e:\n"
         "    print(e.error_count(), \"error(s)\")\n"
-        "    print(e.errors())          # which field + why\n"
+        "    # loc + type tell you which field broke which rule\n"
+        "    print(e.errors())\n"
         "\n"
         "# OUTPUT (console)\n"
         "1 error(s)\n"
@@ -839,27 +987,36 @@ REAL_LIFE: dict[int, str] = {
         "would raise <code>AttributeError</code> when you call it."
         "</p>"
         + io_split(
+            "# common blueprint — children reuse these methods\n"
             "class Account:\n"
             "    def __init__(self, balance):\n"
-            "        self.balance = balance   # shared state for all accounts\n"
+            "        # shared state for all accounts\n"
+            "        self.balance = balance\n"
             "\n"
-            "    def deposit(self, amount):    # shared: add money\n"
+            "    # shared: add money\n"
+            "    def deposit(self, amount):\n"
             "        self.balance += amount\n"
             "\n"
-            "    def withdraw(self, amount):   # shared: remove money\n"
+            "    # shared: remove money\n"
+            "    def withdraw(self, amount):\n"
             "        if amount &gt; self.balance:\n"
             '            raise ValueError("not enough balance")\n'
             "        self.balance -= amount\n"
             "\n"
             "    def month_end(self):\n"
-            "        pass   # default: do nothing (safe for plain accounts)\n"
+            "        # default: do nothing (safe for plain accounts)\n"
+            "        pass\n"
             "\n"
+            "# start with 100\n"
             "a = Account(100)\n"
-            "a.deposit(50)      # 100 → 150\n"
-            "a.withdraw(20)     # 150 → 130\n"
-            "a.month_end()      # still 130 — pass did nothing\n"
+            "# 100 → 150\n"
+            "a.deposit(50)\n"
+            "# 150 → 130\n"
+            "a.withdraw(20)\n"
+            "# still 130 — pass did nothing\n"
+            "a.month_end()\n"
             "print(a.balance)",
-            {20: "130"},
+            {29: "130"},
         )
         + "<p style=\"font-size:12px;color:#334155;margin:6px 0 0;line-height:1.45\">"
         "<b>Line by line:</b> "
@@ -870,15 +1027,20 @@ REAL_LIFE: dict[int, str] = {
         "<p><b>2) <code>SavingsAccount</code> — override <code>month_end</code></b><br>"
         "Child keeps deposit/withdraw from the parent, but replaces month-end with +4% interest.</p>"
         + io_split(
+            "# child of Account — inherits deposit/withdraw\n"
             "class SavingsAccount(Account):\n"
             "    def month_end(self):\n"
-            "        self.balance *= 1.04   # overrides Account.month_end (base was pass) — apply +4% interest\n"
+            "        # overrides Account.month_end (base was pass) — apply +4% interest\n"
+            "        self.balance *= 1.04\n"
             "\n"
             "s = SavingsAccount(200)\n"
-            "s.deposit(0)       # still works — inherited from Account\n"
-            "s.month_end()      # updates balance; returns None (no return)\n"
-            "print(s.balance)   # print the balance — NOT print(s.month_end())",
-            {8: "208.0"},
+            "# still works — inherited from Account\n"
+            "s.deposit(0)\n"
+            "# updates balance; returns None (no return)\n"
+            "s.month_end()\n"
+            "# print the balance — NOT print(s.month_end())\n"
+            "print(s.balance)",
+            {13: "208.0"},
         )
         + "<p style=\"font-size:12px;color:#334155;margin:6px 0 0;line-height:1.45\">"
         "<b>Why not <code>print(s.month_end())</code>?</b> "
@@ -889,11 +1051,14 @@ REAL_LIFE: dict[int, str] = {
         "Call <code>month_end()</code> on every account; Python picks the right version "
         "(base <code>pass</code> vs savings interest).</p>"
         + io_split(
+            "# mixed list: base Account + SavingsAccount\n"
             "accounts = [Account(100), SavingsAccount(200)]\n"
             "for a in accounts:\n"
+            "    # Python picks Account.month_end or SavingsAccount.month_end\n"
             "    a.month_end()\n"
-            "    print(type(a).__name__, a.balance)   # runs twice",
-            {4: "Account 100\nSavingsAccount 208.0"},
+            "    # runs twice — once per account type\n"
+            "    print(type(a).__name__, a.balance)",
+            {7: "Account 100\nSavingsAccount 208.0"},
         )
     ),
     16: (
@@ -905,24 +1070,29 @@ REAL_LIFE: dict[int, str] = {
         "<code>self._price</code> → getter <code>def price</code> → "
         "<code>@price.setter</code> (same name).</p>"
         + io_split(
+            "# one field with getter + setter\n"
             "class Product:\n"
             "    def __init__(self):\n"
+            "        # public name is price; store lives in _price\n"
             "        self._price = 0\n"
             "\n"
+            "    # getter — p.price reads this\n"
             "    @property\n"
-            "    def price(self):                 # getter\n"
+            "    def price(self):\n"
             "        return self._price\n"
             "\n"
+            "    # setter — p.price = … runs this\n"
             "    @price.setter\n"
-            "    def price(self, value):          # setter\n"
+            "    def price(self, value):\n"
             "        if value < 0:\n"
             '            raise ValueError("must be >= 0")\n'
             "        self._price = value\n"
             "\n"
             "p = Product()\n"
+            "# assignment runs the setter (rejects negatives)\n"
             "p.price = 99\n"
             "print(p.price)",
-            {15: "99"},
+            {22: "99"},
         )
         + "<p><b>2) Two fields — <code>@property</code> vs descriptor (side by side)</b> "
         + csharp_compare_btn("property-vs-descriptor")
@@ -933,6 +1103,7 @@ REAL_LIFE: dict[int, str] = {
         "<div class=\"mc-col mc-bad\">"
         "<span class=\"mc-lbl\">@property × 2 (repeat code)</span>"
         + io_split(
+            "# copy getter/setter once per field\n"
             "class Product:\n"
             "    def __init__(self):\n"
             "        self._price = 0\n"
@@ -947,8 +1118,9 @@ REAL_LIFE: dict[int, str] = {
             '            raise ValueError("must be >= 0")\n'
             "        self._price = value\n"
             "\n"
+            "    # same rules again!\n"
             "    @property\n"
-            "    def qty(self):                   # same rules again!\n"
+            "    def qty(self):\n"
             "        return self._qty\n"
             "    @qty.setter\n"
             "    def qty(self, value):\n"
@@ -960,13 +1132,14 @@ REAL_LIFE: dict[int, str] = {
             "p.price = 10\n"
             "p.qty = 3\n"
             "print(p.price, p.qty)",
-            {27: "10 3"},
+            {29: "10 3"},
         )
         + "</div>"
         "<div class=\"mc-col mc-good\">"
         "<span class=\"mc-lbl\">Descriptor once → many fields</span>"
         + io_split(
-            "class Positive:                     # define ONCE\n"
+            "# define ONCE — reusable get/set rules\n"
+            "class Positive:\n"
             "    def __set_name__(self, owner, name):\n"
             "        # NOT the constructor — runs AFTER class Product is created\n"
             "        # owner = the CLASS (Product), name = 'price' / 'qty'\n"
@@ -981,22 +1154,28 @@ REAL_LIFE: dict[int, str] = {
             '            raise ValueError("must be >= 0")\n'
             "        obj.__dict__[self.name] = value\n"
             "\n"
-            "class Product:                      # plug in where needed\n"
-            "    price = Positive()              # class-level field\n"
-            "    qty = Positive()                # same helper again\n"
+            "# plug in where needed\n"
+            "class Product:\n"
+            "    # class-level field — Positive() is not a default value\n"
+            "    price = Positive()\n"
+            "    # same helper again\n"
+            "    qty = Positive()\n"
             "\n"
             "class Order:\n"
-            "    total = Positive()              # reuse on another class!\n"
+            "    # reuse on another class!\n"
+            "    total = Positive()\n"
             "\n"
             "p = Product()\n"
+            "# assignment runs Positive.__set__\n"
             "p.price = 10\n"
             "p.qty = 3\n"
             "print(p.price, p.qty)\n"
             "try:\n"
+            "    # negatives rejected by the shared setter\n"
             "    p.qty = -1\n"
             "except ValueError as e:\n"
             "    print(type(e).__name__)",
-            {26: "10 3", 30: "ValueError"},
+            {32: "10 3", 37: "ValueError"},
         )
         + "</div></div>"
         + '<table class="data-tbl" style="margin:8px 0">'
@@ -1016,6 +1195,7 @@ REAL_LIFE: dict[int, str] = {
         "<div class=\"mc-col mc-good\">"
         "<span class=\"mc-lbl\">Code + live OUTPUT</span>"
         + io_split(
+            "# helper that stores a field name and get/set rules\n"
             "class Positive:\n"
             "    def __init__(self):\n"
             '        print("1) __init__ — Positive() created")\n'
@@ -1031,22 +1211,27 @@ REAL_LIFE: dict[int, str] = {
             "\n"
             'print("--- defining Product ---")\n'
             "class Product:\n"
-            "    price = Positive()   # ← __init__ HERE\n"
-            "    qty = Positive()     # ← __init__ again\n"
+            "    # Positive() constructor runs here (__init__)\n"
+            "    price = Positive()\n"
+            "    # constructor runs again for qty\n"
+            "    qty = Positive()\n"
             "    # class ends → __set_name__ for price, then qty\n"
             "\n"
             'print("--- creating instance ---")\n'
-            "p = Product()           # ← neither method\n"
-            "p.price = 10            # ← __set__ only\n"
-            'print("stored", p.price)  # ← __get__ only',
+            "# neither __init__ nor __set_name__ runs here\n"
+            "p = Product()\n"
+            "# __set__ only\n"
+            "p.price = 10\n"
+            "# __get__ only\n"
+            'print("stored", p.price)',
             {
-                14: "--- defining Product ---\n"
+                15: "--- defining Product ---\n"
                 "1) __init__ — Positive() created\n"
                 "1) __init__ — Positive() created\n"
                 "2) __set_name__ — Product.price\n"
                 "2) __set_name__ — Product.qty",
-                20: "--- creating instance ---",
-                23: "stored 10",
+                23: "--- creating instance ---",
+                29: "stored 10",
             },
             out_label="# OUTPUT (call order)",
         )
@@ -1107,12 +1292,14 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without yield — list in RAM</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# builds a full list — RAM grows with file size\n"
         "def csv_reader(path):\n"
         "    rows = []\n"
         "    with open(path, encoding=\"utf-8\") as f:\n"
         "        for line in f:\n"
         "            rows.append(line.strip().split(\",\"))\n"
-        "    return rows          # ALL rows at once\n"
+        "    # ALL rows at once — may MemoryError on huge files\n"
+        "    return rows\n"
         "\n"
         "data = csv_reader(\"big.csv\")\n"
         "print(len(data))\n"
@@ -1124,6 +1311,7 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With yield — one row at a time</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# generator: one row per next() — file stays open across yields\n"
         "def csv_reader(path):\n"
         "    with open(path, encoding=\"utf-8\") as f:\n"
         "        for line in f:\n"
@@ -1131,11 +1319,13 @@ REAL_LIFE: dict[int, str] = {
         "\n"
         "# first row only\n"
         "row = next(csv_reader(\"big.csv\"))\n"
-        "print(row)                 # ['id', 'name', 'amount']\n"
+        "# ['id', 'name', 'amount']\n"
+        "print(row)\n"
         "\n"
         "# ALL rows — one per loop (still lazy)\n"
         "for row in csv_reader(\"big.csv\"):\n"
-        "    print(row)             # each line, one at a time\n"
+        "    # each line, one at a time\n"
+        "    print(row)\n"
         "\n"
         "# OUTPUT (first next)\n"
         "['id', 'name', 'amount']\n"
@@ -1202,8 +1392,10 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without yield — load all, then write</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# load everything first, then write — peak RAM ≈ whole file\n"
         "def export(path, out):\n"
-        "    rows = csv_reader(path)   # list version — ALL in RAM\n"
+        "    # list version — ALL in RAM before any write\n"
+        "    rows = csv_reader(path)\n"
         "    with open(out, \"w\", encoding=\"utf-8\") as dest:\n"
         "        for row in rows:\n"
         "            t = transform(row)\n"
@@ -1218,9 +1410,11 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With yield — write as you read</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# write each row as it arrives — peak RAM ≈ one row\n"
         "def export(path, out):\n"
         "    with open(out, \"w\", encoding=\"utf-8\") as dest:\n"
-        "        for row in csv_reader(path):  # yield version\n"
+        "        # yield version — next row only when the loop asks\n"
+        "        for row in csv_reader(path):\n"
         "            t = transform(row)\n"
         "            dest.write(\",\".join(t) + \"\\n\")\n"
         "\n"
@@ -1242,7 +1436,8 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without yield — fails at scale</span>'
         '<div class="step-pre">'
         "# INPUT\n"
-        "data = open(path).read().split()   # whole file\n"
+        "# whole file into one string, then split — RAM spike\n"
+        "data = open(path).read().split()\n"
         "# or: rows = list(csv_reader(path))  # force full list\n"
         "\n"
         "print(len(data))\n"
@@ -1254,12 +1449,14 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With yield — stays flat</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# stream rows; never list() the generator\n"
         "def csv_reader(path):\n"
         "    with open(path, encoding=\"utf-8\") as f:\n"
         "        for line in f:\n"
         "            yield line.strip().split(\",\")\n"
         "\n"
         "count = 0\n"
+        "# one row in memory; count then discard\n"
         "for row in csv_reader(path):\n"
         "    count += 1\n"
         "print(count)\n"
@@ -1285,17 +1482,20 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat timing code</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# clock used to measure duration\n"
         "import time\n"
         "\n"
         "def run_query():\n"
-        "    start = time.time()          # copy-paste in every function\n"
+        "    # copy-paste in every function\n"
+        "    start = time.time()\n"
         "    time.sleep(0.1)\n"
         "    result = \"ok\"\n"
         "    print(f\"run_query took {time.time()-start:.2f}s\")\n"
         "    return result\n"
         "\n"
         "def save_report():\n"
-        "    start = time.time()          # same timing code again\n"
+        "    # same timing code again\n"
+        "    start = time.time()\n"
         "    time.sleep(0.05)\n"
         "    result = \"saved\"\n"
         "    print(f\"save_report took {time.time()-start:.2f}s\")\n"
@@ -1311,7 +1511,9 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With @timer — write once, reuse</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# clock for start / end timestamps\n"
         "import time\n"
+        "# copy fn.__name__ / __doc__ onto the wrapper\n"
         "from functools import wraps\n"
         "\n"
         "def timer(fn):\n"
@@ -1323,15 +1525,18 @@ REAL_LIFE: dict[int, str] = {
         "        return result\n"
         "    return wrapper\n"
         "\n"
-        "@timer                        # one line per function\n"
+        "# one line per function — same as run_query = timer(run_query)\n"
+        "@timer\n"
         "def run_query():\n"
-        "    time.sleep(0.1)           # only business logic here\n"
+        "    # only business logic here\n"
+        "    time.sleep(0.1)\n"
         "    return \"ok\"\n"
         "\n"
         "@timer\n"
         "def save_report():\n"
         "    time.sleep(0.05)\n"
-        "    return \"saved\"            # timing handled by decorator\n"
+        "    # timing handled by decorator\n"
+        "    return \"saved\"\n"
         "\n"
         "run_query()\n"
         "save_report()\n"
@@ -1353,8 +1558,10 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat log lines</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# log start/finish by hand in every function\n"
         "def run_query():\n"
-        '    print("[INFO] run_query started")    # copy in every function\n'
+        "    # copy in every function\n"
+        '    print("[INFO] run_query started")\n'
         '    result = "ok"\n'
         '    print(f"[INFO] run_query finished → {result}")\n'
         "    return result\n"
@@ -1377,6 +1584,7 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With @log_calls — write once, reuse</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# keep original function name & docstring on the wrapper\n"
         "from functools import wraps\n"
         "\n"
         "def log_calls(fn):\n"
@@ -1390,7 +1598,8 @@ REAL_LIFE: dict[int, str] = {
         "\n"
         "@log_calls\n"
         "def run_query():\n"
-        '    return "ok"                 # only business logic\n'
+        "    # only business logic\n"
+        '    return "ok"\n'
         "\n"
         "@log_calls\n"
         "def save_report():\n"
@@ -1414,11 +1623,13 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat retry loop</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# sleep between failed attempts\n"
         "import time\n"
         "\n"
         "def GetEmployees(employee_ids, include_inactive=False):\n"
         "    attempts = 0\n"
-        "    while attempts < 3:              # copy retry loop everywhere\n"
+        "    # copy retry loop everywhere\n"
+        "    while attempts < 3:\n"
         "        try:\n"
         "            return api_call(employee_ids, include_inactive)\n"
         "        except ConnectionError:\n"
@@ -1434,13 +1645,18 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With @retry — write once, reuse</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# sleep between failed attempts\n"
         "import time\n"
+        "# copy fn.__name__ / __doc__ onto the wrapper\n"
         "from functools import wraps\n"
         "\n"
-        "def retry(times=3, delay=0.1):          # 1) FACTORY - takes settings, returns a decorator\n"
-        "    def decorator(fn):                 # 2) DECORATOR - takes the function, returns wrapper\n"
+        "# 1) FACTORY — takes settings, returns a decorator\n"
+        "def retry(times=3, delay=0.1):\n"
+        "    # 2) DECORATOR — takes the function, returns wrapper\n"
+        "    def decorator(fn):\n"
         "        @wraps(fn)\n"
-        "        def wrapper(*args, **kwargs):  # 3) WRAPPER - runs on each call\n"
+        "        # 3) WRAPPER — runs on each call\n"
+        "        def wrapper(*args, **kwargs):\n"
         "            for attempt in range(times):\n"
         "                try:\n"
         "                    return fn(*args, **kwargs)\n"
@@ -1453,7 +1669,8 @@ REAL_LIFE: dict[int, str] = {
         "\n"
         "@retry(times=3)\n"
         "def GetEmployees(employee_ids, include_inactive=False):\n"
-        "    return api_call(employee_ids, include_inactive)  # only business logic\n"
+        "    # only business logic\n"
+        "    return api_call(employee_ids, include_inactive)\n"
         "\n"
         "GetEmployees([101, 102, 103], include_inactive=True)\n"
         "\n"
@@ -1469,15 +1686,18 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-bad"><span class="mc-lbl">Without decorator — repeat auth check</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# guest is not admin — the checks below will fail\n"
         'current_user = {"name": "guest", "role": "user"}\n'
         "\n"
         "def delete_user(user_id):\n"
-        '    if current_user["role"] != "admin":   # auth check in every function\n'
+        "    # auth check in every function\n"
+        '    if current_user["role"] != "admin":\n'
         '        raise PermissionError("admin only")\n'
         '    return f"deleted {user_id}"\n'
         "\n"
         "def export_data():\n"
-        '    if current_user["role"] != "admin":   # same check again\n'
+        "    # same check again\n"
+        '    if current_user["role"] != "admin":\n'
         '        raise PermissionError("admin only")\n'
         '    return "export.csv"\n'
         "\n"
@@ -1489,23 +1709,28 @@ REAL_LIFE: dict[int, str] = {
         '<div class="mc-col mc-good"><span class="mc-lbl">With @require_auth — write once, reuse</span>'
         '<div class="step-pre">'
         "# INPUT\n"
+        "# keep original function name & docstring on the wrapper\n"
         "from functools import wraps\n"
         "\n"
+        "# factory: role= setting, returns the real decorator\n"
         'def require_auth(role="admin"):\n'
         "    def decorator(fn):\n"
         "        @wraps(fn)\n"
         "        def wrapper(*args, **kwargs):\n"
+        "            # block the call unless the current user has that role\n"
         '            if current_user["role"] != role:\n'
         '                raise PermissionError(f"{role} only")\n'
         "            return fn(*args, **kwargs)\n"
         "        return wrapper\n"
         "    return decorator\n"
         "\n"
+        "# guest is not admin — the decorator will reject\n"
         'current_user = {"name": "guest", "role": "user"}\n'
         "\n"
         '@require_auth("admin")\n'
         "def delete_user(user_id):\n"
-        '    return f"deleted {user_id}"   # only business logic\n'
+        "    # only business logic\n"
+        '    return f"deleted {user_id}"\n'
         "\n"
         '@require_auth("admin")\n'
         "def export_data():\n"
@@ -1523,18 +1748,27 @@ REAL_LIFE: dict[int, str] = {
         "<code>timer</code> builds the wrapper; <code>wrapper</code> adds timing around the original.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
-        "import time                  # for time.time() — start / end clock\n"
-        "from functools import wraps  # keep original function name & docstring\n"
+        "# for time.time() — start / end clock\n"
+        "import time\n"
+        "# keep original function name & docstring\n"
+        "from functools import wraps\n"
         "\n"
-        "def timer(fn):               # custom decorator function (takes a function)\n"
-        "    # fn = the function we wrap (e.g. run_query from step 2)\n"
-        "    @wraps(fn)               # copy fn.__name__ / __doc__ onto wrapper\n"
-        "    def wrapper(*args, **kwargs):  # inner function — runs instead of fn\n"
-        "        start = time.time()           # remember start time\n"
-        "        result = fn(*args, **kwargs)  # run the ORIGINAL function\n"
-        "        print(f\"{fn.__name__} took {time.time() - start:.2f}s\")  # print duration\n"
-        "        return result                 # pass original return value back\n"
-        "    return wrapper           # give wrapper back — this becomes the new function\n"
+        "# custom decorator function (takes a function)\n"
+        "def timer(fn):\n"
+        "    # fn = the wrapped function; @wraps copies its __name__ / __doc__\n"
+        "    @wraps(fn)\n"
+        "    # inner function — runs instead of fn\n"
+        "    def wrapper(*args, **kwargs):\n"
+        "        # remember start time\n"
+        "        start = time.time()\n"
+        "        # run the ORIGINAL function\n"
+        "        result = fn(*args, **kwargs)\n"
+        "        # print duration\n"
+        "        print(f\"{fn.__name__} took {time.time() - start:.2f}s\")\n"
+        "        # pass original return value back\n"
+        "        return result\n"
+        "    # give wrapper back — this becomes the new function\n"
+        "    return wrapper\n"
         "\n"
         "# OUTPUT\n"
         "# (wrapper ready — can decorate any function)"
@@ -1545,12 +1779,15 @@ REAL_LIFE: dict[int, str] = {
         "and the name <code>run_query</code> now points to <code>wrapper</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
-        "@timer                       # same as: run_query = timer(run_query)\n"
-        "def run_query():             # timer(fn) runs; fn is this function\n"
+        "# same as: run_query = timer(run_query)\n"
+        "@timer\n"
+        "# timer(fn) runs; fn is this function\n"
+        "def run_query():\n"
         "    time.sleep(0.1)\n"
         "    return \"ok\"\n"
         "\n"
-        "result = run_query()         # calls wrapper → which calls original\n"
+        "# calls wrapper → which calls original\n"
+        "result = run_query()\n"
         "\n"
         "# OUTPUT\n"
         "run_query took 0.10s\n"
@@ -1570,15 +1807,19 @@ REAL_LIFE: dict[int, str] = {
         "Save the file and return OK when nothing goes wrong.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# specific excepts + finally so temp files always go away\n"
         "def upload(file, temp):\n"
         "    try:\n"
         "        save(file)\n"
         "        return {\"status\": 200}\n"
+        "    # no write permission\n"
         "    except PermissionError:\n"
         "        return {\"status\": 403}\n"
+        "    # disk full, path gone, etc.\n"
         "    except OSError:\n"
         "        return {\"status\": 500}\n"
         "    finally:\n"
+        "        # runs on success AND on error\n"
         "        temp.cleanup()\n"
         "\n"
         "upload(valid_file, temp)\n"
@@ -1614,16 +1855,19 @@ REAL_LIFE: dict[int, str] = {
         "Network waits release the GIL — threads are fine.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# thread pool — good for waiting on the network (GIL released)\n"
         "from concurrent.futures import ThreadPoolExecutor\n"
         "import urllib.request\n"
         "\n"
         "def download(url):\n"
+        "    # blocking HTTP get; other threads can run while this waits\n"
         "    with urllib.request.urlopen(url, timeout=10) as r:\n"
         "        return r.read()\n"
         "\n"
         "urls = [\"http://a/img1.jpg\", \"http://b/img2.jpg\"]\n"
         "\n"
         "with ThreadPoolExecutor(max_workers=4) as pool:\n"
+        "    # run download() on up to 4 URLs at once\n"
         "    images = list(pool.map(download, urls))\n"
         "\n"
         "# OUTPUT\n"
@@ -1633,6 +1877,7 @@ REAL_LIFE: dict[int, str] = {
         "Pixel work needs real cores — each process has its own GIL.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# process pool — each worker has its own GIL for CPU work\n"
         "from concurrent.futures import ProcessPoolExecutor\n"
         "from PIL import Image\n"
         "import io\n"
@@ -1644,8 +1889,10 @@ REAL_LIFE: dict[int, str] = {
         "    img.save(out, format=\"JPEG\")\n"
         "    return out.getvalue()\n"
         "\n"
+        "# required on Windows so child processes don't re-run this module\n"
         "if __name__ == \"__main__\":\n"
         "    with ProcessPoolExecutor(max_workers=4) as pool:\n"
+        "        # pixel work on 4 cores — not threads\n"
         "        out = list(pool.map(heavy_resize, images))\n"
         "\n"
         "    # OUTPUT\n"
@@ -1659,9 +1906,11 @@ REAL_LIFE: dict[int, str] = {
         "Each channel awaits a short sleep (stand-in for a real HTTP call).</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# event-loop library — await, gather, run\n"
         "import asyncio\n"
         "\n"
         "async def send_email():\n"
+        "    # stand-in for a real HTTP POST; yields the loop for 0.2s\n"
         "    await asyncio.sleep(0.2)\n"
         '    return "email ok"\n'
         "\n"
@@ -1676,7 +1925,9 @@ REAL_LIFE: dict[int, str] = {
         "Total wait ≈ 0.2s (longest task), not 0.6s sequential.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run email, SMS, and push together — wait for the slowest\n"
         "async def notify():\n"
+        "    # start all three; wait until the slowest finishes (~0.2s)\n"
         "    results = await asyncio.gather(\n"
         "        send_email(),\n"
         "        send_sms(),\n"
@@ -1684,6 +1935,7 @@ REAL_LIFE: dict[int, str] = {
         "    )\n"
         "    return results\n"
         "\n"
+        "# create the event loop, run notify, then close it\n"
         "asyncio.run(notify())\n"
         "\n"
         "# OUTPUT\n"
@@ -1694,26 +1946,56 @@ REAL_LIFE: dict[int, str] = {
         "<b>Production order service:</b> Structured logs + exception traceback + rotation — "
         "each logging piece with <b>input → output</b>."
         "<p><b>1) Rotating file handler — setup</b><br>"
-        "Log to <code>app.log</code>; rotate at 1 MB, keep 7 backup files.</p>"
+        "Log to <code>app.log</code>; rotate at 1 MB, keep 7 backup files. "
+        "Green comments sit on the line above each statement.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# loads Python's logging library (not print)\n"
         "import logging\n"
+        "# file handler that rolls when the file gets large\n"
         "from logging.handlers import RotatingFileHandler\n"
         "\n"
+        "# creates a logger object; input __name__ = this module/file\n"
         "logger = logging.getLogger(__name__)\n"
+        "# write app.log; 1 MB cap; keep 7 backups\n"
         "handler = RotatingFileHandler(\n"
         '    "app.log", maxBytes=1_000_000, backupCount=7\n'
         ")\n"
+        "# attach the handler — without this, logs never reach the file\n"
         "logger.addHandler(handler)\n"
+        "# INFO and above; DEBUG stays off in production\n"
         "logger.setLevel(logging.INFO)\n"
         "\n"
         "# OUTPUT\n"
         "logger ready → writes to app.log (rotates at 1 MB)"
         "</div>"
+        + '<table class="data-tbl">'
+        "<tr><th>Line</th><th>What it does</th><th>Why we need it</th></tr>"
+        "<tr><td><code>import logging</code></td>"
+        "<td>Loads Python&apos;s built-in logging library.</td>"
+        "<td><code>print()</code> has no levels, timestamps, or file routing. This module is the production logger (like ILogger in C#).</td></tr>"
+        "<tr><td><code>from logging.handlers import RotatingFileHandler</code></td>"
+        "<td>Imports the handler that writes to a file and rolls it when it gets large.</td>"
+        "<td>A plain <code>FileHandler</code> grows forever and can fill the disk. Rotation keeps a bounded history.</td></tr>"
+        "<tr><td><code>logging.getLogger(__name__)</code></td>"
+        "<td>Creates (or reuses) a logger named after this module.</td>"
+        "<td>Named loggers can be filtered (<code>orders</code> vs <code>http</code>). <code>__name__</code> avoids one anonymous global logger.</td></tr>"
+        "<tr><td><code>RotatingFileHandler(\"app.log\", maxBytes=1_000_000, backupCount=7)</code></td>"
+        "<td>Writes to <code>app.log</code>. At 1 MB it renames to <code>app.log.1</code> and starts a new file; keeps 7 old files.</td>"
+        "<td>Caps disk use. You still have a week-ish of files to debug an incident.</td></tr>"
+        "<tr><td><code>logger.addHandler(handler)</code></td>"
+        "<td>Connects that file destination to the logger.</td>"
+        "<td>A logger with no handler often swallows messages. This is the line that actually makes logs land on disk.</td></tr>"
+        "<tr><td><code>logger.setLevel(logging.INFO)</code></td>"
+        "<td>Sets the minimum severity this logger will emit.</td>"
+        "<td>INFO, WARNING, ERROR, CRITICAL go through. DEBUG stays off in production so logs stay useful, not noisy.</td></tr>"
+        "</table>"
+        '<p style="font-size:12px;color:#334155;margin:6px 0 0">OUTPUT: logger is ready — later <code>logger.info(...)</code> appends to <code>app.log</code> and rotates at 1 MB.</p>'
         "<p><b>2) Info on success</b><br>"
         "Structured message with order id — searchable in log tools.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# %s is filled only if INFO is enabled; 9001 is searchable\n"
         'logger.info("order %s paid", 9001)\n'
         "\n"
         "# OUTPUT\n"
@@ -1723,9 +2005,11 @@ REAL_LIFE: dict[int, str] = {
         "Inside an <code>except</code> block — logs message plus full traceback.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# simulate a payment failure, then log it with traceback\n"
         "try:\n"
         "    raise RuntimeError(\"gateway timeout\")\n"
         "except Exception:\n"
+        "    # ERROR + full traceback — only use inside except\n"
         '    logger.exception("payment failed")\n'
         "\n"
         "# OUTPUT\n"
@@ -1740,12 +2024,16 @@ REAL_LIFE: dict[int, str] = {
         "Descriptive name tells reviewers what behaviour is locked in.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# 10% off for age 60+; otherwise return the full amount\n"
         "def senior_discount(age, amount):\n"
+        "    # seniors pay 90 cents on the dollar\n"
         "    if age &gt;= 60:\n"
         "        return amount * 0.90\n"
         "    return amount\n"
         "\n"
+        "# name tells reviewers what behaviour this test locks in\n"
         "def test_senior_citizen_gets_10_percent():\n"
+        "    # 65-year-old on 1000 must pay 900\n"
         "    assert senior_discount(65, 1000) == 900\n"
         "\n"
         "# OUTPUT\n"
@@ -1755,11 +2043,15 @@ REAL_LIFE: dict[int, str] = {
         "<code>@patch</code> replaces <code>payments.charge</code> so CI never calls the real API.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# patch() fakes callables so tests never hit real APIs\n"
         "from unittest.mock import patch\n"
         "\n"
+        "# replace payments.charge with a fake for this test only\n"
         "@patch(\"payments.charge\")\n"
         "def test_checkout_mocks_gateway(mock_charge):\n"
+        "    # fake gateway always returns ok — no HTTP\n"
         "    mock_charge.return_value = \"ok\"\n"
+        "    # checkout uses the fake; CI stays offline\n"
         "    assert checkout(100) == \"ok\"\n"
         "\n"
         "# OUTPUT\n"
@@ -1773,10 +2065,14 @@ REAL_LIFE: dict[int, str] = {
         "Pattern <code>\\d{3}-\\d{2}-\\d{4}</code> matches US-style social security numbers.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# regex library for find/replace on text\n"
         "import re\n"
         "\n"
+        "# US SSN shape: 3 digits, 2 digits, 4 digits\n"
         'pattern = r"\\d{3}-\\d{2}-\\d{4}"\n'
+        "# sample log line that contains a fake SSN\n"
         'text = "user 123-45-6789 logged in"\n'
+        "# findall returns every match as a list of strings\n"
         "matches = re.findall(pattern, text)\n"
         "\n"
         "# OUTPUT\n"
@@ -1786,13 +2082,18 @@ REAL_LIFE: dict[int, str] = {
         "Swap each match with stars so SIEM never stores real SSNs.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# mask each SSN before the log is shipped to SIEM\n"
         "def redact(text):\n"
+        "    # reuse the same SSN pattern as above\n"
         "    matches = re.findall(pattern, text)\n"
+        "    # copy the original; we replace on clean, not text\n"
         "    clean = text\n"
         "    for m in matches:\n"
+        "        # swap the real SSN for a starred placeholder\n"
         '        clean = clean.replace(m, "***-**-****")\n'
         "    return clean\n"
         "\n"
+        "# run redact on a sample log line\n"
         'print(redact("user 123-45-6789 logged in"))\n'
         "\n"
         "# OUTPUT\n"
@@ -1806,9 +2107,12 @@ REAL_LIFE: dict[int, str] = {
         "<code>DictReader</code> gives each row as a dict; file closes when block exits.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# csv module reads rows as lists or dicts\n"
         "import csv\n"
         "\n"
+        "# with auto-closes the file when the block ends\n"
         'with open("sales.csv", encoding="utf-8") as f:\n'
+        "    # DictReader → each row is a dict keyed by header\n"
         "    rows = list(csv.DictReader(f))\n"
         "\n"
         "# OUTPUT\n"
@@ -1818,10 +2122,14 @@ REAL_LIFE: dict[int, str] = {
         "One small summary file for dashboards — count of rows exported.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# json module writes Python dicts as JSON text\n"
         "import json\n"
         "\n"
+        "# one-field summary: how many sales rows we exported\n"
         'summary = {"count": len(rows)}\n'
+        "# \"w\" creates/overwrites; with closes the handle\n"
         'with open("summary.json", "w", encoding="utf-8") as out:\n'
+        "    # dump writes the dict; indent=2 makes it readable\n"
         "    json.dump(summary, out, indent=2)\n"
         "\n"
         "# OUTPUT\n"
@@ -1831,8 +2139,10 @@ REAL_LIFE: dict[int, str] = {
         "<code>Path.mkdir(exist_ok=True)</code> — safe to run every night.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# Path is an object-style wrapper around file paths\n"
         "from pathlib import Path\n"
         "\n"
+        "# exist_ok=True: no error if archive/ already exists\n"
         'Path("archive").mkdir(exist_ok=True)\n'
         "\n"
         "# OUTPUT\n"
@@ -1846,18 +2156,26 @@ REAL_LIFE: dict[int, str] = {
         "Open session, yield it, commit on success, rollback on error, always close.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# contextmanager turns a generator into a with-block helper\n"
         "from contextlib import contextmanager\n"
         "\n"
+        "# code before yield = enter; after yield = exit\n"
         "@contextmanager\n"
         "def session_scope():\n"
+        "    # open a new DB session (like C# using SqlConnection)\n"
         "    session = Session()\n"
         "    try:\n"
+        "        # yield hands the session to the with-block\n"
         "        yield session\n"
+        "        # runs only if the with-block did not raise\n"
         "        session.commit()\n"
         "    except Exception:\n"
+        "        # undo uncommitted work so the DB stays consistent\n"
         "        session.rollback()\n"
+        "        # re-raise so the caller still sees the error\n"
         "        raise\n"
         "    finally:\n"
+        "        # always close, success or failure\n"
         "        session.close()\n"
         "\n"
         "# OUTPUT\n"
@@ -1867,7 +2185,9 @@ REAL_LIFE: dict[int, str] = {
         "If <code>db.add</code> succeeds, commit runs; if it raises, rollback runs.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# with runs enter → body → commit/rollback → close\n"
         "with session_scope() as db:\n"
+        "    # add queues the order; commit happens on a clean exit\n"
         "    db.add(order)\n"
         "\n"
         "# OUTPUT\n"
@@ -1877,8 +2197,10 @@ REAL_LIFE: dict[int, str] = {
         "Exception inside the block triggers rollback before re-raise.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# same with-block; an exception inside triggers rollback\n"
         "with session_scope() as db:\n"
-        "    db.add(bad_order)  # raises IntegrityError\n"
+        "    # IntegrityError here → rollback, then the error re-raises\n"
+        "    db.add(bad_order)\n"
         "\n"
         "# OUTPUT\n"
         "rollback → no partial save; session closed; exception propagates"
@@ -1891,6 +2213,7 @@ REAL_LIFE: dict[int, str] = {
         "Create and activate an isolated environment before installing requirements.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# isolated venv so client A's Django never mixes with other projects\n"
         "cd client_a\n"
         "python -m venv .venv\n"
         ".venv\\Scripts\\activate\n"
@@ -1903,6 +2226,7 @@ REAL_LIFE: dict[int, str] = {
         "Switch folder, new venv — versions never bleed between projects.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# same steps in client_b — a second venv so Django 5 cannot clash\n"
         "cd client_b\n"
         "python -m venv .venv\n"
         ".venv\\Scripts\\activate\n"
@@ -1919,6 +2243,7 @@ REAL_LIFE: dict[int, str] = {
         "FastAPI parses JSON into <code>EmployeeCreate</code> before your code runs.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# FastAPI parses this JSON into EmployeeCreate before the route runs\n"
         'POST /employees  body={"name": "Ravi", "dept": "Eng"}\n'
         "\n"
         "# OUTPUT\n"
@@ -1928,14 +2253,19 @@ REAL_LIFE: dict[int, str] = {
         "ORM object is serialized through <code>EmployeeRead</code>, not raw SQL rows.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# POST route; response_model shapes the JSON we send back\n"
         "@app.post(\"/employees\", response_model=EmployeeRead)\n"
         "def create_employee(\n"
         "    body: EmployeeCreate,\n"
         "    db: Session = Depends(get_db),\n"
         "):\n"
+        "    # model_dump() → dict; ** unpacks into Employee columns\n"
         "    emp = Employee(**body.model_dump())\n"
+        "    # stage the new row in the session\n"
         "    db.add(emp)\n"
+        "    # write the INSERT so emp gets a database id\n"
         "    db.commit()\n"
+        "    # reload emp so id and defaults are populated\n"
         "    db.refresh(emp)\n"
         "    return emp\n"
         "\n"
@@ -1950,6 +2280,7 @@ REAL_LIFE: dict[int, str] = {
         "Show classes and methods in under a minute.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run the OOP class demo for interviewers\n"
         "python pythonBasics/MyClass/car.py\n"
         "\n"
         "# OUTPUT\n"
@@ -1959,6 +2290,7 @@ REAL_LIFE: dict[int, str] = {
         "Parse text files — shows string processing beyond toy examples.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# parse baby-name files to show regex beyond toy examples\n"
         "python google-python-exercises/babynames/babynames.py\n"
         "\n"
         "# OUTPUT\n"
@@ -1982,6 +2314,7 @@ REAL_LIFE: dict[int, str] = {
         "Run the bank account example so new hires see polymorphism in code.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run the bank-account inheritance demo (maps to slide 15)\n"
         "cd Python-Set2/pythonBasics\n"
         "python MyClass/oops_inheritance_BankAccount.py\n"
         "\n"
@@ -1992,6 +2325,7 @@ REAL_LIFE: dict[int, str] = {
         "Show how CI runs assertions before merge.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# run the calculator unit tests the way CI would\n"
         "python MyUnitTesting/calculator_unittest.py\n"
         "\n"
         "# OUTPUT\n"
@@ -2005,9 +2339,12 @@ REAL_LIFE: dict[int, str] = {
         "Remove rows with no age so averages are not skewed by NaN.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# pandas: tables as DataFrames (like Excel in Python)\n"
         "import pandas as pd\n"
         "\n"
+        "# read_csv loads the file into a DataFrame named df\n"
         'df = pd.read_csv("titanic.csv")\n'
+        "# drop rows whose Age is missing so averages are not NaN\n"
         'df = df.dropna(subset=["Age"])\n'
         "\n"
         "# OUTPUT\n"
@@ -2017,10 +2354,12 @@ REAL_LIFE: dict[int, str] = {
         "Answer: did survivors tend to be younger or older?</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# group by Survived (0/1), then mean age in each group\n"
         "summary = (\n"
         "    df.groupby(\"Survived\")[\"Age\"]\n"
         "      .mean()\n"
         ")\n"
+        "# print the two means for the stakeholder table\n"
         "print(summary)\n"
         "\n"
         "# OUTPUT\n"
@@ -2032,6 +2371,7 @@ REAL_LIFE: dict[int, str] = {
         "Chart the summary for stakeholders — same numbers, visual story.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# bar chart: survived vs not, mean age side by side\n"
         "summary.plot(kind=\"bar\")\n"
         "\n"
         "# OUTPUT\n"
@@ -2045,8 +2385,11 @@ REAL_LIFE: dict[int, str] = {
         "Filter available rooms and render a template.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# Django view: request in, HTML response out\n"
         "def room_list(request):\n"
+        "    # ORM filter — only rooms marked available\n"
         "    rooms = Room.objects.filter(available=True)\n"
+        "    # render fills rooms.html with the rooms list\n"
         '    return render(request, "rooms.html", {"rooms": rooms})\n'
         "\n"
         "# OUTPUT\n"
@@ -2056,10 +2399,14 @@ REAL_LIFE: dict[int, str] = {
         "Same <code>Room</code> model, serialized through <code>RoomSerializer</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# ModelViewSet gives list/create/update/delete from the model\n"
         "class RoomViewSet(viewsets.ModelViewSet):\n"
+        "    # queryset is the rows this API can serve\n"
         "    queryset = Room.objects.all()\n"
+        "    # serializer turns Room rows into JSON (and back)\n"
         "    serializer_class = RoomSerializer\n"
         "\n"
+        "# HTTP list call — DRF returns JSON, not HTML\n"
         "GET /api/rooms/\n"
         "\n"
         "# OUTPUT\n"
@@ -2073,7 +2420,9 @@ REAL_LIFE: dict[int, str] = {
         "Transcribe the caller's speech chunk into words.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# raw audio bytes from the phone call\n"
         "audio_chunk = b\"…wav bytes…\"\n"
+        "# STT (speech-to-text) turns audio into a string\n"
         "text = await stt.transcribe(audio_chunk)\n"
         "\n"
         "# OUTPUT\n"
@@ -2083,9 +2432,12 @@ REAL_LIFE: dict[int, str] = {
         "If they said \"member\", ask the LLM to validate; else prompt for ID.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# branch: they mentioned \"member\" vs they did not\n"
         'if "member" in text.lower():\n'
+        "    # ask the LLM to start member-ID validation\n"
         '    reply = await llm.ask("Validate member ID")\n'
         "else:\n"
+        "    # scripted prompt when the utterance is unclear\n"
         '    reply = "Please say your member ID"\n'
         "\n"
         "# OUTPUT\n"
@@ -2095,6 +2447,7 @@ REAL_LIFE: dict[int, str] = {
         "Send reply audio to the phone line.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# TTS (text-to-speech) turns the reply into audio for the caller\n"
         "speech = await tts.speak(reply)\n"
         "\n"
         "# OUTPUT\n"
@@ -2123,9 +2476,12 @@ REAL_LIFE: dict[int, str] = {
         "HTTP handler validates input, delegates to service, returns DTO.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# thin POST handler — no SQL here, only HTTP + DTO\n"
         "@router.post(\"/orders\")\n"
         "def create_order(body: OrderCreate, svc: OrderService = Depends()):\n"
+        "    # service owns business rules and persistence\n"
         "    order = svc.create(body)\n"
+        "    # model_validate maps the ORM object onto the response DTO\n"
         "    return OrderRead.model_validate(order)\n"
         "\n"
         "# OUTPUT\n"
@@ -2139,7 +2495,9 @@ REAL_LIFE: dict[int, str] = {
         "Use <code>is None</code>, not <code>== None</code>.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# None is Python's null (C# null)\n"
         "value = None\n"
+        "# use \"is None\", not \"== None\" — identity check\n"
         "if value is None:\n"
         '    print("no data")\n'
         "\n"
@@ -2150,7 +2508,9 @@ REAL_LIFE: dict[int, str] = {
         "Stub until the report logic is written.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# stub until report logic is written (C# empty { })\n"
         "def save_report():\n"
+        "    # pass keeps the body valid; empty def is a SyntaxError\n"
         "    pass\n"
         "\n"
         "# OUTPUT\n"
@@ -2160,7 +2520,9 @@ REAL_LIFE: dict[int, str] = {
         "File closes automatically when the block ends.</p>"
         '<div class="step-pre">'
         "# INPUT\n"
+        "# with open is C# using — file closes when the block ends\n"
         'with open("report.txt", "w") as f:\n'
+        "    # write the payload while the handle is open\n"
         '    f.write("done")\n'
         "\n"
         "# OUTPUT\n"

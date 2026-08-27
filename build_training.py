@@ -6828,6 +6828,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
+# logger object; __name__ = this module/file
 log = logging.getLogger(__name__)
 
 log.debug("won't show at INFO level")
@@ -6836,6 +6837,7 @@ log.warning("Disk 85% full")
 log.error("Payment gateway timeout", exc_info=False)
 
 # ── Module logger (preferred) ──
+# named logger you can filter in config
 logger = logging.getLogger("orders.service")
 
 def charge(order_id: int) -> None:
@@ -6843,11 +6845,15 @@ def charge(order_id: int) -> None:
     try:
         ...
     except TimeoutError:
-        logger.exception("Charge failed for %s", order_id)  # includes traceback
+        # ERROR + traceback; only inside except
+        logger.exception("Charge failed for %s", order_id)
 
 # ── File + rotation ──
+# 1 MB cap; keep 3 backups
 handler = RotatingFileHandler("app.log", maxBytes=1_000_000, backupCount=3)
+# how each line looks on disk
 handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
+# attach handler — without this, logs never reach the file
 logger.addHandler(handler)''') + '''
 <div class="callout"><b>Rule:</b> <code>logger.info("x=%s", x)</code> — lazy formatting. Avoid f-strings in log calls when the message might be filtered out.</div>
 
