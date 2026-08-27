@@ -381,3 +381,5 @@ ADO.NET vs EF (they ask preference + why). Dapper transactions. API versioning, 
 | 20 | Rapid-fire checklist |
 
 Do not hand-edit `Client1.html`. Edit `ClientInterview/client1_catalog.py` and run `python ClientInterview/build_client1.py`.
+
+Visual guides: unique 1536×1024 posters in `ClientInterview/Client1-Images/` (same thumbnail + resizable window as `PythonTraining.html`). Edit `client1_posters.py` — do not use the generic 6-box stencil.

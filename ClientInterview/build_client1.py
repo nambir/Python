@@ -10,6 +10,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from ClientInterview.client1_catalog import AREA_TITLES, SKILLS
+from ClientInterview.client1_posters import write_client1_posters
+from ClientInterview.client1_visual_guides import make_client1_visual_guide_fn
 from interview_track import build_from_skills
 from training_deck import DeckConfig, build_deck
 
@@ -36,6 +38,7 @@ EXTRA_CSS = """
 
 
 def main() -> None:
+    posters = write_client1_posters(CLIENT_DIR / "Client1-Images")
     cfg = DeckConfig(
         title="Client1 — Interview questions",
         total_slides=TOTAL_SLIDES,
@@ -59,6 +62,7 @@ def main() -> None:
     Study notes: <a href="Client1.md">Client1.md</a>
     · <a href="../Client1 Interview questions.pdf">Questions PDF</a>
     · <a href="../ClientInterviewExpectations.pdf">Expectations PDF</a>
+    · Visual guides: <code>ClientInterview/Client1-Images/</code> (unique poster per slide, PythonTraining thumbnail pattern)
     · Related decks:
     <a href="../PythonTraining.html">Python</a> ·
     <a href="../Dotnet/DotnetTraining.html">.NET</a> ·
@@ -77,6 +81,7 @@ def main() -> None:
         subtopics=SUBTOPICS,
         nav_intro=nav_intro,
         code_lang="csharp",
+        visual_guide_fn=make_client1_visual_guide_fn(posters),
     )
     page = cfg.output.read_text(encoding="utf-8")
     if EXTRA_CSS not in page:
