@@ -175,7 +175,33 @@ Self-rating: they will ask “rate yourself in Angular / SQL / AWS out of 10”.
 2. Angular interceptor attaches `Authorization: Bearer <access>` on every HTTP call.
 3. API middleware validates signature, `exp`, issuer, audience, then **roles/claims**.
 4. 401 → interceptor tries refresh **once** → retry original request. If refresh fails, logout.
-5. Idle timeout: sliding refresh or silent renew; if **no refresh** (daemon / hangfire job), use **client credentials** or a service identity — not a user JWT from localStorage.
+5. Idle timeout: sliding refresh or silent renew. Background jobs **do authenticate** — OAuth **client credentials** (app id + secret or managed identity), never the user's browser JWT.
+
+**Why access cannot mint access:** access is sent on every API; if it could refresh itself, XSS would mean an infinite session. Refresh is a different secret, only used at `/refresh`, hashed/rotated/revoked.
+
+**Forms + cookie vs JWT**
+
+| | Forms + cookie | JWT Bearer |
+|---|---|---|
+| Typical | MVC / WebForms same-site | Angular SPA + mobile + same API |
+| On the wire | Cookie (often httpOnly) | `Authorization: Bearer` |
+| CSRF | Need antiforgery | XSS is the bigger worry |
+| Mobile | Awkward | Natural |
+
+**OAuth vs OIDC:** OAuth 2.0 = what APIs allow (`access_token`). OpenID Connect = who logged in (`id_token`). SPA = Authorization Code + PKCE. Server .NET/Java = Code + secret. Hangfire = client credentials. Implicit is deprecated.
+
+**jwt.io sample (HS256 demo)** — paste into [jwt.io](https://jwt.io). Secret: `client1-demo-secret`.
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MiIsImVtYWlsIjoiYWRtaW5AY2xpZW50MS5sb2NhbCIsInJvbGUiOiJBZG1pbiIsImlzcyI6Imh0dHBzOi8vYXBpLmNsaWVudDEubG9jYWwiLCJhdWQiOiJjbGllbnQxLXNwYSIsImlhdCI6MTcxNzIwMDAwMCwiZXhwIjoxNzE3MjAzNjAwfQ.3_6ChCvo613Glzef1pVOLjnXksOW8KO6e0MWeXgT8kY
+```
+
+| Pane | What you see |
+|---|---|
+| Encoded (left) | Pink **header** · purple **payload** · blue **signature**, joined by dots |
+| HEADER | `{ "alg": "HS256", "typ": "JWT" }` |
+| PAYLOAD | `sub` 42, `email` admin@client1.local, `role` Admin, `iss` / `aud`, `iat` 1717200000 (2024-06-01 00:00 UTC), `exp` +1 hour |
+| VERIFY | `HMACSHA256(base64Url(header) + "." + base64Url(payload), secret)` — green check ≠ Angular `atob`. Payload is readable Base64, not encryption. |
 
 **Repeated follow-ups**
 

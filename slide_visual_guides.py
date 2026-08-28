@@ -75,8 +75,12 @@ def visual_guide_for(n: int) -> str:
     return "".join(blocks)
 
 
-def _guide_block(win_id: str, src: str, label: str, native_w: int) -> str:
+def _guide_block(win_id: str, src: str, label: str, native_w: int, blurb: str | None = None) -> str:
     title = f"{label} &ndash; Visual Guide"
+    caption = blurb or (
+        "One-page poster: 6 build steps with diagrams, tables and code. "
+        "Click the thumbnail to open it full size in a new tab."
+    )
     return f'''
 <div class="vguide-strip">
   <a class="vguide-thumb" href="{src}" target="_blank" rel="noopener noreferrer"
@@ -86,8 +90,7 @@ def _guide_block(win_id: str, src: str, label: str, native_w: int) -> str:
   </a>
   <div class="vguide-txt">
     <b>Visual guide &mdash; {label}</b>
-    <span>One-page poster: 6 build steps with diagrams, tables and code.
-      Click the thumbnail to open it full size in a new tab.</span>
+    <span>{caption}</span>
     <button type="button" class="btn-vguide-win" onclick="openCsharpWin('{win_id}')">
       Open in resizable window
     </button>

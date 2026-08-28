@@ -10,6 +10,8 @@ from pathlib import Path
 
 from poster_lib import (
     INK,
+    INKS,
+    MONO,
     MUTED,
     TBL,
     bullets,
@@ -26,6 +28,7 @@ from poster_lib import (
     note,
     panel,
     pipe_split,
+    rect,
     slots,
     stack,
     svg,
@@ -212,6 +215,22 @@ def c02():
     )
 
 
+# jwt.io demo token (HS256). Secret: client1-demo-secret
+# iat 1717200000 = 2024-06-01 00:00 UTC; exp = +1 hour.
+JWT_H = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+JWT_P = (
+    "eyJzdWIiOiI0MiIsImVtYWlsIjoiYWRtaW5AY2xpZW50MS5sb2NhbCIsInJvbGUiOiJBZG1pbiIsImlzcyI6Imh0dHBzOi8v"
+    "YXBpLmNsaWVudDEubG9jYWwiLCJhdWQiOiJjbGllbnQxLXNwYSIsImlhdCI6MTcxNzIwMDAwMCwiZXhwIjoxNzE3MjAzNjAwfQ"
+)
+JWT_S = "3_6ChCvo613Glzef1pVOLjnXksOW8KO6e0MWeXgT8kY"
+JWT_PINK, JWT_PURPLE, JWT_CYAN = "#FB015B", "#D63AFF", "#00B9F1"
+
+
+def _chunks(s: str, n: int) -> list[str]:
+    n = max(12, n)
+    return [s[i : i + n] for i in range(0, len(s), n)]
+
+
 def c03():
     s = slots()
 
@@ -221,18 +240,6 @@ def c03():
         )
 
     def p2(x, y, w, h):
-        return table(
-            x, y, w, ["Piece", "Job"],
-            [
-                ("Signature", "Tamper → JwtBearer fails"),
-                ("exp", "401 — server is source of truth"),
-                ("Roles", "[Authorize] on the action"),
-                ("Refresh", "Mint new access; rotate store"),
-            ],
-            header_fill=TBL[1], h=h,
-        )
-
-    def p3(x, y, w, h):
         return vs_boxes(
             x, y, w, h,
             "Trust the payload",
@@ -241,11 +248,76 @@ def c03():
             ["ValidateIssuerSigningKey", "exp + roles on the API", "Short TTL + refresh once"],
         )
 
+    def p3(x, y, w, h):
+        """jwt.io encoded — HEADER / PAYLOAD / SIGNATURE labeled."""
+        gap = 6
+        h_hdr, h_sig = 48, 50
+        h_pld = h - h_hdr - h_sig - 2 * gap
+        bands = [
+            (h_hdr, "HEADER", JWT_H, JWT_PINK, "#fff1f2", "#9f1239"),
+            (h_pld, "PAYLOAD", JWT_P, JWT_PURPLE, "#faf5ff", "#6b21a8"),
+            (h_sig, "SIGNATURE", JWT_S, JWT_CYAN, "#ecfeff", "#155e75"),
+        ]
+        parts = []
+        yy = y
+        for bh, label, token, fg, bg, ink in bands:
+            parts.append(rect(x, yy, w, bh, fill=bg, stroke=fg, sw=1.6, rx=6))
+            parts.append(t(x + 8, yy + 15, label, size=11, fill=fg, weight=800, family=MONO))
+            cw = max(18, int((w - 16) / 6.2))
+            ty = yy + 30
+            for chunk in _chunks(token, cw):
+                if ty > yy + bh - 6:
+                    break
+                parts.append(t(x + 8, ty, chunk, size=10, fill=ink, weight=700, family=MONO))
+                ty += 12
+            yy += bh + gap
+        return "".join(parts)
+
     def p4(x, y, w, h):
-        return hub(
-            x, y, w, h, "JWT format",
-            ["OAuth = delegation", "SSO = IdP", "Form auth = browser", "Job = client credentials"],
-        )
+        """jwt.io right pane — decoded HEADER / PAYLOAD / VERIFY."""
+        col = (w - 10) / 2
+        left, right = x, x + col + 10
+        hdr = [
+            '{ "alg": "HS256", "typ": "JWT" }',
+        ]
+        pld = [
+            '{',
+            '  "sub": "42",',
+            '  "email": "admin@client1.local",',
+            '  "role": "Admin",',
+            '  "iss": "https://api.client1.local",',
+            '  "aud": "client1-spa",',
+            '  "iat": 1717200000,   // 2024-06-01 00:00 UTC',
+            '  "exp": 1717203600    // +1 hour → then 401',
+            '}',
+        ]
+        mean = [
+            "HEADER  alg=HS256, typ=JWT",
+            "PAYLOAD  claims — anyone can read",
+            "SIGNATURE  HMAC with the secret",
+            "sub  user id the API trusts",
+            "role Admin → [Authorize]",
+            "iss / aud  who signed / who may use",
+            "exp  server clock → then 401",
+        ]
+        parts = [
+            rect(left, y, col, 36, fill="#fff1f2", stroke="#fb7185", rx=6),
+            t(left + 8, y + 14, "HEADER  (decoded)", size=10, fill=JWT_PINK, weight=800, family=MONO),
+            t(left + 8, y + 28, hdr[0], size=10, fill="#9f1239", weight=600, family=MONO),
+            rect(left, y + 42, col, h - 42, fill="#faf5ff", stroke="#d8b4fe", rx=6),
+            t(left + 8, y + 56, "PAYLOAD  (decoded claims)", size=10, fill=JWT_PURPLE, weight=800, family=MONO),
+            ml(left + 8, y + 72, pld, size=10, fill="#6b21a8", weight=500, family=MONO),
+            rect(right, y, col, h - 40, fill="#fff", stroke="#e2e8f0", rx=6),
+            t(right + 8, y + 16, "HEADER · PAYLOAD · SIGNATURE", size=11, fill="#0f172a", weight=800),
+            ml(right + 8, y + 36, mean, size=11, fill=INK, weight=500),
+            rect(right, y + h - 42, col, 42, fill="#ecfeff", stroke="#67e8f9", rx=6),
+            ml(
+                right + 8, y + h - 28,
+                ["SIGNATURE  HMACSHA256(header.payload, secret)", "HMAC — not Base64. Decode ≠ valid."],
+                size=10, fill="#155e75", weight=700, family=MONO,
+            ),
+        ]
+        return "".join(parts)
 
     def p5(x, y, w, h):
         return code_out(
@@ -265,11 +337,11 @@ def c03():
         return footer3(
             x, y, w, h, "Scripts",
             footer_left_code(
-                ["// access minutes; refresh longer", "// hashed server-side / httpOnly"],
-                ["// no refresh? service identity", "// never a browser token on Hangfire"],
+                ["// jwt.io: paste the 3-part token", "// secret: client1-demo-secret", "// green check = HMAC matches"],
+                ["// jobs CAN: client_credentials", "// never a user JWT on Hangfire"],
             ),
             ["Signature + exp + roles", "401 → refresh once → retry"],
-            ["JWT is OAuth", "Guards = security"],
+            ["JWT is OAuth", "Access mints access", "User JWT on Hangfire"],
             [
                 ("Token", "Three parts", "Signed claims + exp"),
                 ("Refresh", "Another JWT", "Server-stored secret"),
@@ -283,11 +355,274 @@ def c03():
         "Client1 · C03  ·  Highest-frequency technical topic",
         [
             panel(s[0], 1, "Login flow", "Access is sent; refresh is not on every API.", p1),
-            panel(s[1], 2, "What they test", "Tamper, expiry, roles, rotation.", p2),
-            panel(s[2], 3, "Interview trap", "Decoding in the SPA is not validation.", p3),
-            panel(s[3], 4, "JWT vs OAuth vs SSO", "Format vs protocol vs identity provider.", p4),
+            panel(s[1], 2, "Interview trap", "Decoding in the SPA is not validation.", p2),
+            panel(s[2], 3, "HEADER · PAYLOAD · SIGNATURE", "jwt.io encoded: three labeled Base64url parts.", p3),
+            panel(s[3], 4, "jwt.io decoded", "HEADER + PAYLOAD JSON. SIGNATURE is HMAC, not Base64.", p4),
             panel(s[4], 5, "API pipeline", "Bearer middleware then [Authorize].", p5),
             panel(s[5], 6, "Practice & comparison", "Jobs do not use the user's browser token.", p6),
+        ],
+    )
+
+
+def c03_oauth():
+    """Second C03 poster: OAuth grants, OIDC, SPA vs server vs background job."""
+    s = slots()
+
+    def p1(x, y, w, h):
+        return table(
+            x, y, w, ["Who", "Flow today"],
+            [
+                ("Angular SPA", "Authorization Code + PKCE"),
+                (".NET MVC / Java", "Code + client secret"),
+                ("Hangfire / worker", "Client credentials — YES"),
+            ],
+            header_fill=TBL[0], h=h,
+        )
+
+    def p2(x, y, w, h):
+        return flow_v(
+            x + w * 0.06, y, w * 0.88,
+            ["User logs in at IdP (Identity Provider)", "Auth code (not the JWT)", "Token + PKCE verifier", "access_token + id_token"],
+            h=h,
+        )
+
+    def p3(x, y, w, h):
+        return flow_v(
+            x + w * 0.06, y, w * 0.88,
+            ["client_id + secret on server", "grant_type=client_credentials", "Service access JWT", "API as worker, not as user"],
+            fill="#dbeafe",
+            ink="#1e40af",
+            h=h,
+        )
+
+    def p4(x, y, w, h):
+        return table(
+            x, y, w, ["", "OAuth 2.0", "OpenID Connect"],
+            [
+                ("Job", "Authorization", "Authentication"),
+                ("Token", "access_token + scopes", "id_token (who)"),
+                ("Answers", "What may this client call?", "Who logged in?"),
+                ("Alone?", "APIs with no login identity", "Login with no API access"),
+            ],
+            header_fill=TBL[3], h=h,
+        )
+
+    def p5(x, y, w, h):
+        return table(
+            x, y, w, ["Grant", "Use for", "Today?"],
+            [
+                ("Code + PKCE", "SPA / mobile", "YES — Client1 Angular"),
+                ("Code + secret", ".NET / Java server apps", "YES — confidential"),
+                ("Implicit", "Old SPA, token in URL hash", "NO — deprecated"),
+                ("Hybrid", "Code + tokens at once", "Rare"),
+                ("Client credentials", "Hangfire / daemon", "YES — bg jobs"),
+            ],
+            header_fill=TBL[4], h=h,
+        )
+
+    def p6(x, y, w, h):
+        return footer3(
+            x, y, w, h, "Why both",
+            footer_left_code(
+                ["// OAuth = what the API allows", "// OIDC = who the human is"],
+                ["// SPA needs both: login + APIs", "// Job needs OAuth only (no user)"],
+            ),
+            ["SPA: Code + PKCE", "Job: client credentials"],
+            ["Implicit grant", "User JWT inside Hangfire", "OIDC without access token"],
+            [
+                (".NET/Java", "Password grant", "Code + secret"),
+                ("Angular", "Implicit / hash", "Code + PKCE"),
+                ("Bg job", "Steal user token", "Client credentials"),
+            ],
+            third="Do this",
+        )
+
+    return svg(
+        "OAuth flows, OIDC, SPA vs job",
+        "Client1 · C03 extra  ·  OIDC = OpenID Connect · SPA = Single Page App · PKCE = Proof Key for Code Exchange",
+        [
+            panel(s[0], 1, "Which client, which flow", "Same IdP (Identity Provider); different grant per app type.", p1),
+            panel(s[1], 2, "SPA — Authorization Code + PKCE", "SPA = Single Page App. PKCE = Proof Key for Code Exchange. No secret in Angular.", p2),
+            panel(s[2], 3, "Job — client credentials", "Background jobs CAN authenticate this way.", p3),
+            panel(s[3], 4, "OAuth vs OpenID Connect", "OIDC = OpenID Connect. Need both: WHO logged in, and WHAT the API allows.", p4),
+            panel(s[4], 5, "Grant types", "Implicit is deprecated. Hybrid is rare.", p5),
+            panel(s[5], 6, "Practice & comparison", ".NET/Java vs SPA vs Hangfire — pick the grant, not a slogan.", p6),
+        ],
+    )
+
+
+def c03_jwt_secure():
+    """JWT secure steps — interview chain: sign, key, HTTPS, storage, CSRF."""
+    s = slots()
+
+    def p1(x, y, w, h):
+        return flow_h(
+            x, y + 8, w,
+            ["1 Sign", "2 Key", "3 HTTPS", "4 Cookie", "5 CSRF"],
+        ) + note(
+            x, y + h - 28, w,
+            "Right library is not enough — craft all five or it is hacked.",
+            kind="warn",
+        )
+
+    def p2(x, y, w, h):
+        return vs_boxes(
+            x, y, w, h,
+            "No algorithm / alg:none",
+            ["Unsigned JWT anyone can mint", "Attacker sets role=Admin", "Library that trusts alg header"],
+            "Must sign + pin the alg",
+            ["HS256 or RS256 required", "ValidateIssuerSigningKey", "Reject alg:none in middleware"],
+        )
+
+    def p3(x, y, w, h):
+        return table(
+            x, y, w, ["Secret", "Why it fails / works"],
+            [
+                ("6 characters", "Trivial brute force — common mistake"),
+                ("16 chars ~16 bytes", "Still short for HMAC-SHA256"),
+                ("32+ bytes (256 bit)", "Minimum for HS256 signing key"),
+                ("RSA/EC private key", "Asymmetric — SPA never holds it"),
+            ],
+            header_fill=TBL[1], h=h,
+        )
+
+    def p4(x, y, w, h):
+        return vs_boxes(
+            x, y, w, h,
+            "Port 80 HTTP",
+            ["Packet sniff on the wire", "Bearer token in clear text", "Same as handing over the JWT"],
+            "HTTPS only (443)",
+            ["TLS encrypts the token in transit", "HSTS in production", "Redirect HTTP → HTTPS"],
+        )
+
+    def p5(x, y, w, h):
+        return vs_boxes(
+            x, y, w, h,
+            "XSS reads web storage",
+            ["localStorage / sessionStorage", "Script (XSS) — not CSS — steals JWT", "HTTPS does not stop XSS"],
+            "httpOnly cookie",
+            ["JS cannot read httpOnly", "Secure + SameSite flags", "CSRF is the remaining risk"],
+        )
+
+    def p6(x, y, w, h):
+        return footer3(
+            x, y, w, h, "Fingerprint",
+            footer_left_code(
+                ["// cookie Fp = random bytes", "// JWT claim fp = same hash"],
+                ["// API: cookie fp == JWT fp", "// else 401 — CSRF blocked"],
+            ),
+            ["Sign + pin algorithm", "32+ byte secret / RSA key", "HTTPS + httpOnly + antiforgery"],
+            ["alg:none", "6-char secret", "JWT in localStorage as 'secure'"],
+            [
+                ("Unsigned", "Library will save us", "We pin alg + signing key"),
+                ("HTTP", "Intranet is fine", "Sniff = stolen Bearer"),
+                ("Cookie", "Stops all attacks", "Stops XSS; still need CSRF"),
+            ],
+            third="Interview",
+        )
+
+    return svg(
+        "JWT secure steps",
+        "Client1 · C03 extra  ·  Even the right library is hacked if we skip these five",
+        [
+            panel(s[0], 1, "Five locks in a row", "Interview: I can name each lock and what breaks without it.", p1),
+            panel(s[1], 2, "1 — Must sign (no alg:none)", "Without a signature anyone can generate a JWT.", p2),
+            panel(s[2], 3, "2 — Strong signing key", "HS256 needs 32+ bytes. Six characters will be brute-forced.", p3),
+            panel(s[3], 4, "3 — Never port 80", "HTTP = packet sniff = stolen token. HTTPS is mandatory.", p4),
+            panel(s[4], 5, "4 — XSS vs httpOnly cookie", "Notes said CSS — they mean XSS. Scripts read storage, not httpOnly.", p5),
+            panel(s[5], 6, "5 — CSRF fingerprint", "httpOnly cookie still auto-sends. Match antiforgery in JWT + cookie.", p6),
+        ],
+    )
+
+
+def c03_roles():
+    """OAuth 2 roles with IdP spelled out."""
+    s = slots()
+
+    def p1(x, y, w, h):
+        return table(
+            x, y, w, ["OAuth name", "Simple name"],
+            [
+                ("Resource Owner", "End user — you"),
+                ("Resource Server", "Website / API"),
+                ("Client", "Angular (or MVC)"),
+                ("Authorization Server", "IdP = Identity Provider"),
+            ],
+            header_fill=TBL[2], h=h,
+        )
+
+    def p2(x, y, w, h):
+        return bullets(
+            x, y,
+            [
+                "Resource Owner = End User",
+                "The person who owns the data",
+                "You click Yes / Allow on login",
+                "Without you, no user token",
+            ],
+            color="#e11d48", max_w=36, h=h,
+        )
+
+    def p3(x, y, w, h):
+        return bullets(
+            x, y,
+            [
+                "Resource Server = Website / API",
+                "Holds the protected data",
+                "In this project: our .NET Web API",
+                "Checks the access token, then returns JSON",
+            ],
+            color="#0d9488", max_w=36, h=h,
+        )
+
+    def p4(x, y, w, h):
+        return bullets(
+            x, y,
+            [
+                "Client = Angular web / MVC",
+                "The app that asks for your data",
+                "Never sees your password",
+                "Only receives tokens after login",
+            ],
+            color="#ea580c", max_w=36, h=h,
+        )
+
+    def p5(x, y, w, h):
+        return table(
+            x, y, w, ["Letters", "Say this out loud"],
+            [
+                ("IdP", "Identity Provider"),
+                ("Same as", "Authorization Server"),
+                ("Job", "Login page + issue tokens"),
+                ("Examples", "Azure AD, Cognito, IdentityServer, Auth0"),
+                ("Not this", "Not Angular. Not the orders API."),
+            ],
+            header_fill=TBL[3], h=h,
+        )
+
+    def p6(x, y, w, h):
+        return flow_v(
+            x + w * 0.06, y, w * 0.88,
+            [
+                "You (Resource Owner / End User) click Login",
+                "Angular (Client) sends you to the IdP",
+                "IdP (Identity Provider) shows the login page",
+                "IdP gives tokens to Angular",
+                ".NET API (Resource Server) checks the access token",
+            ],
+            h=h,
+        )
+
+    return svg(
+        "OAuth 2 roles — IdP = Identity Provider",
+        "Client1 · C03 extra  ·  four players: End User, Website/API, Angular, Identity Provider",
+        [
+            panel(s[0], 1, "Four roles — both names", "Learn the OAuth name and the simple name.", p1),
+            panel(s[1], 2, "Resource Owner = End User", "You own the data. You click Allow.", p2),
+            panel(s[2], 3, "Resource Server = Website / API", "Our .NET API holds the data and checks the token.", p3),
+            panel(s[3], 4, "Client = Angular (or MVC)", "The app asking for data. It never sees the password.", p4),
+            panel(s[4], 5, "IdP = Identity Provider", "Authorization Server. Login system. Issues tokens.", p5),
+            panel(s[5], 6, "Simple login story", "You → Angular → IdP login → tokens → .NET API.", p6),
         ],
     )
 
@@ -370,6 +705,106 @@ def c04():
             panel(s[3], 4, "How HTTP knows", "Multi-provider on HttpClient.", p4),
             panel(s[4], 5, "Clone the request", "Never mutate the original HttpRequest.", p5),
             panel(s[5], 6, "Practice & comparison", "401 retry keeps the user on the same screen.", p6),
+        ],
+    )
+
+
+def c04_lifecycle():
+    """Angular app + component lifecycle with route, token, interceptor."""
+    s = slots()
+
+    def p1(x, y, w, h):
+        return levels(
+            x, y, w, h,
+            [
+                ("1 Bootstrap", INKS[0], "main.ts — the app starts"),
+                ("2 Route + guard", INKS[1], "canActivate reads token / role"),
+                ("3 constructor", INKS[2], "DI only — do not call HTTP here"),
+                ("4 ngOnInit", INKS[3], "component calls the service"),
+                ("5 Interceptor", INKS[4], "clone request, add Bearer from storage"),
+                ("6 API", INKS[5], "[Authorize] is the real lock"),
+            ],
+        )
+
+    def p2(x, y, w, h):
+        return table(
+            x, y, w, ["Who", "When", "Token?"],
+            [
+                ("Route guard", "Before the page is created", "Reads storage / AuthService"),
+                ("constructor", "Class is new'd", "No — DI only"),
+                ("ngOnInit", "Inputs are ready", "Does not touch it — calls HTTP"),
+                ("Interceptor", "Every HttpClient call", "Reads storage, sets Bearer"),
+                ("API", "On the server", "Validates signature + role"),
+            ],
+            header_fill=TBL[1], h=h,
+        )
+
+    def p3(x, y, w, h):
+        return table(
+            x, y, w, ["Hook", "Job", "Route / token / HTTP"],
+            [
+                ("constructor", "Inject services", "No HTTP — @Input not set yet"),
+                ("ngOnInit", "Load the screen", "Service.get() → interceptor runs"),
+                ("ngOnDestroy", "Leave the screen", "Unsubscribe. Token stays in storage"),
+            ],
+            header_fill=TBL[0], h=h,
+        )
+
+    def p4(x, y, w, h):
+        return flow_v(
+            x + w * 0.06, y, w * 0.88,
+            [
+                "Login writes token to storage",
+                "Guard reads token for /admin",
+                "ngOnInit calls the service",
+                "Interceptor adds Bearer",
+                "Logout clears token",
+            ],
+            h=h,
+        )
+
+    def p5(x, y, w, h):
+        return code_out(
+            x, y, w, h,
+            [
+                "ngOnInit() {",
+                "  this.api.list().subscribe(); // interceptor adds Bearer",
+                "}",
+                "canActivate() {",
+                "  return !!this.auth.token; // route only — not the API",
+                "}",
+            ],
+            "Guard runs before the component. Interceptor runs on HTTP.",
+            title="Same token, two readers",
+        )
+
+    def p6(x, y, w, h):
+        return footer3(
+            x, y, w, h, "Say this",
+            footer_left_code(
+                ["// Guard = may I open this route?", "// Interceptor = attach token"],
+                ["// ngOnInit = load data", "// API [Authorize] = real lock"],
+            ),
+            ["Draw bootstrap → guard → ngOnInit → interceptor → API", "constructor is DI only"],
+            ["HTTP in the constructor", "Guard is security", "Interceptor is a component"],
+            [
+                ("Route", "After ngOnInit", "Before the component"),
+                ("Token", "Only the interceptor", "Guard + interceptor + API"),
+                ("HTTP", "constructor", "ngOnInit via service"),
+            ],
+            third=THIRD,
+        )
+
+    return svg(
+        "Angular lifecycle — route, token, interceptor",
+        "Client1 · C04 extra  ·  bootstrap → guard (token) → ngOnInit → interceptor (Bearer) → API",
+        [
+            panel(s[0], 1, "One lifecycle", "Same visit: route first, then the component, then HTTP.", p1),
+            panel(s[1], 2, "Who reads the token?", "Guard, interceptor, and API — three different moments.", p2),
+            panel(s[2], 3, "Component hooks", "constructor vs ngOnInit vs ngOnDestroy.", p3),
+            panel(s[3], 4, "Token through the visit", "Written at login. Read by guard and interceptor. Cleared at logout.", p4),
+            panel(s[4], 5, "Code you say", "Guard does not call the interceptor. Interceptor does not create the route.", p5),
+            panel(s[5], 6, "Practice & comparison", "If they say lifecycle, walk these six boxes.", p6),
         ],
     )
 
@@ -1733,10 +2168,118 @@ BUILDERS = [
 ]
 
 
-def write_client1_posters(images_dir: Path) -> dict[int, tuple[str, str, int]]:
-    """Write unique posters into Client1-Images; paths are relative to Client1.html."""
+POSTER_BLURB = {
+    1: "They start from YOUR project drawing, then drill whatever you named.",
+    2: "Say Angular → interceptor → .NET API → SQL → AWS in 90 seconds, then stop.",
+    3: "Login gives two tokens. Access is the day-pass. Refresh is the spare key at the desk.",
+    4: "Angular does not set the Bearer header itself — the interceptor does it on every call.",
+    5: "Parent to child = @Input. Child to parent = @Output. Unrelated screens = a shared service.",
+    6: "Observable = many values over time. Promise = one value. Subject = you push the values.",
+    7: "Transient = new each time. Scoped = once per HTTP request (DbContext). Singleton = once per app.",
+    8: "Open/Closed = add a new class, do not keep editing the old if/else.",
+    9: "Repository talks to one table. Unit of Work = one SaveChanges for the whole request.",
+    10: "IQueryable = SQL still runs on the server. IEnumerable = data is already in memory.",
+    11: "Fluent API configures tables in code. For a heavy stored procedure, call it — do not hide it.",
+    12: "Middleware is a pipeline (request in, response out). async/await frees the thread while waiting.",
+    13: "Abstract = must implement. virtual = can override. sealed = cannot inherit further.",
+    14: "Isolation = how dirty a read can be. Index = a lookup book so SQL does not scan the whole table.",
+    15: "A slow SP is usually a scan, a bad join, or a deadlock. Read the plan before rewriting.",
+    16: "Saga = a story of steps with undo. CQRS = one model to write, another to read.",
+    17: "Pick one path you built — e.g. Angular on S3, API on ECS behind ALB — and walk it.",
+    18: "Delay, PR conflict, AI code review — tell what you did, not a slogan.",
+    19: "Legacy IIS track still asks iisreset, postback, and cookies. Same JWT questions on top.",
+    20: "60-second drills — architecture, JWT, DI, OCP, one AWS path. Stop talking when they interrupt.",
+}
+
+
+def write_client1_posters(
+    images_dir: Path,
+) -> tuple[dict[int, tuple], dict[int, list[tuple]], dict[int, list[tuple]]]:
+    """Write unique posters into Client1-Images; paths are relative to Client1.html.
+
+    Returns (main mapping, extras after main, prepend before main).
+    Tuples are (src, label, width[, caption]).
+    """
     raw = write_posters(images_dir, BUILDERS)
-    return {
-        n: (f"Client1-Images/{Path(path).name}", title, width)
+    extra_name = "slide-03-oauth-oidc-flows.svg"
+    extra_secure = "slide-03-jwt-secure-steps.svg"
+    extra_roles = "slide-03-oauth-roles-idp.svg"
+    extra_life = "slide-04-angular-lifecycle.svg"
+    (images_dir / extra_name).write_text(c03_oauth(), encoding="utf-8")
+    (images_dir / extra_secure).write_text(c03_jwt_secure(), encoding="utf-8")
+    (images_dir / extra_roles).write_text(c03_roles(), encoding="utf-8")
+    (images_dir / extra_life).write_text(c04_lifecycle(), encoding="utf-8")
+    mapping = {
+        n: (
+            f"Client1-Images/{Path(path).name}",
+            title,
+            width,
+            POSTER_BLURB.get(n, title),
+        )
         for n, (path, title, width) in raw.items()
     }
+    extras = {
+        3: [
+            (
+                f"Client1-Images/{extra_name}",
+                "OAuth flows, OIDC, SPA vs job",
+                1536,
+                "Angular (SPA = Single Page App) uses Code + PKCE (Proof Key for Code Exchange). .NET/Java server apps use Code + a secret. Hangfire uses client credentials. Implicit is old — do not use it. OIDC = OpenID Connect. IdP = Identity Provider.",
+            )
+        ]
+    }
+    prepend = {
+        3: [
+            (
+                "Client1-Images/slide-03-01-oauth-vs-oidc.png",
+                "OAuth vs OpenID Connect",
+                1024,
+                "OAuth = permission to call an API (access token). OpenID Connect (OIDC) = proof of who logged in (id token). IdP = Identity Provider — the login system (Azure AD, Cognito, IdentityServer).",
+            ),
+            (
+                "Client1-Images/slide-03-oauth-terminology-roles.png",
+                "OAuth 2 roles — four players",
+                1024,
+                "Resource Owner = End User (you). Resource Server = Website/API (our .NET API). Client = Angular web/MVC. Authorization Server = IdP = Identity Provider (Azure AD, Cognito, IdentityServer).",
+            ),
+            (
+                "Client1-Images/slide-03-oauth-roles-idp.svg",
+                "OAuth 2 roles — IdP = Identity Provider",
+                1536,
+                "IdP expands to Identity Provider. Same thing as Authorization Server. It shows the login page and issues tokens. It is not Angular and not the orders API.",
+            ),
+            (
+                "Client1-Images/slide-03-02-id-access-reference-tokens.png",
+                "ID token vs access vs reference",
+                1024,
+                "ID token = who you are (always a JWT, for the app). Access token = what you may call (for the API). Reference token = a random id, not a JWT — the API asks the IdP what it means.",
+            ),
+            (
+                "Client1-Images/slide-03-03-auth-code-vs-implicit.png",
+                "Authorization Code vs Implicit",
+                1024,
+                "Code flow = browser gets a short code, server swaps it for a token (safe). Implicit = token sits in the URL (old SPA style — do not use). Today Angular uses Code + PKCE.",
+            ),
+            (
+                "Client1-Images/slide-03-04-access-refresh-jwt.png",
+                "Access vs refresh, JWT claims",
+                1024,
+                "Access token goes on every API call. Refresh token only asks for a new access token. JWT is signed, not encrypted — anyone can read it; they cannot change it without the key.",
+            ),
+            (
+                "Client1-Images/slide-03-jwt-secure-steps.svg",
+                "JWT secure steps (interview)",
+                1536,
+                "Five locks — sign the token, use a long key, HTTPS only, httpOnly cookie, CSRF fingerprint. Skip one and the library still loses.",
+            ),
+        ],
+        4: [
+            (
+                f"Client1-Images/{extra_life}",
+                "Angular lifecycle — route, token, interceptor",
+                1536,
+                "App starts → route guard reads the token → component constructor (DI only) → ngOnInit calls the service → interceptor adds Bearer → API [Authorize] is the real lock.",
+            ),
+        ],
+    }
+    return mapping, extras, prepend

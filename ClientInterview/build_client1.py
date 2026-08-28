@@ -34,11 +34,30 @@ SECTIONS = _BUILT["SECTIONS"]
 EXTRA_CSS = """
 .freq-note { font-size: 12px; color: #9a3412; background: #fff7ed; border: 1px solid #fdba74; border-radius: 6px; padding: 8px 12px; margin: 8px 0 12px; line-height: 1.5; }
 .nav-content .sub a { color: #0066cc; }
+.jwt-io-encoded { font-family: Consolas, Menlo, monospace; font-size: 12px; line-height: 1.55; word-break: break-all; background: #0f172a; color: #e2e8f0; padding: 12px 14px; border-radius: 8px; margin: 8px 0 12px; }
+.jwt-h { color: #FB015B; font-weight: 700; }
+.jwt-p { color: #D63AFF; font-weight: 700; }
+.jwt-s { color: #00B9F1; font-weight: 700; }
+.jwt-io-labeled { display: grid; gap: 8px; margin: 8px 0 10px; }
+.jwt-io-row { font-family: Consolas, Menlo, monospace; font-size: 12px; line-height: 1.5; word-break: break-all; border-radius: 8px; padding: 8px 12px; }
+.jwt-io-row b { display: block; font-size: 11px; letter-spacing: 0.06em; margin-bottom: 2px; }
+.jwt-io-row.hdr { background: #fff1f2; border: 1px solid #fb7185; color: #9f1239; }
+.jwt-io-row.hdr b { color: #FB015B; }
+.jwt-io-row.pld { background: #faf5ff; border: 1px solid #d8b4fe; color: #6b21a8; }
+.jwt-io-row.pld b { color: #D63AFF; }
+.jwt-io-row.sig { background: #ecfeff; border: 1px solid #67e8f9; color: #155e75; }
+.jwt-io-row.sig b { color: #00B9F1; }
+.jwt-io-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 14px; }
+.jwt-io-pane { border-radius: 8px; padding: 10px 12px; font-family: Consolas, Menlo, monospace; font-size: 12px; white-space: pre-wrap; line-height: 1.45; }
+.jwt-io-pane.hdr { background: #fff1f2; border: 1px solid #fb7185; color: #9f1239; }
+.jwt-io-pane.pld { background: #faf5ff; border: 1px solid #d8b4fe; color: #6b21a8; }
+.jwt-io-pane.sig { background: #ecfeff; border: 1px solid #67e8f9; color: #155e75; grid-column: 1 / -1; }
+@media (max-width: 720px) { .jwt-io-panes { grid-template-columns: 1fr; } .jwt-io-pane.sig { grid-column: auto; } }
 """
 
 
 def main() -> None:
-    posters = write_client1_posters(CLIENT_DIR / "Client1-Images")
+    posters, extra_guides, prepend_guides = write_client1_posters(CLIENT_DIR / "Client1-Images")
     cfg = DeckConfig(
         title="Client1 — Interview questions",
         total_slides=TOTAL_SLIDES,
@@ -81,7 +100,7 @@ def main() -> None:
         subtopics=SUBTOPICS,
         nav_intro=nav_intro,
         code_lang="csharp",
-        visual_guide_fn=make_client1_visual_guide_fn(posters),
+        visual_guide_fn=make_client1_visual_guide_fn(posters, extra_guides, prepend_guides),
     )
     page = cfg.output.read_text(encoding="utf-8")
     if EXTRA_CSS not in page:

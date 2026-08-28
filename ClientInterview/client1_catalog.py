@@ -1,5 +1,7 @@
 """Client1 question catalog — from Client1 Interview questions.pdf."""
 
+import textwrap
+
 from interview_track import skill_entry as _entry
 
 AREA_TITLES = {
@@ -29,6 +31,9 @@ def _s(
     *,
     code_src=None,
     expected="",
+    extra_steps=None,
+    prepend_steps=None,
+    steps=None,
 ):
     s = _entry(
         skill_id,
@@ -45,6 +50,21 @@ def _s(
         expected=expected,
     )
     s["interview_qa"] = qa
+    if extra_steps:
+        s["extra_steps"] = [
+            {**step, "body": textwrap.dedent(step.get("body") or "").strip()}
+            for step in extra_steps
+        ]
+    if prepend_steps:
+        s["prepend_steps"] = [
+            {**step, "body": textwrap.dedent(step.get("body") or "").strip()}
+            for step in prepend_steps
+        ]
+    if steps:
+        s["steps"] = [
+            {**step, "body": textwrap.dedent(step.get("body") or "").strip()}
+            for step in steps
+        ]
     return s
 
 
@@ -56,13 +76,13 @@ SKILLS = [
         "Start from your architecture, then drill whatever you named",
         "Names the stack, typical order, and the Interview-5 rule without a definition dump",
         ["Client1", "Drill-down", "Do not volunteer", "Two tracks"],
-        "Client1 hires a hands-on full-stack engineer: Angular + .NET Web API + SQL Server + AWS. "
-        "About 39 sessions in the PDF (2024–2026). They start from <b>your</b> project, then go deeper.",
+        "They hire you to code Angular + .NET + SQL + AWS, and they start from <b>YOUR</b> project drawing — not a technology list. "
+        "About 39 sessions in the PDF (2024–2026). Then they drill whatever you named.",
         [
-            ("Order", "Intro → architecture → JWT → Angular interceptor/guards → DI lifetimes → SOLID/UoW → SQL → microservices/AWS → (later) behavioral."),
-            ("Interview 5", "What / where in my project / why / how I implemented / what problem. No pattern without a story."),
-            ("Separate host", "Angular URL ≠ API URL → CORS + interceptor on every call. They will check this."),
-            ("Two tracks", "Core: Angular + .NET + SQL + AWS. Legacy IIS / ASP.NET adds WebForms, manual deploy, SP line-by-line."),
+            ("Order", "Intro, then draw your boxes, then JWT, then Angular, then .NET DI/SOLID, then SQL, then AWS. Behavioral comes later."),
+            ("Interview 5", "What it is, where you used it, why, how you built it, what broke if you had not. No pattern without a story."),
+            ("Separate host", "Angular lives on one URL, the API on another. The browser needs CORS, and every call needs the interceptor to attach the token."),
+            ("Two tracks", "Core round is Angular + .NET + SQL + AWS. Legacy round also asks IIS, WebForms, and reading a stored procedure line by line."),
         ],
         "Client1 is a full-stack coding role. I walk Angular to API to SQL to AWS in 90 seconds, then they drill JWT, DI, and whatever I named. I do not mention a pattern I cannot implement.",
         (
@@ -93,13 +113,13 @@ SKILLS = [
         "Self intro, recent project, modules you owned, one design decision",
         "Draws end-to-end flow and names two modules they personally shipped",
         ["Intro", "Architecture", "R&R", "Self-rating"],
-        "Almost every session starts here. Keep intro short. Architecture is a <b>flow</b>, not a slide of logos. "
-        "Roles means <b>what you coded</b>.",
+        "30-second intro, then draw the click-to-database path <b>you</b> built. Architecture is a <b>flow</b>, not a slide of logos. "
+        "Roles means <b>what you coded</b>, not the whole company.",
         [
-            ("Intro", "Years, domain, stack in 30 seconds. They have limited time."),
+            ("Intro", "Years, domain, stack — 30 seconds. They have limited time."),
             ("Architecture", "Angular → interceptor → API → service → SQL → (queue/S3). Point to your boxes."),
-            ("R&R", "Two features you owned: e.g. auth, admin module, integration, report. Production issue + RCA."),
-            ("Rating", "They ask 'rate Angular / SQL / AWS out of 10'. Defend with an example, not a 10."),
+            ("R&R", "Two features you owned (auth, admin, report). Plus one production issue and how you found the cause."),
+            ("Rating", "They ask rate Angular / SQL / AWS out of 10. Defend with a story, not a 10."),
         ],
         "I am a full-stack TA. Last project: .NET 8 Web API plus web client. I owned the registry/admin APIs and SQL. SPA calls APIs with JWT. I can walk one screen from click to stored procedure.",
         (
@@ -129,14 +149,15 @@ SKILLS = [
         "JWT, OAuth, access vs refresh",
         "Highest-frequency technical topic across core Client1 rounds",
         "Walks login → two tokens → API validation → 401 refresh → no-refresh job case",
-        ["JWT", "Access vs refresh", "OAuth/SSO", "Tamper/expiry"],
-        "Asked in ~20+ sessions: JWT implementation, access vs refresh, idle timeout, "
-        "JWT vs OAuth vs SSO, form-auth vs JWT for web+mobile.",
+        ["JWT", "Access vs refresh", "jwt.io decode", "OAuth/SSO", "Tamper/expiry"],
+        "Login gives two tokens. Access is the day-pass for APIs. Refresh is the spare key, used only to get a new day-pass. "
+        "<b>IdP</b> = Identity Provider = the login system. <b>OIDC</b> = OpenID Connect = who logged in. <b>SSO</b> = Single Sign-On = one IdP login for many apps. "
+        "Asked in ~20+ sessions.",
         [
-            ("JWT", "Signed JSON: header.payload.signature. API verifies signature — never trust payload alone."),
-            ("Access vs refresh", "Access is short (minutes). Refresh is longer, stored server-side hashed (or httpOnly cookie). Often both issued at login; refresh is used later to mint a new access token."),
-            ("No refresh token", "Background/async job: client-credentials or service identity — not a user JWT from localStorage."),
-            ("OAuth / SSO", "JWT = format. OAuth = delegated auth. SSO = IdP (Cognito / IdentityServer / Azure AD)."),
+            ("JWT", "A signed note in three pieces: header.payload.signature. Anyone can read it. Only our key can prove it was not changed."),
+            ("Access vs refresh", "Access = short day-pass sent on every API. Refresh = spare key, used only at /refresh. Both usually come at login."),
+            ("No refresh token", "A Hangfire job still logs in — as an app, not as a user. That is client credentials. Never the user's browser token."),
+            ("OAuth / OIDC / IdP", "OAuth = permission (access token). OIDC = OpenID Connect = who you are (id token). IdP = Identity Provider = Authorization Server = login system. Four roles: End User, Website/API, Angular, IdP."),
         ],
         "Login returns a short-lived access JWT and a refresh token. Angular interceptor sends Bearer access. API validates signature, exp, and roles. On 401 we refresh once. Jobs use a service identity, not the user's browser token.",
         (
@@ -145,12 +166,20 @@ SKILLS = [
             "// AFTER — We sign with our key. Middleware checks exp. Interceptor retries once after /refresh. Refresh tokens are rotated and hashed in SQL.",
         ),
         [
-            {"q": "Difference between access token and refresh token? Do we get both at login?", "a": "Usually both at login. Access is in memory/storage and sent on APIs. Refresh is used only against /refresh to get a new access token when access expires or is about to."},
-            {"q": "How do you know the payload was not tampered? How do you know access expired?", "a": "Tamper: signature fails in JwtBearer. Expiry: exp claim → 401. UI may decode exp for UX but the server is the source of truth."},
-            {"q": "JWT vs traditional cookie/form auth? Web + mobile?", "a": "Same Web API for SPA and mobile → bearer JWT. Cookie/form is tied to browser + antiforgery. We still use HTTPS and short TTL."},
-            {"q": "What if there is no refresh token (async job)?", "a": "User-delegated refresh does not apply. Use client credentials, a queued worker identity, or a long-lived secret in the server config — never a browser localStorage token."},
+            {"q": "Difference between access token and refresh token? Do we get both at login? If we have access, why not use it to get a new access token?", "a": "Usually both at login. Access = short day-pass on every API (Bearer). Refresh = spare key, used only at /refresh, stored hashed (or httpOnly cookie), rotated and revocable. If access could mint access, a stolen XSS (Cross-Site Scripting) token would last forever — that is why refresh exists."},
+            {"q": "How do you know the payload was not tampered? How do you know access expired?", "a": "Payload is Base64url — anyone can edit role to Admin and re-encode. Tamper is caught because HMACSHA256(header.payload, server key) no longer matches the signature → JwtBearer throws SecurityTokenInvalidSignatureException → 401. Expiry is the exp claim (ValidateLifetime) → SecurityTokenExpiredException → 401. Angular atob is not this check."},
+            {"q": "JWT vs traditional cookie/form auth? Web + mobile?", "a": "Forms + cookie: browser posts username/password, server sets a cookie (often httpOnly). Same-site MVC/WebForms. Need antiforgery because the browser sends cookies by itself. JWT Bearer: interceptor sets Authorization header. Same Web API for Angular SPA (Single Page App) and mobile. Threat is XSS (Cross-Site Scripting), not classic CSRF (Cross-Site Request Forgery). Both need HTTPS and a short lifetime."},
+            {"q": "What if there is no refresh token (async / background job)? Can we still authenticate the job?", "a": "Yes — background jobs CAN and SHOULD authenticate. Use OAuth client credentials (client id + secret, or AWS/Azure managed identity) to get a service access token. That is not a user refresh flow. Never copy a user's localStorage JWT into Hangfire."},
+            {"q": "What does jwt.io show? Is decoding the same as validating?", "a": "Left = encoded HEADER.PAYLOAD.SIGNATURE (pink/purple/blue). Right HEADER JSON, PAYLOAD JSON, then VERIFY SIGNATURE. Paste the secret to see a green check (HMAC matches). Change one payload character and it goes red. Decoding is always possible; the green check is verification. The API does verification with its real key — jwt.io is a debugger, not the API."},
+            {"q": "OAuth vs OpenID Connect? Which flow for Angular vs .NET/Java vs a background job?", "a": "OAuth 2.0 = permission to call APIs (access token). OIDC = OpenID Connect = who logged in (id token). IdP = Identity Provider = login system. SPA (Single Page App, Angular) = Authorization Code + PKCE (Proof Key for Code Exchange — no secret in the browser). .NET MVC / Java = Authorization Code + a server secret. Background job = client credentials. Implicit (token in the URL) is old — do not use it."},
+            {"q": "What is an IdP? What are the four OAuth roles?", "a": "IdP = Identity Provider. Same as Authorization Server — the login system (Azure AD, Cognito, IdentityServer, Auth0). Four roles: Resource Owner = End User (you). Resource Server = Website/API (our .NET API). Client = Angular web/MVC. Authorization Server = the IdP."},
+            {"q": "ID token vs access token vs reference token?", "a": "ID token = who you are (always a JWT, for the app). Access token = what APIs you may call (for the API). Reference token = a random ticket number, not a JWT; the API asks the IdP (Identity Provider) what it means."},
+            {"q": "How do you harden JWT so it is not hacked even with the right library?", "a": "Five locks: (1) sign it — never alg:none. (2) long key, at least 32 bytes. (3) HTTPS only. (4) XSS = Cross-Site Scripting (not CSS) can read localStorage; prefer httpOnly cookie. (5) CSRF = Cross-Site Request Forgery — match an antiforgery fingerprint in the JWT and the cookie."},
         ],
-        code_src="""// Program.cs — JWT bearer (say this as your pipeline)
+        code_src="""// --- Tamper is caught by SIGNATURE, not by reading the payload ---
+// Payload is Base64url (readable). Attacker can change "role":"User" → "Admin"
+// and re-encode. They cannot produce a matching HMAC without our key.
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
@@ -158,15 +187,264 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,   // exp
-            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,              // exp → 401
+            ValidateIssuerSigningKey = true,      // tamper → 401
+            ValidIssuer = "https://api.client1.local",
+            ValidAudience = "client1-spa",
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+        o.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = ctx =>
+            {
+                // SecurityTokenInvalidSignatureException = tampered or wrong key
+                // SecurityTokenExpiredException        = exp passed
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+// Forged token: new payload + OLD signature → always 401
+var parts = accessJwt.Split('.');
+var json = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(parts[1]));
+var evil = json.Replace("User", "Admin"); // tamper the role claim
+var forged = parts[0] + "." + WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(evil))
+           + "." + parts[2];
+// HMAC(header + "." + evil, key) != parts[2]
+
+// Login: return { accessToken, refreshToken, expiresIn }
+// Refresh: rotate refresh (hashed in SQL), return new access — never mint from access
+// Hangfire: client-credentials token, not the user's JWT
+// [Authorize(Roles = "Admin")] on the action — UI guards are not enough""",
+        expected="Tamper → invalid signature 401. exp → 401. Refresh ≠ access. Jobs use client credentials.",
+        steps=[
+            {
+                "title": "Step 1 — jwt.io sample (encoded vs decoded)",
+                "body": """
+<p>A JWT is a signed note in three pieces joined by dots. <a href="https://jwt.io" target="_blank" rel="noopener">jwt.io</a> is a website that <b>reads</b> those pieces. Left = the token as it travels. Right = the same data as readable JSON. Green check = the signature matches the secret. Angular <code>atob</code> only reads — it does not check the signature.</p>
+<p><b>Encoded</b> (jwt.io left). Three labeled parts: <span class="jwt-h">HEADER</span> · <span class="jwt-p">PAYLOAD</span> · <span class="jwt-s">SIGNATURE</span>. Paste the full token into jwt.io:</p>
+<div class="jwt-io-labeled">
+<div class="jwt-io-row hdr"><b>HEADER</b> eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</div>
+<div class="jwt-io-row pld"><b>PAYLOAD</b> eyJzdWIiOiI0MiIsImVtYWlsIjoiYWRtaW5AY2xpZW50MS5sb2NhbCIsInJvbGUiOiJBZG1pbiIsImlzcyI6Imh0dHBzOi8vYXBpLmNsaWVudDEubG9jYWwiLCJhdWQiOiJjbGllbnQxLXNwYSIsImlhdCI6MTcxNzIwMDAwMCwiZXhwIjoxNzE3MjAzNjAwfQ</div>
+<div class="jwt-io-row sig"><b>SIGNATURE</b> 3_6ChCvo613Glzef1pVOLjnXksOW8KO6e0MWeXgT8kY</div>
+</div>
+<p><b>Full token</b> (header.payload.signature):</p>
+<div class="jwt-io-encoded"><span class="jwt-h">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span>.<span class="jwt-p">eyJzdWIiOiI0MiIsImVtYWlsIjoiYWRtaW5AY2xpZW50MS5sb2NhbCIsInJvbGUiOiJBZG1pbiIsImlzcyI6Imh0dHBzOi8vYXBpLmNsaWVudDEubG9jYWwiLCJhdWQiOiJjbGllbnQxLXNwYSIsImlhdCI6MTcxNzIwMDAwMCwiZXhwIjoxNzE3MjAzNjAwfQ</span>.<span class="jwt-s">3_6ChCvo613Glzef1pVOLjnXksOW8KO6e0MWeXgT8kY</span></div>
+<div class="jwt-io-panes">
+<div class="jwt-io-pane hdr"><b>HEADER</b>
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}</div>
+<div class="jwt-io-pane pld"><b>PAYLOAD</b>
+{
+  "sub": "42",
+  "email": "admin@client1.local",
+  "role": "Admin",
+  "iss": "https://api.client1.local",
+  "aud": "client1-spa",
+  "iat": 1717200000,
+  "exp": 1717203600
+}</div>
+<div class="jwt-io-pane sig"><b>VERIFY SIGNATURE</b>
+HMACSHA256(
+  base64Url(header) + "." + base64Url(payload),
+  secret
+)
+Demo secret: <code>client1-demo-secret</code> — paste it in jwt.io to see the signature valid.
+The API uses its real signing key. Decode ≠ verify.</div>
+</div>
+<table class="data-tbl">
+<tr><th>Claim</th><th>Value</th><th>What it means</th></tr>
+<tr><td><code>alg</code> / <code>typ</code></td><td>HS256 / JWT</td><td>Header: HMAC-SHA256, this is a JWT. API must enforce the algorithm (do not trust <code>alg: none</code>).</td></tr>
+<tr><td><code>sub</code></td><td>42</td><td>Subject — the user id the API will treat as the caller.</td></tr>
+<tr><td><code>email</code> / <code>role</code></td><td>admin@client1.local / Admin</td><td>Identity + role claim. <code>[Authorize(Roles = "Admin")]</code> reads <code>role</code>.</td></tr>
+<tr><td><code>iss</code> / <code>aud</code></td><td>api.client1.local / client1-spa</td><td>Who signed it, who may use it. <code>ValidateIssuer</code> + <code>ValidateAudience</code>.</td></tr>
+<tr><td><code>iat</code></td><td>1717200000</td><td>Issued-at: 2024-06-01 00:00 UTC (unix seconds).</td></tr>
+<tr><td><code>exp</code></td><td>1717203600</td><td>Expires 01:00 UTC (1 hour later). Past <code>exp</code> → 401. Server clock is source of truth.</td></tr>
+</table>
+<p class="step-result"><b>Takeaway:</b> Anyone can decode the payload (it is Base64, not encryption). Only the holder of the signing key can produce a valid signature. UI may read <code>exp</code> for a countdown; the API still validates signature + <code>exp</code> + roles.</p>
+<p><b>What jwt.io shows, in order:</b></p>
+<ol>
+<li><b>Encoded (left):</b> paste <code>header.payload.signature</code>. Colors = the three parts, not encryption.</li>
+<li><b>HEADER (right, pink):</b> decoded JSON — <code>alg</code> + <code>typ</code>. Always readable.</li>
+<li><b>PAYLOAD (right, purple):</b> decoded claims. Always readable. This is what Angular <code>atob(token.split('.')[1])</code> sees.</li>
+<li><b>VERIFY SIGNATURE (right, blue):</b> paste secret <code>client1-demo-secret</code>. Green check = HMAC of <code>header.payload</code> matches the third part. Red X = tampered payload, wrong secret, or truncated token.</li>
+<li><b>Experiment:</b> change one character in the payload JSON on the right — encoded payload changes, signature goes red. That is tamper detection.</li>
+<li><b>jwt.io is a debugger.</b> Production API uses <code>ValidateIssuerSigningKey</code> with the real key. A green check on jwt.io with the demo secret does not mean a stolen token is trusted by our API.</li>
+</ol>
+""",
+            },
+            {
+                "title": "Step 2 — Four OAuth roles and IdP (Identity Provider)",
+                "body": """
+<p>OAuth always has four players. <b>IdP</b> means <b>Identity Provider</b> — the login system. Same thing as <b>Authorization Server</b>.</p>
+<table class="data-tbl">
+<tr><th>OAuth name</th><th>Simple name</th><th>In this project</th></tr>
+<tr><td><b>Resource Owner</b></td><td>End user — you</td><td>The person who logs in and clicks Allow</td></tr>
+<tr><td><b>Client</b></td><td>The app that asks for data</td><td>Angular SPA (or MVC). It never sees the password.</td></tr>
+<tr><td><b>Resource Server</b></td><td>Website / API that holds data</td><td>Our .NET Web API</td></tr>
+<tr><td><b>Authorization Server</b></td><td><b>IdP = Identity Provider</b></td><td>Azure AD, Cognito, IdentityServer, or Auth0</td></tr>
+</table>
+<p><b>IdP expansion:</b> Identity Provider is the app that knows who you are. It shows the login page, checks the password (or <b>SSO</b> = Single Sign-On), and <b>issues tokens</b>. It is <b>not</b> Angular. It is <b>not</b> the orders API.</p>
+<p><b>Simple story:</b> You click Login in Angular → Angular sends you to the IdP → you type password at Azure AD / IdentityServer → IdP gives Angular tokens → Angular calls the .NET API with the access token.</p>
+<p class="step-result"><b>Takeaway:</b> If they say IdP, say “Identity Provider” out loud, then name yours. Map all four roles to your project. Open the visual guide <b>OAuth 2 roles — IdP = Identity Provider</b>.</p>
+""",
+            },
+            {
+                "title": "Step 3 — ID token vs access token vs reference token",
+                "body": """
+<p>Three different tokens. Do not mix them up.</p>
+<table class="data-tbl">
+<tr><th></th><th>ID token</th><th>Access token</th><th>Reference token</th></tr>
+<tr><td>What it answers</td><td>Who logged in?</td><td>What may this caller do?</td><td>A ticket number — look it up</td></tr>
+<tr><td>Format</td><td>Always a JWT</td><td>Often a JWT, not required</td><td>Not a JWT — random id</td></tr>
+<tr><td>Who reads it</td><td>The client app (Angular)</td><td>The API (Resource Server)</td><td>API asks the IdP “what is this id?”</td></tr>
+<tr><td><code>aud</code> (audience)</td><td>The client id (the Angular app)</td><td>The API name(s)</td><td>—</td></tr>
+<tr><td>Typical claims</td><td>name, email, <code>sub</code></td><td><code>scope</code>, grant type</td><td>Nothing inside — opaque</td></tr>
+</table>
+<p>Open the visual guide <b>ID token vs access vs reference</b> to see both JWTs decoded side by side.</p>
+<p class="step-result"><b>Takeaway:</b> ID token = identity (OIDC). Access token = permission (OAuth). Reference token = “call me back to check.” Our Web API validates the <b>access</b> token, not the id token.</p>
+""",
+            },
+            {
+                "title": "Step 4 — Why access cannot mint a new access token",
+                "body": """
+<p>Access token = day-pass for APIs. Refresh token = spare key at the desk. The day-pass cannot print a new day-pass. If it could, a stolen token would last forever. <b>XSS</b> = Cross-Site Scripting — a script on our page can steal a token from browser storage.</p>
+<table class="data-tbl">
+<tr><th></th><th>Access token</th><th>Refresh token</th></tr>
+<tr><td>Sent on</td><td>Every API (<code>Authorization: Bearer</code>)</td><td>Only <code>/refresh</code> (or token endpoint)</td></tr>
+<tr><td>Lifetime</td><td>Minutes (15–60)</td><td>Hours/days, rotated</td></tr>
+<tr><td>Storage</td><td>Memory / session / localStorage</td><td>Hashed in SQL, or httpOnly cookie</td></tr>
+<tr><td>If stolen</td><td>Attacker calls APIs until <code>exp</code></td><td>Attacker could mint new access — so we rotate + revoke</td></tr>
+<tr><td>Can mint access?</td><td>No — no refresh privilege in the JWT</td><td>Yes — that is its only job</td></tr>
+</table>
+<p><b>Analogy:</b> hotel room key vs ID at the front desk. The room key opens the door; it does not print a new key. Front desk checks a different credential and can refuse.</p>
+<p class="step-result"><b>Takeaway:</b> Short access + separate refresh limits blast radius. Login usually returns <b>both</b>. 401 → interceptor calls <code>/refresh</code> once → new access → retry.</p>
+""",
+            },
+            {
+                "title": "Step 3 — Tampering: full explanation and code",
+                "body": """
+<p>Anyone can <b>read</b> a JWT — it is encoded (Base64), not secret. Anyone can change <code>role</code> from User to Admin and re-encode. The API still says no, because the <b>signature</b> no longer matches. That check uses a key the attacker does not have.</p>
+<div class="step-pre">Original:  HEADER . PAYLOAD(role=User) . SIG
+Attacker:  HEADER . PAYLOAD(role=Admin) . SIG   ← same SIG, new payload
+API:       HMAC(HEADER + "." + NEW_PAYLOAD, key) != SIG  → 401</div>
+<p><b>Full server code</b> (this is what catches tamper and expiry):</p>
+<div class="step-pre">builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,           // exp → SecurityTokenExpiredException
+            ValidateIssuerSigningKey = true,   // tamper → SecurityTokenInvalidSignatureException
+            ValidIssuer = "https://api.client1.local",
+            ValidAudience = "client1-spa",
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
-// Login: return { accessToken, refreshToken, expiresIn }
-// Refresh: rotate refresh, return new access
-// [Authorize(Roles = "Admin")] on the action — UI guards are not enough""",
-        expected="Signature + exp + roles on the server.",
+[Authorize(Roles = "Admin")]  // reads the role claim AFTER signature is valid</div>
+<p><b>What an attacker tries</b> (and why it fails):</p>
+<div class="step-pre">var parts = accessJwt.Split('.');
+var json = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(parts[1]));
+var evil = json.Replace("User", "Admin"); // tamper the role claim
+var forged = parts[0] + "." + WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(evil))
+           + "." + parts[2];  // kept the OLD signature
+// forged still looks like header.payload.signature
+// JwtBearer: signature check fails → 401. Guards / atob never saw this request.</div>
+<p><b>Angular <code>atob</code>:</b> useful to read <code>exp</code> for a countdown. It does <b>not</b> verify HMAC. Never authorize an admin screen from a decoded payload alone.</p>
+<p class="step-result"><b>Takeaway:</b> Tamper = signature mismatch. Expiry = <code>exp</code>. Both are server 401s. The code editor on this slide is this pipeline.</p>
+""",
+            },
+            {
+                "title": "Step 4 — Forms + cookie vs JWT (side by side)",
+                "body": """
+<p>Old web apps keep you logged in with a <b>cookie</b>. Angular + mobile keep you logged in with a <b>JWT</b> on the Authorization header. Same idea (prove who you are), different envelope. Cookie = the browser sends it by itself. JWT = our interceptor attaches it.</p>
+<table class="data-tbl">
+<tr><th></th><th>Forms auth + cookie</th><th>JWT Bearer</th></tr>
+<tr><td>Typical app</td><td>MVC / WebForms, same site</td><td>Angular SPA + mobile + same Web API</td></tr>
+<tr><td>Login</td><td>POST username/password; server sets cookie</td><td>POST login API; returns access (+ refresh)</td></tr>
+<tr><td>Each request</td><td>Browser sends cookie automatically</td><td>Interceptor sets <code>Authorization: Bearer</code></td></tr>
+<tr><td>CSRF</td><td>Must use antiforgery tokens</td><td>No cookie for API → classic CSRF is weaker; XSS is the threat</td></tr>
+<tr><td>XSS</td><td>httpOnly cookie cannot be read by JS</td><td>Token in storage <b>can</b> be read by JS — short TTL + refresh rotation</td></tr>
+<tr><td>Mobile</td><td>Awkward (no browser cookie jar)</td><td>Natural — store token in the app</td></tr>
+<tr><td>Server</td><td>Often session or cookie ticket</td><td>Stateless API (refresh store is the exception)</td></tr>
+<tr><td>HTTPS</td><td>Required</td><td>Required</td></tr>
+</table>
+<p class="step-result"><b>Takeaway:</b> Client1 is Angular + Web API + mobile-capable → <b>JWT Bearer</b>. Legacy IIS/WebForms track may still be cookie/forms. Do not say JWT is “more secure”; say it fits SPA + mobile.</p>
+""",
+            },
+            {
+                "title": "Step 5 — Background jobs CAN authenticate (client credentials)",
+                "body": """
+<p>A background job (Hangfire / timer) has no human and no refresh token. It still logs in — as an <b>app</b>, using client id + secret. That grant is called <b>client credentials</b>. Never copy a user's browser token into the job.</p>
+<table class="data-tbl">
+<tr><th></th><th>User (Angular)</th><th>Background job (Hangfire)</th></tr>
+<tr><td>Who logs in?</td><td>Human at the IdP / login API</td><td>Nobody — the app authenticates</td></tr>
+<tr><td>Grant</td><td>Authorization Code + PKCE (or our login+refresh)</td><td><b>Client credentials</b></td></tr>
+<tr><td>Tokens</td><td>User access + refresh</td><td>Service access token only</td></tr>
+<tr><td>Where secret lives</td><td>Not in the browser</td><td>Server config / AWS secret / managed identity</td></tr>
+<tr><td>Never</td><td>—</td><td>Copy user's localStorage JWT into the job</td></tr>
+</table>
+<div class="step-pre">POST /connect/token
+  grant_type=client_credentials
+  client_id=hangfire-worker
+  client_secret=***
+→ { "access_token": "&lt;service JWT&gt;", "expires_in": 3600 }
+HttpClient: Authorization: Bearer &lt;service JWT&gt;
+API [Authorize] — role/scope = worker, not Admin user</div>
+<p class="step-result"><b>Takeaway:</b> Jobs <b>do</b> use JWT — a <b>client-credentials</b> access token. They do <b>not</b> use the user's refresh flow.</p>
+""",
+            },
+            {
+                "title": "Step 6 — OAuth flows vs OIDC (SPA, .NET/Java, background job)",
+                "body": """
+<p><b>OAuth 2.0</b> = permission (“this app may call these APIs”) — gives an access token. <b>OIDC</b> = OpenID Connect = “who logged in” — gives an id token. <b>IdP</b> = Identity Provider = the login system. <b>SSO</b> = Single Sign-On = one IdP login for many apps. JWT is only the token <b>shape</b>, not the protocol.</p>
+<p><b>Which flow:</b> <b>SPA</b> (Single Page App, Angular) uses Authorization Code + <b>PKCE</b> (Proof Key for Code Exchange) — no secret in the browser. .NET MVC / Java uses Authorization Code + a server secret. Hangfire uses client credentials. Implicit (token in the URL) is old — do not use it. Open the visual guide <b>OAuth flows, OIDC, SPA vs job</b>.</p>
+<table class="data-tbl">
+<tr><th></th><th>Authorization Code</th><th>Code + PKCE</th><th>Implicit</th><th>Hybrid</th><th>Client credentials</th></tr>
+<tr><td>Who</td><td>.NET MVC / Java Spring (server has a secret)</td><td><b>Angular SPA</b>, mobile</td><td>Old SPA (token in URL hash)</td><td>Older OIDC (code + tokens at once)</td><td><b>Hangfire / worker / daemon</b></td></tr>
+<tr><td>User present?</td><td>Yes — browser login</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+<tr><td>Client secret</td><td>Yes, on the server</td><td>No (public client)</td><td>No</td><td>Usually yes</td><td>Yes, on the server</td></tr>
+<tr><td>Today?</td><td>Yes for confidential apps</td><td><b>Yes — use this for SPA</b></td><td>Deprecated — do not</td><td>Rare</td><td><b>Yes — use this for jobs</b></td></tr>
+</table>
+<table class="data-tbl">
+<tr><th></th><th>.NET MVC / Java Spring</th><th>Angular SPA</th><th>Background job</th></tr>
+<tr><td>Flow</td><td>Authorization Code (confidential)</td><td>Authorization Code + PKCE</td><td>Client credentials</td></tr>
+<tr><td>OIDC?</td><td>Yes — cookie after id_token</td><td>Yes — login at IdP, API gets access JWT</td><td>No user — OAuth only</td></tr>
+<tr><td>API call</td><td>Cookie or Bearer</td><td>Bearer access JWT via interceptor</td><td>Bearer service JWT</td></tr>
+</table>
+<p class="step-result"><b>Takeaway:</b> SPA = Code+PKCE. Server web app (.NET or Java) = Code + secret. Job = client credentials. Implicit = no. OAuth + OIDC together because APIs and login are different problems.</p>
+""",
+            },
+            {
+                "title": "Step 7 — JWT secure steps (important interview question)",
+                "body": """
+<p>The library does not save you. Five locks: (1) sign it, (2) long key, (3) HTTPS, (4) hide the token from JavaScript, (5) stop CSRF. <b>XSS</b> = Cross-Site Scripting (a script on our page — not CSS). <b>CSRF</b> = Cross-Site Request Forgery (another site tricks the browser into sending our cookie). Open the visual guide <b>JWT secure steps (interview)</b>.</p>
+<table class="data-tbl">
+<tr><th>Step</th><th>Attack if we skip it</th><th>What we do</th></tr>
+<tr><td><b>1. Sign the token</b></td><td>No algorithm / <code>alg: none</code> — anyone can mint a JWT with <code>role: Admin</code>.</td><td>Require HS256 or RS256. <code>ValidateIssuerSigningKey = true</code>. Never trust the <code>alg</code> header alone.</td></tr>
+<tr><td><b>2. Strong secret / key</b></td><td>A 6-character secret is brute-forced. HMAC-SHA256 needs a long key.</td><td>At least <b>32 bytes</b> (256-bit) for HS256. Do not use “password1”. RSA/EC: private key stays on the server.</td></tr>
+<tr><td><b>3. No port 80</b></td><td>HTTP = packet sniff. The Bearer token is readable on the wire.</td><td>HTTPS only (443). Redirect HTTP → HTTPS. HSTS in production.</td></tr>
+<tr><td><b>4. Storage vs XSS</b></td><td>The notes said “CSS” — they mean <b>XSS</b> (Cross-Site Scripting). A script can read <code>localStorage</code> / <code>sessionStorage</code> even on HTTPS.</td><td>Prefer an <code>httpOnly</code> + <code>Secure</code> + <code>SameSite</code> cookie. JavaScript cannot read httpOnly. XSS does not “hack CSS.”</td></tr>
+<tr><td><b>5. CSRF fingerprint</b></td><td>The browser <b>auto-sends</b> cookies. A malicious site can trigger a request (CSRF) even with HTTPS + httpOnly.</td><td><b>Antiforgery / fingerprint:</b> put the same random value in (1) an httpOnly cookie and (2) a JWT claim. API accepts only if they match. Same idea as MVC antiforgery tokens.</td></tr>
+</table>
+<p><b>Fingerprint (say this in the interview):</b></p>
+<div class="step-pre">Login:
+  fp = random 32 bytes
+  Set-Cookie: __Host-fp=fp; HttpOnly; Secure; SameSite=Strict
+  JWT claim: "fp": sha256(fp)
+
+Each API:
+  cookieFp = Request.Cookies["__Host-fp"]
+  jwtFp    = User.FindFirst("fp")?.Value
+  if (sha256(cookieFp) != jwtFp) return 401;  // CSRF — cookie came without our JWT</div>
+<p class="step-result"><b>Takeaway:</b> Sign → long key → HTTPS → httpOnly → match fingerprint. Skip any one lock and the “right library” still loses. XSS ≠ CSS. Cookie stops XSS-read; CSRF still needs the fingerprint.</p>
+""",
+            },
+        ],
     ),
     _s(
         "C04",
@@ -174,14 +452,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         "Interceptor, token storage, route guards",
         "How the SPA attaches JWT, where it lives, how admin pages are blocked",
         "Names interceptor purpose, storage tradeoff, and that guards are UX not security",
-        ["Interceptor", "local vs session", "Guards", "401 retry"],
-        "High frequency: purpose of interceptor, how HttpClient knows about it, localStorage vs sessionStorage, "
-        "admin vs user pages, attach token on every API.",
+        ["Interceptor", "local vs session", "Guards", "Lifecycle"],
+        "The interceptor is a helper that adds the login token to every API call, so each screen does not do it itself. "
+        "On one page visit: route guard (token?) → component constructor (DI) → ngOnInit (HTTP) → interceptor (Bearer) → API.",
         [
-            ("Interceptor", "HTTP_INTERCEPTORS multi-provider. HttpClient runs it — you do not call it. Typical: Authorization header, 401→refresh, correlation id."),
-            ("How HTTP knows", "provide HttpClient + interceptor in app config. Order of interceptors matters if you have more than one."),
-            ("Storage", "sessionStorage dies with the tab. localStorage survives refresh (common UX). Memory is safest/worst UX. XSS can read web storage — backend still authorizes."),
-            ("Guards", "canActivate reads role from token/auth service. Hides Angular routes. API [Authorize] is the real lock."),
+            ("Interceptor", "HttpClient runs it automatically. It copies the request, adds Authorization: Bearer, and on 401 tries refresh once."),
+            ("How HTTP knows", "You register it once in app config (HTTP_INTERCEPTORS). Components just call the service — they never call the interceptor."),
+            ("Storage", "SessionStorage dies when the tab closes. localStorage survives refresh (nicer UX). XSS (Cross-Site Scripting) can read both — the API still checks the token."),
+            ("Guards", "CanActivate hides an Angular route (UX). The real lock is API [Authorize]. A hidden button is not security."),
         ],
         "HttpClient goes through an auth interceptor that sets Bearer from storage. On 401 we refresh once. Admin routes use a guard, but the API still checks the role claim.",
         (
@@ -190,8 +468,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             "// AFTER — Guard for UX. API [Authorize(Roles = \"Admin\")] so a crafted HTTP call still 403s.",
         ),
         [
-            {"q": "Purpose of interceptor? How many in your project? How does the request know about it?", "a": "Cross-cutting HTTP behavior. I used auth + error. Registered with HTTP_INTERCEPTORS. HttpClient pipeline invokes them; components just call the service."},
-            {"q": "Where do you store the token? Why not sessionStorage?", "a": "We used localStorage so refresh of the SPA keeps the session. sessionStorage is better if you want tab isolation. I would not call either 'secure' — short TTL + HTTPS + server validation."},
+            {"q": "Walk Angular lifecycle for a page that needs JWT. Where do route, token, and interceptor sit?", "a": "Bootstrap the app. Router matches /admin. canActivate reads the token (and role) from storage — if missing, go to login; the component is not created yet. constructor only injects services. ngOnInit calls the service. HttpClient runs the interceptor, which clones the request and sets Authorization: Bearer. The API [Authorize] is the real lock. ngOnDestroy unsubscribes; logout clears the token."},
+            {"q": "Purpose of interceptor? How many in your project? How does the request know about it?", "a": "Cross-cutting HTTP behavior. I used auth + error. Registered with HTTP_INTERCEPTORS. HttpClient pipeline invokes them; components just call the service. The interceptor is not a route guard and not a component hook."},
+            {"q": "constructor vs ngOnInit — which one loads data with the token?", "a": "constructor is DI only — @Input is not set, do not call HTTP there. ngOnInit is where I call the service. The interceptor still attaches the token either way, but loading in ngOnInit is the lifecycle they expect."},
+            {"q": "Where do you store the token? Why not sessionStorage?", "a": "We used localStorage so refresh of the SPA keeps the session. sessionStorage is better if you want tab isolation. I would not call either 'secure' — short TTL + HTTPS + server validation. Guard and interceptor both read the same store."},
             {"q": "Dashboard: admin sees all, user sees subset. How do you set the Angular page?", "a": "Route guard for /admin/*. API returns data filtered by role. Never trust hidden buttons as security."},
             {"q": "How do you handle access expiry without breaking the current operation?", "a": "Interceptor catches 401, queues the original request, calls /refresh, retries once. User stays on the same screen if refresh succeeds."},
         ],
@@ -210,8 +490,31 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 }
-// app.config: { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }""",
-        expected="Clone request, set header, handle 401 once.",
+// app.config: { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+// Route: { path: 'admin', canActivate: [adminGuard], component: AdminComponent }
+// AdminComponent.ngOnInit → this.api.list() → interceptor adds Bearer""",
+        expected="Clone request, set header, handle 401 once. Guard before component; interceptor on HTTP.",
+        prepend_steps=[
+            {
+                "title": "Step 1 — Angular lifecycle: route, token, interceptor",
+                "body": """
+<p>One visit to a page, in order. Open the visual guide <b>Angular lifecycle — route, token, interceptor</b>.</p>
+<table class="data-tbl">
+<tr><th>When</th><th>What Angular does</th><th>Token / interceptor / route</th></tr>
+<tr><td><b>1. Bootstrap</b></td><td><code>main.ts</code> starts the app</td><td>Token is already in storage from login (or missing)</td></tr>
+<tr><td><b>2. Router</b></td><td>Matches the URL, e.g. <code>/admin</code></td><td>Picks the <b>route</b> and its <code>canActivate</code> guard</td></tr>
+<tr><td><b>3. Route guard</b></td><td><code>canActivate</code> runs <b>before</b> the component exists</td><td>Reads the token (and role) from storage / AuthService. No token → login. Guard does <b>not</b> call the interceptor</td></tr>
+<tr><td><b>4. constructor</b></td><td>Angular creates the component and injects services</td><td>DI only. <code>@Input</code> is not set. Do <b>not</b> call HTTP here</td></tr>
+<tr><td><b>5. ngOnInit</b></td><td>Inputs are ready. Screen loads data</td><td>Component calls <code>this.api.list()</code>. That is HttpClient</td></tr>
+<tr><td><b>6. Interceptor</b></td><td>HttpClient pipeline, registered once as <code>HTTP_INTERCEPTORS</code></td><td>Reads the same token, clones the request, sets <code>Authorization: Bearer</code>. On 401, refresh once</td></tr>
+<tr><td><b>7. API</b></td><td>.NET JwtBearer + <code>[Authorize]</code></td><td>The <b>real</b> lock. A hidden Angular route is not security</td></tr>
+<tr><td><b>8. ngOnDestroy</b></td><td>User leaves the screen</td><td>Unsubscribe. Token stays until logout clears storage</td></tr>
+</table>
+<p><b>Simple story:</b> Login writes the token. Opening /admin — the <b>route guard</b> checks it first. The page then starts — <b>constructor</b> (DI), then <b>ngOnInit</b> (HTTP). The <b>interceptor</b> sticks the token on that HTTP call. The API still checks it.</p>
+<p class="step-result"><b>Takeaway:</b> Guard = may I open this route? Interceptor = attach the token to HTTP. ngOnInit = load data. API = real lock. constructor is not for HTTP.</p>
+""",
+            },
+        ],
     ),
     _s(
         "C05",
@@ -220,13 +523,13 @@ export class AuthInterceptor implements HttpInterceptor {
         "Input/Output, service bus, other module, hide data on the route",
         "Draws three paths for one screen they built, including unrelated components",
         ["@Input", "@Output", "Service", "Route state"],
-        "Asked in many sessions. "
-        "Follow-up: pass between <b>modules</b> (users → facility) and hide data in the URL.",
+        "Parent to child = @Input. Child to parent = @Output. Unrelated screens = a shared service. "
+        "Follow-up: how you pass data between <b>modules</b>, and do not put secrets in the URL.",
         [
-            ("@Input", "Parent binds [user]=\"row\" — down the tree."),
-            ("@Output", "Child emits (saved) — up the tree. Do not inject the parent component."),
-            ("Unrelated / other module", "Shared service (providedIn root) + BehaviorSubject. Not a chain of Inputs across lazy modules."),
-            ("Routing", "router.navigate with state, or a resolver. Do not put PII/tokens in query string."),
+            ("@Input", "Parent hands data down — [user]=\"row\"."),
+            ("@Output", "Child shouts up — (saved). Do not inject the parent component."),
+            ("Unrelated / other module", "A shared service (providedIn root) holds the value. Not a chain of Inputs across lazy modules."),
+            ("Routing", "Pass an id in the route or router state. Do not put tokens or personal data in the query string."),
         ],
         "On the editor screen the table passed a row with @Input, the editor emitted saved, and a toast listened to a MessageService. Crossing modules I used that same root service, not the URL.",
         (
@@ -256,12 +559,13 @@ export class SelectionStore {
         "Observable vs Promise, Subject vs BehaviorSubject, parallel APIs, retry",
         "Explains lazy vs eager and when BehaviorSubject is required",
         ["Observable", "Promise", "Subject", "forkJoin"],
-        "Repeated in several sessions. Also: RxJS operators, retry failed requests in interceptor.",
+        "Observable = many values over time (you can cancel). Promise = one value (starts now). Subject = you push the values. "
+        "They also ask retry in the interceptor.",
         [
-            ("Observable", "Lazy, cancelable, 0..N values. HttpClient returns Observable."),
-            ("Promise", "Eager, one value, not cancelable. async/await in Angular can wrap firstValueFrom."),
-            ("Subject vs BehaviorSubject", "Subject: no initial value, late subscribers miss it. BehaviorSubject: holds last value — current user, feature flags."),
-            ("Parallel", "forkJoin([a$, b$]) waits for all. combineLatest if you want latest of each. Interceptor retry only for idempotent GET."),
+            ("Observable", "A stream. Starts when you subscribe. You can unsubscribe (cancel). HttpClient returns this."),
+            ("Promise", "One result, starts immediately, cannot cancel. Use firstValueFrom if you really want async/await."),
+            ("Subject vs BehaviorSubject", "Subject = fire-and-forget; late listeners miss it. BehaviorSubject = remembers the last value (current user)."),
+            ("Parallel", "ForkJoin waits for all HTTP calls. Retry in the interceptor only for GET — not for POST that charges a card."),
         ],
         "HttpClient is Observable so we can cancel on destroy. I use BehaviorSubject for the current user because a late subscriber still needs the last login. Parallel loads use forkJoin. I prefer Observables over Promises for HTTP because of cancel and retry.",
         (
@@ -290,13 +594,13 @@ const user$ = new BehaviorSubject<User | null>(null);""",
         "Highest-frequency .NET drill — they give a scenario and ask which lifetime",
         "Picks Scoped for DbContext and explains captive dependency",
         ["Transient", "Scoped", "Singleton", "Captive"],
-        "Asked in ~20 sessions, often as: after a scenario, which type applies and why the others do not. "
-        "Also: how to configure DI, other IoC containers, Angular DI vs .NET DI.",
+        "Transient = new object every time. Scoped = one per HTTP request (DbContext). Singleton = one for the whole app. "
+        "They give a scenario and ask which lifetime — and why the others are wrong.",
         [
-            ("Transient", "New instance every resolve. Stateless helpers. Not DbContext."),
-            ("Scoped", "One per HTTP request. DbContext, Unit of Work, request user. Default for DataSource."),
-            ("Singleton", "One per process. Cache, settings. Not per-user. Not 'shared across two browsers'."),
-            ("Captive dependency", "Singleton must not inject Scoped DbContext — it would hold the first request's context forever."),
+            ("Transient", "Brand-new instance every resolve. Good for a stateless helper. Not for DbContext."),
+            ("Scoped", "One instance for this HTTP request. DbContext, Unit of Work, current user. Default for DataSource."),
+            ("Singleton", "One object for the whole process. Cache, settings. Not per-user. Not 'shared across two browsers'."),
+            ("Captive dependency", "A Singleton must not hold a Scoped DbContext — it would keep the first request's database context forever."),
         ],
         "We use the built-in container in Program.cs. DbContext and Unit of Work are Scoped so one request, one change-tracker, one transaction. A cache is Singleton. A helper with no state is Transient. I never inject Scoped into Singleton.",
         (
@@ -325,11 +629,12 @@ public OrdersController(IUnitOfWork uow) { _uow = uow; }""",
         "Very frequently asked with 'how in your class' and dynamic polymorphism",
         "Shows a closed class extended by a new implementation, not a growing if/else",
         ["SRP", "OCP", "LSP", "DIP"],
-        "They repeat: class open for extension, closed for modification. Also LSP, DIP, 'have you implemented SOLID in the project'.",
+        "Open/Closed = add a new class, do not keep editing the old if/else. "
+        "They ask 'how in your class' — name the if/else you replaced.",
         [
-            ("OCP", "New channel/type → new class implementing IHandler. Old class stays. That is polymorphism."),
-            ("sealed vs OCP", "sealed stops inheritance. OCP is about not editing working code — usually via interfaces, not sealed."),
-            ("DIP", "Controller depends on IOrderService, not a concrete SQL class. DI supplies the implementation."),
+            ("OCP", "New channel or type → new class behind an interface. The old class stays untouched. That is polymorphism."),
+            ("sealed vs OCP", "Sealed means nobody can inherit. OCP means you do not keep editing working code — usually via interfaces, not sealed."),
+            ("DIP", "Dependency Inversion — the controller asks for IOrderService, not a concrete SQL class. DI hands in the real class."),
             ("Project story", "Name one if/else you replaced with a strategy or a new class."),
         ],
         "Open/Closed: we had if (type==Email) / Sms / Push. I introduced INotifier and one class per channel. New channel is a new class + DI registration. Existing notifiers were not edited.",
@@ -361,13 +666,13 @@ builder.Services.AddTransient<INotifier, SmsNotifier>();
         "Design patterns they expect named from YOUR project",
         "Explains one transaction across three repositories and when UoW is complete",
         ["Repository", "Unit of Work", "Singleton pattern", "Why patterns"],
-        "Very high. Follow-ups: three repository classes insert at once; how you know UoW completed; "
-        "private constructor — how do you new the object; Singleton vs static.",
+        "Repository talks to one table. Unit of Work = one SaveChanges for the whole request. "
+        "Follow-ups: three repositories insert together; private constructor; Singleton vs static.",
         [
-            ("Repository", "One type, data access behind IOrderRepository. Services do not write SQL. Tests mock the interface."),
-            ("Unit of Work", "Same DbContext/transaction for several repos. Complete = SaveChangesAsync succeeds. Dispose/rollback in finally."),
-            ("Three repos", "All injected with the same scoped UoW/context. One SaveChanges. Not three connections and three commits."),
-            ("Singleton pattern", "Private ctor + static Instance, or DI AddSingleton. You do not new from outside. Not shared to the user's browser."),
+            ("Repository", "IOrderRepository hides SQL. The service does not write queries. Tests mock the interface."),
+            ("Unit of Work", "Several repos share one DbContext. Done = SaveChangesAsync succeeds. Fail = nothing commits."),
+            ("Three repos", "All three share the same scoped context. One SaveChanges. Not three connections and three commits."),
+            ("Singleton pattern", "Private constructor + static Instance, or DI AddSingleton. Callers never new. Not shared to the user's browser."),
         ],
         "I used Repository + Unit of Work. Order and OrderLine go through two repos and one SaveChanges. If line insert fails, nothing commits. Singleton in DI is for a memory cache, not for DbContext.",
         (
@@ -401,12 +706,13 @@ public class UnitOfWork : IUnitOfWork
         "Deferred execution and the left outer join they keep asking",
         "Names a double-enumeration or disposed-context bug and writes a GroupJoin",
         ["IQueryable", "IEnumerable", "ToList", "Left join"],
-        "Asked in several sessions. Also: select top 3 with EF.",
+        "IQueryable = SQL still runs on the server. IEnumerable = data is already in memory. "
+        "They also ask a left outer join in LINQ.",
         [
-            ("IQueryable", "Expression tree. EF may translate to SQL. Do not enumerate after Dispose. Count()+foreach = two SQL trips."),
-            ("IEnumerable", "In-memory after materialize. LINQ-to-Objects. Fine on a ToList() result."),
-            ("ToList()", "Force now while the context is open. Safe to reuse for grid + count."),
-            ("Left join", "join into g from x in g.DefaultIfEmpty(). In SQL: LEFT JOIN."),
+            ("IQueryable", "An expression EF can turn into SQL. Do not loop it after Dispose. Count() then foreach = two SQL trips."),
+            ("IEnumerable", "Already in memory. LINQ runs in C#, not in SQL. Fine after ToList()."),
+            ("ToList()", "Run the SQL now, while the context is open. Then you can count and loop the same list."),
+            ("Left join", "Keep the left row even if the right side is missing. LINQ: GroupJoin + DefaultIfEmpty. SQL: LEFT JOIN."),
         ],
         "IQueryable is the SQL-shaped query. I hit a bug enumerating after the context closed — I now ToList in the repository. Left join is GroupJoin plus DefaultIfEmpty.",
         (
@@ -435,12 +741,13 @@ var top3 = await db.Orders.OrderByDescending(o => o.Total).Take(3).ToListAsync()
         "ORM types, Code First vs DB First, run SP from EF, many-to-many",
         "Picks Code First or DB First for their project and shows FromSql / ExecuteSql",
         ["ORM", "Fluent", "SP", "Many-to-many"],
-        "High: 'what is ORM and types', Fluent API, SP from EF, Code First vs DB First, many-to-many table design.",
+        "Fluent API configures tables in code. For a heavy stored procedure, call it — do not hide it. "
+        "They ask ORM types, Code First vs DB First, and many-to-many.",
         [
-            ("ORM", "Maps objects to tables. EF Core is what they expect. Dapper is micro-ORM. ADO.NET is not an ORM."),
-            ("Code First vs DB First", "Code First = migrations own the schema. DB First / scaffold = existing Client1 database. Be honest which you used."),
-            ("Fluent API", "OnModelCreating: keys, indexes, relationships that attributes cannot express cleanly."),
-            ("SP", "FromSqlRaw / ExecuteSqlInterpolated. Map to a type. Do not pretend EF generates every SP."),
+            ("ORM", "Object-Relational Mapper — objects map to tables. They expect EF Core. Dapper is a thin mapper. ADO.NET is not an ORM."),
+            ("Code First vs DB First", "Code First = our C# owns the tables (migrations). DB First = the database already exists and we scaffold. Be honest which you used."),
+            ("Fluent API", "OnModelCreating in code — keys, indexes, relationships that attributes cannot say cleanly."),
+            ("SP", "Stored procedure. Call it with FromSqlRaw / ExecuteSql. Do not pretend EF writes every SP."),
         ],
         "We used EF Core against SQL Server. Relationships in Fluent API. Heavy reports stay in stored procedures called with FromSql. Many-to-many has an explicit join entity so we can store extra columns.",
         (
@@ -475,13 +782,13 @@ var rows = await db.Set<OrderRow>()
         "Pipeline order, custom middleware on some actions, Task vs Thread",
         "Draws in-then-out pipeline and dependent vs parallel async",
         ["Middleware", "Filters", "async", "Task vs Thread"],
-        "Repeated: pipeline order, custom middleware on some actions, nested async. "
-        "Custom middleware for authentication on specific actions — not all requests.",
+        "Middleware is a pipeline (request in, response out). async/await frees the thread while waiting on SQL. "
+        "They also ask custom middleware on some actions only.",
         [
-            ("Pipeline", "Request goes in (exception → auth → routing → endpoint) and out in reverse. Yes, middleware after next() runs on the way back."),
-            ("Custom vs global", "Use() is global. Limit with Map / endpoint metadata / MVC action filters for selected actions."),
-            ("Filter vs middleware", "Middleware does not know the action name unless it reads the endpoint. Filters run in MVC and can see action attributes."),
-            ("async", "await f2() in f1 DOES wait for f2 before the next line. A→B→C dependent = sequential await. Independent = WhenAll. Task ≠ extra OS thread for I/O."),
+            ("Pipeline", "Request goes in (exception → auth → routing → action) and out in reverse. Code after next() runs on the way back."),
+            ("Custom vs global", "Use() hits every request. For some actions only, use an action filter or [Authorize] on that controller."),
+            ("Filter vs middleware", "Middleware does not know the action name unless it looks it up. Filters run inside MVC and can see action attributes."),
+            ("async", "Await f2() in f1 DOES wait for f2. Dependent work = one after another. Independent = WhenAll. Task is not an extra OS thread for I/O."),
         ],
         "Middleware is the onion. Auth JWT is global. A correlation-id middleware is global. Per-action rules I put in an action filter or [Authorize] on the controller. await means the rest of that method continues after the I/O completes — the thread is not blocked on SQL.",
         (
@@ -518,12 +825,13 @@ public async Task<IActionResult> Get()
         "Scenario OOP — not definitions only",
         "Contrasts abstract vs virtual and explains private ctor + sealed",
         ["abstract vs virtual", "base / this", "interface", "sealed"],
-        "Scenario OOP in several sessions — including two interfaces with the same method on one class.",
+        "Abstract = child MUST write the method. virtual = child MAY replace the default. sealed = nobody inherits further. "
+        "They give a scenario — including two interfaces with the same method name.",
         [
-            ("abstract vs virtual", "abstract: no body, derived MUST implement. virtual: default body, derived MAY override."),
-            ("base / this", "base(...) ctor chain; base.Method() call parent. this = current instance (including passing this to another ctor)."),
-            ("Two interfaces, same method", "Explicit interface implementation: IFoo.Do() vs IBar.Do()."),
-            ("sealed / private ctor", "sealed: no subclass. private ctor: only the class (or nested) can new — Singleton/factory."),
+            ("abstract vs virtual", "Abstract has no body — derived MUST implement. virtual has a default — derived MAY override."),
+            ("base / this", "Base() calls the parent constructor. base.Method() calls the parent method. this = this object."),
+            ("Two interfaces, same method", "Implement at least one explicitly — IFoo.Do() vs IBar.Do() — so the caller picks which one."),
+            ("sealed / private ctor", "Sealed = no subclass. private constructor = only this class can new — Singleton or factory."),
         ],
         "I use an abstract Account when every child must implement month_end. virtual when the base has a default. base() to set shared fields. Sealed on helpers we do not want inherited. Private ctor on a Singleton helper.",
         (
@@ -558,12 +866,13 @@ class Dual : IFoo, IBar
         "Isolation level choice + clustered vs nonclustered",
         "Names the isolation they used and one reason clustered is not 'always better'",
         ["Isolation", "Snapshot", "Clustered", "Nonclustered"],
-        "High frequency across sessions: isolation choice plus clustered vs nonclustered.",
+        "Isolation = how dirty a read can be. Index = a lookup book so SQL does not scan the whole table. "
+        "They ask which isolation you used and clustered vs nonclustered.",
         [
-            ("Read Committed", "SQL Server default. Readers block on uncommitted writers (unless RCSI)."),
-            ("Snapshot / RCSI", "Row versions — readers do not block writers. Use when they asked 'how do you reduce blocking'."),
-            ("Clustered", "One per table. Table data stored in that order (often PK). Extra wide clustered key hurts all nonclustered lookups."),
-            ("Nonclustered", "Separate B-tree. Helps WHERE/JOIN. Too many hurt inserts. Index on varchar: possible, watch size and selectivity."),
+            ("Read Committed", "SQL Server default. You do not see someone else's uncommitted write (unless RCSI is on)."),
+            ("Snapshot / RCSI", "Readers use a snapshot copy, so they do not block writers. Say this if they ask how you reduce blocking."),
+            ("Clustered", "One per table. The table itself is stored in that order (often the primary key). A wide clustered key makes every other index heavier."),
+            ("Nonclustered", "A separate lookup tree. Helps WHERE and JOIN. Too many slow down inserts."),
         ],
         "We stayed on Read Committed. For a hot report vs OLTP I would consider RCSI rather than NOLOCK. One clustered index — usually the PK. Filter columns get nonclustered indexes after I look at the actual plan.",
         (
@@ -593,13 +902,13 @@ SET TRANSACTION ISOLATION LEVEL SNAPSHOT;""",
         "They will hand you a long SP or ask how you tune without prod access",
         "Walks a tuning process and temp table vs table variable vs CTE",
         ["Actual plan", "Temp vs TV vs CTE", "Deadlock", "No prod"],
-        "Very common on both core and legacy IIS tracks: optimize SP, debug 1000 lines, deadlock, temp table why. "
-        "Some sessions hand you a long production SP to read line by line.",
+        "A slow stored procedure is usually a scan, a bad join, or a deadlock. Read the plan before rewriting. "
+        "They may hand you a long SP, or ask how you tune with no prod access.",
         [
-            ("Tune process", "Reproduce in lower env → actual plan → stats → parameter sniffing → rewrite RBAR → index. Measure."),
-            ("Temp table", "Writes to tempdb, has statistics — good for large intermediate. Table variable: few rows, no stats. CTE: not stored, can recurse; not a performance magic."),
-            ("Deadlock", "Consistent table order, shorter transactions, snapshot, deadlock retry. After: error 1205, victim rolled back, retry or fix the plan."),
-            ("No prod access", "Logs, staging copy of SP, parameters from the ticket, compare config. They asked this in several sessions."),
+            ("Tune process", "Reproduce in staging → actual plan → statistics → parameter sniffing → rewrite row-by-row → index. Measure."),
+            ("Temp table", "#table in tempdb, has statistics — good for a big intermediate set. Table variable: few rows, no stats. CTE: not stored, not a magic speed-up."),
+            ("Deadlock", "Two sessions grab locks in opposite order and wait forever. SQL kills one (error 1205). Retry or fix the order / plan."),
+            ("No prod access", "Logs, staging copy of the SP, parameters from the ticket. They asked this in several sessions."),
         ],
         "I take the SP and parameters, run with actual plan in staging, look for scans and spills. Big intermediate sets go to a temp table so the optimizer has stats. Deadlocks: I check two procs locking in reverse order. Without prod, I use logs + a masked restore, never guess.",
         (
@@ -634,12 +943,13 @@ END CATCH;""",
         "How many services, how they talk, transactions across services",
         "Explains sync vs async, service token, and one reason for Saga or CQRS",
         ["Sync vs async", "Service token", "Saga", "CQRS"],
-        "2026 rounds go deep. Auth as a separate module. Failed RabbitMQ consumer. 10MB payload.",
+        "Saga = a story of steps with undo if a later step fails. CQRS = one model to write, another to read. "
+        "2026 rounds go deep: auth as its own service, failed queue consumer, 10MB payload.",
         [
-            ("Count + why split", "How many in YOUR project. Auth separate so tokens and users are not copied into every DB."),
-            ("Sync vs async", "HTTP when the caller needs the result now (get order). Queue when work can lag (email, index)."),
-            ("Saga", "No distributed DTC. Orchestration or events + compensating actions if a later step fails."),
-            ("CQRS", "Read model vs write model (they asked 'read DB and write DB'). Only if you had that split."),
+            ("Count + why split", "How many services in YOUR project. Auth is separate so tokens and users are not copied into every database."),
+            ("Sync vs async", "HTTP when the caller needs the answer now (get order). Queue when work can wait (email, search index)."),
+            ("Saga", "No one giant SQL transaction across services. Each step commits locally; if a later step fails, run an undo step."),
+            ("CQRS", "Command Query Responsibility Segregation — write database vs read database. Only if you actually had that split."),
         ],
         "We split APIs by domain. User-facing GET is HTTP. Email and search updates go to a queue. If the consumer fails, the message retries then DLQ — we do not lose it silently. Cross-service 'transaction' is a saga, not a single SQL BEGIN.",
         (
@@ -669,13 +979,13 @@ await _sqs.SendAsync(new OrderPlaced(order.Id, s3Key: $"orders/{order.Id}.json")
         "Purpose of each service you used — 2026 expects hands-on, not a list",
         "Walks one real path: S3 or ECS or Gateway plus how you scale and cut cost",
         ["Gateway/ALB", "ECS/Docker", "S3", "Scale/cost"],
-        "Client note: expecting more AWS hands-on — containers, scale, cost, besides Lambda/Gateway. "
-        "Also ALB, target group, authorizer, CI/CD, ALB vs NLB, Cloud Map.",
+        "Pick one path you built — e.g. Angular on S3, API on ECS behind ALB — and walk it. "
+        "2026 expects hands-on (containers, scale, cost), not a service list.",
         [
-            ("API Gateway / ALB", "Gateway: HTTP API + JWT/IAM authorizer. ALB: L7 to ECS target group. NLB: L4 / static IP."),
-            ("ECS + ECR", "Build image, push ECR, ECS service pulls. Know where the image lives."),
-            ("S3", "Angular static website or user documents. They asked document upload to S3 and why Angular on S3."),
-            ("Scale & cost", "ECS auto-scale on CPU or ALB requests. Workers on SQS depth. Right-size, scale-in, S3 lifecycle. Spiky traffic: don't pay peak 24/7."),
+            ("API Gateway / ALB", "Gateway = HTTP front door + authorizer. ALB = Application Load Balancer, routes HTTP to ECS. NLB = Network Load Balancer, TCP / static IP."),
+            ("ECS + ECR", "ECR = Elastic Container Registry (where the Docker image lives). ECS = Elastic Container Service (runs the containers)."),
+            ("S3", "Simple Storage Service — Angular static files or user documents. They asked upload to S3 and why Angular sits on S3."),
+            ("Scale & cost", "Add ECS tasks when CPU or queue depth rises; scale in at night. Do not pay peak 24/7."),
         ],
         "If I used it: APIs on ECS behind an ALB, images in ECR, Angular on S3, JWT on the API. Scale the ECS service on CPU. Cost: scale-in at night, don't leave extra NAT/ALB, cache GETs.",
         (
@@ -704,12 +1014,13 @@ await _sqs.SendAsync(new OrderPlaced(order.Id, s3Key: $"orders/{order.Id}.json")
         "Repeated four: delay, PR conflict, priorities, AI assistant",
         "Answers delay before the date slips and does not rubber-stamp a bad PR",
         ["Delay", "PR", "Priority", "AI"],
-        "Same scenarios in several 2026 sessions. Plus schema-on-the-spot (orders, ads, school, files).",
+        "Delay, PR conflict, AI code review — tell what you did, not a slogan. "
+        "Same four scenarios in several 2026 sessions, plus a schema sketch.",
         [
-            ("Delay", "As soon as the risk is real: impact, options (scope/date/help), new date. Never silent until the deadline."),
-            ("PR conflict", "Security/data bugs: do not approve. Style: point to the team standard, don't block forever. Escalate with facts."),
-            ("Priorities", "One ranking from the stakeholder. Write down what slips. Don't silently juggle three 'number ones'."),
-            ("AI", "Name a tool you used. You still review tests, secrets, and licences. Prompt with existing patterns and acceptance criteria."),
+            ("Delay", "As soon as the risk is real, say impact + options (scope / date / help) + a new date. Never stay silent until the deadline."),
+            ("PR conflict", "Security or data bugs — do not approve. Style — point to the team standard. Escalate with facts."),
+            ("Priorities", "One ranking from the stakeholder. Write down what slips. Do not silently juggle three 'number ones'."),
+            ("AI", "Name a tool you used. You still review tests, secrets, and licences. Prompt with existing patterns."),
         ],
         "If I will miss a date I tell my manager the same day with options. I will not approve a PR that breaks auth or data. For AI I use it to draft tests and boilerplate, then I run the suite and read the diff.",
         (
@@ -740,12 +1051,13 @@ await _sqs.SendAsync(new OrderPlaced(order.Id, s3Key: $"orders/{order.Id}.json")
         "Second flavour: manual IIS, WebForms, SP walkthrough, prod RCA without access",
         "Explains app pool vs iisreset and a no-prod-access RCA path",
         ["IIS", "WebForms", "RCA", "ADO vs EF"],
-        "Legacy IIS panel. Client note: hands-on ASP.NET, manual deploy, SQL, prod issues.",
+        "Legacy IIS track still asks iisreset, postback, and cookies. Same JWT questions on top. "
+        "Client note: hands-on ASP.NET, manual deploy, SQL, prod issues.",
         [
-            ("iisreset vs recycle", "iisreset restarts ALL sites/services on the box. App pool recycle restarts one pool — preferred."),
-            ("WebForms", "Postback, ViewState, cookies vs session, page lifecycle, Server.Transfer vs redirect, partial view."),
-            ("RCA no prod", "IIS logs, app logs, Event Viewer, staging SP, config transform. Reproduce with the ticket parameters."),
-            ("ADO vs EF", "They ask preference. ADO/Dapper for heavy SPs and TVPs; EF for CRUD. Be ready to read a 100-line SP out loud."),
+            ("iisreset vs recycle", "Iisreset restarts ALL sites on the box. App pool recycle restarts one pool — that is what you want."),
+            ("WebForms", "Postback, ViewState, cookies vs session, page lifecycle, Server.Transfer vs redirect."),
+            ("RCA no prod", "Root Cause Analysis without prod access — IIS logs, app logs, Event Viewer, staging SP, ticket parameters."),
+            ("ADO vs EF", "ADO/Dapper for heavy stored procedures; EF for CRUD. Be ready to read a 100-line SP out loud."),
         ],
         "On the legacy IIS track I expect IIS: one app pool per site, recycle not iisreset, logs + Event Viewer. If I cannot access prod I reproduce in staging with the same SP and parameters from the incident.",
         (
@@ -773,12 +1085,13 @@ await _sqs.SendAsync(new OrderPlaced(order.Id, s3Key: $"orders/{order.Id}.json")
         "The repeats to rehearse out loud the night before",
         "Hits JWT, interceptor, DI scenario, OCP, UoW, isolation, and AWS in under three minutes",
         ["Must-win", "Do not volunteer", "Self-rating", "Company"],
-        "Use this slide as a dry run. Green comments are the answer keys.",
+        "60-second drills — architecture, JWT, DI, OCP, one AWS path. Stop talking when they interrupt. "
+        "Green comments are the answer keys.",
         [
-            ("Must-win", "Architecture, JWT+refresh, interceptor+storage, DI lifetimes, OCP, UoW, IQueryable, isolation, SP tune, microservices talk, one AWS path."),
-            ("Do not volunteer", "Neo4J, Kafka, K8s, WCF, Vue — unless it was really yours."),
-            ("Guards", "Always add: API still authorizes."),
-            ("Client1", "Know one sentence if they ask what Client1 does (business and products)."),
+            ("Must-win", "Architecture, JWT+refresh, interceptor, DI lifetimes, OCP, Unit of Work, IQueryable, isolation, SP tune, one AWS path."),
+            ("Do not volunteer", "Neo4J, Kafka, Kubernetes, WCF, Vue — unless it was really yours."),
+            ("Guards", "Always add — the API still authorizes. A hidden Angular route is not security."),
+            ("Client1", "One sentence if they ask what Client1 does (business and products)."),
         ],
         "I can walk architecture, JWT interceptor, Scoped DbContext, OCP with a new class, one SQL plan I fixed, and one AWS path. I will not name a tool I cannot implement.",
         (

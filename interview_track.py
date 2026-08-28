@@ -6,6 +6,7 @@ Mirrors Dotnet/dotnet_assemble.py without MyDotnet.md.
 from __future__ import annotations
 
 import html
+import re
 from typing import Any, Callable
 
 from slide_code import code
@@ -154,7 +155,7 @@ def _learn_html(s: dict[str, Any], *, pdf_href: str) -> str:
         _title, bad, good = mistake
         parts.append(
             f"<h3>{i}. {_esc(label)} — full example</h3>"
-            f"<p><b>What it means:</b> {detail}</p>"
+            f"<p>{detail}</p>"
             + _before_after(_esc_pre(bad), _esc_pre(good))
             + (
                 f'<p class="step-result"><b>Takeaway:</b> {_esc(label)} — '
@@ -179,6 +180,17 @@ def _practice_html(items: list[str], skill_id: str, *, pdf_href: str) -> str:
 """
 
 
+def _renumber_steps(steps: list[dict]) -> list[dict]:
+    out = []
+    for i, step in enumerate(steps, 1):
+        title = step.get("title") or f"Step {i}"
+        title = re.sub(r"^Step\s+\d+\s*[—–-]\s*", f"Step {i} — ", title, count=1)
+        if not re.match(r"^Step\s+\d+", title):
+            title = f"Step {i} — {title}"
+        out.append({**step, "title": title})
+    return out
+
+
 def _beginner_for(s: dict[str, Any]) -> dict:
     steps = list(s.get("steps") or [])
     if not steps:
@@ -196,13 +208,16 @@ def _beginner_for(s: dict[str, Any]) -> dict:
         for i, ((label, detail), mistake) in enumerate(zip(concepts[:4], mistakes[:4]), 1):
             _t, bad, good = mistake
             body = (
-                f"<p><b>What it means:</b> {detail}</p>"
+                f"<p>{detail}</p>"
                 + _before_after(_esc_pre(bad), _esc_pre(good))
                 + f'<p class="step-result"><b>Takeaway:</b> {_esc(label)} — pair definition with Before → After.</p>'
             )
             steps.append({"title": f"Step {i} — {label} (before/after)", "body": body})
         if not steps:
             steps = [{"title": f"Step 1 — What {s['id']} is about", "body": f"<p>{s['def_intro']}</p>"}]
+    steps = list(s.get("prepend_steps") or []) + steps
+    steps.extend(s.get("extra_steps") or [])
+    steps = _renumber_steps(steps)
     qa = s.get("interview_qa") or [
         {"q": f"Explain {s['title']} for an interviewer.", "a": s["interview"]},
         {"q": "What does interview-ready look like for this skill?", "a": _esc(s["level3"])},
