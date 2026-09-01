@@ -1,0 +1,545 @@
+[00:00:00] Can you hear me now?
+[00:00:04] Yes, fine.
+[00:00:06] Thanks for that.
+[00:00:08] I want you to go ahead with your intro.
+[00:00:12] At last you could focus on your technical expertise.
+[00:00:16] Hi, Sarnia. This is Sankita.
+[00:00:20] I am having around 8 plus years of experience as a .NET developer.
+[00:00:24] I have been worked into many platforms like .NET Co,
+[00:00:28] MVC, and then the back end is SQL.
+[00:00:32] Also I have been worked on with the VB.NET view
+[00:00:36] with the TypeScript. Also I have worked on
+[00:00:40] with the Angular. For deployment purpose
+[00:00:44] I have worked with Azure Services.
+[00:00:48] My current project is with
+[00:00:52] the TheraOffice application. This application
+[00:00:56] supports therapy monitoring where the front end
+[00:01:00] which we used is a view with the TypeScript.
+[00:01:04] We worked on the windows application.
+[00:01:08] Whereas for the web application we have worked with the VB.NET.
+[00:01:12] I have also worked on API migration from .NET framework
+[00:01:16] to .NET code.
+[00:01:20] SQL is a database which we used.
+[00:01:24] The other project is with SkyTech which is for the
+[00:01:28] inspection service purpose. This has both
+[00:01:32] mobile application and the web application. Mobile application
+[00:01:36] is with Xamarin whereas the web application is with
+[00:01:40] .NET and Angular front end. .NET core, API sync
+[00:01:44] with mobile and the web application. For
+[00:01:48] mobile database we have used SQLite.
+[00:01:52] Yeah, that's all.
+[00:01:56] Thanks for that.
+[00:02:00] I want to understand what was the reason design work
+[00:02:04] that was done from your site. If anybody put it in the script.
+[00:02:08] You are asking about the design principles
+[00:02:12] or? It's about your design
+[00:02:16] works. If anything done from your site comes
+[00:02:20] to be a component or design, the back end
+[00:02:24] could be anything. But if it is purely done from your site
+[00:02:28] it could be operated. Why was that design created and what was the reason?
+[00:02:36] If a new API has to be designed
+[00:02:40] I will check the database details
+[00:02:44] and then the database tables.
+[00:02:48] I need to create a new table and I will check that. Was there any
+[00:02:52] design work done from your site recently in any of your project?
+[00:02:56] Yeah.
+[00:03:00] For one of the project
+[00:03:04] for migration purpose
+[00:03:08] there was an issue in the API.
+[00:03:12] That was the payment API. Previously it was like
+[00:03:16] it was using WCF.
+[00:03:20] While migration error came
+[00:03:24] there was some error.
+[00:03:28] I have done a small POC for that
+[00:03:32] and found out it's a DLL issue.
+[00:03:36] So yeah.
+[00:03:40] So that was
+[00:03:44] correcting an issue.
+[00:03:48] It was an existing issue.
+[00:03:52] But this is about a specific design.
+[00:03:56] Maybe if you would have not done such an activity
+[00:04:00] I can go ahead with the straight forward technical questions.
+[00:04:04] Consider that you have to create a microservice from scratch
+[00:04:08] and you are just trying to integrate it with the entity framework.
+[00:04:12] So I will use the support first approach.
+[00:04:16] Code first approach.
+[00:04:20] Okay.
+[00:04:24] Since the database is not there
+[00:04:28] we can create entities
+[00:04:32] and we can apply the migration.
+[00:04:36] Okay.
+[00:04:40] How would you apply migration?
+[00:04:44] What is it?
+[00:04:48] How would you apply migration?
+[00:04:52] We need that entity to the TV changes.
+[00:04:56] Generally we will create a script first
+[00:05:00] like .NETEF
+[00:05:04] and add migration
+[00:05:08] DB update.
+[00:05:12] The entity framework.
+[00:05:16] Consider that you have the schema.
+[00:05:20] And there is a schema change again. What would be the script change that you would take to DB?
+[00:05:24] Consider like
+[00:05:28] Go ahead.
+[00:05:32] Consider there is a customer table.
+[00:05:36] We need to add a new column
+[00:05:40] like address or something.
+[00:05:44] I will add a new field stream
+[00:05:48] get set
+[00:05:52] then say the file
+[00:05:56] add migration.
+[00:06:00] Then update migration.
+[00:06:04] It will run the migration.
+[00:06:08] Is it a write approach to work experience on that?
+[00:06:12] If it is a new field we can go for this.
+[00:06:16] How would you create the script file?
+[00:06:20] What is the script that you generate?
+[00:06:24] There are many in the form of a script.
+[00:06:28] What is the write form that you choose to create?
+[00:06:32] Entity migration
+[00:06:36] will create a snapshot
+[00:06:40] as well as the particular migration details.
+[00:06:44] There will be up and down method.
+[00:06:48] Up method will have the
+[00:06:52] contains new changes and in
+[00:06:56] down method for any ideas.
+[00:07:00] Consider
+[00:07:04] that in Microsoft.
+[00:07:08] You need to implement a custom middleware.
+[00:07:12] What are all the potential logics that you think about
+[00:07:16] in custom middleware?
+[00:07:20] First one is authorization.
+[00:07:24] Logging, caching
+[00:07:28] and then
+[00:07:32] Agree to apply
+[00:07:36] this log log in mechanisms and middleware.
+[00:07:40] Why it is custom middleware?
+[00:07:44] All the A.B.A. request
+[00:07:48] goes via the middleware.
+[00:07:52] We can have that.
+[00:07:56] Custom middleware can be processed for a few of the actions
+[00:08:00] instead of having it for the entire country.
+[00:08:04] Is it even possible?
+[00:08:08] How would you do that?
+[00:08:12] For the caching we can use
+[00:08:16] frequently used values.
+[00:08:26] Consider that you are trying to
+[00:08:30] set up the lifetime of the Microsoft.
+[00:08:34] Your job is to connect with the SQL.
+[00:08:38] For the SQL connection you have already provided
+[00:08:42] created and it is ready. Now your job is to make
+[00:08:46] a connection. How would you apply that?
+[00:08:50] Where do you apply that?
+[00:08:54] For creating the database object
+[00:08:58] there are three types of dependency injection
+[00:09:02] because we can use a transient one.
+[00:09:06] It will close the connection immediately.
+[00:09:10] Rather than going for the scoped one
+[00:09:14] we can use transient.
+[00:09:18] What is the advantage of transient?
+[00:09:22] It is not a good thing to do.
+[00:09:26] If the connection has kept open for some users
+[00:09:30] we are trying the same.
+[00:09:34] We will keep using the other one.
+[00:09:38] We need to analyze that approach.
+[00:09:42] Based upon the scenarios
+[00:09:46] we need to come out with the best one.
+[00:09:50] What is the best one?
+[00:09:54] Consider that there are 500 concurrent users.
+[00:09:58] If there are 500 connections
+[00:10:02] it will affect the database performance.
+[00:10:06] What is the life time you are still sticking with the transient?
+[00:10:10] Because it will close the connection automatically.
+[00:10:14] What is the life time you are still sticking with the transient?
+[00:10:18] On the other side
+[00:10:22] it will close the connection.
+[00:10:26] Throughout the application API
+[00:10:30] it will close the connection.
+[00:10:34] We need to find the lighter...
+[00:10:38] But for every request if you want to make this way
+[00:10:42] it will open the connection in between
+[00:10:46] in and try for some data and then like again looking for another table looking something
+[00:10:52] else.
+[00:10:53] Okay, the logic could be anything in between could open and close the connection for a
+[00:10:58] single request itself.
+[00:11:00] But the transient what you are speaking about is something get open with the request level
+[00:11:09] then it could be closed automatically, isn't it?
+[00:11:12] Is it even applicable for the C equals scenario?
+[00:11:15] It depends upon the scenario.
+[00:11:22] Consider like, consider you have a number of a store pro hooker created, okay?
+[00:11:30] So every store pro whenever you connect with a store pro you open the connection and close
+[00:11:34] the connection at the end, isn't it?
+[00:11:36] So consider that there are multiple logic like that being now integrated into a one
+[00:11:42] single API and there is a user call, okay?
+[00:11:46] So as soon as there is a user call like the request has been involved and the transient
+[00:11:51] what it is like first time it looks for something and that would get auto closed.
+[00:11:58] But is it even a right approach for the sequel?
+[00:12:04] Like no, it's not.
+[00:12:06] We can use the scoped one.
+[00:12:10] So we can maintain the connection option.
+[00:12:16] Why scoped one?
+[00:12:17] What it does?
+[00:12:18] What is the difference between the scoped and transient?
+[00:12:21] Why do you call for it?
+[00:12:24] So through one API call consider like we have the business layer.
+[00:12:30] So it is the database layer.
+[00:12:36] The database object is created and that will be reused.
+[00:12:43] We use like cross multiple calls in particular business layer.
+[00:12:49] But could you please read yourself and see if I'm able to find?
+[00:12:56] Four.
+[00:12:57] Okay, which means I've got an average, right?
+[00:13:02] So I want you to just look at this in a few.
+[00:13:06] See you're asked to develop one of the page in the e-commerce site.
+[00:13:12] What that page does is, you know, that as soon as there is a user login like the user
+[00:13:18] try to see some advertisement related to the previous search.
+[00:13:22] For example, if Sangita is logging in and she had a lot of books being searched early,
+[00:13:30] then there would be a kind of a book advertisement being displayed in the dashboard page.
+[00:13:37] So in order to bring this data into the screen, like what would be your SQL table that you
+[00:13:44] are in need of and also one single select query that help us to bring the data set out.
+[00:13:50] So basically like you think about the signal you like what are all the basic tables that
+[00:13:54] you've made and how you wanted to make a relationship between the other tables.
+[00:14:00] I want you to just share the screen and open a note pad so that you can just tell me one by one.
+[00:14:15] Note pad, right?
+[00:14:19] It's just note pad will be enough.
+[00:14:29] You want to share my screen?
+[00:14:34] Yeah, I want you to share your screen.
+[00:14:48] So this question applies to understand your both SQL skill and also like your designing capacity.
+[00:14:56] So accordingly you can design your table.
+[00:14:59] Like you can go with very simple approach and you could accommodate it a very complex
+[00:15:04] enhancement approach where you like anything could be accommodated in the future.
+[00:15:09] Consider that today advertisement is just a video.
+[00:15:13] Okay, going forward it could be multiple video file like a streaming file or anything.
+[00:15:20] Today it could be a image but tomorrow it could be a sliding images, right?
+[00:15:27] Multiple images with it will be shown in the slide or styling.
+[00:15:33] So thinking about all this like you could design your tables so that it could accommodate the other factors.
+[00:15:44] Can you able to see my screen?
+[00:15:47] Yes, I can.
+[00:15:52] But this is just a team's screen as what I'm seeing.
+[00:15:57] I want you to completely share your screen.
+[00:15:59] Okay.
+[00:16:00] No heat and wages.
+[00:16:02] This is a work that we are trying to demonstrate at the time of interviews, right?
+[00:16:11] Okay.
+[00:16:12] So you need to showcase everything here.
+[00:16:17] Because you're like I'll be creating two tables.
+[00:16:27] Focus on just primary informing for you.
+[00:16:30] This is the table.
+[00:16:31] That's enough.
+[00:16:32] Okay.
+[00:16:33] This will be the primary table.
+[00:16:37] It's about keys, primary keys and foreign keys.
+[00:16:41] You can go ahead with the N number of tables which are required for the scenario.
+[00:16:51] Consider it, you know, Sangeeta had already a previous product search or something due to which like you could able to understand what could be the potential advertisement that can get displayed.
+[00:17:02] Okay.
+[00:17:03] But for Saranya, she's just a first time user.
+[00:17:06] She don't have such history.
+[00:17:08] Okay.
+[00:17:09] In that case, like something else that you need to display on the screen based on her customer data.
+[00:17:18] Okay.
+[00:17:19] It could be age, it could be a gender, it could be anything.
+[00:17:23] But the related data, whatever the advertisement is available with you, that you need to bring.
+[00:17:39] So there will be a customer table.
+[00:17:52] And then the book table.
+[00:18:09] So, ID is the primary key and all that you do.
+[00:18:39] So, this is the design.
+[00:18:53] So, the book and the images table.
+[00:18:56] So, the image table will have the image name, image URL.
+[00:19:11] Based upon the logged in user, I will join these two tables, the book table.
+[00:19:26] And the image table.
+[00:19:28] So, and I will get the image from the image URL.
+[00:19:46] See, book table, that was just an example, right?
+[00:19:51] Have you heard about the B-Commerce site that it's completely driven for the product what they said, isn't it?
+[00:20:00] The product is, this book product has one such, it could be 90, like millions or billions, isn't it?
+[00:20:09] Yeah.
+[00:20:10] So, you cannot directly driven with the product as a table.
+[00:20:14] Okay.
+[00:20:15] Yeah.
+[00:20:16] I thought that book has been mentioned.
+[00:20:19] Sorry.
+[00:20:24] So, you are allowed to ask any questions because this is a design work.
+[00:20:28] Okay.
+[00:20:29] Without even getting clarity, getting started off with the work is not the right approach.
+[00:20:34] Yeah, fine.
+[00:20:40] This is it, like three tables.
+[00:20:43] So, it's a customer product and images.
+[00:20:47] Okay, I get that.
+[00:20:48] But how do you have the foreign key relationship with the image, right?
+[00:20:54] Like for every product, they would be an image.
+[00:20:58] That's what you mean.
+[00:21:00] But image, it represents the product image.
+[00:21:05] What about the advertisement?
+[00:21:07] See, if it is advertisement, it would represent multi-other, you know, model of the product.
+[00:21:14] For example, you might be looking for the IT related, a book study.
+[00:21:21] Tomorrow, it could be fashion.
+[00:21:23] Okay.
+[00:21:24] But the advertisement cannot be the same for everything, isn't it?
+[00:21:28] So, you should be having some relationship with the advertisement table and the product.
+[00:21:37] Okay.
+[00:21:45] For signing, I want you to have a one single Senate query to just have the right data set up.
+[00:21:52] Okay.
+[00:22:07] Okay.
+[00:22:37] Okay.
+[00:22:50] So, do you want the product ID to be the part of the advertisement?
+[00:22:55] Or we need images also.
+[00:22:58] Yeah.
+[00:22:59] I can give some links, but I cannot direct the solutions, right?
+[00:23:06] I just give you a hint that definitely there should be a connection between the product and advertisement.
+[00:23:13] Okay.
+[00:23:14] That's for the max that I can give us a hint.
+[00:23:16] This is your design.
+[00:23:17] Okay.
+[00:23:18] I just wanted to see like how you are designing.
+[00:23:21] Okay.
+[00:23:35] See, based on your experience, you can design simply.
+[00:23:39] That's absolutely fine.
+[00:23:40] But some sort of identity would be there to fetch the advertisement, right?
+[00:23:45] That's what I'm looking for.
+[00:23:47] Okay.
+[00:23:51] Okay.
+[00:24:21] Okay.
+[00:24:51] Okay.
+[00:25:21] Okay.
+[00:25:51] Okay.
+[00:26:21] Okay.
+[00:26:51] Okay.
+[00:27:21] Okay.
+[00:27:33] Okay.
+[00:27:42] Okay.
+[00:27:45] Okay.
+[00:27:47] So there are like I can write the query in two ways.
+[00:27:58] This one will return the joint result for each multiple rows.
+[00:28:13] Why do I just like left auto join?
+[00:28:36] What is the purpose of using left auto?
+[00:28:44] Some product will not have images.
+[00:28:48] Yes of course but it takes the other unmatched items also right.
+[00:28:54] The matching one, the not matching one together or just you are just intercepting the inner
+[00:29:02] joints and taking the outer portion of it.
+[00:29:05] How does it work?
+[00:29:10] In general joints like it uses non clustered index.
+[00:29:19] So look up information generally in SQL like the clustered index which is the primary key.
+[00:29:33] So which is stored in the binary tree format and for the non clustered index it's like
+[00:29:47] there can be only one for the non clustered index.
+[00:29:54] Generally in tables if there is a left join I understand that it is also considering the
+[00:30:02] null values and taking the left tables and things like that.
+[00:30:09] But outer that's where the question do you really ever like how it works or is it even
+[00:30:16] the right approach for this?
+[00:30:17] Sorry sorry sorry.
+[00:30:18] Okay inner join.
+[00:30:19] Okay.
+[00:30:20] Okay.
+[00:30:21] But I see one thing like you have a simple design the one to unmapping between the advertisement
+[00:30:39] image and the product okay.
+[00:30:41] I understand that it's a simple but there is no chance of understanding that what was
+[00:30:47] your users preference for example whether she's interested of seeing the books or coolers
+[00:30:54] or dresses the product could be anything.
+[00:30:57] Ascended but that you can get based on the activities of users but you're not getting
+[00:31:03] any such data here.
+[00:31:05] Then for example like what about the product getting selected that advertisement is what
+[00:31:13] coming up but likewise you are selecting more for the you know advertisement this particular
+[00:31:21] select query right will bring all the product which has advertisement and don't have advertisement
+[00:31:29] categories everything together.
+[00:32:01] So productivity is a primary key right.
+[00:32:18] Yeah.
+[00:32:19] So when you group okay maybe like that's the foreign key here and the advertisement.
+[00:32:26] Again when you're grouping that advertisement related product ID which means that one product
+[00:32:33] could have a number of advertisement only then it would get you know grouped and we'll also
+[00:32:41] have like you're checking like having count is greater than one which means like whichever
+[00:32:48] product is having more than one advertisement it brings everything out as a result set.
+[00:32:56] But yours is a dashboard screen where some get along soon as to see only one advertisement
+[00:33:01] that is related to some get us activity we captured early.
+[00:33:06] Okay.
+[00:33:07] I'm sorry to interrupt us.
+[00:33:28] Okay.
+[00:33:29] So we have many other stats to focus.
+[00:33:32] So we'll move on.
+[00:33:34] Okay.
+[00:33:35] Consider that you know the same scenario like in which some you know store folks or the
+[00:33:42] written queries or functionality being went into an issue and you do which like there
+[00:33:47] is a db failure connection failure.
+[00:33:50] It's not just a connection like it couldn't be to process the data like the connection
+[00:33:57] after that it did not get closed somewhere like SQL deadlock and few others in that you
+[00:34:05] started to show up.
+[00:34:07] Okay.
+[00:34:08] So if this is a key is like what would be the potential fix that you would get assigned.
+[00:34:16] So we can use the isolation isolation database level.
+[00:34:22] So like read and commit the data or read and commit the data.
+[00:34:35] But that would have already been a plan in the early making right now the issue had happened.
+[00:34:41] You need to fix it on fine.
+[00:34:44] What would be the fix that you chose?
+[00:34:47] I'll be doing two fixes.
+[00:34:49] So one is we need to check the database logs.
+[00:34:58] So the database SQL profiler.
+[00:35:06] Okay.
+[00:35:07] If it is a deadlock SQL deadlock, what would be your fix?
+[00:35:11] Yeah.
+[00:35:14] So the fix will be like if there are multiple update statement, we will be doing it orderly.
+[00:35:24] Constantly like there is a customer and payment deal.
+[00:35:31] This is a secondary or deadlock and it already happened.
+[00:35:34] You need to deal with the deadlock first.
+[00:35:36] Otherwise it is like a infinite drive.
+[00:35:41] Yeah.
+[00:35:42] So there is a command like a dv deadlock command.
+[00:35:50] So the SQL admin will add that.
+[00:35:57] So they can pre-order the deadlock.
+[00:36:01] Yeah.
+[00:36:02] Moving on.
+[00:36:03] See in Angular, what are the ways of data sharing available between the components?
+[00:36:10] What are the ways?
+[00:36:12] Yeah.
+[00:36:13] There are four ways like input output and then RxJS and router variables.
+[00:36:34] So for three, what are the fourth ones?
+[00:36:41] Can it be?
+[00:36:44] No.
+[00:36:45] Import is a separate and output is separate because I have been talking about four items.
+[00:36:50] Yeah.
+[00:36:52] I was looking for the fourth one.
+[00:36:54] Yeah.
+[00:36:55] Okay.
+[00:36:56] That is it.
+[00:36:57] You do not have any other option to pass data.
+[00:37:04] Okay.
+[00:37:06] Consider that you need to work on the file download.
+[00:37:10] Okay.
+[00:37:11] For applying multiple file upload, you need to choose one from the promise or absorb.
+[00:37:18] But like what would be the one you chose?
+[00:37:23] For the file upload protocol, right?
+[00:37:26] Download.
+[00:37:27] Download.
+[00:37:28] Okay.
+[00:37:29] File download, it's like...
+[00:37:34] Is it like images or it's a screen?
+[00:37:40] The file could be any time.
+[00:37:41] Okay.
+[00:37:42] But your job is to just download the file.
+[00:37:44] It could be somewhere in the server.
+[00:37:47] You have to just download it.
+[00:37:49] But it is like multi-download.
+[00:37:53] Okay.
+[00:37:54] Multi-download.
+[00:37:56] So generally I will be using HTTP or JRPC.
+[00:38:07] If it is a S3 bucket, we can download it.
+[00:38:15] The S3 bucket is the storage where you just store your raw data.
+[00:38:20] Right?
+[00:38:21] That you can download via having an endpoint created somewhere or if it is a URL created
+[00:38:30] from S3 bucket like you just store that in the DP.
+[00:38:33] It's not about that.
+[00:38:35] It's about angular portion of the work where you need to apply multi-download concept.
+[00:38:41] There is a multi-other third party libraries which could help you.
+[00:38:47] Are you able to remember any?
+[00:38:50] Yes.
+[00:38:53] I can use Async-RWITE.
+[00:38:57] It is an Ivo operation.
+[00:39:01] But that you cannot apply in Angular, right?
+[00:39:06] In Angular what you would be doing?
+[00:39:08] Is it Async-RWITE?
+[00:39:10] In the Angular we can use FORJOYN.
+[00:39:14] FORJOYN.
+[00:39:21] Will it apply in terms of integrating an API?
+[00:39:25] Because these are like going to come from somewhere, isn't it?
+[00:39:31] Or you can have CTN endpoint as an example.
+[00:39:35] You can explain how does it work.
+[00:39:39] Consider like if there is an image,
+[00:39:47] one of the copies will be stored in the CDN,
+[00:39:52] near to the user.
+[00:39:57] So this will be faster.
+[00:39:59] So in our case it's like...
+[00:40:04] Consider you have five different images stored in CDN
+[00:40:07] and you need to download it.
+[00:40:09] All at that time.
+[00:40:11] Means you will be clicking on...
+[00:40:13] There will be multiple checkbox.
+[00:40:15] As soon as you check few, the number could be five you consider for now.
+[00:40:20] And you just click on download but all five has to be started in the parallel.
+[00:40:27] Consider you have a big size image or a video file or something.
+[00:40:33] How would you manage that?
+[00:40:35] You should be having a flawless experience on the user front.
+[00:40:44] You able to hear me?
+[00:40:46] Yeah, if it is...
+[00:40:48] You can think about like you are the developer, how would you...
+[00:40:52] I hear that you are like...
+[00:40:54] That's a cloud platform.
+[00:40:56] But your job is on the...
+[00:41:03] Is it?
+[00:41:04] There are many approaches available today.
+[00:41:08] I won't anyone from your side that how we achieve.
+[00:41:23] Just thinking.
+[00:41:30] What can we use for joint?
+[00:41:35] Observers.
+[00:41:39] That's what the initial question, right?
+[00:41:41] I was asking you to choose problems as an observer.
+[00:41:44] So far you have never included an observer.
+[00:41:47] You have never included an observer.
+[00:41:52] What is the latest version of Angular you are using today?
+[00:41:56] 14.
+[00:41:58] 14 or 16.
+[00:42:04] Is it 16?
+[00:42:06] Yeah, in 16 we have the flexibility of operating this.
+[00:42:11] I am working on the 16.
+[00:42:14] I was considering that there is an API integration that...
+[00:42:21] Sorry, I think here you probably was breaking in between.
+[00:42:24] I have worked on the 16.
+[00:42:26] Angular 16.
+[00:42:28] The latest one is the 20.
+[00:42:34] So the question is on EI.
+[00:42:37] If you are asked to work with the EI coding agent,
+[00:42:42] what would be the one that you would use?
+[00:42:47] I will...
+[00:42:50] Kiro and Co-Pilot.
+[00:42:53] And the model will be the OPUS for analysis.
+[00:42:57] And then for coding, it's a...
+[00:43:00] I can use the plot GPT...
+[00:43:05] The model.
+[00:43:06] Okay, if any EI related PUC done from your side, you could explain me.
+[00:43:13] Okay.
+[00:43:16] I have used Azure Document Intelligence.
+[00:43:19] So like...
+[00:43:21] In our case, it's like...
+[00:43:24] For the mobile applications...
+[00:43:28] We have trained the images.
+[00:43:30] And then the...
+[00:43:32] Images to find the 40...
+[00:43:37] Like flows.
+[00:43:39] 40 flows.
+[00:43:40] And I will get that to your level.
+[00:43:45] Like 80% 90%.
+[00:43:51] And also copying the models from Dave to QA.
+[00:43:57] And to the production.
+[00:44:01] Models.
+[00:44:03] How come you copy the models?
+[00:44:06] What are the ways?
+[00:44:11] Like while...
+[00:44:13] While training...
+[00:44:18] It will create the file and its metadata.
+[00:44:23] We can use the file and the metadata...
+[00:44:27] To create the models.
+[00:44:29] Or to copy the model.
+[00:44:33] We need to use a particular model ID.
+[00:44:37] And we can directly copy to the other environment.
+[00:44:42] In the case of Azure Document Intelligence.
+[00:44:49] Okay, Bharat.
+[00:44:51] Thanks for your time, Asanita.
+[00:44:53] Like I've done with my session.
+[00:44:55] Do you have any questions to ask me?
+[00:44:57] Yeah, fine.
+[00:45:00] What will be the project framework or model?
+[00:45:06] So here we have both like legacy applications
+[00:45:09] and the borderized application as well.
+[00:45:12] Based on the business scenario, like we wrote somewhat.
+[00:45:16] But the opportunity is always be there.
+[00:45:19] In modernized programs, like all the APA level of migration
+[00:45:23] being done into a microservices,
+[00:45:26] like it's kind of a proper APA, what do we have with the legacy?
+[00:45:29] And the legacy application, which is where the actual core business is learning today.
+[00:45:34] Like we have a lot of EI implementation well done
+[00:45:38] for the project and also like we are looking for the, you know,
+[00:45:43] PBOC's to be done from the developer front.
+[00:45:46] And yeah, these roles are something like,
+[00:45:49] we'll excite you for sure.
+[00:45:51] Yeah, okay.
+[00:45:54] Asanita, I'll be sharing my...
+[00:45:56] Yeah, I'll be sharing my feedback with HR.
+[00:45:58] They'll be getting back to you.
+[00:46:00] Sure.
+[00:46:01] Yeah, okay.
+[00:46:02] All the best for your career, Asanita.
+[00:46:04] Thank you.

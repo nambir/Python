@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sangeetha interview — what you said vs right answer</title>
+<style>
+:root {
+  --ink: #0f172a;
+  --muted: #475569;
+  --navy: #1e3a5f;
+  --navy-2: #16324f;
+  --line: #cbd5e1;
+  --paper: #f8fafc;
+  --say: #fff7ed;
+  --say-edge: #c2410c;
+}
+* { box-sizing: border-box; }
+html { font-size: 15px; scroll-padding-top: 64px; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #e2e8f0;
+  font-family: "Segoe UI", Calibri, system-ui, sans-serif;
+  line-height: 1.45;
+}
+.toolbar {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  background: var(--navy); color: #fff;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+.toolbar b { margin-right: 8px; }
+.toolbar button, .toolbar a {
+  background: #fff; color: var(--navy); border: 0;
+  padding: 6px 12px; border-radius: 6px;
+  font-weight: 700; cursor: pointer; text-decoration: none;
+  font-size: 13px;
+}
+.toolbar button:hover, .toolbar a:hover { background: #e0f2fe; }
+.layout {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  gap: 0;
+  align-items: start;
+  width: 100%;
+}
+.sidemenu {
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow: auto;
+  background: #0f2744;
+  color: #e2e8f0;
+  padding: 12px 0 28px;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+.sidemenu-title {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  padding: 6px 14px 10px;
+}
+.sidemenu a {
+  display: block;
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 5px 14px 5px 14px;
+  border-left: 3px solid transparent;
+}
+.sidemenu a:hover { background: #16324f; color: #fff; }
+.sidemenu a.nav-sec {
+  font-weight: 700;
+  color: #fff;
+  margin-top: 10px;
+  padding-top: 8px;
+  background: #16324f;
+  font-size: 12px;
+}
+.sidemenu a.nav-q { padding-left: 18px; color: #cbd5e1; }
+.sidemenu a.active {
+  background: #1e40af;
+  color: #fff;
+  border-left-color: #fb923c;
+}
+.sheet {
+  background: #fff;
+  margin: 16px 16px 48px 12px;
+  padding: 28px 36px 48px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.12);
+  min-width: 0;
+}
+.toc { display: none; }
+h2, h3 { scroll-margin-top: 64px; }
+@media (max-width: 640px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidemenu {
+    position: relative;
+    top: 0;
+    height: auto;
+    max-height: 36vh;
+  }
+}
+h1 { font-size: 1.7rem; margin: 0 0 8px; color: var(--navy); }
+h2 {
+  font-size: 1.25rem;
+  color: #fff;
+  background: var(--navy);
+  padding: 8px 12px;
+  margin: 28px 0 14px;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h3 {
+  font-size: 1.05rem;
+  color: #16324f;
+  border-left: 5px solid #c2410c;
+  padding: 8px 12px;
+  margin: 22px 0 0;
+  background: #dbeafe;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h4 {
+  font-size: 0.95rem;
+  color: #1e40af;
+  margin: 14px 0 6px;
+  page-break-after: avoid;
+}
+p { margin: 8px 0; }
+strong { color: #0f172a; }
+a { color: #1d4ed8; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 14px;
+  font-size: 13.5px;
+  page-break-inside: avoid;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: #e2e8f0; color: var(--navy); }
+tr:nth-child(even) td { background: var(--paper); }
+table.vs-code tr:nth-child(even) td,
+table.vs-code tr:nth-child(odd) td { background: #fff; }
+blockquote {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: var(--say);
+  border-left: 5px solid var(--say-edge);
+  color: #7c2d12;
+  line-height: 1.6;
+  page-break-inside: avoid;
+}
+h3 + blockquote { margin-top: 0; }
+blockquote.said {
+  background: #f1f5f9;
+  border-left-color: #475569;
+  color: #1e293b;
+}
+h4 + blockquote { margin-top: 0; }
+blockquote p { margin: 0 0 10px; }
+blockquote p:last-child { margin-bottom: 0; }
+pre, .mermaid, .vs-editor, .mc-row, .shot-wrap {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+pre {
+  background: #fff;
+  color: #000;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: auto;
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-family: Consolas, "Cascadia Mono", Menlo, monospace;
+}
+code {
+  font-family: Consolas, "Cascadia Mono", Menlo, monospace;
+  font-size: 0.92em;
+  background: #e2e8f0;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+.vs-editor {
+  background: #fff;
+  overflow: auto;
+  max-height: none;
+  border: 1px solid #c9a227;
+  border-radius: 4px;
+  margin: 10px 0 14px;
+}
+table.vs-code {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+table.vs-code td { border: 0; padding: 0; background: #fff; }
+table.vs-code td.gutter {
+  width: 44px; min-width: 44px; padding: 0 10px 0 6px;
+  text-align: right; color: #2b91af; user-select: none;
+  vertical-align: top; border-right: 2px solid #c9a227; background: #fff;
+}
+table.vs-code td.src {
+  padding: 0 0 0 14px; white-space: pre; vertical-align: top; color: #000;
+}
+.t-kw, .t-bi { color: #0000ff; }
+.t-type { color: #2b91af; }
+.t-fn  { color: #74531f; }
+.t-cm  { color: #008000; }
+.t-str { color: #a31515; }
+.t-num { color: #098658; }
+.t-op, .t-id { color: #000000; }
+.mc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0 16px;
+  align-items: stretch;
+}
+.mc-col {
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 0;
+  background: #fff;
+}
+.mc-bad  { border: 1.5px solid #e53e3e; }
+.mc-good { border: 1.5px solid #28a745; }
+.mc-alt  { border: 1.5px solid #2563eb; }
+.mc-lbl  { display: block; padding: 6px 10px; font-size: 12px; font-weight: 700; }
+.mc-col p { margin: 8px 10px; }
+.mc-col p:has(.mc-lbl), .mc-col > p:first-child { margin: 0; }
+.mc-bad  .mc-lbl { background: #fff5f5; color: #c53030; }
+.mc-good .mc-lbl { background: #f0fff4; color: #276749; }
+.mc-alt  .mc-lbl { background: #eff6ff; color: #1e40af; }
+.mc-col .vs-editor { margin: 0; border: none; border-top: 1px solid #e2e8f0; border-radius: 0; }
+.mc-col .mermaid { margin: 0; border: none; border-radius: 0; border-top: 1px solid #e2e8f0; }
+.mc-col .shot-wrap { margin: 0; }
+.mc-col img.shot { border: none; border-radius: 0; }
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 8px;
+  margin: 12px 0 16px;
+  text-align: center;
+}
+img.shot {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  object-position: top;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+.mc-col img.shot { max-height: 260px; border: none; border-radius: 0; }
+.shot-wrap { margin: 12px 0 8px; }
+.shot-cap {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.how-call {
+  font-size: 13px;
+  color: #1e3a5f;
+  font-weight: 700;
+  margin: 12px 0 4px;
+}
+ul, ol { margin: 6px 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { margin: 4px 0; }
+.toc a { text-decoration: none; }
+.cover-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+@media print {
+  body { background: #fff; }
+  .toolbar, .sidemenu { display: none !important; }
+  .layout { display: block; max-width: none; }
+  .sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  a { color: inherit; text-decoration: none; }
+  h2, h3, h4, table, blockquote, pre, .mermaid, .mc-row, .vs-editor { page-break-inside: avoid; }
+  h2 { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  h3, th, blockquote, .mermaid, .mc-lbl, .mc-bad, .mc-good,
+  .t-kw, .t-type, .t-fn, .t-cm, .t-str, .t-num, .vs-editor, img.shot {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .vs-editor { max-height: none; overflow: visible; }
+  .mc-row { grid-template-columns: 1fr 1fr; }
+  @page { size: A4; margin: 14mm 12mm 16mm; }
+}
+@media (max-width: 900px) {
+  .mc-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <b>Sangeetha interview</b>
+  <button type="button" id="btnPrint">Print / Save PDF</button>
+  <a href="Sangeetha-Interview.md">Source</a>
+  <a href="SaranyaAnswers.html">Saranya booklet</a>
+  <a href="Client1.html">Client1 deck</a>
+  <span style="opacity:.85">Wait for diagrams, then print. Enable Background graphics.</span>
+</div>
+<div class="layout">
+<nav class="sidemenu" id="sidemenu"><div class="sidemenu-title">Questions</div>
+<a class="nav-sec" href="#how-the-interview-went">How the interview went</a>
+<a class="nav-sec" href="#how-to-use-this-printout">How to use this printout</a>
+<a class="nav-sec" href="#1-opening">1. Opening</a>
+<a class="nav-q" href="#q-tell-me-about-yourself-technical-expertise">Tell me about yourself / technical expertise</a>
+<a class="nav-q" href="#q-design-work-you-did-why-was-that-design-created">Design work you did — why was that design created?</a>
+<a class="nav-sec" href="#2-entity-framework-and-a-new-microservice">2. Entity Framework and a new microservice</a>
+<a class="nav-q" href="#q-new-microservice-from-scratch-how-do-you-use-entity-framework">New microservice from scratch — how do you use Entity Framework?</a>
+<a class="nav-q" href="#q-how-do-you-apply-a-migration-schema-change-add-a-column">How do you apply a migration? Schema change — add a column</a>
+<a class="nav-sec" href="#3-middleware-and-di-lifetime">3. Middleware and DI lifetime</a>
+<a class="nav-q" href="#q-custom-middleware-what-logic-can-it-run-for-a-few-actions-only">Custom middleware — what logic? Can it run for a few actions only?</a>
+<a class="nav-q" href="#q-dbcontext-sql-connection-lifetime-scoped-or-transient">DbContext / SQL connection lifetime — Scoped or Transient?</a>
+<a class="nav-sec" href="#4-sql-whiteboard-ads-on-the-e-commerce-dashboard">4. SQL whiteboard — ads on the e-commerce dashboard</a>
+<a class="nav-q" href="#q-design-tables-one-select-for-the-dashboard-ad">Design tables + one SELECT for the dashboard ad</a>
+<a class="nav-sec" href="#5-deadlock">5. Deadlock</a>
+<a class="nav-q" href="#q-connection-left-open-deadlock-showing-up-what-is-the-fix">Connection left open, deadlock showing up — what is the fix?</a>
+<a class="nav-sec" href="#6-angular">6. Angular</a>
+<a class="nav-q" href="#q-ways-to-share-data-between-components">Ways to share data between components</a>
+<a class="nav-q" href="#q-multiple-file-download-promise-or-observable-all-five-in-parallel">Multiple file download — Promise or Observable? All five in parallel</a>
+<a class="nav-q" href="#q-latest-angular-version-you-use">Latest Angular version you use</a>
+<a class="nav-sec" href="#7-ai">7. AI</a>
+<a class="nav-q" href="#q-which-coding-agent-any-ai-poc">Which coding agent? Any AI POC?</a>
+<a class="nav-sec" href="#8-questions-for-them-close">8. Questions for them / close</a>
+<a class="nav-sec" href="#rapid-checklist-before-the-next-round">Rapid checklist before the next round</a></nav>
+<article class="sheet">
+<h1 id="sangeetha-interview-what-you-said-vs-the-right-answer">Sangeetha interview — what you said vs the right answer</h1>
+<p>Source: <code>Sangeetha-Interview.mp3</code> (~46 minutes). Whisper transcript is <code>Sangeetha-Interview.txt</code>. Stack they asked: .NET + EF + SQL + Angular + a little AI.</p>
+<p>Open <code>Sangeetha-Interview.html</code> → <strong>Print / Save PDF</strong>. Rebuild: <code>python ClientInterview/build_sangeetha_interview.py</code></p>
+<p>Grey box = what you said (cleaned from the recording). Peach box = what to say next time. Full sentences.</p>
+<p>Do not say “in this session” or “in this video”. You are answering an interview, not taking a class.</p>
+<hr />
+<h2 id="how-the-interview-went">How the interview went</h2>
+<p><strong>Mark: 5 / 10.</strong> From their tone, this is <strong>not a strong pass</strong>. Plan as if you must do the next round better. HR still decides. We cannot know the letter they send.</p>
+<p>They were <strong>polite</strong>. They gave hints. They did not shout. That is not the same as “we want you”.</p>
+<p>Notice these lines from the recording:</p>
+<ol>
+<li>On design: they said this was <strong>correcting a bug</strong>, not a design. Then they dropped that question.</li>
+<li>On <code>DbContext</code>: they kept asking why Transient. You changed to Scoped only after they pushed.</li>
+<li>On the SQL board: they gave hints (“there must be a link between product and advertisement”). Then: <strong>we have other topics, we will move on</strong>. They stopped waiting for a full answer.</li>
+<li>On download: <strong>so far you have never included an Observable</strong>. That is a tired line, not a happy line.</li>
+<li>At the end: feedback to HR. <strong>All the best for your career.</strong> That is a close. It is not “let us schedule the next round on this call”.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Mark</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intro</td>
+<td>6</td>
+<td>Two products. Vue and VB.NET got mixed. Sky trac missing.</td>
+</tr>
+<tr>
+<td>Design you did</td>
+<td>3</td>
+<td>WCF DLL fix. They wanted a picture you designed.</td>
+</tr>
+<tr>
+<td>EF + migration</td>
+<td>7</td>
+<td>Code first, <code>Up</code> / <code>Down</code>. Good enough.</td>
+</tr>
+<tr>
+<td>Middleware</td>
+<td>5</td>
+<td>Auth, log, cache. You did not say <strong>filter</strong> for a few actions.</td>
+</tr>
+<tr>
+<td>DbContext lifetime</td>
+<td>4</td>
+<td>Transient first. Scoped only at the end.</td>
+</tr>
+<tr>
+<td>SQL tables + query</td>
+<td>3</td>
+<td>See your five tables below. Query does not return <strong>one ad for this user</strong>.</td>
+</tr>
+<tr>
+<td>Deadlock</td>
+<td>4</td>
+<td>Same lock order is right. “DBA deadlock command” is not.</td>
+</tr>
+<tr>
+<td>Angular share data</td>
+<td>6</td>
+<td><code>@Input</code> <code>@Output</code> RxJS router. Fine.</td>
+</tr>
+<tr>
+<td>Multi download</td>
+<td>4</td>
+<td>S3 and <code>async</code> first. <code>forkJoin</code> very late.</td>
+</tr>
+<tr>
+<td>Angular version</td>
+<td>5</td>
+<td>14, then 16.</td>
+</tr>
+<tr>
+<td>AI POC</td>
+<td>7</td>
+<td>Copilot, Opus, Document Intelligence, copy model. This part was fine.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overall 5.</strong> For eight years they expect Scoped, one clean JOIN, deadlock 1205, and Observable in the first sentence. Those four were slow or wrong. The AI and EF parts saved the score from going lower.</p>
+<p>What to do now: own the SQL board and Scoped until you can draw them with the sound off. That is how the next interview goes to 7.</p>
+<hr />
+<h2 id="how-to-use-this-printout">How to use this printout</h2>
+<ol>
+<li><strong>What you said</strong> — read it once. Notice the gap. Do not memorise the gap.</li>
+<li><strong>Say</strong> — speak the peach box. About twenty seconds.</li>
+<li><strong>Walk through</strong> — if they stay on the question. <strong>First, why</strong> → example → <strong>Before vs After</strong> → Notice that → This means → <strong>How they call it</strong>.</li>
+<li>Point at the <strong>diagram</strong>. Put <strong>your</strong> module names on the boxes.</li>
+</ol>
+<p>When you speak: <strong>what it is → where you used it → why → how → what problem it solved</strong>.</p>
+<p>Whisper heard “Sankita”, “view”, “.NET Co”. Those are <strong>Sangeetha</strong>, <strong>Vue</strong>, <strong>.NET Core</strong>. The grey boxes use the cleaned words.</p>
+<hr />
+<h2 id="1-opening">1. Opening</h2>
+<h3 id="q-tell-me-about-yourself-technical-expertise">Q. Tell me about yourself / technical expertise</h3>
+<h4 id="what-you-said">What you said</h4>
+<blockquote class="said">
+<p>I have around eight plus years as a .NET developer. I have worked on .NET Core, MVC, SQL, VB.NET, Vue with TypeScript, Angular, and Azure for deploy.</p>
+<p>Current project is <strong>Theraoffice</strong>. Therapy monitoring. Front end is Vue with TypeScript. There is also a Windows application. For the web we used VB.NET. I migrated APIs from .NET Framework to .NET Core. Database is SQL.</p>
+<p>The other project is <strong>Skytec</strong>. Inspection. Mobile is Xamarin. Web is .NET and Angular. A .NET Core API syncs mobile and web. Phone database is SQLite.</p>
+</blockquote>
+<h4 id="right-answer">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> I am a hands-on full-stack engineer. About eight years. I work on <strong>Theraoffice</strong>, <strong>Skytec</strong>, and <strong>Sky trac</strong>.</p>
+<p><strong>Theraoffice</strong> is a clinic product. Vue on the web. A legacy WinForms VB.NET desktop. Both talk to a C# API. Auth is Azure AD. Database is SQL Server. I migrated APIs from .NET Framework to .NET Core.</p>
+<p><strong>Skytec</strong> is inspection. Xamarin on the phone with SQLite. Angular and .NET on the web. A .NET Core API syncs the two.</p>
+<p><strong>Sky trac</strong> is microservices. Angular and mobile go through WAF, then an API Gateway, then Order, Payment, and Product. Auth is Azure AD.</p>
+</blockquote>
+<h4 id="walk-through">Walk through</h4>
+<p>First, why is she asking this? She wants <strong>your</strong> products, and she wants <strong>what you touched</strong>. She does not want a list of every Microsoft word.</p>
+<ol>
+<li>One line: role and years. Stop.</li>
+<li>Name the three products. One breath each. UI, API, database, auth.</li>
+<li>Then your pieces. Example: “On Skytec I owned the sync API. On Theraoffice I owned the Vue screens that call the C# API.”</li>
+<li>One production fix. This shows you are hands-on.</li>
+</ol>
+<p>Notice that in the recording you mixed Theraoffice. Vue is the <strong>web</strong>. VB.NET is the <strong>desktop</strong>. They both call a C# API. Do not say “the web application is VB.NET”.</p>
+<p>You also stopped after two products. Add <strong>Sky trac</strong> in one breath. Then stop.</p>
+<div class="mermaid">
+flowchart LR
+  subgraph Theraoffice
+    V[Vue web] --> API[C# API]
+    W[WinForms VB.NET] --> API
+    API --> AD[Azure AD]
+    API --> SQL[(SQL Server)]
+  end
+</div>
+<div class="mermaid">
+flowchart LR
+  subgraph Skytec
+    X[Xamarin + SQLite] --> S[Sync API]
+    A[Angular + .NET web] --> S
+    S --> DB[(SQL Server)]
+  end
+</div>
+<h4 id="fix-for-next-time">Fix for next time</h4>
+<ul>
+<li>Practise the three products out loud. Twenty seconds. Then stop.</li>
+<li>One line on <strong>what you owned</strong>. Not the whole company stack.</li>
+</ul>
+<hr />
+<h3 id="q-design-work-you-did-why-was-that-design-created">Q. Design work you did — why was that design created?</h3>
+<h4 id="what-you-said_1">What you said</h4>
+<blockquote class="said">
+<p>If a new API has to be designed, I will check the database tables. If I need a new table, I will check that.</p>
+<p>Recently, on migration, the payment API had an issue. Previously it was WCF. An error came. I did a small POC and found it was a DLL issue.</p>
+</blockquote>
+<p>They then said this was <strong>correcting an issue</strong>, not a design. They moved to straight technical questions.</p>
+<h4 id="right-answer_1">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> They want a <strong>component I designed</strong>, not a bug I fixed.</p>
+<p>On <strong>Skytec</strong>, inspectors work on site. The network is weak. So the phone must work offline. I designed it this way: Xamarin stores rows in <strong>SQLite</strong> on the device. When the network is back, a .NET Core <strong>sync API</strong> sends the inspection to SQL Server. The office Angular app reads the same SQL.</p>
+<p>Why this design? If the phone waited for the API on every save, the inspector could not finish the job in the field.</p>
+<p>On <strong>Sky trac</strong>, mobile and Angular do not call Order and Payment directly. They hit a <strong>WAF</strong>, then an <strong>API Gateway</strong>. The gateway does authorization, rate limit, load balance, and cache. Then Order, Payment, Product.</p>
+</blockquote>
+<h4 id="walk-through_1">Walk through</h4>
+<p>First, why this question? They want: <strong>problem → your design → why that shape</strong>. A DLL fix is useful later. It is not this answer.</p>
+<p>Let us understand this with an example. Skytec.</p>
+<ol>
+<li><strong>Problem.</strong> Inspector is on a site. Signal drops.</li>
+<li><strong>Design.</strong> Local SQLite. Sync API when online.</li>
+<li><strong>Why.</strong> The job must finish even when the API is down.</li>
+<li><strong>What you owned.</strong> The sync endpoints, or the SQLite schema, or both. Say which.</li>
+</ol>
+<p>Notice that “I check the tables” is a <strong>habit</strong>. It is not a design. A design has a picture.</p>
+<div class="mermaid">
+flowchart TB
+  PHONE[Xamarin phone] --> SQLITE[(SQLite on device)]
+  SQLITE -->|"when online"| SYNC[.NET Core sync API]
+  WEB[Angular office] --> SYNC
+  SYNC --> SQL[(SQL Server)]
+</div>
+<h4 id="fix-for-next-time_1">Fix for next time</h4>
+<ul>
+<li>Keep one picture ready. Skytec offline sync <strong>or</strong> Sky trac gateway.</li>
+<li>If they say “from your side”, name <strong>your</strong> module. Not “we used WCF”.</li>
+</ul>
+<hr />
+<h2 id="2-entity-framework-and-a-new-microservice">2. Entity Framework and a new microservice</h2>
+<h3 id="q-new-microservice-from-scratch-how-do-you-use-entity-framework">Q. New microservice from scratch — how do you use Entity Framework?</h3>
+<h4 id="what-you-said_2">What you said</h4>
+<blockquote class="said">
+<p>I will use the code first approach. The database is not there. We create entities and we apply the migration.</p>
+</blockquote>
+<h4 id="right-answer_2">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> For a <strong>new</strong> service, I use <strong>code first</strong>. I write the C# entity. I add a migration. EF creates the database.</p>
+<p>If the database <strong>already</strong> exists, and we must not break it, I use <strong>database first</strong>. I scaffold from SQL. I do not let EF drop production tables.</p>
+</blockquote>
+<h4 id="walk-through_2">Walk through</h4>
+<p>First, why two approaches? Because “from scratch” means there is <strong>no</strong> database yet.</p>
+<ol>
+<li><strong>Code first</strong> — C# is the source. EF writes SQL.</li>
+<li><strong>Database first</strong> — SQL is the source. EF writes C#.</li>
+<li><strong>This question</strong> is from scratch. So code first.</li>
+</ol>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">Customer</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Name</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">AppDbContext</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">DbContext</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-fn">AppDbContext</span><span class="t-op">(</span><span class="t-type">DbContextOptions</span><span class="t-op">&lt;</span><span class="t-type">AppDbContext</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">options</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">base</span><span class="t-op">(</span><span class="t-id">options</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-type">DbSet</span><span class="t-op">&lt;</span><span class="t-type">Customer</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">Customers</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-fn">Set</span><span class="t-op">&lt;</span><span class="t-type">Customer</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">builder</span><span class="t-op">.</span><span class="t-id">Services</span><span class="t-op">.</span><span class="t-fn">AddDbContext</span><span class="t-op">&lt;</span><span class="t-type">AppDbContext</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-id">o</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">o</span><span class="t-op">.</span><span class="t-fn">UseSqlServer</span><span class="t-op">(</span><span class="t-id">builder</span><span class="t-op">.</span><span class="t-id">Configuration</span><span class="t-op">.</span><span class="t-fn">GetConnectionString</span><span class="t-op">(</span><span class="t-str">&quot;App&quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice that you said “support first” first, then “code first”. Say <strong>code first</strong> in the first sentence.</p>
+<hr />
+<h3 id="q-how-do-you-apply-a-migration-schema-change-add-a-column">Q. How do you apply a migration? Schema change — add a column</h3>
+<h4 id="what-you-said_3">What you said</h4>
+<blockquote class="said">
+<p>We create a script. <code>dotnet ef</code> add migration, then DB update.</p>
+<p>There is a customer table. We need an address column. I add a string property with get set. Save. Add migration. Then update. It will run the migration.</p>
+<p>If it is a new field we can go for this. The migration creates a snapshot and the migration file. There is <code>Up</code> and <code>Down</code>. <code>Up</code> has the new changes. <code>Down</code> undoes them.</p>
+</blockquote>
+<h4 id="right-answer_3">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> I change the C# entity. Then I add a migration. Then I update the database. For production I do <strong>not</strong> run <code>database update</code> from my laptop. I generate a <strong>SQL script</strong> and DBA runs it.</p>
+<p><code>Up</code> applies the change. <code>Down</code> rolls it back. The snapshot is EF’s picture of the model <strong>after</strong> this migration.</p>
+</blockquote>
+<h4 id="walk-through_3">Walk through</h4>
+<p>Let us understand this with an example. Customer needs <code>Address</code>.</p>
+<p><strong>1. Change the entity</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">Customer</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">int</span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op"> </span><span class="t-id">Name</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&quot;&quot;</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op">?</span><span class="t-op"> </span><span class="t-id">Address</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">get</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p><strong>2. Add the migration, then either update or script</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">dotnet</span><span class="t-op"> </span><span class="t-id">ef</span><span class="t-op"> </span><span class="t-id">migrations</span><span class="t-op"> </span><span class="t-id">add</span><span class="t-op"> </span><span class="t-type">AddCustomerAddress</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">dotnet</span><span class="t-op"> </span><span class="t-id">ef</span><span class="t-op"> </span><span class="t-id">database</span><span class="t-op"> </span><span class="t-id">update</span></td></tr>
+</tbody></table></div>
+<p>For production:</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">dotnet</span><span class="t-op"> </span><span class="t-id">ef</span><span class="t-op"> </span><span class="t-id">migrations</span><span class="t-op"> </span><span class="t-id">script</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-id">idempotent</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-id">o</span><span class="t-op"> </span><span class="t-type">AddCustomerAddress</span><span class="t-op">.</span><span class="t-id">sql</span></td></tr>
+</tbody></table></div>
+<p><code>--idempotent</code> means the script checks <code>__EFMigrationsHistory</code>. It will not run the same migration twice.</p>
+<p><strong>3. What EF wrote</strong> — this is the “script” they asked for.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-id">partial</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">AddCustomerAddress</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">Migration</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">protected</span><span class="t-op"> </span><span class="t-kw">override</span><span class="t-op"> </span><span class="t-kw">void</span><span class="t-op"> </span><span class="t-fn">Up</span><span class="t-op">(</span><span class="t-type">MigrationBuilder</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">.</span><span class="t-fn">AddColumn</span><span class="t-op">&lt;</span><span class="t-kw">string</span><span class="t-op">&gt;</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">name</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;Address&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">table</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;Customers&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">type</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;nvarchar(max)&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">nullable</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">true</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">protected</span><span class="t-op"> </span><span class="t-kw">override</span><span class="t-op"> </span><span class="t-kw">void</span><span class="t-op"> </span><span class="t-fn">Down</span><span class="t-op">(</span><span class="t-type">MigrationBuilder</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">.</span><span class="t-fn">DropColumn</span><span class="t-op">(</span><span class="t-id">name</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;Address&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">table</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;Customers&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p>Notice that <code>database update</code> is fine on your machine. On production, give DBA the <code>.sql</code> file.</p>
+<p>This means: you were close. Name the <strong>commands</strong>. Name <strong>Up / Down / snapshot</strong>. Name the <strong>script</strong> for production.</p>
+<hr />
+<h2 id="3-middleware-and-di-lifetime">3. Middleware and DI lifetime</h2>
+<h3 id="q-custom-middleware-what-logic-can-it-run-for-a-few-actions-only">Q. Custom middleware — what logic? Can it run for a few actions only?</h3>
+<h4 id="what-you-said_4">What you said</h4>
+<blockquote class="said">
+<p>Authorization. Logging. Caching. Login.</p>
+<p>Why custom? All API requests go via the middleware.</p>
+<p>Custom middleware can run for a few actions instead of the entire application.</p>
+<p>How? For caching we can use frequently used values.</p>
+</blockquote>
+<p>They asked: is that even possible? How would you do that? You did not say <strong>filter</strong>.</p>
+<h4 id="right-answer_4">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> Middleware is a pipe around HTTP. <code>next()</code> goes in. The rest of the pipe runs. Then the code after <code>next()</code> sees the response.</p>
+<p>I put <strong>cross-cutting</strong> work here: correlation id, session id, request logging. Not “login business rules”.</p>
+<p>For <strong>a few actions only</strong>, I do not put that check on the global pipe. I use an <strong>action filter</strong>. Middleware is for every request. A filter is for one action or one controller.</p>
+</blockquote>
+<h4 id="walk-through_4">Walk through</h4>
+<p>Let us understand middleware. The request goes through a list of steps, then comes <strong>back</strong> out the same list.</p>
+<ol>
+<li>Exception handler, CORS, HTTPS.</li>
+<li><code>UseAuthentication</code> reads the JWT if it is there.</li>
+<li>Custom middleware can check a <strong>session id</strong> on every call.</li>
+<li>Then the controller action runs.</li>
+</ol>
+<p><strong>1. The middleware class</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">SessionIdMiddleware</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">readonly</span><span class="t-op"> </span><span class="t-type">RequestDelegate</span><span class="t-op"> </span><span class="t-id">_next</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-fn">SessionIdMiddleware</span><span class="t-op">(</span><span class="t-type">RequestDelegate</span><span class="t-op"> </span><span class="t-id">next</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">_next</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">next</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">8</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">async</span><span class="t-op"> </span><span class="t-type">Task</span><span class="t-op"> </span><span class="t-fn">InvokeAsync</span><span class="t-op">(</span><span class="t-type">HttpContext</span><span class="t-op"> </span><span class="t-id">ctx</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">path</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ctx</span><span class="t-op">.</span><span class="t-id">Request</span><span class="t-op">.</span><span class="t-id">Path</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">path</span><span class="t-op">.</span><span class="t-fn">StartsWithSegments</span><span class="t-op">(</span><span class="t-str">&quot;/health&quot;</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">|</span><span class="t-op">|</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">path</span><span class="t-op">.</span><span class="t-fn">StartsWithSegments</span><span class="t-op">(</span><span class="t-str">&quot;/login&quot;</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-fn">_next</span><span class="t-op">(</span><span class="t-id">ctx</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">18</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">sessionId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">ctx</span><span class="t-op">.</span><span class="t-id">Request</span><span class="t-op">.</span><span class="t-id">Headers</span><span class="t-op">[</span><span class="t-str">&quot;X-Session-Id&quot;</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-fn">ToString</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">if</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">string</span><span class="t-op">.</span><span class="t-fn">IsNullOrWhiteSpace</span><span class="t-op">(</span><span class="t-id">sessionId</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">ctx</span><span class="t-op">.</span><span class="t-id">Response</span><span class="t-op">.</span><span class="t-id">StatusCode</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">401</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-id">ctx</span><span class="t-op">.</span><span class="t-id">Response</span><span class="t-op">.</span><span class="t-fn">WriteAsync</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;Session id is missing.&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">28</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-fn">_next</span><span class="t-op">(</span><span class="t-id">ctx</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p><strong>2. How we add it</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">app</span><span class="t-op">.</span><span class="t-fn">UseAuthentication</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">app</span><span class="t-op">.</span><span class="t-fn">UseMiddleware</span><span class="t-op">&lt;</span><span class="t-type">SessionIdMiddleware</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-id">app</span><span class="t-op">.</span><span class="t-fn">UseAuthorization</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-id">app</span><span class="t-op">.</span><span class="t-fn">MapControllers</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice that if session id is missing, we <strong>do not</strong> call <code>next()</code>. The controller never runs.</p>
+<p>Now their extra question: <strong>only some actions</strong>.</p>
+<p>If you <code>app.Use</code> “must be admin” on the whole app, health and login break. Admin create-user is <strong>one method</strong>. That is a <strong>filter</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Middleware</th>
+<th>Filter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where</td>
+<td>HTTP pipe, before MVC</td>
+<td>After routing picked the action</td>
+</tr>
+<tr>
+<td>Knows the action name?</td>
+<td>No, unless you look it up</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Use when</td>
+<td>Almost every request</td>
+<td>One action or controller</td>
+</tr>
+<tr>
+<td>Example</td>
+<td>Session id</td>
+<td><code>[Authorize(Policy = "Admin")]</code></td>
+</tr>
+</tbody>
+</table>
+<div class="mc-row">
+<div class="mc-col mc-alt">
+<span class="mc-lbl">Middleware — almost every request</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">app</span><span class="t-op">.</span><span class="t-fn">UseMiddleware</span><span class="t-op">&lt;</span><span class="t-type">SessionIdMiddleware</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+</div>
+<div class="mc-col mc-alt">
+<span class="mc-lbl">Filter — one action only</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-op">[</span><span class="t-type">AdminOnly</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">[</span><span class="t-type">HttpPost</span><span class="t-op">]</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-type">IActionResult</span><span class="t-op"> </span><span class="t-fn">CreateUser</span><span class="t-op">(</span><span class="t-type">UserDto</span><span class="t-op"> </span><span class="t-id">dto</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">return</span><span class="t-op"> </span><span class="t-fn">Ok</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+</div>
+</div>
+<h4 id="fix-for-next-time_2">Fix for next time</h4>
+<ul>
+<li>List three: logging, correlation id, session id. Stop.</li>
+<li>When they say “few actions”, say <strong>filter</strong>. That one word was the answer.</li>
+</ul>
+<hr />
+<h3 id="q-dbcontext-sql-connection-lifetime-scoped-or-transient">Q. DbContext / SQL connection lifetime — Scoped or Transient?</h3>
+<h4 id="what-you-said_5">What you said</h4>
+<blockquote class="said">
+<p>There are three types of DI. I would use <strong>Transient</strong>. It closes the connection immediately. Rather than Scoped, we can use Transient.</p>
+<p>Advantage? It is not a good thing if the connection stays open. With 500 users, 500 connections hurt the database. Transient closes the connection automatically.</p>
+<p>(After they pushed.) No. We can use <strong>Scoped</strong>. One API call, business layer and data layer reuse the same database object.</p>
+</blockquote>
+<h4 id="right-answer_5">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> <code>DbContext</code> is <strong>Scoped</strong>. One object per HTTP request. Controller, repository, and activity log all share it. When the request ends, that context is disposed. The connection goes back to the pool.</p>
+<p>I do not register <code>DbContext</code> as Transient. Each inject would get a <strong>new</strong> context. You save the order on one context and the lines on another. The unit of work breaks.</p>
+<p>I do not register it as Singleton. Two users would share one tracker.</p>
+</blockquote>
+<h4 id="walk-through_5">Walk through</h4>
+<p>First, why does lifetime matter? EF tracks entities. The connection comes from the <strong>pool</strong>. Dispose does not “kill SQL Server”. It returns the connection.</p>
+<p>They asked about 500 users. Notice that <strong>Scoped</strong> is still one context <strong>per request</strong>, not 500 forever. User 1’s request ends. That context is gone. User 2 gets a new one.</p>
+<p><strong>Transient</strong> inside one request: business layer asks for <code>DbContext</code> — new. Data layer asks again — <strong>another</strong> new. Two connections. Two trackers. Save on the first does not see rows on the second.</p>
+<p><strong>Scoped:</strong> both get the <strong>same</strong> object. One <code>SaveChangesAsync</code>. That is the unit of work.</p>
+<div class="mc-row">
+<div class="mc-col mc-bad">
+<span class="mc-lbl">Before — Transient DbContext</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">builder</span><span class="t-op">.</span><span class="t-id">Services</span><span class="t-op">.</span><span class="t-fn">AddDbContext</span><span class="t-op">&lt;</span><span class="t-type">AppDbContext</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-id">o</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">o</span><span class="t-op">.</span><span class="t-fn">UseSqlServer</span><span class="t-op">(</span><span class="t-id">cs</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">contextLifetime</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">ServiceLifetime</span><span class="t-op">.</span><span class="t-id">Transient</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+</div>
+<div class="mc-col mc-good">
+<span class="mc-lbl">After — Scoped (default)</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">builder</span><span class="t-op">.</span><span class="t-id">Services</span><span class="t-op">.</span><span class="t-fn">AddDbContext</span><span class="t-op">&lt;</span><span class="t-type">AppDbContext</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-id">o</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">o</span><span class="t-op">.</span><span class="t-fn">UseSqlServer</span><span class="t-op">(</span><span class="t-id">cs</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+</div>
+</div>
+<p><strong>How they call it</strong> — constructor. Same request, same context.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">public</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">OrdersController</span><span class="t-op"> </span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">ControllerBase</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">readonly</span><span class="t-op"> </span><span class="t-type">IOrderRepository</span><span class="t-op"> </span><span class="t-id">_orders</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">public</span><span class="t-op"> </span><span class="t-fn">OrdersController</span><span class="t-op">(</span><span class="t-type">IOrderRepository</span><span class="t-op"> </span><span class="t-id">orders</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">_orders</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">orders</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p>They also said: many stored procedures in <strong>one</strong> API call. If you open and close for every procedure, you still can. But with EF, keep <strong>one Scoped context</strong> for that request. Do not create a new context per procedure unless you have a hard reason.</p>
+<table>
+<thead>
+<tr>
+<th>Registration</th>
+<th>Meaning</th>
+<th>DbContext?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scoped</strong></td>
+<td>One per HTTP request</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Transient</td>
+<td>New every inject</td>
+<td>No — breaks unit of work</td>
+</tr>
+<tr>
+<td>Singleton</td>
+<td>One for the process</td>
+<td>No — not thread-safe</td>
+</tr>
+</tbody>
+</table>
+<div class="mermaid">
+flowchart TB
+  REQ[One HTTP request]
+  REQ --> CTL[Controller]
+  REQ --> UOW[Unit of Work]
+  REQ --> CTX["DbContext Scoped"]
+  CTL --> UOW
+  UOW --> CTX
+  CTX --> POOL[(Connection pool)]
+</div>
+<h4 id="fix-for-next-time_3">Fix for next time</h4>
+<ul>
+<li>First sentence: <strong>DbContext is Scoped.</strong></li>
+<li>Do not start with Transient. You spent several minutes there. They had to pull you back.</li>
+</ul>
+<hr />
+<h2 id="4-sql-whiteboard-ads-on-the-e-commerce-dashboard">4. SQL whiteboard — ads on the e-commerce dashboard</h2>
+<h3 id="q-design-tables-one-select-for-the-dashboard-ad">Q. Design tables + one SELECT for the dashboard ad</h3>
+<p>They asked you to share the screen and design.</p>
+<p><strong>Scenario.</strong> After login, the dashboard shows an advertisement from the user’s <strong>previous search</strong>. Example: you searched books, show a book ad.</p>
+<p><strong>First-time user</strong> (no history). Show an ad from <strong>customer data</strong>: age, gender, or a default category.</p>
+<p><strong>Future.</strong> Today the ad is one image. Tomorrow it can be a video, or a slideshow of many images. Design so that still fits.</p>
+<p>They also said: this is a <strong>product</strong> catalogue, not a “book” table. Book was only an example. Ask questions before you draw.</p>
+<h4 id="what-you-said_6">What you said</h4>
+<p>This is the notepad from the call. Keep it. We will fix it next.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-num">1.</span><span class="t-op"> </span><span class="t-type">Customer</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Id</span><span class="t-op"> </span><span class="t-id">PK</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Name</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Preference</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ActivityHistory</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-num">2.</span><span class="t-op"> </span><span class="t-type">Product</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Id</span><span class="t-op"> </span><span class="t-id">PK</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Name</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ProductType</span></td></tr>
+<tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-num">3.</span><span class="t-op"> </span><span class="t-type">ProductImages</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Id</span><span class="t-op"> </span><span class="t-id">PK</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ProductId</span><span class="t-op"> </span><span class="t-id">FK</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ImageName</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ImageUrl</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-op"> </span><span class="t-id">blob</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-type">S3</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ProductType</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Price</span></td></tr>
+<tr><td class="gutter">19</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-num">4.</span><span class="t-op"> </span><span class="t-type">Advertisement</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Id</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ProductId</span></td></tr>
+<tr><td class="gutter">23</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-num">5.</span><span class="t-op"> </span><span class="t-type">AdvertisementImages</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">Id</span><span class="t-op"> </span><span class="t-id">PK</span></td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">AdvertisementId</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ImageName</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">ImageUrl</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op">-</span><span class="t-op"> </span><span class="t-id">blob</span><span class="t-op"> </span><span class="t-op">/</span><span class="t-op"> </span><span class="t-type">S3</span></td></tr>
+</tbody></table></div>
+<p><strong>Query 1</strong> — you wrote a join. Query 2 (subquery) was blank.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-op">*</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Pimg</span><span class="t-op">.</span><span class="t-op">*</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">advImg</span><span class="t-op">.</span><span class="t-op">*</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">Product</span><span class="t-op"> </span><span class="t-id">prdt</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">ProductImages</span><span class="t-op"> </span><span class="t-id">Pimg</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Pimg</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">Advertisement</span><span class="t-op"> </span><span class="t-id">adv</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">AdvertisementImages</span><span class="t-op"> </span><span class="t-id">advImg</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">advImg</span><span class="t-op">.</span><span class="t-id">AdvertisementId</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-kw">GROUP</span><span class="t-op"> </span><span class="t-kw">BY</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-kw">HAVING</span><span class="t-op"> </span><span class="t-id">COUNT</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice what is already good: <strong>Advertisement</strong> is its own table. <strong>AdvertisementImages</strong> is a child table. That idea is right.</p>
+<p>Notice what is missing. They asked for <strong>this user’s</strong> last search, a <strong>first-time user</strong>, and <strong>video / slideshow</strong> later.</p>
+<h4 id="why-this-design-does-not-answer-the-question">Why this design does not answer the question</h4>
+<ol>
+<li><code>Preference</code> and <code>ActivityHistory</code> are <strong>columns</strong> on Customer. A user has many searches. That must be <strong>rows</strong> in another table. One column cannot hold a history.</li>
+<li><code>ProductImages</code> has <code>Price</code> and <code>ProductType</code>. Price belongs on <strong>Product</strong>. Type belongs on <strong>Product</strong> or <strong>Category</strong>. An image row is only name, url, sort order.</li>
+<li><code>Advertisement</code> has only <code>ProductId</code>. Then you can show an ad only when that exact product was searched. They also asked: first-time user has <strong>no</strong> history. Use <strong>Category</strong> (books, fashion) plus a default on the customer.</li>
+<li><code>AdvertisementImages</code> has no <code>MediaType</code> and no <code>SortOrder</code>. Tomorrow they want video, or three slides. Add type and order. Same table. New rows. Not a new column.</li>
+<li>The <code>SELECT</code> starts from <strong>Product</strong>. The screen is a <strong>dashboard banner</strong>, not a product list. Start from <strong>Customer</strong> (or from Advertisement filtered by that customer).</li>
+<li>Four <code>LEFT JOIN</code>s: one product, three photos, four ad images → <strong>12 rows</strong>. That is a cartesian product. The dashboard wants <strong>one</strong> banner.</li>
+<li><code>GROUP BY adv.ProductId</code> in SQL Server is invalid unless every other selected column is in the <code>GROUP BY</code> or inside <code>MIN</code> / <code>MAX</code>.</li>
+<li><code>HAVING COUNT &gt; 0</code> is almost always true. It does not mean “this user”. You also wrote <code>prd.id</code> once and <code>prdt.Id</code> once. One alias. One name.</li>
+</ol>
+<h4 id="right-answer_6">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> I do not start with Product as the ad. An ad is its own row. A product can have many ads. An ad can have many media files.</p>
+<p>I also store <strong>what this user searched</strong> as rows. If there is no search, I use a default category on the customer.</p>
+<p>One <code>SELECT</code> returns <strong>one</strong> ad for the dashboard. <code>TOP (1)</code>. Not every product.</p>
+</blockquote>
+<h4 id="walk-through_6">Walk through</h4>
+<p>First, why so many tables? Because <strong>three different facts</strong> must not share one table.</p>
+<ol>
+<li>Who is the user? → <code>Customer</code> (keep Name, Age, Gender. Drop Preference and ActivityHistory <strong>columns</strong>.)</li>
+<li>What did they look at? → <code>SearchHistory</code> (this <strong>is</strong> ActivityHistory, as rows)</li>
+<li>What can we show? → <code>Advertisement</code> + <code>AdMedia</code> (your Advertisement + AdvertisementImages, plus type and sort)</li>
+<li>What is for sale? → <code>Product</code> + <code>Category</code> (ProductType becomes Category. Price stays on Product)</li>
+</ol>
+<p>Notice that <strong>product image</strong> is not the same as <strong>advertisement</strong>. Keep <code>ProductImages</code> if the product page needs photos. The dashboard banner still comes from <code>AdMedia</code>.</p>
+<p>Let us understand this with a picture.</p>
+<div class="mermaid">
+erDiagram
+  Customer ||--o{ SearchHistory : searches
+  Category ||--o{ Product : contains
+  Category ||--o{ Advertisement : targets
+  Customer }o--o| Category : default
+  Advertisement ||--|{ AdMedia : has
+  Product }o--o{ Advertisement : "optional link"
+
+  Customer {
+    int CustomerId PK
+    nvarchar Name
+    int Age
+    char Gender
+    int DefaultCategoryId FK
+  }
+  Category {
+    int CategoryId PK
+    nvarchar Name
+  }
+  Product {
+    int ProductId PK
+    int CategoryId FK
+    nvarchar Name
+  }
+  SearchHistory {
+    int SearchId PK
+    int CustomerId FK
+    int CategoryId FK
+    datetime SearchedAt
+  }
+  Advertisement {
+    int AdId PK
+    int CategoryId FK
+    nvarchar Title
+    bit IsActive
+  }
+  AdMedia {
+    int MediaId PK
+    int AdId FK
+    nvarchar MediaType
+    nvarchar Url
+    int SortOrder
+  }
+</div>
+<p><strong>Why <code>AdMedia</code>?</strong> Today <code>MediaType</code> is <code>Image</code>. Tomorrow <code>Video</code>. For a slideshow, <strong>many rows</strong> with <code>SortOrder</code> 1, 2, 3. You do not add <code>Image2</code>, <code>Image3</code> columns.</p>
+<p><strong>Why <code>SearchHistory</code>?</strong> That is the user’s preference. Without this table you cannot say “Sangeetha searched books”.</p>
+<p><strong>Why <code>DefaultCategoryId</code> on Customer?</strong> First-time user. Age and gender can also map to a default category. Keep it simple: one default category on the customer.</p>
+<p><strong>SQL — create</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Category</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Name</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">80</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">6</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Name</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">80</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Age</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Gender</span><span class="t-op"> </span><span class="t-id">char</span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">DefaultCategoryId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Category</span><span class="t-op">(</span><span class="t-id">CategoryId</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Product</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">ProductId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Category</span><span class="t-op">(</span><span class="t-id">CategoryId</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Name</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">120</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Price</span><span class="t-op"> </span><span class="t-id">decimal</span><span class="t-op">(</span><span class="t-num">10</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">25</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">26</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">SearchHistory</span></td></tr>
+<tr><td class="gutter">27</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">28</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">SearchId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">29</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">30</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span><span class="t-op">(</span><span class="t-id">CustomerId</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">31</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">32</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Category</span><span class="t-op">(</span><span class="t-id">CategoryId</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">33</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">SearchedAt</span><span class="t-op"> </span><span class="t-id">datetime2</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">34</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">35</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">36</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Advertisement</span></td></tr>
+<tr><td class="gutter">37</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">38</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">AdId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">39</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">40</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Category</span><span class="t-op">(</span><span class="t-id">CategoryId</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">41</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Title</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">120</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">42</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">IsActive</span><span class="t-op"> </span><span class="t-id">bit</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op"> </span><span class="t-id">DEFAULT</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">43</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">44</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">45</td><td class="src"><span class="t-kw">CREATE</span><span class="t-op"> </span><span class="t-kw">TABLE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">AdMedia</span></td></tr>
+<tr><td class="gutter">46</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">47</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">MediaId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-id">IDENTITY</span><span class="t-op"> </span><span class="t-id">PRIMARY</span><span class="t-op"> </span><span class="t-id">KEY</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">48</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">AdId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">49</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">REFERENCES</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Advertisement</span><span class="t-op">(</span><span class="t-id">AdId</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">50</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">MediaType</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">20</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">-- Image, Video, Slideshow</span></td></tr>
+<tr><td class="gutter">51</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">Url</span><span class="t-op"> </span><span class="t-id">nvarchar</span><span class="t-op">(</span><span class="t-num">400</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">52</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">SortOrder</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-kw">NOT</span><span class="t-op"> </span><span class="t-kw">NULL</span></td></tr>
+<tr><td class="gutter">53</td><td class="src"><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p><strong>Query 1 — join.</strong> One banner for this user. Not every product.</p>
+<p>First, why <code>TOP (1)</code>? The screen shows <strong>one</strong> banner. Not a product catalogue.</p>
+<p>Do not <code>LEFT JOIN</code> the whole <code>SearchHistory</code> table. One user has many search rows. That repeats ads. Take <strong>only the last search</strong>, then join.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">DECLARE</span><span class="t-op"> </span><span class="t-type">@CustomerId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">Title</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">MediaType</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">Url</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">c</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-kw">OUTER</span><span class="t-op"> </span><span class="t-id">APPLY</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">CategoryId</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">SearchHistory</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">h</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">c</span><span class="t-op">.</span><span class="t-id">CustomerId</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ORDER</span><span class="t-op"> </span><span class="t-kw">BY</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">SearchedAt</span><span class="t-op"> </span><span class="t-kw">DESC</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">lastSearch</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-kw">INNER</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Advertisement</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">a</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">COALESCE</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">lastSearch</span><span class="t-op">.</span><span class="t-id">CategoryId</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">c</span><span class="t-op">.</span><span class="t-id">DefaultCategoryId</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">IsActive</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-kw">INNER</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">AdMedia</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">m</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">SortOrder</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">c</span><span class="t-op">.</span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@CustomerId</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p><strong>Query 2 — subqueries.</strong> This is the blank page on your notepad. Same result. No join to SearchHistory.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">DECLARE</span><span class="t-op"> </span><span class="t-type">@CustomerId</span><span class="t-op"> </span><span class="t-id">int</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">Title</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">MediaType</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">Url</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Advertisement</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">a</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-kw">INNER</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">AdMedia</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">m</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">SortOrder</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">IsActive</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">COALESCE</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">CategoryId</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">SearchHistory</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">h</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@CustomerId</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ORDER</span><span class="t-op"> </span><span class="t-kw">BY</span><span class="t-op"> </span><span class="t-id">h</span><span class="t-op">.</span><span class="t-id">SearchedAt</span><span class="t-op"> </span><span class="t-kw">DESC</span></td></tr>
+<tr><td class="gutter">19</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">20</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">21</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-id">c</span><span class="t-op">.</span><span class="t-id">DefaultCategoryId</span></td></tr>
+<tr><td class="gutter">22</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">c</span></td></tr>
+<tr><td class="gutter">23</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">c</span><span class="t-op">.</span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@CustomerId</span></td></tr>
+<tr><td class="gutter">24</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">25</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice that:</p>
+<ol>
+<li>The inner <code>SELECT TOP (1) ... ORDER BY SearchedAt DESC</code> is the last search. Returning user.</li>
+<li>If that subquery is NULL, <code>COALESCE</code> takes <code>DefaultCategoryId</code>. First-time user.</li>
+<li><code>INNER JOIN</code> AdMedia with <code>SortOrder = 1</code> — first image, or the video, or the first slide.</li>
+<li>There is <strong>no</strong> <code>GROUP BY</code>. There is <strong>no</strong> <code>HAVING COUNT</code>.</li>
+</ol>
+<p>This means: returning user → last search category → that ad. New user → default category → that ad.</p>
+<div class="mc-row">
+<div class="mc-col mc-bad">
+<span class="mc-lbl">Your Query 1 — starts at Product, four LEFT JOINs</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-op">*</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">Pimg</span><span class="t-op">.</span><span class="t-op">*</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">advImg</span><span class="t-op">.</span><span class="t-op">*</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">Product</span><span class="t-op"> </span><span class="t-id">prdt</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">ProductImages</span><span class="t-op"> </span><span class="t-id">Pimg</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Pimg</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">Advertisement</span><span class="t-op"> </span><span class="t-id">adv</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">prdt</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">LEFT</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">AdvertisementImages</span><span class="t-op"> </span><span class="t-id">advImg</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">Id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">advImg</span><span class="t-op">.</span><span class="t-id">AdvertisementId</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-kw">GROUP</span><span class="t-op"> </span><span class="t-kw">BY</span><span class="t-op"> </span><span class="t-id">adv</span><span class="t-op">.</span><span class="t-id">ProductId</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-kw">HAVING</span><span class="t-op"> </span><span class="t-id">COUNT</span><span class="t-op"> </span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+</div>
+<div class="mc-col mc-good">
+<span class="mc-lbl">Query 2 — one ad for this customer</span>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">Title</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">Url</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Advertisement</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">a</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">INNER</span><span class="t-op"> </span><span class="t-kw">JOIN</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">AdMedia</span><span class="t-op"> </span><span class="t-kw">AS</span><span class="t-op"> </span><span class="t-id">m</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ON</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">AdId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">AdId</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">m</span><span class="t-op">.</span><span class="t-id">SortOrder</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">IsActive</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">AND</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">CategoryId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">COALESCE</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-kw">TOP</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-num">1</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-id">CategoryId</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">SearchHistory</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@CustomerId</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">ORDER</span><span class="t-op"> </span><span class="t-kw">BY</span><span class="t-op"> </span><span class="t-id">SearchedAt</span><span class="t-op"> </span><span class="t-kw">DESC</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">SELECT</span><span class="t-op"> </span><span class="t-id">DefaultCategoryId</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">FROM</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@CustomerId</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+</div>
+</div>
+<p><strong>LEFT JOIN vs INNER JOIN</strong> — they asked you this on your query.</p>
+<ul>
+<li><strong>INNER JOIN</strong> — both sides must match. No ad? No row. Dashboard can show a static default in C#.</li>
+<li><strong>LEFT JOIN</strong> — keep the left row even when the right is NULL. Use this when you still want the customer row even if there is no ad.</li>
+<li><strong>LEFT OUTER JOIN</strong> is the same as <strong>LEFT JOIN</strong>. The word OUTER is optional.</li>
+</ul>
+<p>You do <strong>not</strong> explain JOIN with “clustered index / B-tree / only one nonclustered”. That is a <strong>different</strong> question. JOIN is about <strong>matching keys</strong>. Index is about <strong>how fast</strong> that match runs.</p>
+<p><code>HAVING COUNT(*) &gt; 1</code> is wrong here. That returns products with <strong>many</strong> ads. The dashboard wants <strong>one</strong> ad for <strong>this</strong> user.</p>
+<h4 id="fix-for-next-time_4">Fix for next time</h4>
+<ul>
+<li><strong>Ask</strong> before you draw. “Is book a product category? Is the banner different from the product photo?”</li>
+<li>Draw <strong>Advertisement</strong> and <strong>SearchHistory</strong> first. Product is extra.</li>
+<li>One query. <code>TOP (1)</code>. <code>COALESCE</code> for the first-time user.</li>
+<li>JOIN: say matching keys. Do not jump to indexes unless they ask.</li>
+</ul>
+<hr />
+<h2 id="5-deadlock">5. Deadlock</h2>
+<h3 id="q-connection-left-open-deadlock-showing-up-what-is-the-fix">Q. Connection left open, deadlock showing up — what is the fix?</h3>
+<h4 id="what-you-said_7">What you said</h4>
+<blockquote class="said">
+<p>We can use isolation. Read committed.</p>
+<p>Two fixes: check database logs. SQL Profiler.</p>
+<p>If it is a deadlock: do multiple updates in the same order. Customer then payment.</p>
+<p>There is a command like a DB deadlock command. The SQL admin will add that. They can pre-order the deadlock.</p>
+</blockquote>
+<h4 id="right-answer_7">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> A deadlock happens when two connections lock rows in <strong>opposite order</strong>. SQL Server picks a <strong>victim</strong>, rolls that transaction back, and returns error <strong>1205</strong>.</p>
+<p><strong>Right now</strong>, the victim must <strong>retry</strong> the same work. Catch 1205. Wait a little. Run the transaction again.</p>
+<p><strong>Next time</strong>, both procedures lock <strong>Customer then Payment</strong>. Never the other way. Keep the transaction <strong>short</strong>. Do not wait for a user click inside <code>BEGIN TRAN</code>.</p>
+</blockquote>
+<h4 id="walk-through_7">Walk through</h4>
+<p>First, why deadlock? Two connections. Opposite lock order. Nobody can move.</p>
+<p>Let us understand this with an example.</p>
+<ol>
+<li>Session A updates <code>Customer</code> 1, then waits for <code>Payment</code> 1.</li>
+<li>Session B updates <code>Payment</code> 1, then waits for <code>Customer</code> 1.</li>
+<li>SQL Server kills one. Error 1205.</li>
+</ol>
+<p><strong>Live fix</strong> — retry. There is no admin command that “pre-orders” a deadlock that already happened.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">for</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">0</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op">+</span><span class="t-op">+</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">try</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-kw">using</span><span class="t-op"> </span><span class="t-kw">var</span><span class="t-op"> </span><span class="t-id">tx</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">Database</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">.</span><span class="t-fn">BeginTransactionAsync</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-id">db</span><span class="t-op">.</span><span class="t-id">Database</span><span class="t-op">.</span><span class="t-fn">ExecuteSqlRawAsync</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-str">&quot;EXEC dbo.uspPay @customerId, @amount&quot;</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">customerId</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">amount</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-id">tx</span><span class="t-op">.</span><span class="t-fn">CommitAsync</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">11</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">break</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">catch</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-type">SqlException</span><span class="t-op"> </span><span class="t-id">ex</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-kw">when</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">ex</span><span class="t-op">.</span><span class="t-id">Number</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">=</span><span class="t-op"> </span><span class="t-num">1205</span><span class="t-op"> </span><span class="t-op">&amp;</span><span class="t-op">&amp;</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">&lt;</span><span class="t-op"> </span><span class="t-num">2</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">await</span><span class="t-op"> </span><span class="t-type">Task</span><span class="t-op">.</span><span class="t-fn">Delay</span><span class="t-op">(</span><span class="t-num">50</span><span class="t-op"> </span><span class="t-op">*</span><span class="t-op"> </span><span class="t-op">(</span><span class="t-id">i</span><span class="t-op"> </span><span class="t-op">+</span><span class="t-op"> </span><span class="t-num">1</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p><strong>Prevent</strong> — same order every time.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">BEGIN</span><span class="t-op"> </span><span class="t-kw">TRANSACTION</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-kw">UPDATE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Customer</span><span class="t-op"> </span><span class="t-kw">SET</span><span class="t-op"> </span><span class="t-id">Balance</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">Balance</span><span class="t-op"> </span><span class="t-op">-</span><span class="t-op"> </span><span class="t-type">@Amt</span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">CustomerId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@Id</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-kw">UPDATE</span><span class="t-op"> </span><span class="t-id">dbo</span><span class="t-op">.</span><span class="t-id">Payment</span><span class="t-op"> </span><span class="t-kw">SET</span><span class="t-op"> </span><span class="t-id">Status</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-str">&#x27;Paid&#x27;</span><span class="t-op"> </span><span class="t-kw">WHERE</span><span class="t-op"> </span><span class="t-id">PaymentId</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">@PayId</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-kw">COMMIT</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice that changing isolation to READ COMMITTED is already the default. READ UNCOMMITTED does not fix deadlock. Snapshot isolation can reduce <strong>reader/writer</strong> blocking. It is not the first sentence for a deadlock that <strong>already</strong> happened.</p>
+<p>Profiler is for <strong>finding</strong> the two graphs. It is not the fix.</p>
+<h4 id="fix-for-next-time_5">Fix for next time</h4>
+<ul>
+<li>Sentence 1: error <strong>1205</strong>, retry.</li>
+<li>Sentence 2: same lock order. Short transaction.</li>
+<li>Do not invent a “deadlock command” for the DBA.</li>
+</ul>
+<hr />
+<h2 id="6-angular">6. Angular</h2>
+<h3 id="q-ways-to-share-data-between-components">Q. Ways to share data between components</h3>
+<h4 id="what-you-said_8">What you said</h4>
+<blockquote class="said">
+<p>Four ways: <code>@Input</code>, <code>@Output</code>, RxJS, and router variables.</p>
+<p>(They counted Input and Output as two, and asked for a fourth. You did not add a fifth name.)</p>
+</blockquote>
+<h4 id="right-answer_8">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> Parent to child is <code>@Input</code>. Child to parent is <code>@Output</code> plus <code>EventEmitter</code>. Two screens that are <strong>not</strong> parent and child use a <strong>root service</strong> with a <code>BehaviorSubject</code>. That is the RxJS way. The router can pass an id in the URL. That is for bookmark and refresh, not for a big object.</p>
+</blockquote>
+<h4 id="walk-through_8">Walk through</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>@Input</code></td>
+<td>Parent → child</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>@Output</code> + <code>EventEmitter</code></td>
+<td>Child → parent</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Root service + <code>BehaviorSubject</code></td>
+<td>Any screen, not parent/child</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Router <code>param</code> / <code>queryParam</code></td>
+<td>Id in the URL</td>
+</tr>
+<tr>
+<td>Extra</td>
+<td><code>@ViewChild</code></td>
+<td>Parent calls a method on the child. Rare.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1. <code>@Input</code></strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-op">@</span><span class="t-fn">Component</span><span class="t-op">(</span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">selector</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;user-card&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">template</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;{{ user.name }}&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">export</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">UserCardComponent</span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">@</span><span class="t-fn">Input</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-id">user</span><span class="t-op">!</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">User</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src">&lt;user-card [user]=&quot;row&quot;&gt;&lt;/user-card&gt;</td></tr>
+</tbody></table></div>
+<p><strong>2. <code>@Output</code></strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-op">@</span><span class="t-fn">Output</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-id">saved</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-type">EventEmitter</span><span class="t-op">&lt;</span><span class="t-id">number</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-fn">onSave</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">saved</span><span class="t-op">.</span><span class="t-fn">emit</span><span class="t-op">(</span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">user</span><span class="t-op">.</span><span class="t-id">id</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src">&lt;user-card [user]=&quot;row&quot; (saved)=&quot;onSaved($event)&quot;&gt;&lt;/user-card&gt;</td></tr>
+</tbody></table></div>
+<p><strong>3. Shared service</strong> — Users module and Facility module are not parent and child.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-op">@</span><span class="t-fn">Injectable</span><span class="t-op">(</span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">providedIn</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;root&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-id">export</span><span class="t-op"> </span><span class="t-kw">class</span><span class="t-op"> </span><span class="t-type">SelectionStore</span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">private</span><span class="t-op"> </span><span class="t-kw">readonly</span><span class="t-op"> </span><span class="t-id">_id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">new</span><span class="t-op"> </span><span class="t-type">BehaviorSubject</span><span class="t-op">&lt;</span><span class="t-id">number</span><span class="t-op"> </span><span class="t-op">|</span><span class="t-op"> </span><span class="t-kw">null</span><span class="t-op">&gt;</span><span class="t-op">(</span><span class="t-kw">null</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">readonly</span><span class="t-op"> </span><span class="t-id">id</span><span class="t-op">$</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">_id</span><span class="t-op">.</span><span class="t-fn">asObservable</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">set</span><span class="t-op">(</span><span class="t-id">id</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">number</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">_id</span><span class="t-op">.</span><span class="t-fn">next</span><span class="t-op">(</span><span class="t-id">id</span><span class="t-op">)</span><span class="t-op">;</span><span class="t-op"> </span><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p>A <code>BehaviorSubject</code> remembers the <strong>last</strong> value. A late subscriber still gets it. A plain <code>Subject</code> does not.</p>
+<p><strong>4. Router</strong></p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">router</span><span class="t-op">.</span><span class="t-fn">navigate</span><span class="t-op">(</span><span class="t-op">[</span><span class="t-str">&quot;/facility&quot;</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">userId</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-id">id</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-fn">Number</span><span class="t-op">(</span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">route</span><span class="t-op">.</span><span class="t-id">snapshot</span><span class="t-op">.</span><span class="t-id">paramMap</span><span class="t-op">.</span><span class="t-kw">get</span><span class="t-op">(</span><span class="t-str">&quot;id&quot;</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<p>Notice that you already had the four names. When they say “what is the fourth?”, say <strong>shared service</strong> as its own sentence, not only “RxJS”. Then <strong>router</strong>. Then stop.</p>
+<div class="mermaid">
+flowchart LR
+  P[Parent] -->|"@Input"| C[Child]
+  C -->|"@Output"| P
+  U[Users screen] --> S[SelectionStore]
+  F[Facility screen] --> S
+  R[Router] -->|"/facility/42"| F
+</div>
+<hr />
+<h3 id="q-multiple-file-download-promise-or-observable-all-five-in-parallel">Q. Multiple file download — Promise or Observable? All five in parallel</h3>
+<h4 id="what-you-said_9">What you said</h4>
+<blockquote class="said">
+<p>File upload? (They said download.) HttpClient. If S3, download from the bucket URL stored in the DB.</p>
+<p>(They said: this is the <strong>Angular</strong> part. Multi download. Third-party libraries?)</p>
+<p>Async/await. I/O. (They said that is not Angular.)</p>
+<p><code>forkJoin</code>.</p>
+<p>Then CDN: a copy near the user, faster. Five images, five checkboxes, download all in parallel. Large video, keep the UI smooth.</p>
+<p>(Long pause.) <code>forkJoin</code>. Observables.</p>
+<p>They said: I asked you to choose Promise or Observable. So far you never said Observable until the end.</p>
+</blockquote>
+<h4 id="right-answer_9">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> In Angular I use <strong>Observables</strong>, not raw Promises. <code>HttpClient</code> already returns an Observable.</p>
+<p>Five files, no file depends on another. I start all five together with <code>forkJoin</code>. When all five blobs return, I save them.</p>
+<p>If the files are <strong>huge</strong>, I do not wait for all five in memory. I use <code>mergeMap</code> with a limit of 3, and I save each blob as it arrives. The UI stays smooth.</p>
+</blockquote>
+<h4 id="walk-through_9">Walk through</h4>
+<p>First, why Observable? Because we can <strong>cancel</strong>, we can <strong>retry</strong>, and <code>HttpClient</code> is already Observable. <code>async</code>/<code>await</code> in C# is the server. It is not the Angular answer.</p>
+<p>Let us understand this with an example. The user ticks five rows. Clicks Download. Five CDN URLs.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-fn">downloadAll</span><span class="t-op">(</span><span class="t-id">urls</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op">[</span><span class="t-op">]</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">const</span><span class="t-op"> </span><span class="t-id">calls</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">urls</span><span class="t-op">.</span><span class="t-fn">map</span><span class="t-op">(</span><span class="t-id">url</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">http</span><span class="t-op">.</span><span class="t-kw">get</span><span class="t-op">(</span><span class="t-id">url</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">responseType</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blob&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">5</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-fn">forkJoin</span><span class="t-op">(</span><span class="t-id">calls</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-fn">subscribe</span><span class="t-op">(</span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">next</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">blobs</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">blobs</span><span class="t-op">.</span><span class="t-fn">forEach</span><span class="t-op">(</span><span class="t-op">(</span><span class="t-id">b</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">i</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-fn">save</span><span class="t-op">(</span><span class="t-id">urls</span><span class="t-op">[</span><span class="t-id">i</span><span class="t-op">]</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">b</span><span class="t-op">)</span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">error</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">err</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-id">console</span><span class="t-op">.</span><span class="t-fn">error</span><span class="t-op">(</span><span class="t-id">err</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">9</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">10</td><td class="src"><span class="t-op">}</span></td></tr>
+<tr><td class="gutter">11</td><td class="src">&#160;</td></tr>
+<tr><td class="gutter">12</td><td class="src"><span class="t-kw">private</span><span class="t-op"> </span><span class="t-fn">save</span><span class="t-op">(</span><span class="t-id">url</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-kw">string</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">blob</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-type">Blob</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">{</span></td></tr>
+<tr><td class="gutter">13</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-kw">const</span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">document</span><span class="t-op">.</span><span class="t-fn">createElement</span><span class="t-op">(</span><span class="t-str">&quot;a&quot;</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">14</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">href</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-type">URL</span><span class="t-op">.</span><span class="t-fn">createObjectURL</span><span class="t-op">(</span><span class="t-id">blob</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">15</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">download</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op"> </span><span class="t-id">url</span><span class="t-op">.</span><span class="t-fn">split</span><span class="t-op">(</span><span class="t-str">&quot;/&quot;</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-fn">pop</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op"> </span><span class="t-op">?</span><span class="t-op">?</span><span class="t-op"> </span><span class="t-str">&quot;file&quot;</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">16</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">a</span><span class="t-op">.</span><span class="t-fn">click</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">17</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-type">URL</span><span class="t-op">.</span><span class="t-fn">revokeObjectURL</span><span class="t-op">(</span><span class="t-id">a</span><span class="t-op">.</span><span class="t-id">href</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+<tr><td class="gutter">18</td><td class="src"><span class="t-op">}</span></td></tr>
+</tbody></table></div>
+<p>Notice that <code>forkJoin</code> waits until <strong>all</strong> complete. One failure fails the group unless you catch that call.</p>
+<p>For a <strong>large video</strong>, <code>forkJoin</code> holds every blob until the last one finishes. That can freeze the tab.</p>
+<div class="vs-editor vs-editor-compact"><table class="vs-code"><tbody>
+<tr><td class="gutter">1</td><td class="src"><span class="t-fn">from</span><span class="t-op">(</span><span class="t-id">urls</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-fn">pipe</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">2</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-fn">mergeMap</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">3</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-id">url</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-id">http</span><span class="t-op">.</span><span class="t-kw">get</span><span class="t-op">(</span><span class="t-id">url</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-op">{</span><span class="t-op"> </span><span class="t-id">responseType</span><span class="t-op">:</span><span class="t-op"> </span><span class="t-str">&quot;blob&quot;</span><span class="t-op"> </span><span class="t-op">}</span><span class="t-op">)</span><span class="t-op">.</span><span class="t-fn">pipe</span><span class="t-op">(</span></td></tr>
+<tr><td class="gutter">4</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-fn">tap</span><span class="t-op">(</span><span class="t-id">blob</span><span class="t-op"> </span><span class="t-op">=</span><span class="t-op">&gt;</span><span class="t-op"> </span><span class="t-kw">this</span><span class="t-op">.</span><span class="t-fn">save</span><span class="t-op">(</span><span class="t-id">url</span><span class="t-op">,</span><span class="t-op"> </span><span class="t-id">blob</span><span class="t-op">)</span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">5</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span><span class="t-op">,</span></td></tr>
+<tr><td class="gutter">6</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-num">3</span><span class="t-op"> </span><span class="t-op"> </span><span class="t-op"> </span><span class="t-cm">// at most 3 at a time</span></td></tr>
+<tr><td class="gutter">7</td><td class="src"><span class="t-op"> </span><span class="t-op"> </span><span class="t-op">)</span></td></tr>
+<tr><td class="gutter">8</td><td class="src"><span class="t-op">)</span><span class="t-op">.</span><span class="t-fn">subscribe</span><span class="t-op">(</span><span class="t-op">)</span><span class="t-op">;</span></td></tr>
+</tbody></table></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Promise</th>
+<th>Observable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Angular <code>HttpClient</code></td>
+<td>You wrap it</td>
+<td><strong>Native</strong></td>
+</tr>
+<tr>
+<td>Cancel</td>
+<td>Awkward</td>
+<td><code>unsubscribe</code> / <code>takeUntil</code></td>
+</tr>
+<tr>
+<td>Many in parallel</td>
+<td><code>Promise.all</code></td>
+<td><code>forkJoin</code></td>
+</tr>
+<tr>
+<td>Stream / each as it lands</td>
+<td>No</td>
+<td><code>mergeMap</code></td>
+</tr>
+</tbody>
+</table>
+<p>S3 and CDN are <strong>where</strong> the file lives. They still asked <strong>how Angular starts five downloads</strong>. Say Observable. Say <code>forkJoin</code>. Then CDN in one line if they want where.</p>
+<h4 id="fix-for-next-time_6">Fix for next time</h4>
+<ul>
+<li>First word: <strong>Observable</strong>. Second word: <strong><code>forkJoin</code></strong>.</li>
+<li>Do not start with S3 or C# <code>async</code>/<code>await</code>.</li>
+</ul>
+<hr />
+<h3 id="q-latest-angular-version-you-use">Q. Latest Angular version you use</h3>
+<h4 id="what-you-said_10">What you said</h4>
+<blockquote class="said">
+<ol start="14">
+<li>Then 14 or 16. Then “I am working on 16.”</li>
+</ol>
+</blockquote>
+<p>They said the latest is 20.</p>
+<h4 id="right-answer_10">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> On Skytec / Theraoffice I am on <strong>Angular 16</strong>. I know the current latest is <strong>20</strong>. I have not moved the product to 20 yet.</p>
+</blockquote>
+<p>Do not guess 14 then change. Pick the version on <strong>your</strong> repo. Then one sentence on latest.</p>
+<hr />
+<h2 id="7-ai">7. AI</h2>
+<h3 id="q-which-coding-agent-any-ai-poc">Q. Which coding agent? Any AI POC?</h3>
+<h4 id="what-you-said_11">What you said</h4>
+<blockquote class="said">
+<p>Kiro and Copilot. Model: Opus for analysis. For coding, Claude / GPT.</p>
+<p>POC: Azure Document Intelligence. Mobile: we trained images to read form fields. Accuracy around 80–90 percent. We copy models from Dev to QA to Production. Training creates a file and metadata. We copy with the model id to the other environment.</p>
+</blockquote>
+<h4 id="right-answer_11">Right answer</h4>
+<blockquote>
+<p><strong>Say:</strong> For the editor I use <strong>GitHub Copilot</strong> or <strong>Kiro</strong>. For a hard design I use a strong model such as <strong>Opus</strong>. For a small code change I use a faster model. I never paste secrets into the chat.</p>
+<p>I did a POC with <strong>Azure Document Intelligence</strong>. We trained a custom model on form images from the mobile app. We read the fields. About 80–90 percent. We copy the custom model from Dev to QA to Prod with the <strong>model id</strong> and a copy authorization. We do not retrain from scratch in each environment.</p>
+</blockquote>
+<h4 id="walk-through_10">Walk through</h4>
+<p>This part was <strong>fine</strong>. Keep it. Add one line: what problem it solved (inspectors do not type every field). Add one line: we <strong>review</strong> the extracted fields before save. AI is not the database.</p>
+<p>Copy model: Azure gives a copy-authorization token from the source. The target region calls copy with that token and the model id. That is the “file and metadata” you meant.</p>
+<h4 id="fix-for-next-time_7">Fix for next time</h4>
+<ul>
+<li>Name the <strong>product</strong> (Skytec mobile forms).</li>
+<li>One metric. One copy story. Stop. Do not trail off on “40 fields”.</li>
+</ul>
+<hr />
+<h2 id="8-questions-for-them-close">8. Questions for them / close</h2>
+<p>You asked what the project framework is. They said legacy plus modernized APIs, microservices, AI POCs from developers. Feedback goes to HR.</p>
+<p>If you have thirty seconds at the end, ask <strong>one</strong> question about the work: “Will I work on the modernized APIs, or on the legacy core, in the first months?” Then thank them. Stop.</p>
+<hr />
+<h2 id="rapid-checklist-before-the-next-round">Rapid checklist before the next round</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>First sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intro</td>
+<td>Three products. UI, API, DB, auth. What I owned.</td>
+</tr>
+<tr>
+<td>Design I did</td>
+<td>Skytec offline SQLite + sync. Why: field has no network.</td>
+</tr>
+<tr>
+<td>EF new service</td>
+<td>Code first. <code>migrations add</code>. Production: SQL script.</td>
+</tr>
+<tr>
+<td>Middleware vs few actions</td>
+<td>Pipe for all. <strong>Filter</strong> for one action.</td>
+</tr>
+<tr>
+<td>DbContext lifetime</td>
+<td><strong>Scoped</strong>. Not Transient. Not Singleton.</td>
+</tr>
+<tr>
+<td>Dashboard ad</td>
+<td><code>SearchHistory</code> + <code>Advertisement</code> + <code>AdMedia</code>. <code>TOP (1)</code> + <code>COALESCE</code>.</td>
+</tr>
+<tr>
+<td>JOIN</td>
+<td>Matching keys. INNER = both. LEFT = keep left.</td>
+</tr>
+<tr>
+<td>Deadlock</td>
+<td>1205. Retry. Same lock order.</td>
+</tr>
+<tr>
+<td>Angular share</td>
+<td><code>@Input</code> <code>@Output</code> service+<code>BehaviorSubject</code> router.</td>
+</tr>
+<tr>
+<td>Multi download</td>
+<td>Observable. <code>forkJoin</code>. Huge files: <code>mergeMap</code>.</td>
+</tr>
+<tr>
+<td>Angular version</td>
+<td>My repo version. Then latest.</td>
+</tr>
+<tr>
+<td>AI</td>
+<td>Copilot / Kiro. Document Intelligence POC + copy model id.</td>
+</tr>
+</tbody>
+</table>
+</article>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: "neutral",
+  securityLevel: "loose",
+  flowchart: { useMaxWidth: true, htmlLabels: true },
+  er: { useMaxWidth: true }
+});
+const btn = document.getElementById("btnPrint");
+btn.addEventListener("click", async () => {
+  btn.textContent = "Drawing…";
+  try {
+    if (window.mermaid && mermaid.run) await mermaid.run();
+  } catch (e) {}
+  btn.textContent = "Print / Save PDF";
+  window.print();
+});
+const menuLinks = [...document.querySelectorAll(".sidemenu a")];
+const byId = new Map(menuLinks.map(a => [a.getAttribute("href").slice(1), a]));
+function setActive(id) {
+  menuLinks.forEach(a => a.classList.remove("active"));
+  const a = byId.get(id);
+  if (a) {
+    a.classList.add("active");
+    a.scrollIntoView({ block: "nearest" });
+  }
+}
+menuLinks.forEach(a => a.addEventListener("click", () => setActive(a.getAttribute("href").slice(1))));
+const heads = [...document.querySelectorAll(".sheet h2[id], .sheet h3[id]")];
+const io = new IntersectionObserver((entries) => {
+  const hit = entries.filter(e => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  if (hit) setActive(hit.target.id);
+}, { rootMargin: "-70px 0px -60% 0px", threshold: [0.1, 0.4] });
+heads.forEach(h => io.observe(h));
+</script>
+</body>
+</html>
