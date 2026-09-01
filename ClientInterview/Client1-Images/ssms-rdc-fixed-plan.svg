@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024">
+  <rect width="1536" height="1024" fill="#f0f0f0"/>
+  <rect x="0" y="0" width="1536" height="48" fill="#15803d"/>
+  <text x="16" y="32" fill="#fff" font-size="18" font-weight="700" font-family="Segoe UI,Arial,sans-serif">After the fix — Actual Execution Plan (retest)</text>
+  <text x="1520" y="32" fill="#dcfce7" font-size="13" text-anchor="end" font-family="Segoe UI,Arial,sans-serif">MyDB  ·  IX_Orders_Customer_Status</text>
+
+  <rect x="12" y="60" width="1512" height="36" fill="#fff" stroke="#d0d0d0"/>
+  <text x="24" y="84" fill="#333" font-size="13" font-family="Segoe UI,Arial,sans-serif">Results    Messages    <tspan font-weight="700" fill="#15803d">Execution Plan</tspan></text>
+
+  <rect x="12" y="104" width="1512" height="860" fill="#fff" stroke="#c8c8c8"/>
+  <text x="28" y="140" fill="#1a1a1a" font-size="15" font-weight="700" font-family="Segoe UI,Arial,sans-serif">Query 1: Query cost (relative to the batch): 100%</text>
+  <text x="28" y="164" fill="#64748b" font-size="13" font-family="Consolas,Menlo,monospace">SELECT … FROM dbo.Orders WHERE CustomerId = 42 AND Status = 'Open'</text>
+
+  <rect x="120" y="280" width="280" height="150" rx="4" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+  <circle cx="260" cy="328" r="28" fill="#16a34a"/>
+  <text x="260" y="334" fill="#fff" font-size="14" font-weight="800" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">SEL</text>
+  <text x="260" y="378" fill="#0f172a" font-size="16" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">SELECT</text>
+  <text x="260" y="402" fill="#15803d" font-size="14" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">Cost: 0%</text>
+
+  <line x1="400" y1="355" x2="760" y2="355" stroke="#86efac" stroke-width="3"/>
+  <polygon points="400,355 428,344 428,366" fill="#16a34a"/>
+  <text x="580" y="340" fill="#166534" font-size="12" font-weight="700" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">thin arrow = 1 row</text>
+
+  <rect x="760" y="260" width="400" height="190" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/>
+  <rect x="900" y="278" width="120" height="56" rx="6" fill="#16a34a"/>
+  <text x="960" y="302" fill="#fff" font-size="11" font-weight="800" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">INDEX</text>
+  <text x="960" y="320" fill="#fff" font-size="11" font-weight="800" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">SEEK</text>
+  <text x="960" y="360" fill="#14532d" font-size="16" font-weight="800" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">Index Seek</text>
+  <text x="960" y="386" fill="#0f172a" font-size="13" text-anchor="middle" font-family="Consolas,Menlo,monospace">IX_Orders_Customer_Status</text>
+  <text x="960" y="412" fill="#15803d" font-size="15" font-weight="800" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">Seek on (CustomerId, Status)</text>
+  <text x="960" y="436" fill="#166534" font-size="12" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif">INCLUDE covers Total, CreatedUtc</text>
+
+  <rect x="80" y="520" width="1376" height="400" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="100" y="556" fill="#14532d" font-size="16" font-weight="800" font-family="Segoe UI,Arial,sans-serif">Fix you ran, then this picture</text>
+  <text x="100" y="592" fill="#0f172a" font-size="14" font-family="Consolas,Menlo,monospace">CREATE NONCLUSTERED INDEX IX_Orders_Customer_Status ON dbo.Orders(CustomerId, Status) INCLUDE (Total, CreatedUtc);</text>
+  <text x="100" y="624" fill="#0f172a" font-size="14" font-family="Segoe UI,Arial,sans-serif">1. Clustered on OrderId first (heap gone). Same CustomerId filter is still a CI Scan.</text>
+  <text x="100" y="652" fill="#0f172a" font-size="14" font-family="Segoe UI,Arial,sans-serif">2. Retest the lookup with Ctrl+M. Expect Clustered Index Seek, thin arrow, one row.</text>
+  <text x="100" y="680" fill="#0f172a" font-size="14" font-family="Segoe UI,Arial,sans-serif">3. SELECT of the whole table with no WHERE still scans — you asked for every row. That is not a failed index.</text>
+  <text x="100" y="708" fill="#0f172a" font-size="14" font-family="Segoe UI,Arial,sans-serif">4. Filter by Status? Add a nonclustered index on (Status) INCLUDE (FullName) — from the WHERE, not a guess.</text>
+  <text x="100" y="736" fill="#0f172a" font-size="14" font-family="Segoe UI,Arial,sans-serif">5. NOLOCK does not turn a Table Scan into a Seek. Isolation is C14. This slide is the plan.</text>
+  <text x="100" y="780" fill="#64748b" font-size="13" font-family="Segoe UI,Arial,sans-serif">Lab: 00_create_mydb.sql (you) → 01 seed → 02_mydb_tune_steps.sql</text>
+  <text x="100" y="860" fill="#166534" font-size="16" font-weight="800" font-family="Segoe UI,Arial,sans-serif">Interview: heap Table Scan → CX on OrderId (still scan) → NCI Seek on (CustomerId, Status).</text>
+</svg>

@@ -52,7 +52,8 @@ EXTRA_CSS = """
 .jwt-io-pane.hdr { background: #fff1f2; border: 1px solid #fb7185; color: #9f1239; }
 .jwt-io-pane.pld { background: #faf5ff; border: 1px solid #d8b4fe; color: #6b21a8; }
 .jwt-io-pane.sig { background: #ecfeff; border: 1px solid #67e8f9; color: #155e75; grid-column: 1 / -1; }
-@media (max-width: 720px) { .jwt-io-panes { grid-template-columns: 1fr; } .jwt-io-pane.sig { grid-column: auto; } }
+.plan-shot { max-width: 100%; height: auto; border: 1px solid #94a3b8; border-radius: 8px; margin: 10px 0 6px; background: #fff; display: block; }
+.plan-caption { font-size: 12px; color: #475569; margin: 0 0 12px; line-height: 1.45; }
 """
 
 
@@ -68,7 +69,7 @@ def main() -> None:
     )
     nav_intro = f"""
   <h1>Client1 — interview questions</h1>
-  <p class="sub">Consolidated from ~39 sessions (2024–2026) · {TOTAL_SLIDES} topics (C01–C20)
+  <p class="sub">Consolidated from ~39 sessions (2024–2026) · {TOTAL_SLIDES} topics (C01–C21)
     · same deck template as <code>PythonTraining.html</code></p>
   <p class="org">Edit <code>ClientInterview/client1_catalog.py</code> or <code>ClientInterview/Client1.md</code>
     → run <code>python ClientInterview/build_client1.py</code></p>

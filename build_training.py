@@ -342,14 +342,27 @@ body.io-split-dragging { cursor: col-resize; user-select: none; }
 table.vs-code { width: 100%; border-collapse: collapse; font-family: Consolas, 'Cascadia Mono', 'Courier New', monospace; font-size: 13px; line-height: 1.55; }
 table.vs-code td.gutter { width: 44px; min-width: 44px; padding: 0 10px 0 6px; text-align: right; color: #2b91af; user-select: none; vertical-align: top; border-right: 2px solid #c9a227; background: #fff; }
 table.vs-code td.src { padding: 0 0 0 14px; white-space: pre; vertical-align: top; color: #000; }
-.t-kw  { color: #0000ff; }
+.t-kw  { color: #0000ff; }      /* VS2022 Light keyword */
 .t-bi  { color: #0000ff; }
+.t-type { color: #2b91af; }    /* VS2022 user types (class / interface) */
+.t-fn  { color: #74531f; }     /* VS2022 user members — methods */
 .t-cm  { color: #008000; }
 .step-pre .t-cm { color: #008000; }
 .t-str { color: #a31515; }
 .t-num { color: #098658; }
 .t-op  { color: #000000; }
 .t-id  { color: #000000; }
+.mc-col .vs-editor,
+.learn-steps .vs-editor {
+  max-height: min(62vh, 560px);
+  margin: 0;
+  border: none;
+  border-top: 1px solid #e2e8f0;
+}
+.mc-col .vs-editor-compact,
+.learn-steps .vs-editor-compact { max-height: min(62vh, 560px); }
+.mc-col .vs-editor table.vs-code,
+.learn-steps .vs-editor table.vs-code { font-size: 12px; line-height: 1.5; }
 
 .tip { background: #fff8e6; border-left: 3px solid #f39c12; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }
 .challenge { background: #e8f5e9; border-left: 3px solid #28a745; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; }

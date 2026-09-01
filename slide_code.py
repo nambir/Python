@@ -24,20 +24,30 @@ _PY_BUILTINS = {
 }
 
 _CS_KEYWORDS = {
-    "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
-    "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else",
-    "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for",
-    "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock",
-    "long", "namespace", "new", "null", "object", "operator", "out", "override", "params",
-    "private", "protected", "public", "readonly", "record", "ref", "return", "sbyte", "sealed",
-    "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
-    "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using",
-    "var", "virtual", "void", "volatile", "while",
+    "abstract", "as", "async", "await", "base", "bool", "break", "byte", "case", "catch",
+    "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do",
+    "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed",
+    "float", "for", "foreach", "get", "goto", "if", "implicit", "in", "init", "int",
+    "interface", "internal", "is", "lock", "long", "nameof", "namespace", "new", "nint",
+    "nuint", "null", "object", "operator", "out", "override", "params", "private",
+    "protected", "public", "readonly", "record", "ref", "required", "return", "sbyte",
+    "sealed", "set", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch",
+    "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe",
+    "ushort", "using", "var", "virtual", "void", "volatile", "when", "while", "with", "yield",
 }
-_CS_TYPES = {
-    "List", "Dictionary", "IEnumerable", "Task", "Action", "Func", "String", "Int32",
-    "Boolean", "Object", "Console", "Exception",
+_CS_TYPE_INTRO = {
+    "class", "interface", "struct", "enum", "record", "new", "is", "as", "typeof",
 }
+_CS_BUILTIN_TYPES = {
+    "bool", "byte", "char", "decimal", "double", "float", "int", "long", "nint", "nuint",
+    "object", "sbyte", "short", "string", "uint", "ulong", "ushort", "void", "var",
+}
+_CS_LOOKS_LIKE = re.compile(
+    r"(?m)^\s*(public|private|internal|protected|static)\s+"
+    r"(class|interface|async|static|override|void|readonly|sealed)"
+    r"|^\s*(public|private|internal)\s+interface\b"
+    r"|\bbuilder\.Services\."
+)
 
 
 def _span(cls: str, text: str) -> str:
@@ -93,14 +103,55 @@ def highlight_python_line(line: str) -> str:
     return "".join(out) if out else "&#160;"
 
 
+def _cs_skip_ws(line: str, i: int) -> int:
+    n = len(line)
+    while i < n and line[i] in " \t":
+        i += 1
+    return i
+
+
+def _cs_after_generics(line: str, i: int) -> int:
+    """Skip a `<...>` generic argument list, then whitespace."""
+    n = len(line)
+    i = _cs_skip_ws(line, i)
+    if i >= n or line[i] != "<":
+        return i
+    depth = 0
+    while i < n:
+        if line[i] == "<":
+            depth += 1
+        elif line[i] == ">":
+            depth -= 1
+            i += 1
+            if depth == 0:
+                break
+            continue
+        i += 1
+    return _cs_skip_ws(line, i)
+
+
 def highlight_csharp_line(line: str) -> str:
+    """VS 2022 Light: keyword blue, type teal, method gold, string maroon, comment green."""
     out: list[str] = []
     i = 0
     n = len(line)
+    prev_was_dot = False
+    prev_was_colon = False
+    after_type_intro = False
+    expect_name = False
+    generic_depth = 0
     while i < n:
         if line[i:i + 2] == "//":
             out.append(_span("t-cm", line[i:]))
             break
+        if line[i:i + 2] == "/*":
+            end = line.find("*/", i + 2)
+            if end < 0:
+                out.append(_span("t-cm", line[i:]))
+                break
+            out.append(_span("t-cm", line[i : end + 2]))
+            i = end + 2
+            continue
         ch = line[i]
         if ch in "\"'":
             q = ch
@@ -115,6 +166,9 @@ def highlight_csharp_line(line: str) -> str:
                 j += 1
             out.append(_span("t-str", line[i:j]))
             i = j
+            prev_was_dot = False
+            prev_was_colon = False
+            after_type_intro = False
             continue
         if ch.isdigit() and (i == 0 or not (line[i - 1].isalnum() or line[i - 1] == "_")):
             j = i
@@ -122,6 +176,9 @@ def highlight_csharp_line(line: str) -> str:
                 j += 1
             out.append(_span("t-num", line[i:j]))
             i = j
+            prev_was_dot = False
+            prev_was_colon = False
+            after_type_intro = False
             continue
         if ch.isalpha() or ch == "_":
             j = i
@@ -130,13 +187,59 @@ def highlight_csharp_line(line: str) -> str:
             word = line[i:j]
             if word in _CS_KEYWORDS:
                 cls = "t-kw"
-            elif word in _CS_TYPES:
-                cls = "t-bi"
+                after_type_intro = word in _CS_TYPE_INTRO
+                expect_name = word in _CS_BUILTIN_TYPES
+                prev_was_dot = False
+                prev_was_colon = False
             else:
-                cls = "t-id"
+                nxt = _cs_after_generics(line, j)
+                is_call = nxt < n and line[nxt] == "("
+                if generic_depth > 0:
+                    cls = "t-type" if word[:1].isupper() else "t-id"
+                elif after_type_intro or prev_was_colon:
+                    cls = "t-type"
+                    expect_name = True
+                elif expect_name:
+                    cls = "t-fn" if is_call else "t-id"
+                    expect_name = False
+                elif prev_was_dot:
+                    cls = "t-fn" if is_call else "t-id"
+                    expect_name = False
+                elif is_call:
+                    cls = "t-fn"
+                    expect_name = False
+                elif word[:1].isupper():
+                    cls = "t-type"
+                    expect_name = True
+                else:
+                    cls = "t-id"
+                    expect_name = False
+                after_type_intro = False
+                prev_was_dot = False
+                prev_was_colon = False
             out.append(_span(cls, word))
             i = j
             continue
+        if ch == "<":
+            generic_depth += 1
+            prev_was_dot = False
+        elif ch == ">" and generic_depth:
+            generic_depth -= 1
+            prev_was_dot = False
+        elif ch == ".":
+            prev_was_dot = True
+            prev_was_colon = False
+            after_type_intro = False
+            expect_name = False
+        elif ch == ":":
+            prev_was_colon = True
+            prev_was_dot = False
+        elif not ch.isspace():
+            prev_was_dot = False
+            if ch not in "<,":
+                prev_was_colon = False
+                if ch not in "<>[]":
+                    after_type_intro = False
         out.append(_span("t-op", ch))
         i += 1
     return "".join(out) if out else "&#160;"
@@ -416,6 +519,10 @@ def mark_important_in_step_pres(html_text: str) -> str:
     return _STEP_PRE_RE.sub(_repl, html_text)
 
 
+def looks_like_csharp(text: str) -> bool:
+    return bool(_CS_LOOKS_LIKE.search(text or ""))
+
+
 def highlight_step_pres(html_text: str, lang: str = "python") -> str:
     """Replace plain <div class="step-pre">...</div> blocks with VS-colored editors."""
 
@@ -424,6 +531,27 @@ def highlight_step_pres(html_text: str, lang: str = "python") -> str:
         return vs_editor(code_text + "\n" if code_text else "", lang=lang, compact=True)
 
     return _STEP_PRE_RE.sub(_repl, html_text)
+
+
+_STEP_PRE_OPEN_RE = re.compile(
+    r'<div class="step-pre"(?P<attrs>[^>]*)>(?P<body>.*?)</div>',
+    re.DOTALL,
+)
+
+
+def highlight_csharp_step_pres(html_text: str) -> str:
+    """Turn C# .step-pre samples into VS 2022 Light editors (line numbers + colors)."""
+
+    def _repl(match: re.Match[str]) -> str:
+        attrs = match.group("attrs") or ""
+        body = match.group("body")
+        forced = 'data-lang="csharp"' in attrs.replace("'", '"')
+        code_text = html.unescape(body).rstrip("\n")
+        if not forced and not looks_like_csharp(code_text):
+            return match.group(0)
+        return vs_editor(code_text + "\n" if code_text else "", lang="csharp", compact=True)
+
+    return _STEP_PRE_OPEN_RE.sub(_repl, html_text)
 
 
 def code(text: str, *, expected: str | None = None) -> str:

@@ -8,6 +8,8 @@ Use these rules when creating or updating:
 
 Goal: **every explanation should be understandable by a beginner**, with matching examples; regenerate HTML from sources (never hand-edit generated files).
 
+**Voice:** Kud Venkat — simple Indian classroom English. Full do / do-not: `ClientInterview/TeachingStyleGuide.md` section 2. Also section 16 below.
+
 ---
 
 ## Training deck
@@ -64,13 +66,15 @@ Each slide must have **4–6 steps** in `training_beginner.py`:
 - **Step 4** — Contrast with something they already know (list vs tuple, C# vs Python).
 - **Step 5+** — Alternatives, when to use, or interview one-liner.
 
-Writing style:
+Writing style (Kud Venkat — simple Indian classroom English):
 
-- Use **plain English** — no jargon without defining it in the same sentence.
+- Full tables: `ClientInterview/TeachingStyleGuide.md` section **How to explain / how not to explain**.
+- Short sentences. **Let us**, **Notice that**, **This means**. Numbered 1. 2. 3.
 - One idea per step — if you need "and also", split into two steps.
-- Use **concrete examples** (shopping cart, GPS, phone book) before abstract terms.
+- Concrete example first (`tblEmployee`, shopping cart), then the term.
 - Put code snippets in backticks in the text: `` `t[0] = 5` ``.
 - Say **what happens** when code runs: "You get `TypeError`" not just "it's wrong".
+- **Do not:** dive in, leverage, holistic, gonna, basically, textbook B-tree dumps, office English (please do the needful).
 
 ---
 
@@ -238,6 +242,7 @@ Do **not** introduce "hashable" in step 1 — build up to it in step 6 as "keys 
 - Edit `PythonTraining.html` directly — always regenerate.
 - Use one giant interview paragraph — use Q&A.
 - Add jargon without a beginner sentence first.
+- Write American vlog English (dive in, super powerful) or company English (leverage, holistic). Follow `ClientInterview/TeachingStyleGuide.md` section 2.
 - Commit secrets (`.env`, API keys) in `Projects/` or slides.
 
 ---
@@ -345,3 +350,26 @@ python -m http.server 8765 --bind 127.0.0.1
 - Review: `http://127.0.0.1:8765/PythonReview.html`
 
 If port 8765 fails (“Connection was reset”), kill stale listeners and restart the server.
+
+---
+
+## 16. How to explain / how not to explain (required)
+
+Master copy with full tables: `ClientInterview/TeachingStyleGuide.md` **section 2**.
+
+Venkat style = slow, short sentences, **Let us / Notice that / This means**, numbered 1. 2. 3. Interview words (`JWT`, `scoped`) once, then a simple sentence.
+
+| How **not** to explain | How **to** explain |
+|---|---|
+| Let’s dive in. This is super powerful. | Let us understand… / First, why… |
+| We leverage a holistic strategy at scale. | We save the order and the lines together in SQL. |
+| A clustered index constitutes a B+ tree wherein… | A clustered index decides the order of rows. So a table can have only one. |
+| Gonna / basically / essentially / folks | So / This means / Notice that |
+| Kindly revert. Please do the needful. | Let us look at the example. Here is what happens. |
+| Yaar, na, only I am telling | Let us see. Notice that. |
+| The interceptor hydrates the Authorization header… | The interceptor puts the token on every HTTP call. Header: `Authorization: Bearer` plus the token. |
+
+**Do:** create, find, store, check, send, wait, because, so. Same `tblEmployee` example. Pain first, then the fix.
+
+**Do not:** American vlog English, company English, textbook dumps, office email English, Hindi mixed into the slide.
+

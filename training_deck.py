@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from build_training import CSS
-from slide_code import mark_important_in_step_pres, split_learn
+from slide_code import highlight_csharp_step_pres, mark_important_in_step_pres, split_learn
 from slide_io import convert_input_output_pres
 
 
@@ -913,6 +913,8 @@ def build_deck(
 </html>"""
 
     page = convert_input_output_pres(page)
+    if code_lang == "csharp":
+        page = highlight_csharp_step_pres(page)
     page = mark_important_in_step_pres(page)
     cfg.output.parent.mkdir(parents=True, exist_ok=True)
     cfg.output.write_text(page, encoding="utf-8")
